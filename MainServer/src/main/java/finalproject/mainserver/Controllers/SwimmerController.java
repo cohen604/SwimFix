@@ -1,20 +1,18 @@
-package Controllers;
-
-import org.springframework.stereotype.Controller;
+package finalproject.mainserver.Controllers;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller("/swimmer")
+@RestController
 public class SwimmerController {
-
 
     @GetMapping("/upload")
     public String uploadVideo() {
-        return String.format("Uploaded Video!");
+        return "Uploaded Video!";
     }
 
     @GetMapping("/viewFeedback")
     public String viewFeedBack() {
-        return String.format("View Feedback Video!");
+        return "View Feedback Video!";
     }
 
 }
