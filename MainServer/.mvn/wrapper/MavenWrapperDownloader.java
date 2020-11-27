@@ -47,9 +47,9 @@ public class MavenWrapperDownloader {
     private static final String PROPERTY_NAME_WRAPPER_URL = "wrapperUrl";
 
     public static void main(String args[]) {
-        System.out.println("- Downloader started");
+        ExernalSystems.out.println("- Downloader started");
         File baseDirectory = new File(args[0]);
-        System.out.println("- Using base directory: " + baseDirectory.getAbsolutePath());
+        ExernalSystems.out.println("- Using base directory: " + baseDirectory.getAbsolutePath());
 
         // If the maven-wrapper.properties exists, read it and check if it contains a custom
         // wrapperUrl parameter.
@@ -63,7 +63,7 @@ public class MavenWrapperDownloader {
                 mavenWrapperProperties.load(mavenWrapperPropertyFileInputStream);
                 url = mavenWrapperProperties.getProperty(PROPERTY_NAME_WRAPPER_URL, url);
             } catch (IOException e) {
-                System.out.println("- ERROR loading '" + MAVEN_WRAPPER_PROPERTIES_PATH + "'");
+                ExernalSystems.out.println("- ERROR loading '" + MAVEN_WRAPPER_PROPERTIES_PATH + "'");
             } finally {
                 try {
                     if (mavenWrapperPropertyFileInputStream != null) {
@@ -74,31 +74,31 @@ public class MavenWrapperDownloader {
                 }
             }
         }
-        System.out.println("- Downloading from: " + url);
+        ExernalSystems.out.println("- Downloading from: " + url);
 
         File outputFile = new File(baseDirectory.getAbsolutePath(), MAVEN_WRAPPER_JAR_PATH);
         if (!outputFile.getParentFile().exists()) {
             if (!outputFile.getParentFile().mkdirs()) {
-                System.out.println(
+                ExernalSystems.out.println(
                         "- ERROR creating output directory '" + outputFile.getParentFile().getAbsolutePath() + "'");
             }
         }
-        System.out.println("- Downloading to: " + outputFile.getAbsolutePath());
+        ExernalSystems.out.println("- Downloading to: " + outputFile.getAbsolutePath());
         try {
             downloadFileFromURL(url, outputFile);
-            System.out.println("Done");
-            System.exit(0);
+            ExernalSystems.out.println("Done");
+            ExernalSystems.exit(0);
         } catch (Throwable e) {
-            System.out.println("- Error downloading");
+            ExernalSystems.out.println("- Error downloading");
             e.printStackTrace();
-            System.exit(1);
+            ExernalSystems.exit(1);
         }
     }
 
     private static void downloadFileFromURL(String urlString, File destination) throws Exception {
-        if (System.getenv("MVNW_USERNAME") != null && System.getenv("MVNW_PASSWORD") != null) {
-            String username = System.getenv("MVNW_USERNAME");
-            char[] password = System.getenv("MVNW_PASSWORD").toCharArray();
+        if (ExernalSystems.getenv("MVNW_USERNAME") != null && ExernalSystems.getenv("MVNW_PASSWORD") != null) {
+            String username = ExernalSystems.getenv("MVNW_USERNAME");
+            char[] password = ExernalSystems.getenv("MVNW_PASSWORD").toCharArray();
             Authenticator.setDefault(new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
