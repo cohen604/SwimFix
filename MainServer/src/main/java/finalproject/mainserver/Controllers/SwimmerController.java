@@ -1,4 +1,5 @@
 package finalproject.mainserver.Controllers;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -6,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SwimmerController {
 
     @GetMapping("/upload")
+    @CrossOrigin(origins = "*")
     public String uploadVideo() {
+        System.out.println("Received Upload");
         return "Uploaded Video!";
     }
 
