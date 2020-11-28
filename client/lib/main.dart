@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Services/connectionHandler.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -29,7 +29,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   ConnectionHandelr connectionHandelr;
   Future<String> name;
 
@@ -59,17 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             FutureBuilder<String>(
-              future: this.name,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text("result: ${snapshot.data}");
-                }
-                return Text("None");
-                }
-              ),
-            ],
-          ),
+                future: this.name,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text("result: ${snapshot.data}");
+                  }
+                  return Text("None");
+                }),
+          ],
         ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: foo,
         tooltip: 'Send',
