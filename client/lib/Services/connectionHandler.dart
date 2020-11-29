@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
 
 /// Class that responsible for communication with the server
 class ConnectionHandler {
@@ -59,16 +57,16 @@ class ConnectionHandler {
     return postFile(path, multipartFile);
   }
 
-  Future<bool> postWebFile(String path, Future<Uint8List> fileBytes, int length,
+  Future<bool> postWebFile(String path, Uint8List fileBytes, int length,
       String filePath) async {
-
-    http.MultipartFile multipartFile = http.MultipartFile(
-        'video',
-        fileBytes.asStream(),
-        length,
-        filename: filePath
-    );
-    return postFile(path, multipartFile);
+      List<Uint8List> list = [fileBytes];
+      http.MultipartFile multipartFile = http.MultipartFile(
+          'video',
+          new Stream.fromIterable(list),
+          length,
+          filename: filePath
+      );
+      return postFile(path, multipartFile);
   }
 
 
