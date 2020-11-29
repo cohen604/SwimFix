@@ -38,20 +38,21 @@ class ConnectionHandler {
     }
   }
 
-  Future<bool> postFile(String path, http.MultipartFile file) async {
-    String url = this.address + ':' + this.port + path;
-    var request = new http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(file);
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print(response);
+    Future<bool> postFile(String path, http.MultipartFile file) async {
+      String url = this.address + ':' + this.port + path;
+      var request = new http.MultipartRequest('POST', Uri.parse(url));
+      request.files.add(file);
+      http.Response response = await http.Response.fromStream(await request.send());
+      if (response.statusCode == 200) {
+        print(response.body);
+        return true;
+      } else {
+        throw Exception('Error code !!! :0');
+      }
       return true;
-    } else {
-      throw Exception('Error code !!! :0');
     }
-    return true;
-  }
 
+  //TODO delete this
   Future<bool> postMobileFile(String path, File file) async {
     http.MultipartFile multipartFile = new http.MultipartFile(
         'video',
@@ -69,8 +70,6 @@ class ConnectionHandler {
           fileBytes,
           filename: filePath
       );
-    print(multipartFile.filename);
-    print(multipartFile.length);
     return postFile(path, multipartFile);
   }
 

@@ -16,7 +16,7 @@ public class SwimmerController {
 
     @PostMapping("/upload")
     @CrossOrigin(origins = "*")
-    public ActionResult<FeedbackVideoDTO> uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
+    public String uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
         System.out.println("Received Upload");
         ConvertedVideoDTO convertedVideo = null;
         try {
@@ -27,7 +27,7 @@ public class SwimmerController {
         }
         ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideo(convertedVideo);
         System.out.println("Result generated, send result");
-        return actionResult;
+        return actionResult.toJson();
     }
 
     @GetMapping("/viewFeedback")

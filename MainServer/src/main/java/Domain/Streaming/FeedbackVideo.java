@@ -28,6 +28,6 @@ public class FeedbackVideo extends Video {
         List<Object> visualComments = null; //TODO
         byte[] outputVideo = videoHandler.generatedFeedBack(this.video, swimmingTags, errorList, visualComments);
         List<String> textualComments = new LinkedList<>(); //TODO
-        return new FeedbackVideoDTO(outputVideo, textualComments);
+        return new FeedbackVideoDTO(outputVideo, textualComments, ".mov");
     }
 }

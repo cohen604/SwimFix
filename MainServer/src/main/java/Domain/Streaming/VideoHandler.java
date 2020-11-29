@@ -16,13 +16,11 @@ import static org.opencv.highgui.HighGui.destroyAllWindows;
 import static org.opencv.videoio.Videoio.CAP_PROP_POS_MSEC;
 
 //TODO optimize this class design
+//TODO this class need be a synchronize methods ?
 public class VideoHandler {
 
     String path = "videoTmp.mov";
     String desPath = "videoTmp.avi";
-    VideoCapture capture;
-    VideoWriter writer;
-
 
     public VideoHandler() {
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -36,7 +34,7 @@ public class VideoHandler {
      * @param path - the path
      * @return if saved true
      */
-    public boolean saveVideo(byte[] video, String path) {
+    public synchronized boolean saveVideo(byte[] video, String path) {
         try {
             FileOutputStream out = new FileOutputStream(path);
             out.write(video);
@@ -54,7 +52,7 @@ public class VideoHandler {
      * @param path - the path for the video
      * @return if deleted true
      */
-    public boolean deleteVideo(String path) {
+    public synchronized boolean deleteVideo(String path) {
         //TODO
         return false;
     }
@@ -64,7 +62,7 @@ public class VideoHandler {
      * @param path - the path of the video
      * @return the data of the video
      */
-    public byte[] readVideo(String path) {
+    public synchronized byte[] readVideo(String path) {
         File file =  new File(path);
         if(file.exists()) {
             try {
@@ -76,7 +74,6 @@ public class VideoHandler {
             }
             catch (Exception e) {
                 System.out.println(e.getMessage());
-                return null;
             }
         }
         return null;
@@ -94,14 +91,15 @@ public class VideoHandler {
         if(saveVideo(video, this.path)) {
             // this.capture = new VideoCapture(0); capture the camera
             File file = new File(this.path);
-            this.capture = new VideoCapture(file.getAbsolutePath());
-            if(this.capture.isOpened()) {
+            VideoCapture capture = new VideoCapture(file.getAbsolutePath());
+            if(capture.isOpened()) {
                 Mat frame = new Mat();
-                while (this.capture.read(frame)) {
+                while (capture.read(frame)) {
                     output.add(frame);
                     frame = new Mat();
                 }
             }
+            capture.release();
             deleteVideo(this.path);
         }
         return output;
@@ -131,16 +129,19 @@ public class VideoHandler {
      * @postcondition videoWriter is working
      */
     private boolean saveVideo(String path, List<Mat> frames) {
+        boolean output = false;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
         File file = new File("feedback_"+this.path);
-        this.writer = new VideoWriter(file.getAbsolutePath(), -1, 29, size,true);
-        if(this.writer.isOpened()) {
+        VideoWriter writer = new VideoWriter(file.getAbsolutePath(), -1, 29, size,true);
+        if(writer.isOpened()) {
             for (Mat frame: frames) {
-                this.writer.write(frame);
+                writer.write(frame);
             }
-            return true;
+
+            output = true;
         }
-        return false;
+        writer.release();
+        return output;
     }
 
     /**
@@ -165,12 +166,6 @@ public class VideoHandler {
             if(output!=null) {
                 deleteVideo(this.path);
             }
-        }
-        if(this.capture!=null) {
-            this.capture.release();
-        }
-        if(this.writer!=null) {
-            this.writer.release();
         }
         return output;
     }

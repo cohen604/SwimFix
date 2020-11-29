@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:client/Screens/Components/MobileInput.dart';
 import 'package:client/Screens/Components/WebInput.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,43 +51,11 @@ class _UploadScreenState extends State<UploadScreen> {
           child: Center(
             child: Container(
               padding: const EdgeInsets.all(16.0),
+              child: LayoutBuilder()
               child: Column(
                 children: <Widget>[
                   WebInput(),
-                  SizedBox(height: 50),
-                  Text(
-                    "Click on Pick Video to select video",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      // kIsWeb? _computerVideo() :
-                      _pickVideoFromGallery();
-                    },
-                    child: Text("Pick Video From Gallery"),
-                  ),
-                  SizedBox(height: 50),
-                  Text(
-                    "Click on Pick Video to select video",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      _pickVideoFromCamera();
-                    },
-                    child: Text("Pick Video From Camera"),
-                  ),
-                  SizedBox(height: 50),
-                  Text(
-                    "Send the video to analyze",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      _pickVideoFromCamera();
-                    },
-                    child: Text("analyze video"),
-                  )
+                  MobileInput(),
                 ],
               ),
             ),
