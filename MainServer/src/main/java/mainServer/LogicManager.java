@@ -29,7 +29,6 @@ public class LogicManager {
         List<SwimmingError> errorList = null; //TODO
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorList);
         FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateDTO();
-        System.out.println("here 5");
         ActionResult<FeedbackVideoDTO> actionResult = new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
         return actionResult;
     }

@@ -42,8 +42,13 @@ class ConnectionHandler {
     String url = this.address + ':' + this.port + path;
     var request = new http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(file);
-    var res = await request.send();
-    print(res);
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print(response);
+      return true;
+    } else {
+      throw Exception('Error code !!! :0');
+    }
     return true;
   }
 
