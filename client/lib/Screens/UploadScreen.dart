@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:client/Screens/Components/WebInput.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,15 +39,6 @@ class _UploadScreenState extends State<UploadScreen> {
     });
   }
 
-  _webVideoPicker() {
-
-  }
-
-  _sendVideo() async {
-    ConnectionHandler connectionHandler = new ConnectionHandler("", "");
-    connectionHandler.postVideo('/upload',_video);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,18 +52,7 @@ class _UploadScreenState extends State<UploadScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 50),
-                  Text(
-                    "Web video uploader",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      // kIsWeb? _computerVideo() :
-                      _pickVideoFromGallery();
-                    },
-                    child: Text("Pick Video From Gallery"),
-                  ),
+                  WebInput(),
                   SizedBox(height: 50),
                   Text(
                     "Click on Pick Video to select video",
