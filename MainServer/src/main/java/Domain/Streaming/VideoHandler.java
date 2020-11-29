@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+//TODO optimize this class design
 public class VideoHandler {
 
     VideoCapture capture;

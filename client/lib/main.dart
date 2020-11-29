@@ -1,3 +1,4 @@
+import 'package:client/uploadVideo.dart';
 import 'package:flutter/material.dart';
 import 'Services/connectionHandler.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: UploadVideo(), //MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -29,18 +30,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ConnectionHandelr connectionHandelr;
+  ConnectionHandler connectionHandler;
   Future<String> name;
 
   @override
   void initState() {
     super.initState();
-    this.connectionHandelr = new ConnectionHandelr("", "");
+    this.connectionHandler = new ConnectionHandler("", "");
   }
 
   void foo() {
     setState(() {
-      name = this.connectionHandelr.getMessage("/upload");
+      name = this.connectionHandler.getMessage("/upload");
     });
   }
 
