@@ -16,10 +16,11 @@ public class SwimmerController {
 
     @PostMapping("/upload")
     @CrossOrigin(origins = "*")
-    public ActionResult<FeedbackVideoDTO> uploadVideo(@RequestParam (name="id") String id, @RequestBody MultipartFile data) {
+    public ActionResult<FeedbackVideoDTO> uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
         System.out.println("Received Upload");
         ConvertedVideoDTO convertedVideo = null;
         try {
+            System.out.println(data);
             convertedVideo = new ConvertedVideoDTO(data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();

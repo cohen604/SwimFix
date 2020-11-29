@@ -36,6 +36,8 @@ class _WebInputState extends State<WebInput> {
           this.fileBytes = bytes;
           this.fileLength = this.fileBytes.length;
           this.filePath = filePath;
+          print('File path: ' + filePath);
+          print('File size: ' + file.size.toString());
         });
       });
     });

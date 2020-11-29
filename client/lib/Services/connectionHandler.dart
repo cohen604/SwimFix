@@ -40,7 +40,7 @@ class ConnectionHandler {
 
   Future<bool> postFile(String path, http.MultipartFile file) async {
     String url = this.address + ':' + this.port + path;
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = new http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(file);
     var res = await request.send();
     print(res);
@@ -48,7 +48,7 @@ class ConnectionHandler {
   }
 
   Future<bool> postMobileFile(String path, File file) async {
-    http.MultipartFile multipartFile = http.MultipartFile(
+    http.MultipartFile multipartFile = new http.MultipartFile(
         'video',
         file.readAsBytes().asStream(),
         file.lengthSync(),
@@ -59,14 +59,14 @@ class ConnectionHandler {
 
   Future<bool> postWebFile(String path, Uint8List fileBytes, int length,
       String filePath) async {
-      List<Uint8List> list = [fileBytes];
-      http.MultipartFile multipartFile = http.MultipartFile(
-          'video',
-          new Stream.fromIterable(list),
-          length,
+    http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+          'file',
+          fileBytes,
           filename: filePath
       );
-      return postFile(path, multipartFile);
+    print(multipartFile.filename);
+    print(multipartFile.length);
+    return postFile(path, multipartFile);
   }
 
 
