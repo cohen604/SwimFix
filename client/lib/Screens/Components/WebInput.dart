@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
+import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,11 @@ class WebInput extends StatefulWidget {
 }
 
 class _WebInputState extends State<WebInput> {
+
   Uint8List fileBytes;
   int fileLength;
   String filePath;
+  Future<FeedbackVideo> feedbackVideo;
 
   void uploadFile() async {
     html.InputElement uploadInput = html.FileUploadInputElement();
@@ -44,9 +47,11 @@ class _WebInputState extends State<WebInput> {
     uploadInput.remove();
   }
 
-  void getFeedback() {
+  void getFeedback(BuildContext innerContext) async {
     ConnectionHandler connectionHandler = new ConnectionHandler("", "");
-    connectionHandler.postWebFile("/upload", this.fileBytes, this.fileLength, this.filePath);
+    this.setState(() {
+      feedbackVideo = connectionHandler.postVideo(this.fileBytes, this.fileLength, this.filePath);
+    });
   }
 
   @override
@@ -68,8 +73,20 @@ class _WebInputState extends State<WebInput> {
             style: TextStyle(fontSize: 18.0)
         ),
         RaisedButton(
-            onPressed: getFeedback,
+            onPressed: ()=>getFeedback(context),
             child:Text("Upload from your computer")
+        ),
+        SizedBox(height: 20,),
+        FutureBuilder<FeedbackVideo>(
+            future: this.feedbackVideo,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                FeedbackVideo fbv = snapshot.data;
+                return Text("Feedback type: ${fbv.type} size: ${fbv.bytes.length} "
+                    "number-comments: ${fbv.comments.length}");
+              }
+              return Text("No Feedback");
+            }
         ),
       ],
     );
