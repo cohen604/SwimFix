@@ -1,4 +1,5 @@
 package Domain.Streaming;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.videoio.VideoCapture;
@@ -15,6 +16,11 @@ public class VideoHandler {
 
     VideoCapture capture;
     VideoWriter writer;
+
+    public VideoHandler() {
+        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        nu.pattern.OpenCV.loadShared();
+    }
 
     /**
      * The function save a video to the given path. The path includes his name
