@@ -25,6 +25,7 @@ public class SwimmerController {
             e.printStackTrace();
         }
         ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideo(convertedVideo);
+        System.out.println("Result generated, send result");
         return actionResult;
     }
 

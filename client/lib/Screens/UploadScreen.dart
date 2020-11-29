@@ -1,35 +1,33 @@
 import 'dart:io';
-
-// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:client/Services/connectionHandler.dart';
 
-class UploadVideo extends StatefulWidget {
+import 'Screen.dart';
 
-  UploadVideo({Key key}) : super(key: key);
+class UploadScreen extends Screen {
+
+  UploadScreen({Key key}) : super(key: key);
 
   @override
-  _UploadVideoState createState() => _UploadVideoState();
+  _UploadScreenState createState() => _UploadScreenState();
 }
 
-class _UploadVideoState extends State<UploadVideo> {
+class _UploadScreenState extends State<UploadScreen> {
 
   File _video;            /// video from the gallery
   File _cameraVideo;      /// video from the camera
-
   File cv;
-
   ImagePicker picker = ImagePicker();
 
-  /// pick video from the gallery
+  /// The function pick video from the gallery
   _pickVideoFromGallery() async {
     PickedFile pickedFile = await picker.getVideo(source: ImageSource.gallery);
     setState(() {
-      _video = File(pickedFile.path);;
+      _video = File(pickedFile.path);
     });
   }
-
 
   /// film video with the camera
   _pickVideoFromCamera() async {
@@ -39,17 +37,15 @@ class _UploadVideoState extends State<UploadVideo> {
       _cameraVideo = File(pickedFile.path);
     });
   }
-  //
-  // _computerVideo() async {
-  //   FilePickerResult result = await FilePicker.platform.pickFiles();
-  //   if(result != null) {
-  //     setState(() {
-  //       cv = File(result.files.single.path);
-  //     });
-  //   } else {
-  //     // User canceled the picker
-  //   }
-  // }
+
+  _webVideoPicker() {
+
+  }
+
+  _sendVideo() async {
+    ConnectionHandler connectionHandler = new ConnectionHandler("", "");
+    connectionHandler.postVideo('/upload',_video);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,21 +62,33 @@ class _UploadVideoState extends State<UploadVideo> {
                 children: <Widget>[
                   SizedBox(height: 50),
                   Text(
-                    "Click on Pick Video to select video",
+                    "Web video uploader",
                     style: TextStyle(fontSize: 18.0),
                   ),
                   RaisedButton(
                     onPressed: () {
-                       // kIsWeb? _computerVideo() :
+                      // kIsWeb? _computerVideo() :
                       _pickVideoFromGallery();
                     },
                     child: Text("Pick Video From Gallery"),
                   ),
                   SizedBox(height: 50),
                   Text(
-                      "Click on Pick Video to select video",
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+                    "Click on Pick Video to select video",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      // kIsWeb? _computerVideo() :
+                      _pickVideoFromGallery();
+                    },
+                    child: Text("Pick Video From Gallery"),
+                  ),
+                  SizedBox(height: 50),
+                  Text(
+                    "Click on Pick Video to select video",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                   RaisedButton(
                     onPressed: () {
                       _pickVideoFromCamera();
