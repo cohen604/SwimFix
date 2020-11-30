@@ -10,8 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Base64;
 
 public class MLConnectionHandlerReal implements MLConnectionHandler{
 
@@ -27,10 +26,11 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
-        body.add("video", video);
+        String encodedString = Base64.getEncoder().encodeToString(video.getVideo());
+        body.add("video", encodedString);
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, requestEntity);
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
     }
 
     public String getURL(String prefix) {
