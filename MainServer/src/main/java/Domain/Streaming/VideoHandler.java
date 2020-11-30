@@ -17,6 +17,7 @@ import static org.opencv.videoio.Videoio.CAP_PROP_POS_MSEC;
 
 //TODO optimize this class design
 //TODO this class need be a synchronize methods ?
+//TODO if needed to be static Class ?
 public class VideoHandler {
 
     String path = "videoTmp.mov";
@@ -86,7 +87,7 @@ public class VideoHandler {
      * @precondition there is no video path saved as "./videoTmp" in the current folder
      * @postcondition videoCapture is working
      */
-    private List<Mat> getFrames(byte[] video) {
+    public List<Mat> getFrames(byte[] video) {
         List<Mat> output = new LinkedList<>();
         if(saveVideo(video, this.path)) {
             // this.capture = new VideoCapture(0); capture the camera
@@ -101,6 +102,21 @@ public class VideoHandler {
             }
             capture.release();
             deleteVideo(this.path);
+        }
+        return output;
+    }
+
+    /**
+     * The function return the List of frames as List<byte>
+     * @param frames - the original video
+     * @return the frames as List<byte[]>
+     */
+    public List<byte[]> getFramesBytes(List<Mat> frames) {
+        List<byte[]> output = new LinkedList<>();
+        for (Mat mat: frames) {
+            byte[] mat_bytes = new byte[(int) (mat.total() * mat.channels())];
+            mat.get(0, 0, mat_bytes);
+            output.add(mat_bytes);
         }
         return output;
     }
@@ -146,18 +162,17 @@ public class VideoHandler {
 
     /**
      * The function generate a feedback video
-     * @param video - the video data
+     * @param frames - the video data
      * @param dots - the tags of the swimmer
      * @param errors - the list of errors
      * @param visualComments - the list of visual comments
      * @return new byte video
      * @precondition all lists must be the save of the same video frames
      */
-    public byte[] generatedFeedBack(byte[] video, List<SwimmingTag> dots, List<SwimmingError> errors,
+    public byte[] generatedFeedBack(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                     List<Object> visualComments) {
         byte[] output = null;
         //TODO optimize this to an iterative function rather then looping functions
-        List<Mat> frames = getFrames(video);
         frames = drawSwimmer(frames, dots);
         frames = drawErrors(frames, errors);
         frames = drawVisualComment(frames, visualComments);

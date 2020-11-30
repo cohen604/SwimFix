@@ -3,6 +3,8 @@ package ExernalSystems;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 
+import java.util.List;
+
 public class MLConnectionHandlerProxy implements MLConnectionHandler{
     private MLConnectionHandler mlConnectionHandler = null;
 
@@ -11,9 +13,10 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     }
 
     @Override
-    public TaggedVideo tagVideo(Video video) {
-        if (mlConnectionHandler != null)
-            return mlConnectionHandler.tagVideo(video);
+    public TaggedVideo tagFrames(Video video) {
+        if (mlConnectionHandler != null) {
+            return mlConnectionHandler.tagFrames(video);
+        }
         return null;
     }
 }
