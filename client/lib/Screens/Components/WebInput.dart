@@ -5,6 +5,8 @@ import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
 
+import 'VideoPreview.dart';
+
 class WebInput extends StatefulWidget {
 
   WebInput({Key key}) : super(key: key);
@@ -81,9 +83,7 @@ class _WebInputState extends State<WebInput> {
             future: this.feedbackVideo,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                FeedbackVideo fbv = snapshot.data;
-                return Text("Feedback type: ${fbv.type} size: ${fbv.bytes.length} "
-                    "number-comments: ${fbv.comments.length}");
+                return VideoPreview(feedbackVideo:snapshot.data);
               }
               return Text("No Feedback");
             }

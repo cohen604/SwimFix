@@ -3,8 +3,8 @@ package Domain.Streaming;
 import DTO.ConvertedVideoDTO;
 
 public class Video {
-    byte[] video;
-    //TODO: change to correct data structure
+
+    protected byte[] video;
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.video = convertedVideoDTO.getBytes();
@@ -16,5 +16,9 @@ public class Video {
      */
     public Video(Video other) {
         this.video = other.video;
+    }
+
+    public byte[] getVideo() {
+        return this.video;
     }
 }
