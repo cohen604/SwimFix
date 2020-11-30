@@ -1,4 +1,5 @@
 package Domain.Streaming;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.videoio.VideoCapture;
@@ -7,13 +8,25 @@ import org.opencv.videoio.VideoWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.opencv.highgui.HighGui.destroyAllWindows;
+import static org.opencv.videoio.Videoio.CAP_PROP_POS_MSEC;
+
+//TODO optimize this class design
+//TODO this class need be a synchronize methods ?
 public class VideoHandler {
 
-    VideoCapture capture;
-    VideoWriter writer;
+    String path = "videoTmp.mov";
+    String desPath = "videoTmp.avi";
+
+    public VideoHandler() {
+        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        nu.pattern.OpenCV.loadShared();
+        nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
+    }
 
     /**
      * The function save a video to the given path. The path includes his name
@@ -21,7 +34,7 @@ public class VideoHandler {
      * @param path - the path
      * @return if saved true
      */
-    public boolean saveVideo(byte[] video, String path) {
+    public synchronized boolean saveVideo(byte[] video, String path) {
         try {
             FileOutputStream out = new FileOutputStream(path);
             out.write(video);
@@ -39,7 +52,7 @@ public class VideoHandler {
      * @param path - the path for the video
      * @return if deleted true
      */
-    public boolean deleteVideo(String path) {
+    public synchronized boolean deleteVideo(String path) {
         //TODO
         return false;
     }
@@ -49,7 +62,7 @@ public class VideoHandler {
      * @param path - the path of the video
      * @return the data of the video
      */
-    public byte[] readVideo(String path) {
+    public synchronized byte[] readVideo(String path) {
         File file =  new File(path);
         if(file.exists()) {
             try {
@@ -61,11 +74,9 @@ public class VideoHandler {
             }
             catch (Exception e) {
                 System.out.println(e.getMessage());
-                return null;
             }
         }
         return null;
-
     }
 
     /**
@@ -77,17 +88,19 @@ public class VideoHandler {
      */
     private List<Mat> getFrames(byte[] video) {
         List<Mat> output = new LinkedList<>();
-        String videoPath = "videoTmp";
-        if(saveVideo(video, videoPath)) {
-            this.capture = new VideoCapture(videoPath);
-            if(this.capture.isOpened()) {
+        if(saveVideo(video, this.path)) {
+            // this.capture = new VideoCapture(0); capture the camera
+            File file = new File(this.path);
+            VideoCapture capture = new VideoCapture(file.getAbsolutePath());
+            if(capture.isOpened()) {
                 Mat frame = new Mat();
-                while (this.capture.read(frame)) {
+                while (capture.read(frame)) {
                     output.add(frame);
                     frame = new Mat();
                 }
             }
-            deleteVideo(videoPath);
+            capture.release();
+            deleteVideo(this.path);
         }
         return output;
     }
@@ -116,16 +129,19 @@ public class VideoHandler {
      * @postcondition videoWriter is working
      */
     private boolean saveVideo(String path, List<Mat> frames) {
-        int fourcc = VideoWriter.fourcc('x', '2','6','4');
+        boolean output = false;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
-        this.writer = new VideoWriter(path, fourcc, 30, size,true);
-        if(this.writer.isOpened()) {
+        File file = new File("feedback_"+this.path);
+        VideoWriter writer = new VideoWriter(file.getAbsolutePath(), -1, 29, size,true);
+        if(writer.isOpened()) {
             for (Mat frame: frames) {
-                this.writer.write(frame);
+                writer.write(frame);
             }
-            return true;
+
+            output = true;
         }
-        return false;
+        writer.release();
+        return output;
     }
 
     /**
@@ -145,18 +161,11 @@ public class VideoHandler {
         frames = drawSwimmer(frames, dots);
         frames = drawErrors(frames, errors);
         frames = drawVisualComment(frames, visualComments);
-        String path = "videoTmp"; //TODO check if saved as mp4
-        if(!frames.isEmpty() && saveVideo(path, frames)) {
-            output = readVideo(path);
+        if(!frames.isEmpty() && saveVideo(this.path, frames)) {
+            output = readVideo(this.path);
             if(output!=null) {
-                deleteVideo(path);
+                deleteVideo(this.path);
             }
-        }
-        if(this.capture!=null) {
-            this.capture.release();
-        }
-        if(this.writer!=null) {
-            this.writer.release();
         }
         return output;
     }

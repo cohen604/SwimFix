@@ -22,6 +22,10 @@ environment:
 
 dependencies:
   http: ^0.12.2
+  image_picker: ^0.6.7+14
+#  file_picker: ^2.1.0
+  video_player: ^0.10.9
+  video_player_web: ^0.1.1
   flutter:
     sdk: flutter
 
@@ -33,6 +37,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

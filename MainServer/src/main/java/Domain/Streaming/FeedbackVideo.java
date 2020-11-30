@@ -24,10 +24,10 @@ public class FeedbackVideo extends Video {
 
     public FeedbackVideoDTO generateDTO() {
         VideoHandler videoHandler = new VideoHandler();
-        List<SwimmingTag> swimmingTags = this.taggedVideo.getTags();
+        List<SwimmingTag> swimmingTags = null;
         List<Object> visualComments = null; //TODO
         byte[] outputVideo = videoHandler.generatedFeedBack(this.video, swimmingTags, errorList, visualComments);
         List<String> textualComments = new LinkedList<>(); //TODO
-        return new FeedbackVideoDTO(outputVideo, textualComments);
+        return new FeedbackVideoDTO(outputVideo, textualComments, ".mov");
     }
 }

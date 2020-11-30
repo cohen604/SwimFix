@@ -10,6 +10,7 @@ import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
+import ExernalSystems.MLConnectionHandlerProxy;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ public class LogicManager {
     MLConnectionHandler mlConnectionHandler;
     //TODO: hold all the logged users
     List<User> userList;
+
+    public LogicManager() {
+        mlConnectionHandler = new MLConnectionHandlerProxy();
+    }
 
     public ActionResult<FeedbackVideoDTO> uploadVideo(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);

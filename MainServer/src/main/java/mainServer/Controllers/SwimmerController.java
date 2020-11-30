@@ -16,16 +16,18 @@ public class SwimmerController {
 
     @PostMapping("/upload")
     @CrossOrigin(origins = "*")
-    public ActionResult<FeedbackVideoDTO> uploadVideo(@RequestParam (name="id") String id, @RequestBody MultipartFile data) {
+    public String uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
         System.out.println("Received Upload");
         ConvertedVideoDTO convertedVideo = null;
         try {
+            System.out.println(data);
             convertedVideo = new ConvertedVideoDTO(data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
         ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideo(convertedVideo);
-        return actionResult;
+        System.out.println("Result generated, send result");
+        return actionResult.toJson();
     }
 
     @GetMapping("/viewFeedback")
