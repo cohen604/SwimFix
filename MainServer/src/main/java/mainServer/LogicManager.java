@@ -25,7 +25,7 @@ public class LogicManager {
 
     public ActionResult<FeedbackVideoDTO> uploadVideo(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
-        TaggedVideo taggedVideo = mlConnectionHandler.tagVideo(video);
+        TaggedVideo taggedVideo = mlConnectionHandler.tagFrames(video);
         List<SwimmingError> errorList = null; //TODO
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorList);
         FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateDTO();
