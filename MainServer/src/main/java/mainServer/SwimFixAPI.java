@@ -8,6 +8,6 @@ public class SwimFixAPI {
    private LogicManager logicManager = new LogicManager();
 
    public ActionResult<FeedbackVideoDTO> uploadVideo(ConvertedVideoDTO convertedVideoDTO) {
-      return logicManager.uploadVideo(convertedVideoDTO);
+      return logicManager.uploadVideoForDownload(convertedVideoDTO);
    }
 }

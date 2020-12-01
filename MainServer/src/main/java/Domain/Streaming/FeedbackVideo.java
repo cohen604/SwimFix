@@ -2,7 +2,7 @@ package Domain.Streaming;
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 
-import java.io.FileOutputStream;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,13 +27,19 @@ public class FeedbackVideo extends Video {
     public FeedbackVideoDTO generateFeedbackDTO() {
         List<SwimmingTag> swimmingTags = null;
         List<Object> visualComments = null; //TODO
-        byte[] outputVideo = this.videoHandler.generatedFeedBack(this.video, swimmingTags, errorList, visualComments);
+        byte[] outputVideo = this.videoHandler.getFeedBackVideo(this.video, swimmingTags, errorList, visualComments);
         List<String> textualComments = new LinkedList<>(); //TODO
         return new FeedbackVideoDTO(this.videoType, outputVideo, textualComments);
     }
 
     public FeedbackVideoStreamer generateFeedbackStreamer() {
-        return new FeedbackVideoStreamer(this.videoHandler.getDesPath());
+        List<SwimmingTag> swimmingTags = null;
+        List<Object> visualComments = null; //TODO
+        File file = this.videoHandler.getFeedBackVideoFile(this.video, swimmingTags, errorList, visualComments);
+        if(file == null) {
+            return null;
+        }
+        return new FeedbackVideoStreamer(file);
     }
 
 

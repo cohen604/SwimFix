@@ -28,9 +28,9 @@ public class VideoHandler {
      * @param type - the type of the video we working with, need to be in the format ".type"
      */
     public VideoHandler(String type) {
-        //TODO generate here a uniqe string path
-        this.path = "videoTmp"+type;
-        this.desPath = "feedbackVideoTmp"+type;
+        //TODO generate here a uniqe string path that recognize the user so we can load later
+        this.path = "clientVideos/videoTmp"+type;
+        this.desPath = "clientVideos/feedbackVideoTmp"+type;
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
@@ -148,11 +148,11 @@ public class VideoHandler {
      * The function save a frame list to a given path
      * @param path - path and the name of the file
      * @param frames - the list of frames
-     * @return if saved true
+     * @return the file saved
      * @postcondition videoWriter is working
      */
-    public boolean saveVideo(String path, List<Mat> frames) {
-        boolean output = false;
+    public File saveVideo(String path, List<Mat> frames) {
+        File output = null;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
         File file = new File(path);
         VideoWriter writer = new VideoWriter(file.getAbsolutePath(), -1, 29, size,true);
@@ -160,10 +160,28 @@ public class VideoHandler {
             for (Mat frame: frames) {
                 writer.write(frame);
             }
-            output = true;
+            output = file;
         }
         writer.release();
         return output;
+    }
+
+    /**
+     * The function generate a feedback video frames
+     * @param frames - the video data
+     * @param dots - the tags of the swimmer
+     * @param errors - the list of errors
+     * @param visualComments - the list of visual comments
+     * @return new byte video
+     * @precondition all lists must be the save of the same video frames
+     */
+    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+                                             List<Object> visualComments) {
+        //TODO optimize this to an iterative function rather then looping functions
+        frames = drawSwimmer(frames, dots);
+        frames = drawErrors(frames, errors);
+        frames = drawVisualComment(frames, visualComments);
+        return frames;
     }
 
     /**
@@ -175,19 +193,32 @@ public class VideoHandler {
      * @return new byte video
      * @precondition all lists must be the save of the same video frames
      */
-    public byte[] generatedFeedBack(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
-                                    List<Object> visualComments) {
+    public byte[] getFeedBackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+                                   List<Object> visualComments) {
         byte[] output = null;
         //TODO add a check if a generated video already there
-        //TODO optimize this to an iterative function rather then looping functions
-        frames = drawSwimmer(frames, dots);
-        frames = drawErrors(frames, errors);
-        frames = drawVisualComment(frames, visualComments);
-        if(!frames.isEmpty() && saveVideo(this.desPath, frames)) {
+        frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
+        if(!frames.isEmpty() && saveVideo(this.desPath, frames)!=null) {
             output = readVideo(this.desPath);
             //Note: after we generated a feedback there is no purpose for deleting it
         }
         return output;
+    }
+
+    /**
+     * The function get the feedback video file
+     * @param frames - the video data
+     * @param dots - the tags of the swimmer
+     * @param errors - the list of errors
+     * @param visualComments - the list of visual comments
+     * @return the feedback file
+     * @precondition all lists must be the save of the same video frames
+     */
+    public File getFeedBackVideoFile(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+                                     List<Object> visualComments) {
+        //TODO add a check if a generated video already there
+        frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
+        return saveVideo(this.desPath, frames);
     }
 
     /***
