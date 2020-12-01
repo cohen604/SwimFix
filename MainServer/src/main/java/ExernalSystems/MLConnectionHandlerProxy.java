@@ -15,7 +15,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public TaggedVideo tagFrames(Video video) {
         if (mlConnectionHandler != null) {
-            return mlConnectionHandler.tagFrames(video);
+            //mlConnectionHandler.tagFrames(video);
         }
         return null;
     }

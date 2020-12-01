@@ -19,15 +19,15 @@ class VideoPreview extends StatefulWidget {
 class _VideoPreviewState extends State<VideoPreview> {
 
   VideoPlayerController _controller;
-
+  Future<void> _futureController;
   @override
   void initState() {
-    super.initState();
     io.File file = this.widget.feedbackVideo.getFile();
-    _controller = VideoPlayerController.file(file)..initialize().then(
-            (_){ setState(() {});} );
+    _controller = VideoPlayerController.file(file);
+    _futureController = _controller.initialize();
     _controller.setLooping(true);
-
+    _controller.setVolume(35);
+    super.initState();
   }
 
   @override
@@ -37,13 +37,38 @@ class _VideoPreviewState extends State<VideoPreview> {
   }
 
   Widget buildVideoPlayer() {
-    return Column(
-      children: [
-        AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        ),
-    ]);
+    return
+        FutureBuilder(
+          future: _futureController,
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot){
+            if(snapshot.connectionState == ConnectionState.done) {
+              return
+              Column(
+                children: [
+                  FlatButton(
+                    child: Text("Click Me"),
+                    onPressed: () {
+                      setState(() {
+                        if(_controller.value.isPlaying) {
+                          print('stop');
+                          _controller.pause();
+                        }
+                        else {
+                          print('play');
+                          _controller.play();
+                        }
+                      });
+                    }),
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
+                ],
+              );
+            }
+            return CircularProgressIndicator();
+          },
+        );
   }
 
   @override
@@ -56,18 +81,6 @@ class _VideoPreviewState extends State<VideoPreview> {
         Text('Size ${this.widget.feedbackVideo.bytes.length}'),
         SizedBox(height: 20),
         buildVideoPlayer(),
-        FlatButton(
-          onPressed: () {
-            setState(() {
-              if(_controller.value.isPlaying) {
-                _controller.pause();
-              }
-              else {
-                _controller.play();
-              }
-            });
-          },
-        )
       ],
     );
   }

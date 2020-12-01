@@ -20,10 +20,17 @@ import static org.opencv.videoio.Videoio.CAP_PROP_POS_MSEC;
 //TODO if needed to be static Class ?
 public class VideoHandler {
 
-    String path = "videoTmp.mov";
-    String desPath = "videoTmp.avi";
+    private String path;
+    private String desPath;
 
-    public VideoHandler() {
+    /**
+     * constractor
+     * @param type - the type of the video we working with, need to be in the format ".type"
+     */
+    public VideoHandler(String type) {
+        //TODO generate here a uniqe string path
+        this.path = "videoTmp"+type;
+        this.desPath = "feedbackVideoTmp"+type;
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
@@ -144,16 +151,15 @@ public class VideoHandler {
      * @return if saved true
      * @postcondition videoWriter is working
      */
-    private boolean saveVideo(String path, List<Mat> frames) {
+    public boolean saveVideo(String path, List<Mat> frames) {
         boolean output = false;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
-        File file = new File("feedback_"+this.path);
+        File file = new File(path);
         VideoWriter writer = new VideoWriter(file.getAbsolutePath(), -1, 29, size,true);
         if(writer.isOpened()) {
             for (Mat frame: frames) {
                 writer.write(frame);
             }
-
             output = true;
         }
         writer.release();
@@ -172,16 +178,26 @@ public class VideoHandler {
     public byte[] generatedFeedBack(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                     List<Object> visualComments) {
         byte[] output = null;
+        //TODO add a check if a generated video already there
         //TODO optimize this to an iterative function rather then looping functions
         frames = drawSwimmer(frames, dots);
         frames = drawErrors(frames, errors);
         frames = drawVisualComment(frames, visualComments);
-        if(!frames.isEmpty() && saveVideo(this.path, frames)) {
-            output = readVideo(this.path);
-            if(output!=null) {
-                deleteVideo(this.path);
-            }
+        if(!frames.isEmpty() && saveVideo(this.desPath, frames)) {
+            output = readVideo(this.desPath);
+            //Note: after we generated a feedback there is no purpose for deleting it
         }
         return output;
+    }
+
+    /***
+     * Getters
+     */
+    public String getPath() {
+        return this.path;
+    }
+
+    public String getDesPath() {
+        return this.desPath;
     }
 }

@@ -28,7 +28,7 @@ public class LogicManager {
         TaggedVideo taggedVideo = mlConnectionHandler.tagFrames(video);
         List<SwimmingError> errorList = null; //TODO
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorList);
-        FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateDTO();
+        FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
         ActionResult<FeedbackVideoDTO> actionResult = new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
         return actionResult;
     }

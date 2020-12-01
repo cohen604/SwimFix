@@ -20,6 +20,7 @@ class _WebInputState extends State<WebInput> {
   Uint8List fileBytes;
   int fileLength;
   String filePath;
+  bool clickUpload = false;
   Future<FeedbackVideo> feedbackVideo;
 
   void uploadFile() async {
@@ -50,6 +51,9 @@ class _WebInputState extends State<WebInput> {
   }
 
   void getFeedback(BuildContext innerContext) async {
+    this.setState(() {
+      this.clickUpload = true;
+    });
     ConnectionHandler connectionHandler = new ConnectionHandler("", "");
     this.setState(() {
       feedbackVideo = connectionHandler.postVideo(this.fileBytes, this.fileLength, this.filePath);
@@ -85,7 +89,10 @@ class _WebInputState extends State<WebInput> {
               if (snapshot.hasData) {
                 return VideoPreview(feedbackVideo:snapshot.data);
               }
-              return Text("No Feedback");
+              if(this.clickUpload) {
+                return CircularProgressIndicator();
+              }
+              return Text("");
             }
         ),
       ],

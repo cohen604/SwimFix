@@ -20,8 +20,9 @@ public class SwimmerController {
         System.out.println("Received Upload");
         ConvertedVideoDTO convertedVideo = null;
         try {
-            System.out.println(data);
-            convertedVideo = new ConvertedVideoDTO(data.getBytes());
+            //TODO get here the type of the file as paramater
+            String type = ".mov";
+            convertedVideo = new ConvertedVideoDTO(type, data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
