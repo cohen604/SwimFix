@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Services/LogicManager.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
 
@@ -58,9 +59,8 @@ class _WebInputState extends State<WebInput> {
     });
     ConnectionHandler connectionHandler = new ConnectionHandler();
     this.setState(() {
-      // feedbackVideo = connectionHandler.postVideoForDownload(this.fileBytes,
-      //     this.fileLength, this.filePath);
-      feedbackVideoStreamer = connectionHandler.postVideoForStreaming(this.fileBytes,
+      LogicManager logicManager = LogicManager.getInstance();
+      feedbackVideoStreamer = logicManager.postVideoForStreaming(this.fileBytes,
           this.fileLength, this.filePath);
     });
   }

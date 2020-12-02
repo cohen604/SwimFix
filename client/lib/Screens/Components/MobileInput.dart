@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Services/LogicManager.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,8 +36,8 @@ class _MobileInputState extends State<MobileInput> {
 
   void getFeedBack(BuildContext innerContext) async {
     Uint8List bytes = _file.readAsBytesSync();
-    ConnectionHandler connectionHandler = new ConnectionHandler();
-    var feedbackVideo = await connectionHandler.postVideoForDownload(bytes, await _file.length(), _file.path);
+    LogicManager logicManger = LogicManager.getInstance();
+    var feedbackVideo = await logicManger.postVideoForDownload(bytes, await _file.length(), _file.path);
     this.setState(() {
       this.feedbackVideo=feedbackVideo;
     });

@@ -31,8 +31,6 @@ class _VideoPreviewState extends State<VideoPreview> {
   }
 
   void setController() async {
-    // not working with file
-    // _controller = VideoPlayerController.file(this.widget.feedbackVideo.getFile());
     // on web path
     ConnectionHandler connectionHandelr = new ConnectionHandler();
     String url = connectionHandelr.getStreamUrl() + this.widget.feedbackVideoStreamer.getPath();
@@ -53,45 +51,6 @@ class _VideoPreviewState extends State<VideoPreview> {
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  Widget buildVideoPlayer() {
-    return
-        FutureBuilder(
-          future: _futureController,
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot){
-            if(snapshot.connectionState == ConnectionState.done) {
-              return
-              Column(
-                children: [
-                  FlatButton(
-                    child: Text("Play / Stop"),
-                    onPressed: () {
-                      setState(() {
-                        if(_controller.value.isPlaying) {
-                          print('stop');
-                          _controller.pause();
-                        }
-                        else {
-                          print('play');
-                          _controller.play();
-                        }
-                      });
-                    }),
-                  FittedBox(
-                    fit:BoxFit.cover,
-                    child: SizedBox(
-                      width: _controller.value.size?.width / 2 ?? 0,
-                      height: _controller.value.size?.height / 2 ?? 0,
-                      child: VideoPlayer(_controller),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return CircularProgressIndicator();
-          },
-        );
   }
 
   // Widget buildChecw(BuildContext context) {

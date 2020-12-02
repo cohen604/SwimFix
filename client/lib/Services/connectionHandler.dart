@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 /// Class that responsible for communication with the server
-//TODO add this class to locigmannger for using 1 instance
 class ConnectionHandler {
 
   String address;   /// the address of the server
@@ -57,45 +56,6 @@ class ConnectionHandler {
     }
     return null;
   }
-
-  Future<FeedbackVideo> postVideoForDownload(Uint8List fileBytes, int length,
-      String filePath) async {
-    String path = "/uploadForDownload";
-    http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
-          'file',
-          fileBytes,
-          filename: filePath
-      );
-    Future<String> result = postMultiPartFile(path, multipartFile);
-    FeedbackVideo output;
-    await result.then((jsonString) {
-      Map responseMap = json.decode(jsonString);
-      ServerResponse response = ServerResponse.fromJson(responseMap);
-      Map map = response.value as Map;
-      output = FeedbackVideo.factory(map);
-    });
-    return output;
-  }
-
-  Future<FeedbackVideoStreamer> postVideoForStreaming(Uint8List fileBytes, int length,
-      String filePath) async {
-    String path = "/uploadForStream";
-    http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
-        'file',
-        fileBytes,
-        filename: filePath
-    );
-    Future<String> result = postMultiPartFile(path, multipartFile);
-    FeedbackVideoStreamer output;
-    await result.then((jsonString) {
-      Map responseMap = json.decode(jsonString);
-      ServerResponse response = ServerResponse.fromJson(responseMap);
-      Map map = response.value as Map;
-      output = FeedbackVideoStreamer.factory(map);
-    });
-    return output;
-  }
-
 
   String getUrl() {
     return this.address + ':' + this.port ;
