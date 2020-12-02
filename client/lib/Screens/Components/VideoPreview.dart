@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'dart:html';
+import 'package:chewie/chewie.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/connectionHandler.dart';
@@ -22,7 +23,7 @@ class _VideoPreviewState extends State<VideoPreview> {
 
   VideoPlayerController _controller;
   Future<void> _futureController;
-  // ChewieController _chewieController;
+  ChewieController _chewieController;
 
   @override
   void initState() {
@@ -34,16 +35,17 @@ class _VideoPreviewState extends State<VideoPreview> {
     // on web path
     ConnectionHandler connectionHandelr = new ConnectionHandler();
     String url = connectionHandelr.getStreamUrl() + this.widget.feedbackVideoStreamer.getPath();
-    // String url = 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4';
-    print(url);
+    // print(url);
     _controller = VideoPlayerController.network(url);
     await _controller.initialize();
     _controller.play();
-    // _chewieController = ChewieController(
-    //   videoPlayerController: _controller,
-    //   autoPlay: true,
-    //   looping: true,
-    // );
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      autoPlay: true,
+      looping: true,
+      //note: this muse be false cause chewiew having problem in full screen
+      allowFullScreen: false,
+    );
     setState(() {});
   }
 
@@ -53,16 +55,24 @@ class _VideoPreviewState extends State<VideoPreview> {
     super.dispose();
   }
 
-  // Widget buildChecw(BuildContext context) {
-  //   if(_chewieController != null && _chewieController.videoPlayerController.value.initialized)
-  //     return Chewie(
-  //       controller: _chewieController,
-  //     );
-  //   return CircularProgressIndicator();
-  // }
+  Widget buildChecw(BuildContext context) {
+    if(_chewieController != null && _chewieController.videoPlayerController.value.initialized)
+      return FittedBox(
+        fit:BoxFit.cover,
+        child: SizedBox(
+          width: _controller.value.size?.width ?? 0,
+          height: _controller.value.size?.height ?? 0,
+          child: Container(
+            child:Chewie(
+              controller: _chewieController,
+            ),
+          ),
+        ),
+      );
+    return CircularProgressIndicator();
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildVideoPlayer(BuildContext context) {
     if(_controller != null && _controller.value.initialized)
       return FittedBox(
           fit:BoxFit.cover,
@@ -74,6 +84,11 @@ class _VideoPreviewState extends State<VideoPreview> {
           )
       );
     return CircularProgressIndicator();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildChecw(context);
   }
   
 }
