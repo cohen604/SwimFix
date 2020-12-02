@@ -7,6 +7,7 @@ import 'package:client/Services/LogicManager.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
 
+import 'TitleButton.dart';
 import 'VideoPreview.dart';
 
 class WebInput extends StatefulWidget {
@@ -56,48 +57,87 @@ class _WebInputState extends State<WebInput> {
   void getFeedback(BuildContext innerContext) async {
     this.setState(() {
       this.clickUpload = true;
-    });
-    ConnectionHandler connectionHandler = new ConnectionHandler();
-    this.setState(() {
       LogicManager logicManager = LogicManager.getInstance();
       feedbackVideoStreamer = logicManager.postVideoForStreaming(this.fileBytes,
           this.fileLength, this.filePath);
     });
   }
 
+
+  Widget buildSelectedFile(BuildContext context) {
+    if(this.filePath == null) {
+      return Text("");
+    }
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(width: 1.0, color: Colors.black),
+          left: BorderSide(width: 1.0, color: Colors.black),
+          right: BorderSide(width: 1.0, color: Colors.black),
+          bottom: BorderSide(width: 1.0, color: Colors.black),
+        ),
+        color: Color.fromRGBO(105, 173, 251, 1),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10,),
+              Text("File: " + this.filePath,
+                style: TextStyle(fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 10,),
+            ],
+          ),
+        ),
+      );
+  }
+
+  Widget buildVideoPreview(BuildContext context) {
+    return FutureBuilder<FeedbackVideoStreamer>(
+        future: this.feedbackVideoStreamer,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return VideoPreview(feedbackVideoStreamer:snapshot.data);
+          }
+          if(this.clickUpload) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Text("");
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        FutureBuilder<FeedbackVideoStreamer>(
-            future: this.feedbackVideoStreamer,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return VideoPreview(feedbackVideoStreamer:snapshot.data);
-              }
-              if(this.clickUpload) {
-                return CircularProgressIndicator();
-              }
-              return Text("");
-            }
-        ),
         SizedBox(height: 50,),
-        Text(
-            "Click on Pick Video to select video",
-            style: TextStyle(fontSize: 18.0)
+        Column(
+          children: [
+            TitleButton(
+              title:"Pick Video from your computer",
+              buttonText: "Upload",
+              onPress: uploadFile
+            ),
+            SizedBox(height: 10,),
+            buildSelectedFile(context),
+            SizedBox(height: 10,),
+            TitleButton(
+                title:"Submit video to SwimFix for feedback",
+                buttonText: "Submit",
+                onPress: ()=>getFeedback(context)
+            ),
+          ],
         ),
-        RaisedButton(
-          onPressed: uploadFile,
-          child:Text("Upload from your computer")
-        ),
-        SizedBox(height: 50,),
-        Text(
-            "Get Feedback",
-            style: TextStyle(fontSize: 18.0)
-        ),
-        RaisedButton(
-            onPressed: ()=>getFeedback(context),
-            child:Text("Upload from your computer")
+        SizedBox(height: 20,),
+        Expanded(
+          child:buildVideoPreview(context),
         ),
       ],
     );

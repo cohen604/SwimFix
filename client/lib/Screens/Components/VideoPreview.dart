@@ -83,7 +83,9 @@ class _VideoPreviewState extends State<VideoPreview> {
                 child:VideoPlayer( _controller))
           )
       );
-    return CircularProgressIndicator();
+    return Center(
+      child:CircularProgressIndicator()
+    );
   }
 
   @override
