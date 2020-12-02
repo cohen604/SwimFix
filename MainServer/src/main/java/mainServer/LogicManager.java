@@ -9,6 +9,10 @@ import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.util.List;
 
 public class LogicManager {
@@ -58,5 +62,26 @@ public class LogicManager {
             //TODO return here action result error!!
         }
         return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+    }
+
+    /**
+     * The function handle a streaming file request
+     * @param path the path tp the file
+     * @return the bytes for the file
+     */
+    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
+        File file = new File(path);
+        if(!file.exists()) {
+            //TODO return error
+        }
+        try {
+            byte[] data = Files.readAllBytes(file.toPath());
+            FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath() ,data);
+            return new ActionResult<>(Response.SUCCESS, output);
+        } catch (Exception e ){
+            //TODO return here error
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 }

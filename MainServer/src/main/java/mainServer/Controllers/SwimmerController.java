@@ -3,8 +3,15 @@ package mainServer.Controllers;
 import DTO.ActionResult;
 import DTO.ConvertedVideoDTO;
 import DTO.FeedbackVideoDTO;
+import DTO.FeedbackVideoStreamer;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -14,26 +21,52 @@ public class SwimmerController {
 
     private SwimFixAPI swimFixAPI = SingleServiceAPI.getInstance();
 
-    @PostMapping("/upload")
+    @PostMapping("/uploadForDownload")
     @CrossOrigin(origins = "*")
     public String uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
-        System.out.println("Received Upload");
+        System.out.println("Received Video for Download feedback");
         ConvertedVideoDTO convertedVideo = null;
         try {
-            //TODO get here the type of the file as paramater
+            //TODO get here the type of the file as parameter
             String type = ".mov";
             convertedVideo = new ConvertedVideoDTO(type, data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
         ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideo(convertedVideo);
-        System.out.println("Result generated, send result");
+        System.out.println("Feedback generated, send feedback");
         return actionResult.toJson();
     }
 
-    @GetMapping("/viewFeedback")
-    public String viewFeedBack() {
-        return "View Feedback Video!";
+    @PostMapping("/uploadForStream")
+    @CrossOrigin(origins = "*")
+    public String viewFeedBack(@RequestPart(name = "file", required = false) MultipartFile data) {
+        System.out.println("Received Video for Streaming path");
+        ConvertedVideoDTO convertedVideo = null;
+        try {
+            //TODO get here the type of the file as parameter
+            convertedVideo = new ConvertedVideoDTO(".mov", data.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.uploadVideoForStreamer(convertedVideo);
+        System.out.println("Streaming link generated, send link");
+        return actionResult.toJson();
+    }
+
+    @GetMapping("/stream/{folder}/{fileName}")
+    public ResponseEntity streamFile(@PathVariable String folder, @PathVariable String fileName) {
+        System.out.println("Received file request for streaming");
+        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.streamFile(folder+"/"+fileName);
+        //TODO check here if the action result is ok
+        FeedbackVideoDTO videoDTO = actionResult.getValue();
+        System.out.println(videoDTO.getBytes().length);
+        System.out.println("File opened, send file");
+        //TODO
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Accept-Ranges","bytes")
+                .contentType(MediaTypeFactory.getMediaType(videoDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(videoDTO.getBytes());
     }
 
 }

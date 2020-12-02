@@ -17,4 +17,8 @@ public class ActionResult<T> {
         return gson.toJson(this);
     }
 
+    public T getValue() {
+        return this.value;
+    }
+
 }

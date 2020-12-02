@@ -10,6 +10,10 @@ public class FeedbackVideoStreamer {
     private String path;
 
     public FeedbackVideoStreamer(File file) {
-        this.path = file.getAbsolutePath();
+        this.path = file.getPath();
+    }
+
+    public String getPath() {
+        return this.path;
     }
 }

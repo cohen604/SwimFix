@@ -1,4 +1,5 @@
 package Domain.Streaming;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -22,7 +23,7 @@ public class VideoHandler {
 
     private String path;
     private String desPath;
-
+    private String outputType;
     /**
      * constractor
      * @param type - the type of the video we working with, need to be in the format ".type"
@@ -30,7 +31,8 @@ public class VideoHandler {
     public VideoHandler(String type) {
         //TODO generate here a uniqe string path that recognize the user so we can load later
         this.path = "clientVideos/videoTmp"+type;
-        this.desPath = "clientVideos/feedbackVideoTmp"+type;
+        this.outputType = ".mp4";
+        this.desPath = "clientVideos/feedbackVideoTmp"+this.outputType;
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
@@ -230,5 +232,9 @@ public class VideoHandler {
 
     public String getDesPath() {
         return this.desPath;
+    }
+
+    public String getOutputType() {
+        return this.outputType;
     }
 }

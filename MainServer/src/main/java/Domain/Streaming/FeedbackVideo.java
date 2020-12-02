@@ -29,7 +29,9 @@ public class FeedbackVideo extends Video {
         List<Object> visualComments = null; //TODO
         byte[] outputVideo = this.videoHandler.getFeedBackVideo(this.video, swimmingTags, errorList, visualComments);
         List<String> textualComments = new LinkedList<>(); //TODO
-        return new FeedbackVideoDTO(this.videoType, outputVideo, textualComments);
+        String path = this.videoHandler.getDesPath();
+        String type = this.videoHandler.getOutputType();
+        return new FeedbackVideoDTO( path, type, outputVideo, textualComments);
     }
 
     public FeedbackVideoStreamer generateFeedbackStreamer() {

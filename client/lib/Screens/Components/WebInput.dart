@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
+import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _WebInputState extends State<WebInput> {
   String filePath;
   bool clickUpload = false;
   Future<FeedbackVideo> feedbackVideo;
+  Future<FeedbackVideoStreamer> feedbackVideoStreamer;
 
   void uploadFile() async {
     html.InputElement uploadInput = html.FileUploadInputElement();
@@ -54,9 +56,12 @@ class _WebInputState extends State<WebInput> {
     this.setState(() {
       this.clickUpload = true;
     });
-    ConnectionHandler connectionHandler = new ConnectionHandler("", "");
+    ConnectionHandler connectionHandler = new ConnectionHandler();
     this.setState(() {
-      feedbackVideo = connectionHandler.postVideo(this.fileBytes, this.fileLength, this.filePath);
+      // feedbackVideo = connectionHandler.postVideoForDownload(this.fileBytes,
+      //     this.fileLength, this.filePath);
+      feedbackVideoStreamer = connectionHandler.postVideoForStreaming(this.fileBytes,
+          this.fileLength, this.filePath);
     });
   }
 
@@ -64,6 +69,18 @@ class _WebInputState extends State<WebInput> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        FutureBuilder<FeedbackVideoStreamer>(
+            future: this.feedbackVideoStreamer,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return VideoPreview(feedbackVideoStreamer:snapshot.data);
+              }
+              if(this.clickUpload) {
+                return CircularProgressIndicator();
+              }
+              return Text("");
+            }
+        ),
         SizedBox(height: 50,),
         Text(
             "Click on Pick Video to select video",
@@ -81,19 +98,6 @@ class _WebInputState extends State<WebInput> {
         RaisedButton(
             onPressed: ()=>getFeedback(context),
             child:Text("Upload from your computer")
-        ),
-        SizedBox(height: 20,),
-        FutureBuilder<FeedbackVideo>(
-            future: this.feedbackVideo,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return VideoPreview(feedbackVideo:snapshot.data);
-              }
-              if(this.clickUpload) {
-                return CircularProgressIndicator();
-              }
-              return Text("");
-            }
         ),
       ],
     );
