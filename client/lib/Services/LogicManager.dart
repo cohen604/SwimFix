@@ -47,7 +47,7 @@ class LogicManager {
     http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
         'file',
         fileBytes,
-        filename: filePath
+        filename: filePath,
     );
     Future<String> result = this.connectionHandler.postMultiPartFile(path, multipartFile);
     FeedbackVideoStreamer output;

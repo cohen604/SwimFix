@@ -27,9 +27,7 @@ public class SwimmerController {
         System.out.println("Received Video for Download feedback");
         ConvertedVideoDTO convertedVideo = null;
         try {
-            //TODO get here the type of the file as parameter
-            String type = ".mov";
-            convertedVideo = new ConvertedVideoDTO(type, data.getBytes());
+            convertedVideo = new ConvertedVideoDTO(data.getOriginalFilename(), data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,8 +43,7 @@ public class SwimmerController {
         System.out.println("Received Video for Streaming path");
         ConvertedVideoDTO convertedVideo = null;
         try {
-            //TODO get here the type of the file as parameter
-            convertedVideo = new ConvertedVideoDTO(".mov", data.getBytes());
+            convertedVideo = new ConvertedVideoDTO(data.getOriginalFilename(), data.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,7 +60,6 @@ public class SwimmerController {
         FeedbackVideoDTO videoDTO = actionResult.getValue();
         System.out.println(videoDTO.getBytes().length);
         System.out.println("File opened, send file");
-        //TODO
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Accept-Ranges","bytes")
                 .contentType(MediaTypeFactory.getMediaType(videoDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))

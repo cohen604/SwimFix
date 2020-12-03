@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO optimize this class design
 //TODO this class need be a synchronize methods ?
 public class VideoHandler {
 
@@ -94,7 +93,8 @@ public class VideoHandler {
      * The function return a list of frames by a given video
      * @param video - the data
      * @return the list of frames
-     * @precondition there is no video path saved as "./videoTmp" in the current folder
+     * @precondition there is no video path saved as "./videoTmp" in the current folder,
+     *               video frames size larger then (150 * 50)
      * @postcondition videoCapture is working
      */
     public List<Mat> getFrames(byte[] video) {

@@ -1,14 +1,18 @@
 package DTO;
 
-import java.io.File;
-
 public class ConvertedVideoDTO {
 
-    private String videoType; //this is the video type must be in the format ".type"
+    //this is the video type must be in the format ".type"
+    private String videoType;
     private byte[] video;
 
-    public ConvertedVideoDTO(String videoType, byte[] video) {
-        this.videoType = videoType;
+    public ConvertedVideoDTO(String videoName, byte[] video) {
+        if(videoName != null) {
+            this.videoType = videoName.substring(videoName.lastIndexOf("."));
+        }
+        else {
+            this.videoType = ".mp4";
+        }
         this.video = video;
     }
 
