@@ -2,16 +2,13 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.FeedbackVideo;
-import Domain.Streaming.SwimmingError;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -31,7 +28,8 @@ public class LogicManager {
      */
     private FeedbackVideo getFeedbackVideo(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
-        TaggedVideo taggedVideo = mlConnectionHandler.tagFrames(video);
+        TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
+        //TODO here need to be call for generate errors list
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, null);
         return feedbackVideo;
     }
@@ -54,6 +52,7 @@ public class LogicManager {
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
      * @return the streaming path for the feedback video
+     * @precondition the feedback video we are generating doesn't exits!
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
         FeedbackVideo feedbackVideo = getFeedbackVideo(convertedVideoDTO);
@@ -70,9 +69,12 @@ public class LogicManager {
      * @return the bytes for the file
      */
     public ActionResult<FeedbackVideoDTO> streamFile(String path) {
+        //TODO need to refactor this in the future for a class responsible of our resources
+        //TODO need here to be access check
         File file = new File(path);
         if(!file.exists()) {
             //TODO return error
+            //TODO maybe always generate a video if it a error video then return error video ?
         }
         try {
             byte[] data = Files.readAllBytes(file.toPath());

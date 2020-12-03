@@ -1,5 +1,4 @@
 package Domain.Streaming;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
@@ -8,25 +7,19 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.opencv.highgui.HighGui.destroyAllWindows;
-import static org.opencv.videoio.Videoio.CAP_PROP_POS_MSEC;
-
 //TODO optimize this class design
 //TODO this class need be a synchronize methods ?
-//TODO if needed to be static Class ?
 public class VideoHandler {
 
     private String path;
     private String desPath;
-    private String outputType;
+    private String desType;
     /**
      * constractor
      * @param type - the type of the video we working with, need to be in the format ".type"
@@ -34,18 +27,19 @@ public class VideoHandler {
     public VideoHandler(String type) {
         //TODO generate here a uniqe string path that recognize the user so we can load later
         this.path = "clientVideos/videoTmp"+type;
-        this.outputType = ".mp4";
-        this.desPath = "clientVideos/feedbackVideoTmp"+this.outputType;
+        this.desType = ".mp4";
+        this.desPath = "clientVideos/feedbackVideoTmp"+this.desType;
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
     }
 
     /**
-     * The function save a video to the given path. The path includes his name
+     * The function save a byte list to the given path. The path includes his name
      * @param video - the data
      * @param path - the path
      * @return if saved true
+     * @precondition there is no file in the given path - if there is it will override it
      */
     public synchronized boolean saveVideo(byte[] video, String path) {
         try {
@@ -64,9 +58,13 @@ public class VideoHandler {
      * The function delete a video from a given path
      * @param path - the path for the video
      * @return if deleted true
+     * @postcondition the file is deleted
      */
     public synchronized boolean deleteVideo(String path) {
-        //TODO
+        File file = new File(path);
+        if(file.exists()) {
+            return file.delete();
+        }
         return false;
     }
 
@@ -113,7 +111,8 @@ public class VideoHandler {
                 }
             }
             capture.release();
-            deleteVideo(this.path);
+            //TODO need to talk about this, maybe we need the original frames
+            //deleteVideo(this.path);
         }
         return output;
     }
@@ -133,22 +132,45 @@ public class VideoHandler {
         return output;
     }
 
+    /**
+     * The function draw swimming tag into the frame
+     * @param frame the current frame
+     * @param swimmingTag the image tag to print
+     * @return the new frame
+     */
     private Mat drawSwimmer(Mat frame, SwimmingTag swimmingTag) {
         //TODO
         //Imgproc.rectangle(frame,obj.getLeftBottom(),obj.getRightTop(),new Scalar(255,0,0),1);
         return frame;
     }
 
+    /**
+     * The function draw error on the frame
+     * @param frame the current frame
+     * @param error the error to draw
+     * @return the new frame
+     */
     private Mat drawErrors(Mat frame, SwimmingError error) {
         //TODO
         return frame;
     }
 
+    /**
+     * The function draw a visual comment on the frame
+     * @param frame the current frame
+     * @param visualComment the visual comment
+     * @return the new frame
+     */
     private Mat drawVisualComment(Mat frame, Object visualComment) {
         //TODO
         return frame;
     }
 
+    /**
+     * The function draw the logo on the frame
+     * @param frame the current frame
+     * @return the new frame with the logo
+     */
     private Mat drawLogo(Mat frame) {
         String logo = "SwimFix";
         double x = frame.width() - 130;
@@ -194,8 +216,6 @@ public class VideoHandler {
      */
     private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                              List<Object> visualComments) {
-        //TODO optimize this to an iterative function rather then looping functions
-
         for(int i=0; i<frames.size(); i++) {
             Mat frame = frames.get(i);
             if(dots!=null && !dots.isEmpty()) {
@@ -212,31 +232,9 @@ public class VideoHandler {
                 frame = drawVisualComment(frame, visualComment);
             }
             drawLogo(frame);
-            //TODO check if need maybe all the function do on pointer then no need to set it back
             frames.set(i, frame);
         }
         return frames;
-    }
-
-    /**
-     * The function generate a feedback video
-     * @param frames - the video data
-     * @param dots - the tags of the swimmer
-     * @param errors - the list of errors
-     * @param visualComments - the list of visual comments
-     * @return new byte video
-     * @precondition all lists must be the save of the same video frames
-     */
-    public byte[] getFeedBackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
-                                   List<Object> visualComments) {
-        byte[] output = null;
-        //TODO add a check if a generated video already there
-        frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
-        if(!frames.isEmpty() && saveVideo(this.desPath, frames)!=null) {
-            output = readVideo(this.desPath);
-            //Note: after we generated a feedback there is no purpose for deleting it
-        }
-        return output;
     }
 
     /**
@@ -247,10 +245,10 @@ public class VideoHandler {
      * @param visualComments - the list of visual comments
      * @return the feedback file
      * @precondition all lists must be the save of the same video frames
+     * @postcondition save the newest feedback generated in the des path
      */
     public File getFeedBackVideoFile(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {
-        //TODO add a check if a generated video already there
         frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
         return saveVideo(this.desPath, frames);
     }
@@ -266,7 +264,7 @@ public class VideoHandler {
         return this.desPath;
     }
 
-    public String getOutputType() {
-        return this.outputType;
+    public String getDesType() {
+        return this.desType;
     }
 }

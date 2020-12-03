@@ -8,6 +8,7 @@ import java.io.File;
 public class FeedbackVideoStreamer {
 
     private String path;
+    //TODO need to add here the List of comments because we cant send them in with the streaming video
 
     public FeedbackVideoStreamer(File file) {
         this.path = file.getPath();

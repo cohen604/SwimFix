@@ -55,7 +55,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
     }
 
     @Override
-    public TaggedVideo tagFrames(Video video) {
+    public TaggedVideo getSkeletons(Video video) {
         List<byte[]> frames = video.getVideo();
         List<String> frames_string = new LinkedList<>();
         for (byte[] frame: frames) {

@@ -7,11 +7,13 @@ import java.util.List;
 
 public class Video {
 
-    protected String videoType; //this is the video type must be in the format ".type"
+    //this is the video type must be in the format ".type"
+    private String videoType;
+    //this is the original frames of the video
     protected List<Mat> video;
-    protected int height;
-    protected int width;
-    protected VideoHandler videoHandler;
+    private int height;
+    private int width;
+    VideoHandler videoHandler;
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();

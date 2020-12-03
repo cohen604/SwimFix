@@ -7,6 +7,6 @@ import org.opencv.core.Mat;
 import java.util.List;
 
 public interface MLConnectionHandler {
-    public TaggedVideo tagFrames(Video video);
+    public TaggedVideo getSkeletons(Video video);
 
 }

@@ -3,45 +3,79 @@ import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
 public class FeedbackVideo extends Video {
 
-    VisualComment visualComment;
-    TextualComment textualComment;
-    List<SwimmingError> errorList;
-    TaggedVideo taggedVideo;
+    private VisualComment visualComment;
+    private TextualComment textualComment;
+    private List<SwimmingError> errorList;
+    private TaggedVideo taggedVideo;
+    // the file generated in the video handler for the for the feedback
+    private File feedbackFile;
+    // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
+    private boolean feedbackUpdated;
 
     public FeedbackVideo(Video video, TaggedVideo taggedVideo) {
         super(video);
         this.taggedVideo = taggedVideo;
+        this.feedbackFile = null;
+        this.feedbackUpdated = false;
     }
 
     public FeedbackVideo(Video video, TaggedVideo taggedVideo, List<SwimmingError> errorList) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorList = errorList;
+        this.feedbackFile = null;
+        this.feedbackUpdated = false;
+    }
+
+    /**
+     * The function update the feedback file
+     * @precondition feedback file is Null or feedback is updated, have the original video frames
+     * @postcondition generated new feedback file
+     */
+    private void updateFeedbackFile() {
+        List<SwimmingTag> swimmingTags = null;
+        List<Object> visualComments = null; //TODO
+        if(this.feedbackFile == null || this.feedbackUpdated) {
+            File file = this.videoHandler.getFeedBackVideoFile(this.video, swimmingTags, errorList, visualComments);
+            if(file != null) {
+                this.feedbackFile = file;
+                this.feedbackUpdated = false;
+            }
+        }
     }
 
     public FeedbackVideoDTO generateFeedbackDTO() {
-        List<SwimmingTag> swimmingTags = null;
-        List<Object> visualComments = null; //TODO
-        byte[] outputVideo = this.videoHandler.getFeedBackVideo(this.video, swimmingTags, errorList, visualComments);
-        List<String> textualComments = new LinkedList<>(); //TODO
-        String path = this.videoHandler.getDesPath();
-        String type = this.videoHandler.getOutputType();
-        return new FeedbackVideoDTO( path, type, outputVideo, textualComments);
-    }
-
-    public FeedbackVideoStreamer generateFeedbackStreamer() {
-        List<SwimmingTag> swimmingTags = null;
-        List<Object> visualComments = null; //TODO
-        File file = this.videoHandler.getFeedBackVideoFile(this.video, swimmingTags, errorList, visualComments);
-        if(file == null) {
+        updateFeedbackFile();
+        if(this.feedbackFile == null) {
             return null;
         }
-        return new FeedbackVideoStreamer(file);
+        byte[] feedbackBytes = this.videoHandler.readVideo(this.feedbackFile.getPath());
+        if(feedbackBytes == null) {
+            return null;
+        }
+        List<String> textualComments = new LinkedList<>(); //TODO
+        String path = this.feedbackFile.getPath();
+        String type = path.substring(path.lastIndexOf("."));
+        return new FeedbackVideoDTO( path, type, feedbackBytes, textualComments);
+    }
+
+
+    /**
+     * The function generate a feedback video for streaming
+     * @return feedback streamer
+     */
+    public FeedbackVideoStreamer generateFeedbackStreamer() {
+        updateFeedbackFile();
+        if(this.feedbackFile == null) {
+            return null;
+        }
+        return new FeedbackVideoStreamer(this.feedbackFile);
     }
 
 
