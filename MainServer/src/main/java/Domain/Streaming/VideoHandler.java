@@ -40,7 +40,10 @@ public class VideoHandler {
      * @return if saved true
      * @precondition there is no file in the given path - if there is it will override it
      */
-    public synchronized boolean saveVideo(byte[] video, String path) {
+    public synchronized boolean saveFrames(byte[] video, String path) {
+        if(video == null || path == null || path.isEmpty() || video.length == 0) {
+            return false;
+        }
         try {
             FileOutputStream out = new FileOutputStream(path);
             out.write(video);
@@ -99,7 +102,7 @@ public class VideoHandler {
      */
     public List<Mat> getFrames(byte[] video) {
         List<Mat> output = new LinkedList<>();
-        if(saveVideo(video, this.path)) {
+        if(saveFrames(video, this.path)) {
             // this.capture = new VideoCapture(0); capture the camera
             File file = new File(this.path);
             VideoCapture capture = new VideoCapture(file.getAbsolutePath());
@@ -190,7 +193,7 @@ public class VideoHandler {
      * @return the file saved
      * @postcondition videoWriter is working
      */
-    public File saveVideo(String path, List<Mat> frames) {
+    public File saveFrames(String path, List<Mat> frames) {
         File output = null;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
         File file = new File(path);
@@ -250,7 +253,7 @@ public class VideoHandler {
     public File getFeedBackVideoFile(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {
         frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
-        return saveVideo(this.desPath, frames);
+        return saveFrames(this.desPath, frames);
     }
 
     /***

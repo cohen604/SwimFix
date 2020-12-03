@@ -4,7 +4,6 @@ import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +14,7 @@ import java.util.List;
 public class VideoHandlerTest extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
+    final private String WRNOG_FOLDER = "./NO/SUCH/FOLDER";
     private VideoHandler videoHandler;
     private File testVideo;
     private List<File> deleteList;
@@ -39,14 +39,11 @@ public class VideoHandlerTest extends TestCase {
         }
     }
 
-    @Test
     public void testSaveVideo() {
         try {
             byte[] bytes = Files.readAllBytes(this.testVideo.toPath());
             String path = VIDEO_FOLDER + "./test.mov";
-            //TODO add test with null path and wrong path
-            //TODO add test with null bytes
-            assertTrue(this.videoHandler.saveVideo(bytes, path));
+            assertTrue(this.videoHandler.saveFrames(bytes, path));
             File file = new File(path);
             this.deleteList.add(file);
             assertTrue(file.exists());
@@ -57,14 +54,61 @@ public class VideoHandlerTest extends TestCase {
         }
     }
 
-    @Test
+    public void testSaveVideoEmptyBytes() {
+        try {
+            byte[] bytes = new byte[0];
+            String path = VIDEO_FOLDER + "./test.mov";
+            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            File file = new File(path);
+            assertFalse(file.exists());
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    public void testSaveVideoNullPath() {
+        try {
+            byte[] bytes = new byte[1];
+            assertFalse(this.videoHandler.saveFrames(bytes, null));
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    public void testSaveVideoEmptyPath() {
+        try{
+            byte[] bytes = new byte[1];
+            String path = "";
+            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            File file = new File(path);
+            assertFalse(file.exists());
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    public void testSaveVideoWrongPath() {
+        try {
+            byte[] bytes = new byte[1];
+            String path = WRNOG_FOLDER + "/test.mov";
+            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            File file = new File(path);
+            assertFalse(file.exists());
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
     public void testDeleteVideo() {
         try {
             String path = VIDEO_FOLDER + "./test.mov";
             FileOutputStream out = new FileOutputStream(path);
             out.write(new byte[1]);
             out.close();
-            //TODO add test with null path and wrong path
             assertTrue(this.videoHandler.deleteVideo(path));
             File file = new File(path);
             assertFalse(file.exists());
@@ -72,10 +116,16 @@ public class VideoHandlerTest extends TestCase {
             System.out.println(e.getMessage());
             fail();
         }
-
     }
 
-    @Test
+    public void testDeleteVideoNullPath() {
+        //TODO
+    }
+
+    public void testDeleteVideoWrongPath() {
+        //TODO
+    }
+
     public void testReadBytes() {
         try {
             byte[] bytes = new byte[3];
@@ -87,7 +137,6 @@ public class VideoHandlerTest extends TestCase {
             out.close();
             this.deleteList.add(new File(path));
             // Test started
-            //TODO add test with path null and wrong path not exists
             byte[] result = this.videoHandler.readVideo(path);
             assertEquals(bytes.length, result.length);
             for(int i=0; i< bytes.length; i++) {
@@ -98,4 +147,29 @@ public class VideoHandlerTest extends TestCase {
             fail();
         }
     }
+
+    public void testReadBytesNullPath() {
+        //TODO
+    }
+
+    public void testReadBytesWrongPath() {
+        //TODO
+    }
+
+    public void testGetFrames() {
+        //TODO
+    }
+
+    public void testGetFramesBytes() {
+        //TODO
+    }
+
+    public void testSaveFrames() {
+        //TODO
+    }
+
+    public void testGetFeedBackVideoFile() {
+        //TODO
+    }
+    
 }
