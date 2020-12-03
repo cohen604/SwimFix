@@ -39,10 +39,13 @@ public class VideoHandlerTest extends TestCase {
         }
     }
 
+    @Test
     public void testSaveVideo() {
         try {
             byte[] bytes = Files.readAllBytes(this.testVideo.toPath());
             String path = VIDEO_FOLDER + "./test.mov";
+            //TODO add test with null path and wrong path
+            //TODO add test with null bytes
             assertTrue(this.videoHandler.saveVideo(bytes, path));
             File file = new File(path);
             this.deleteList.add(file);
@@ -54,12 +57,14 @@ public class VideoHandlerTest extends TestCase {
         }
     }
 
+    @Test
     public void testDeleteVideo() {
         try {
             String path = VIDEO_FOLDER + "./test.mov";
             FileOutputStream out = new FileOutputStream(path);
             out.write(new byte[1]);
             out.close();
+            //TODO add test with null path and wrong path
             assertTrue(this.videoHandler.deleteVideo(path));
             File file = new File(path);
             assertFalse(file.exists());
@@ -68,5 +73,29 @@ public class VideoHandlerTest extends TestCase {
             fail();
         }
 
+    }
+
+    @Test
+    public void testReadBytes() {
+        try {
+            byte[] bytes = new byte[3];
+            bytes[0] = 98;
+            bytes[1] = 99;
+            String path = VIDEO_FOLDER + "./test.mov";
+            FileOutputStream out = new FileOutputStream(path);
+            out.write(bytes);
+            out.close();
+            this.deleteList.add(new File(path));
+            // Test started
+            //TODO add test with path null and wrong path not exists
+            byte[] result = this.videoHandler.readVideo(path);
+            assertEquals(bytes.length, result.length);
+            for(int i=0; i< bytes.length; i++) {
+                assertEquals(bytes[i], result[i]);
+            }
+        } catch (Exception e ){
+            System.out.println(e.getMessage());
+            fail();
+        }
     }
 }
