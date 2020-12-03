@@ -119,11 +119,32 @@ public class VideoHandlerTest extends TestCase {
     }
 
     public void testDeleteVideoNullPath() {
-        //TODO
+        try {
+            assertFalse(this.videoHandler.deleteVideo(null));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
     }
 
     public void testDeleteVideoWrongPath() {
-        //TODO
+        try {
+            String path = WRONG_FOLDER + "/test.mov";
+            assertFalse(this.videoHandler.deleteVideo(path));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+    }
+
+    public void testDeleteVideoEmptyPath() {
+        try {
+            String path = "";
+            assertFalse(this.videoHandler.deleteVideo(path));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
     }
 
     public void testReadBytes() {
@@ -131,7 +152,7 @@ public class VideoHandlerTest extends TestCase {
             byte[] bytes = new byte[3];
             bytes[0] = 98;
             bytes[1] = 99;
-            String path = VIDEO_FOLDER + "./test.mov";
+            String path = VIDEO_FOLDER + "/test.mov";
             FileOutputStream out = new FileOutputStream(path);
             out.write(bytes);
             out.close();
@@ -156,7 +177,27 @@ public class VideoHandlerTest extends TestCase {
         //TODO
     }
 
+    public void testReadBytesEmptyPath() {
+        //TODO
+    }
+
     public void testGetFrames() {
+        //TODO
+    }
+
+    public void testGetFramesListNull() {
+        //TODO
+    }
+
+    public void testGetFramesListEmpty() {
+        //TODO
+    }
+
+    public void testGetFramesBytesNull() {
+        //TODO
+    }
+
+    public void testGetFramesBytesEmpty() {
         //TODO
     }
 

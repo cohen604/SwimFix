@@ -63,6 +63,9 @@ public class VideoHandler {
      * @postcondition the file is deleted
      */
     public synchronized boolean deleteVideo(String path) {
+        if(path==null || path.isEmpty()) {
+            return false;
+        }
         File file = new File(path);
         if(file.exists()) {
             return file.delete();
@@ -76,6 +79,9 @@ public class VideoHandler {
      * @return the data of the video
      */
     public synchronized byte[] readVideo(String path) {
+        if(path == null || path.isEmpty()) {
+            return null;
+        }
         File file =  new File(path);
         if(file.exists()) {
             try {
@@ -101,6 +107,9 @@ public class VideoHandler {
      * @postcondition videoCapture is working
      */
     public List<Mat> getFrames(byte[] video) {
+        if(video == null || video.length == 0) {
+            return null;
+        }
         List<Mat> output = new LinkedList<>();
         if(saveFrames(video, this.path)) {
             // this.capture = new VideoCapture(0); capture the camera
@@ -126,6 +135,9 @@ public class VideoHandler {
      * @return the frames as List<byte[]>
      */
     public List<byte[]> getFramesBytes(List<Mat> frames) {
+        if(frames == null || frames.isEmpty()) {
+            return null;
+        }
         List<byte[]> output = new LinkedList<>();
         for (Mat mat: frames) {
             byte[] mat_bytes = new byte[(int) (mat.total() * mat.channels())];
