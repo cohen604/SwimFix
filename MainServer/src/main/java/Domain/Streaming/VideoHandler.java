@@ -2,10 +2,13 @@ package Domain.Streaming;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -130,20 +133,32 @@ public class VideoHandler {
         return output;
     }
 
-    private List<Mat> drawSwimmer(List<Mat> frames, List<SwimmingTag> dots) {
+    private Mat drawSwimmer(Mat frame, SwimmingTag swimmingTag) {
         //TODO
         //Imgproc.rectangle(frame,obj.getLeftBottom(),obj.getRightTop(),new Scalar(255,0,0),1);
-        return frames;
+        return frame;
     }
 
-    private List<Mat> drawErrors(List<Mat> frames, List<SwimmingError> errors) {
+    private Mat drawErrors(Mat frame, SwimmingError error) {
         //TODO
-        return frames;
+        return frame;
     }
 
-    private List<Mat> drawVisualComment(List<Mat> frames, List<Object> visualComments) {
+    private Mat drawVisualComment(Mat frame, Object visualComment) {
         //TODO
-        return frames;
+        return frame;
+    }
+
+    private Mat drawLogo(Mat frame) {
+        String logo = "SwimFix";
+        double x = frame.width() - 130;
+        double y = 30;
+        org.opencv.core.Point point = new org.opencv.core.Point(x, y);
+        int scale = 1;
+        Scalar color = new Scalar(0,0,0);
+        int thickens = 2;
+        Imgproc.putText(frame, logo, point, Core.FONT_HERSHEY_SIMPLEX, scale, color ,thickens);
+        return frame;
     }
 
     /**
@@ -180,9 +195,26 @@ public class VideoHandler {
     private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                              List<Object> visualComments) {
         //TODO optimize this to an iterative function rather then looping functions
-        frames = drawSwimmer(frames, dots);
-        frames = drawErrors(frames, errors);
-        frames = drawVisualComment(frames, visualComments);
+
+        for(int i=0; i<frames.size(); i++) {
+            Mat frame = frames.get(i);
+            if(dots!=null && !dots.isEmpty()) {
+                SwimmingTag swimmingTag = dots.get(i);
+                frame = drawSwimmer(frame, swimmingTag);
+            }
+            if(errors!=null && !errors.isEmpty()) {
+                SwimmingError swimmingError = errors.get(i);
+                frame = drawErrors(frame, swimmingError);
+            }
+            if(visualComments!= null && ! visualComments.isEmpty()) {
+                //TODO
+                Object visualComment = visualComments.get(i);
+                frame = drawVisualComment(frame, visualComment);
+            }
+            drawLogo(frame);
+            //TODO check if need maybe all the function do on pointer then no need to set it back
+            frames.set(i, frame);
+        }
         return frames;
     }
 

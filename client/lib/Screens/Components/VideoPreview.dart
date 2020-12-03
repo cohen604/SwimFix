@@ -45,6 +45,7 @@ class _VideoPreviewState extends State<VideoPreview> {
       looping: true,
       //note: this muse be false cause chewiew having problem in full screen
       allowFullScreen: false,
+      allowMuting: false,
     );
     setState(() {});
   }
@@ -69,7 +70,9 @@ class _VideoPreviewState extends State<VideoPreview> {
           ),
         ),
       );
-    return CircularProgressIndicator();
+    return Center(
+      child:CircularProgressIndicator(),
+    );
   }
 
   Widget buildVideoPlayer(BuildContext context) {
