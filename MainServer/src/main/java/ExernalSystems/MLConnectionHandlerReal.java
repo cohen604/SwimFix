@@ -56,15 +56,19 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
 
     @Override
     public TaggedVideo getSkeletons(Video video) {
-        List<byte[]> frames = video.getVideo();
-        List<String> frames_string = new LinkedList<>();
-        for (byte[] frame: frames) {
-            String frame_string = Base64.getEncoder().encodeToString(frame);
-            frames_string.add(frame_string);
+        try {
+            List<byte[]> frames = video.getVideo();
+            List<String> frames_string = new LinkedList<>();
+            for (byte[] frame : frames) {
+                String frame_string = Base64.getEncoder().encodeToString(frame);
+                frames_string.add(frame_string);
+            }
+            postMessage(frames_string, getURL("/detect"), "video", frames.size(),
+                    video.getHeight(), video.getWidth());
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
         }
-        postMessage(frames_string, getURL("/detect"), "video", frames.size(),
-                video.getHeight(), video.getWidth());
-        //TODO hanlde response
         return null;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class VideoHandlerTest extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
-    final private String WRNOG_FOLDER = "./NO/SUCH/FOLDER";
+    final private String WRONG_FOLDER = "./NO/SUCH/FOLDER";
     private VideoHandler videoHandler;
     private File testVideo;
     private List<File> deleteList;
@@ -93,7 +93,7 @@ public class VideoHandlerTest extends TestCase {
     public void testSaveVideoWrongPath() {
         try {
             byte[] bytes = new byte[1];
-            String path = WRNOG_FOLDER + "/test.mov";
+            String path = WRONG_FOLDER + "/test.mov";
             assertFalse(this.videoHandler.saveFrames(bytes, path));
             File file = new File(path);
             assertFalse(file.exists());
@@ -171,5 +171,5 @@ public class VideoHandlerTest extends TestCase {
     public void testGetFeedBackVideoFile() {
         //TODO
     }
-    
+
 }
