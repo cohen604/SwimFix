@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,5 +52,21 @@ public class VideoHandlerTest extends TestCase {
             System.out.println(e.getMessage());
             fail();
         }
+    }
+
+    public void testDeleteVideo() {
+        try {
+            String path = VIDEO_FOLDER + "./test.mov";
+            FileOutputStream out = new FileOutputStream(path);
+            out.write(new byte[1]);
+            out.close();
+            assertTrue(this.videoHandler.deleteVideo(path));
+            File file = new File(path);
+            assertFalse(file.exists());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+
     }
 }
