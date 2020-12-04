@@ -1,24 +1,26 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:html' as html;
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Services/connectionHandler.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'TitleButton.dart';
 import 'VideoPreview.dart';
 
-class WebInput extends StatefulWidget {
+class VideoUploader extends StatefulWidget {
 
-  WebInput({Key key}) : super(key: key);
+  VideoUploader({Key key}) : super(key: key);
 
   @override
-  _WebInputState createState() => _WebInputState();
+  _VideoUploaderState createState() => _VideoUploaderState();
 }
 
-class _WebInputState extends State<WebInput> {
+class _VideoUploaderState extends State<VideoUploader> {
 
   Uint8List fileBytes;
   int fileLength;
@@ -27,7 +29,7 @@ class _WebInputState extends State<WebInput> {
   Future<FeedbackVideo> feedbackVideo;
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
 
-  void uploadFile() async {
+  void uploadFileWeb() async {
     html.InputElement uploadInput = html.FileUploadInputElement();
     uploadInput.multiple = false;
     uploadInput.draggable = true;
@@ -52,6 +54,44 @@ class _WebInputState extends State<WebInput> {
       });
     });
     uploadInput.remove();
+  }
+
+  void uploadVideoMobileGallery() async {
+    var picker = ImagePicker();
+    PickedFile pickedFile = await picker.getVideo(source: ImageSource.gallery);
+    var file = File(pickedFile.path);
+    setState(() {
+      this.fileBytes = file.readAsBytesSync();
+      this.fileLength = file.lengthSync();
+      this.filePath = file.path;
+    });
+  }
+
+  void uploadVideoMobileCamera() async {
+    var picker = ImagePicker();
+    PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera);
+    var file = File(pickedFile.path);
+    setState(() {
+      this.fileBytes = file.readAsBytesSync();
+      this.fileLength = file.lengthSync();
+      this.filePath = file.path;
+    });
+  }
+
+  /// The function call upload video of mobile or web
+  /// @param bool flag - if true this goes to camera, other wise gallary
+  void uploadVideo({flag:false}) {
+    if (kIsWeb) {
+        uploadFileWeb();
+    }
+    else {
+      if(flag) {
+        uploadVideoMobileCamera();
+      }
+      else {
+        uploadVideoMobileGallery();
+      }
+    }
   }
 
   void getFeedback(BuildContext innerContext) async {
@@ -123,7 +163,7 @@ class _WebInputState extends State<WebInput> {
             TitleButton(
               title:"Pick Video from your computer",
               buttonText: "Upload",
-              onPress: uploadFile
+              onPress: uploadVideo
             ),
             SizedBox(height: 10,),
             buildSelectedFile(context),

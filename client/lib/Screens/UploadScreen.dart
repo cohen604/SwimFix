@@ -1,6 +1,6 @@
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Screens/Components/MobileInput.dart';
-import 'package:client/Screens/Components/WebInput.dart';
+import 'package:client/Screens/Components/VideoUploader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -16,17 +16,6 @@ class UploadScreen extends Screen {
 
 class _UploadScreenState extends State<UploadScreen> {
 
-  Builder buildInput() {
-    return Builder(
-        builder: (BuildContext innerContext) {
-          if (kIsWeb) {
-            return WebInput();
-          }
-          return MobileInput();
-        }
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,7 +29,7 @@ class _UploadScreenState extends State<UploadScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: <Widget>[
-                  buildInput(),
+                  VideoUploader(),
                 ],
               ),
             ),
