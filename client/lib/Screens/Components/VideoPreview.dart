@@ -1,5 +1,3 @@
-import 'dart:io' as io;
-import 'dart:html';
 import 'package:chewie/chewie.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';

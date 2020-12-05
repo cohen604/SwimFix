@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:html' as html;
+import 'package:universal_html/prefer_universal/html.dart' as html;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
@@ -57,32 +58,40 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   void uploadVideoMobileGallery() async {
-    var picker = ImagePicker();
-    PickedFile pickedFile = await picker.getVideo(source: ImageSource.gallery);
-    var file = File(pickedFile.path);
-    setState(() {
-      this.fileBytes = file.readAsBytesSync();
-      this.fileLength = file.lengthSync();
-      this.filePath = file.path;
-    });
+    // var picker = ImagePicker();
+    // PickedFile pickedFile = await picker.getVideo(source: ImageSource.gallery);
+    // var file = File(pickedFile.path);
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    if(result != null) {
+      File file = File(result.files.single.path);
+      setState(() {
+        this.fileBytes = file.readAsBytesSync();
+        this.fileLength = file.lengthSync();
+        this.filePath = file.path;
+      });
+    }
   }
 
   void uploadVideoMobileCamera() async {
-    var picker = ImagePicker();
-    PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera);
-    var file = File(pickedFile.path);
-    setState(() {
-      this.fileBytes = file.readAsBytesSync();
-      this.fileLength = file.lengthSync();
-      this.filePath = file.path;
-    });
+    // var picker = ImagePicker();
+    // PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera);
+    // var file = File(pickedFile.path);
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    if(result != null) {
+      File file = File(result.files.single.path);
+      setState(() {
+        this.fileBytes = file.readAsBytesSync();
+        this.fileLength = file.lengthSync();
+        this.filePath = file.path;
+      });
+    }
   }
 
   /// The function call upload video of mobile or web
   /// @param bool flag - if true this goes to camera, other wise gallary
   void uploadVideo({flag:false}) {
     if (kIsWeb) {
-        uploadFileWeb();
+      uploadFileWeb();
     }
     else {
       if(flag) {
@@ -121,19 +130,19 @@ class _VideoUploaderState extends State<VideoUploader> {
       child: Padding(
         padding: EdgeInsets.all(12.0),
         child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10,),
-              Text("File: " + this.filePath,
-                style: TextStyle(fontWeight: FontWeight.bold,
-                    fontSize: 16),
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(height: 10,),
-            ],
-          ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 10,),
+            Text("File: " + this.filePath,
+              style: TextStyle(fontWeight: FontWeight.bold,
+                  fontSize: 16),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10,),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   Widget buildVideoPreview(BuildContext context) {
@@ -155,15 +164,41 @@ class _VideoUploaderState extends State<VideoUploader> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TitleButton(
+            title:"Pick Video from your computer",
+            buttonText: "Upload",
+            onPress: uploadVideo
+        ),
+        SizedBox(height: 10,),
+        buildSelectedFile(context),
+        SizedBox(height: 10,),
+        TitleButton(
+            title:"Submit video to SwimFix for feedback",
+            buttonText: "Submit",
+            onPress: ()=>getFeedback(context)
+        ),
+        SizedBox(height: 20,),
+        buildVideoPreview(context),
+
+      ],
+    );
+  }
+
+  //@override
+  // Widget that we used to use.
+  // the feedback is on the right side and not in the bottom
+  Widget build2(BuildContext context) {
     return Row(
       children: [
         SizedBox(height: 50,),
         Column(
           children: [
             TitleButton(
-              title:"Pick Video from your computer",
-              buttonText: "Upload",
-              onPress: uploadVideo
+                title:"Pick Video from your computer",
+                buttonText: "Upload",
+                onPress: uploadVideo
             ),
             SizedBox(height: 10,),
             buildSelectedFile(context),

@@ -16,7 +16,7 @@ class ConnectionHandler {
 
   /// Constructor
   ConnectionHandler() {
-    this.address = 'http://127.0.0.1';
+    this.address = 'http://10.0.0.14';//'http://127.0.0.1';
     this.port = '8080';
   }
 

@@ -224,6 +224,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "universal_html",
+      "rootUri": "file:///C:/Users/User/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/universal_html-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
+      "name": "universal_io",
+      "rootUri": "file:///C:/Users/User/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/universal_io-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.7"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///C:/Users/User/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/vector_math-2.1.0-nullsafety.5",
       "packageUri": "lib/",
@@ -266,13 +278,19 @@
       "languageVersion": "2.8"
     },
     {
+      "name": "zone_local",
+      "rootUri": "file:///C:/Users/User/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/zone_local-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
       "name": "client",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-12-05T10:29:34.792343Z",
+  "generated": "2020-12-05T10:50:40.233278Z",
   "generator": "pub",
   "generatorVersion": "2.12.0-29.10.beta"
 }
