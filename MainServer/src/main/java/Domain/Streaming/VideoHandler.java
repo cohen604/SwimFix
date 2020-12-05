@@ -90,23 +90,16 @@ public class VideoHandler {
         return null;
     }
 
+
     /**
-     * The function return a list of frames by a given video
-     * @param video - the data
-     * @param desPath - the destination path to save the video frames
-     * @return the list of frames
-     * @precondition there is no video path saved as "./videoTmp" in the current folder,
-     *               video frames size larger then (150 * 50)
-     * @postcondition videoCapture is working
+     * The function return a list for frames from a given path video
+     * @param desPath - the video path
+     * @return list of frames
      */
-    public List<Mat> getFrames(byte[] video, String desPath) {
-        if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
-            return null;
-        }
-        List<Mat> output = new LinkedList<>();
-        if(saveFrames(video, desPath)) {
-            // this.capture = new VideoCapture(0); capture the camera
-            File file = new File(desPath);
+    public List<Mat> getFrames(String desPath) {
+        File file = new File(desPath);
+        if(file.exists()) {
+            List<Mat> output = new LinkedList<>();
             VideoCapture capture = new VideoCapture(file.getAbsolutePath());
             if(capture.isOpened()) {
                 Mat frame = new Mat();
@@ -116,10 +109,25 @@ public class VideoHandler {
                 }
             }
             capture.release();
-            //TODO need to talk about this, maybe we need the original frames
-            //deleteVideo(this.path);
+            return output;
         }
-        return output;
+        return null;
+    }
+
+    /**
+     * The function return a list of frames by a given video
+     * @param video - the data
+     * @param desPath - the destination path to save the video frames
+     * @return the list of frames
+     */
+    public List<Mat> getFrames(byte[] video, String desPath) {
+        if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
+            return null;
+        }
+        if(saveFrames(video, desPath)) {
+            return getFrames(desPath);
+        }
+        return null;
     }
 
     /**

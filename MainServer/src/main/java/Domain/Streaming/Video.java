@@ -15,14 +15,11 @@ public class Video {
 
     @Id
     private String path; // The path the video saved into
-
     private String videoType; // The video type must be in the format ".type"
-    // The original frames of the video
-    protected List<Mat> video;
+    protected List<Mat> video; // The original frames of the video
     private int height;
     private int width;
-    // The video handler for doing
-    VideoHandler videoHandler;
+    VideoHandler videoHandler; // The video handler for doing
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
@@ -34,7 +31,17 @@ public class Video {
         this.height = this.video.get(0).height();
         this.width = this.video.get(0).width();
         // save the information in the video repo
-        Daos.getInstance().getVideoDao().insert(this);
+        // Daos.getInstance().getVideoDao().insert(this);
+    }
+
+    public Video(String path, String videoType) {
+        this.path = path;
+        this.videoType = videoType;
+        this.videoHandler = new VideoHandler();
+        this.video = this.videoHandler.getFrames(path);
+        //TODO check if the video is empty?
+        this.height = this.video.get(0).height();
+        this.width = this.video.get(0).width();
     }
 
     /***
@@ -50,6 +57,9 @@ public class Video {
     }
 
     public List<byte[]> getVideo() {
+        if(this.video == null || this.video.isEmpty()) {
+            return null;
+        }
         return videoHandler.getFramesBytes(this.video);
     }
 
