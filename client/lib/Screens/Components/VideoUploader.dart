@@ -163,16 +163,22 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildMobile(BuildContext context) {
     return Column(
       children: [
         TitleButton(
-            title:"Pick Video from your computer",
+            title:"Pick Video from your mobile device",
             buttonText: "Upload",
             onPress: uploadVideo
         ),
         SizedBox(height: 10,),
         buildSelectedFile(context),
+        SizedBox(height: 10,),
+        TitleButton(
+            title:"Take a video from your camera",
+            buttonText: "Recording",
+            onPress: ()=>uploadVideo(flag:true),
+        ),
         SizedBox(height: 10,),
         TitleButton(
             title:"Submit video to SwimFix for feedback",
@@ -189,7 +195,7 @@ class _VideoUploaderState extends State<VideoUploader> {
   //@override
   // Widget that we used to use.
   // the feedback is on the right side and not in the bottom
-  Widget build2(BuildContext context) {
+  Widget buildWeb(BuildContext context) {
     return Row(
       children: [
         SizedBox(height: 50,),
@@ -216,5 +222,14 @@ class _VideoUploaderState extends State<VideoUploader> {
         ),
       ],
     );
+
+    @override
+    Widget build(BuildContext context) {
+      if(kIsWeb) {
+        return buildWeb(context);
+      }
+      return buildMobile(context);
+    }
+
   }
 }
