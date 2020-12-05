@@ -22,7 +22,7 @@ public class VideoHandlerTest extends TestCase {
 
     @Before
     public void setUp() {
-        this.videoHandler = new VideoHandler(".mov");
+        this.videoHandler = new VideoHandler();
         this.testVideo = new File(VIDEO_FOLDER + "/sample.mov");
         this.testVideoType = ".mov";
         if(!testVideo.exists()) {

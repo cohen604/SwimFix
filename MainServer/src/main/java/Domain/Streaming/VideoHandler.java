@@ -16,18 +16,10 @@ import java.util.List;
 //TODO this class need be a synchronize methods ?
 public class VideoHandler {
 
-    private String path;
-    private String desPath;
-    private String desType;
     /**
      * constractor
-     * @param type - the type of the video we working with, need to be in the format ".type"
      */
-    public VideoHandler(String type) {
-        //TODO generate here a uniqe string path that recognize the user so we can load later
-        this.path = "clientVideos/videoTmp"+type;
-        this.desType = ".mp4";
-        this.desPath = "clientVideos/feedbackVideoTmp"+this.desType;
+    public VideoHandler() {
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
@@ -101,19 +93,20 @@ public class VideoHandler {
     /**
      * The function return a list of frames by a given video
      * @param video - the data
+     * @param desPath - the destination path to save the video frames
      * @return the list of frames
      * @precondition there is no video path saved as "./videoTmp" in the current folder,
      *               video frames size larger then (150 * 50)
      * @postcondition videoCapture is working
      */
-    public List<Mat> getFrames(byte[] video) {
-        if(video == null || video.length == 0) {
+    public List<Mat> getFrames(byte[] video, String desPath) {
+        if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
             return null;
         }
         List<Mat> output = new LinkedList<>();
-        if(saveFrames(video, this.path)) {
+        if(saveFrames(video, desPath)) {
             // this.capture = new VideoCapture(0); capture the camera
-            File file = new File(this.path);
+            File file = new File(desPath);
             VideoCapture capture = new VideoCapture(file.getAbsolutePath());
             if(capture.isOpened()) {
                 Mat frame = new Mat();
@@ -254,6 +247,7 @@ public class VideoHandler {
 
     /**
      * The function get the feedback video file
+     * @param desPath - the destination path to save the feedback file into
      * @param frames - the video data
      * @param dots - the tags of the swimmer
      * @param errors - the list of errors
@@ -262,24 +256,10 @@ public class VideoHandler {
      * @precondition all lists must be the save of the same video frames
      * @postcondition save the newest feedback generated in the des path
      */
-    public File getFeedBackVideoFile(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {
         frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
-        return saveFrames(this.desPath, frames);
+        return saveFrames(desPath, frames);
     }
 
-    /***
-     * Getters
-     */
-    public String getPath() {
-        return this.path;
-    }
-
-    public String getDesPath() {
-        return this.desPath;
-    }
-
-    public String getDesType() {
-        return this.desType;
-    }
 }

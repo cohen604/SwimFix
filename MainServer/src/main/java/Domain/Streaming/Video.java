@@ -1,28 +1,40 @@
 package Domain.Streaming;
 
+import Storage.Daos;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.*;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@Document(collation = "Video")
 public class Video {
 
-    //this is the video type must be in the format ".type"
-    private String videoType;
-    //this is the original frames of the video
+    @Id
+    private String path; // The path the video saved into
+
+    private String videoType; // The video type must be in the format ".type"
+    // The original frames of the video
     protected List<Mat> video;
     private int height;
     private int width;
+    // The video handler for doing
     VideoHandler videoHandler;
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
-        this.videoHandler = new VideoHandler(this.videoType);
-        this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes());
+        //TODO generate here a unique string path that recognize the user so we can load later
+        this.path = "clientVideos/videoTmp"+this.videoType;
+        this.videoHandler = new VideoHandler();
+        this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         //TODO check if the video is empty?
         this.height = this.video.get(0).height();
         this.width = this.video.get(0).width();
-
+        // save the information in the video repo
+        Daos.getInstance().getVideoDao().insert(this);
     }
 
     /***

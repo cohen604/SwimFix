@@ -13,22 +13,19 @@ public class FeedbackVideo extends Video {
     private TextualComment textualComment;
     private List<SwimmingError> errorList;
     private TaggedVideo taggedVideo;
-    // the file generated in the video handler for the for the feedback
+    // The feedback video path to save into
+    private String path;
+    // The file generated in the video handler for the for the feedback
     private File feedbackFile;
     // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private boolean feedbackUpdated;
-
-    public FeedbackVideo(Video video, TaggedVideo taggedVideo) {
-        super(video);
-        this.taggedVideo = taggedVideo;
-        this.feedbackFile = null;
-        this.feedbackUpdated = false;
-    }
 
     public FeedbackVideo(Video video, TaggedVideo taggedVideo, List<SwimmingError> errorList) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorList = errorList;
+        //TODO generate here a unique string path that recognize the user so we can load later
+        this.path = "clientVideos/feedbackvideoTmp.mp4";
         this.feedbackFile = null;
         this.feedbackUpdated = false;
     }
@@ -42,7 +39,8 @@ public class FeedbackVideo extends Video {
         List<SwimmingTag> swimmingTags = null;
         List<Object> visualComments = null; //TODO
         if(this.feedbackFile == null || this.feedbackUpdated) {
-            File file = this.videoHandler.getFeedBackVideoFile(this.video, swimmingTags, errorList, visualComments);
+            File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingTags,
+                    errorList, visualComments);
             if(file != null) {
                 this.feedbackFile = file;
                 this.feedbackUpdated = false;
@@ -77,6 +75,5 @@ public class FeedbackVideo extends Video {
         }
         return new FeedbackVideoStreamer(this.feedbackFile);
     }
-
 
 }
