@@ -222,9 +222,10 @@ class _VideoUploaderState extends State<VideoUploader> {
       ],
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
+    //here we check if we are on mobile or web
     if(kIsWeb) {
       return buildWeb(context);
     }
