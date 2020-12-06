@@ -192,7 +192,6 @@ class _VideoUploaderState extends State<VideoUploader> {
     );
   }
 
-  //@override
   // Widget that we used to use.
   // the feedback is on the right side and not in the bottom
   Widget buildWeb(BuildContext context) {
@@ -222,14 +221,13 @@ class _VideoUploaderState extends State<VideoUploader> {
         ),
       ],
     );
-
-    @override
-    Widget build(BuildContext context) {
-      if(kIsWeb) {
-        return buildWeb(context);
-      }
-      return buildMobile(context);
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    if(kIsWeb) {
+      return buildWeb(context);
     }
-
+    return buildMobile(context);
   }
 }
