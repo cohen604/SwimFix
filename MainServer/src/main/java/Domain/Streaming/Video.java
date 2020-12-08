@@ -34,6 +34,16 @@ public class Video {
         // Daos.getInstance().getVideoDao().insert(this);
     }
 
+    public Video(ConvertedVideoDTO convertedVideoDTO, String path) {
+        this.videoType = convertedVideoDTO.getVideoType();
+        this.path = path;
+        this.videoHandler = new VideoHandler();
+        this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
+        //TODO check if the video is empty?
+        this.height = this.video.get(0).height();
+        this.width = this.video.get(0).width();
+    }
+
     public Video(String path, String videoType) {
         this.path = path;
         this.videoType = videoType;

@@ -33,8 +33,11 @@ public class VideoTests extends TestCase {
 
     public void testCreateNewVideo() {
         try {
-            Video video = new Video(this.convertedVideoDTO);
-            //TODO compare bytes
+            String path = VIDEO_FOLDER + "/test.mov";
+            Video video = new Video(this.convertedVideoDTO, path);
+            File file = new File(path);
+            assertTrue(file.exists());
+            assertTrue(file.delete());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             fail();
