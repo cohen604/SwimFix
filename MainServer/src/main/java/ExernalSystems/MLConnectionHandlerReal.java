@@ -35,7 +35,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         return restTemplate.postForObject(url, requestEntity, String.class);
     }
 
-    public String postMessage(List<String> data, String url, String param, int len, int height, int width) {
+    public void postMessage(List<String> data, String url, String param, int len, int height, int width) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
@@ -47,7 +47,8 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         body.add("width", width);
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.postForObject(url, requestEntity, String.class);
+        String res = restTemplate.postForObject(url, requestEntity, String.class);
+        System.out.println(res);
     }
 
     public String getURL(String prefix) {
