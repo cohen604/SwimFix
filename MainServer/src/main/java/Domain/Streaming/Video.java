@@ -1,25 +1,21 @@
 package Domain.Streaming;
 
-import Storage.Daos;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.*;
+import Storage.VideoService;
 import DTO.ConvertedVideoDTO;
+import org.bson.Document;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.opencv.core.Mat;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-@Document(collation = "Video")
 public class Video {
 
-    @Id
     private String path; // The path the video saved into
     private String videoType; // The video type must be in the format ".type"
     protected List<Mat> video; // The original frames of the video
     private int height;
     private int width;
     VideoHandler videoHandler; // The video handler for doing
+    private VideoService videoService = new VideoService();
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
@@ -30,8 +26,6 @@ public class Video {
         //TODO check if the video is empty?
         this.height = this.video.get(0).height();
         this.width = this.video.get(0).width();
-        // save the information in the video repo
-        // Daos.getInstance().getVideoDao().insert(this);
     }
 
     public Video(ConvertedVideoDTO convertedVideoDTO, String path) {
@@ -66,6 +60,17 @@ public class Video {
         this.videoHandler = other.videoHandler;
     }
 
+    @Override
+    public String toString() {
+        return "Video [ path: " + this.path +
+                ", type: " + this.videoType +
+                "]";
+    }
+
+    /**
+     * The function a list of bytes of the video
+     * @return list of bytes
+     */
     public List<byte[]> getVideo() {
         if(this.video == null || this.video.isEmpty()) {
             return null;
@@ -79,5 +84,13 @@ public class Video {
 
     public int getWidth() {
         return width;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getVideoType() {
+        return videoType;
     }
 }

@@ -1,6 +1,10 @@
 package Storage;
 
+import java.util.List;
+
 public interface Dao<T> {
 
-    boolean insert(T value);
+    List<T> getAll();
+    T insert(T value);
+
 }

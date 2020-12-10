@@ -26,7 +26,7 @@ public class VideoHandler {
     }
 
     /**
-     * The function save a byte list to the given path. The path includes his name
+     * The function insert a byte list to the given path. The path includes his name
      * @param video - the data
      * @param path - the path
      * @return if saved true
@@ -117,7 +117,7 @@ public class VideoHandler {
     /**
      * The function return a list of frames by a given video
      * @param video - the data
-     * @param desPath - the destination path to save the video frames
+     * @param desPath - the destination path to insert the video frames
      * @return the list of frames
      */
     public List<Mat> getFrames(byte[] video, String desPath) {
@@ -200,7 +200,7 @@ public class VideoHandler {
     }
 
     /**
-     * The function save a frame list to a given path
+     * The function insert a frame list to a given path
      * @param path - path and the name of the file
      * @param frames - the list of frames
      * @return the file saved
@@ -228,7 +228,7 @@ public class VideoHandler {
      * @param errors - the list of errors
      * @param visualComments - the list of visual comments
      * @return new byte video
-     * @precondition all lists must be the save of the same video frames
+     * @precondition all lists must be the insert of the same video frames
      */
     private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                              List<Object> visualComments) {
@@ -255,14 +255,14 @@ public class VideoHandler {
 
     /**
      * The function get the feedback video file
-     * @param desPath - the destination path to save the feedback file into
+     * @param desPath - the destination path to insert the feedback file into
      * @param frames - the video data
      * @param dots - the tags of the swimmer
      * @param errors - the list of errors
      * @param visualComments - the list of visual comments
      * @return the feedback file
-     * @precondition all lists must be the save of the same video frames
-     * @postcondition save the newest feedback generated in the des path
+     * @precondition all lists must be the insert of the same video frames
+     * @postcondition insert the newest feedback generated in the des path
      */
     public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {

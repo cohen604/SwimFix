@@ -209,7 +209,7 @@ class _VideoUploaderState extends State<VideoUploader> {
             buildSelectedFile(context),
             SizedBox(height: 10,),
             TitleButton(
-                title:"Submit video to SwimFix for feedback",
+                title:"Submit video to SwimFix for feedbac  k",
                 buttonText: "Submit",
                 onPress: ()=>getFeedback(context)
             ),
@@ -225,7 +225,7 @@ class _VideoUploaderState extends State<VideoUploader> {
 
   @override
   Widget build(BuildContext context) {
-    //here we check if we are on mobile or web
+    //here we check if we   are on mobile or web
     if(kIsWeb) {
       return buildWeb(context);
     }

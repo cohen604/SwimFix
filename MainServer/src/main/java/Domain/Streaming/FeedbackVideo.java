@@ -13,7 +13,7 @@ public class FeedbackVideo extends Video {
     private TextualComment textualComment;
     private List<SwimmingError> errorList;
     private TaggedVideo taggedVideo;
-    // The feedback video path to save into
+    // The feedback video path to insert into
     private String path;
     // The file generated in the video handler for the for the feedback
     private File feedbackFile;

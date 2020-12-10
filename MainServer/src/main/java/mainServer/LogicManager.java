@@ -7,13 +7,15 @@ import Domain.Streaming.Video;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.VideoService;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 
 public class LogicManager {
-    MLConnectionHandler mlConnectionHandler;
+
+    private MLConnectionHandler mlConnectionHandler;
     //TODO: hold all the logged users
     List<User> userList;
 
