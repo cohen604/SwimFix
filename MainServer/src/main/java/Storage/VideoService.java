@@ -1,35 +1,29 @@
 package Storage;
 
 import Domain.Streaming.Video;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientURI;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoService implements Dao<Video> {
+import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-    MongoCollection<Video> getVideoCollectionAsDocuments() {
-        MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("swimfix");
-        return mongoDatabase.getCollection("video", Video.class);
-    }
+public class VideoService implements Dao<Video> {
 
     MongoCollection<Video> getVideoCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(new VideoCodec()), //here we define the codec
-                        MongoClient.getDefaultCodecRegistry());
-        MongoClientOptions options = MongoClientOptions.builder()
+                        getDefaultCodecRegistry());
+        MongoClientSettings settings = MongoClientSettings.builder()
                 .codecRegistry(codecRegistry).build();
         // here we define the connection
-        MongoClient mongoClient = new MongoClient(new ServerAddress("localhost",27017), options);
+        MongoClient mongoClient = MongoClients.create(settings);
+
         MongoDatabase mongoDatabase = mongoClient.getDatabase("swimfix");
         return mongoDatabase.getCollection("video", Video.class);
     }

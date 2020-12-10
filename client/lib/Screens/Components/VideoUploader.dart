@@ -209,7 +209,7 @@ class _VideoUploaderState extends State<VideoUploader> {
             buildSelectedFile(context),
             SizedBox(height: 10,),
             TitleButton(
-                title:"Submit video to SwimFix for feedbac  k",
+                title:"Submit video to SwimFix for feedbac  k", 
                 buttonText: "Submit",
                 onPress: ()=>getFeedback(context)
             ),
