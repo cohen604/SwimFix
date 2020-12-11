@@ -29,8 +29,18 @@ class _VideoUploaderState extends State<VideoUploader> {
   int fileLength;
   String filePath;
   bool clickUpload = false;
-  Future<FeedbackVideo> feedbackVideo;
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
+
+  void initVars() {
+    this.setState(() {
+      this.fileBytes = null;
+      this.fileLength = 0;
+      this.filePath = null;
+      this.clickUpload = false;
+      this.feedbackVideoStreamer = null;
+    });
+
+  }
 
   void uploadFileWeb() async {
     html.InputElement uploadInput = html.FileUploadInputElement();
@@ -85,11 +95,7 @@ class _VideoUploaderState extends State<VideoUploader> {
       var fileLength = file.lengthSync();
       var filePath = file.path;
       getFeedback(fileBytes, fileLength, filePath);
-      // setState(() {
-      //   this.fileBytes = file.readAsBytesSync();
-      //   this.fileLength = file.lengthSync();
-      //   this.filePath = file.path;
-      // });
+      cameraHandler.deleteCuttingVideo(file.path);
     }
   }
 
@@ -161,6 +167,7 @@ class _VideoUploaderState extends State<VideoUploader> {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.pushNamed(context, "/videoPreview");
             });
+            this.initVars();
           }
           if(this.clickUpload) {
             return Center(

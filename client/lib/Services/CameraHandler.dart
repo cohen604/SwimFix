@@ -45,8 +45,15 @@ class CameraHandler {
     return file;
   }
 
+  /// The function delete cutting video list
+  void deleteCuttingVideos() {
+    for(File video in this.cuttingVideos) {
+      video.deleteSync();
+    }
+  }
+
   /// The function delete a cutting video with the given name
-  bool clearCuttingVideo(String path) {
+  bool deleteCuttingVideo(String path) {
     File file = getFile(path);
     if(file!=null) {
       file.deleteSync();
