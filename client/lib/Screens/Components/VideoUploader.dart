@@ -81,13 +81,15 @@ class _VideoUploaderState extends State<VideoUploader> {
     List<File> files = cameraHandler.cutVideoList(pickedFile.path);
     File file = files[0];
     if(file != null) {
-      setState(() {
-        this.fileBytes = file.readAsBytesSync();
-        this.fileLength = file.lengthSync();
-        this.filePath = file.path;
-        //todo send feedback
-        //getFeedback(this.fileBytes, this.fileLength, this.filePath)
-      });
+      var fileBytes = file.readAsBytesSync();
+      var fileLength = file.lengthSync();
+      var filePath = file.path;
+      getFeedback(fileBytes, fileLength, filePath);
+      // setState(() {
+      //   this.fileBytes = file.readAsBytesSync();
+      //   this.fileLength = file.lengthSync();
+      //   this.filePath = file.path;
+      // });
     }
   }
 
