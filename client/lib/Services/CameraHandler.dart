@@ -23,7 +23,6 @@ class CameraHandler {
     return this.cuttingVideos;
   }
 
-
   /// The function save new cut of the swimming video from[start_time,end_time]
   /// videoPath - the name of the video Path
   /// folderPath - the name of the folder to save the new cutting video to
