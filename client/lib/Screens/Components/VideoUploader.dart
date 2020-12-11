@@ -32,14 +32,11 @@ class _VideoUploaderState extends State<VideoUploader> {
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
 
   void initVars() {
-    this.setState(() {
-      this.fileBytes = null;
-      this.fileLength = 0;
-      this.filePath = null;
-      this.clickUpload = false;
-      this.feedbackVideoStreamer = null;
-    });
-
+    this.fileBytes = null;
+    this.fileLength = 0;
+    this.filePath = null;
+    this.clickUpload = false;
+    this.feedbackVideoStreamer = null;
   }
 
   void uploadFileWeb() async {
@@ -167,7 +164,7 @@ class _VideoUploaderState extends State<VideoUploader> {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.pushNamed(context, "/videoPreview");
             });
-            return Text("Success");
+            this.initVars();
           }
           if(this.clickUpload) {
             return Center(

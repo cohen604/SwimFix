@@ -32,20 +32,14 @@ class CameraHandler {
   /// endTime - the end time of the cut
   /// return the File of the cutting video
   File cutVideo(String videoPath, String folderPath, String name, int startTime, int endTime) {
-    // delete the old file if exits
-    String path = "$folderPath/$name";
-    // File file = getFile(path);
-    // if(file!=null) {
-    //   file.deleteSync();
-    // }
     int duration = endTime - startTime;
     String command = "";
     command += "-i $videoPath";
     command += " -ss ${timeToString(startTime)}";
     command += " -t ${timeToString(duration)}";
     command += " -c copy $folderPath/$name";
-    var output = false;
     this.fFmpeg.executeAsync(command, (arg1, arg2)=>{});
+    String path = "$folderPath/$name";
     return getFile(path);
   }
 
@@ -61,6 +55,7 @@ class CameraHandler {
     File file = getFile(path);
     if(file!=null) {
       file.deleteSync();
+      print('deleted file from $path}');
       return true;
     }
     return false;
@@ -94,7 +89,7 @@ class CameraHandler {
   /// return a file
   File getFile(String path) {
     File file = File(path);
-    if(file.existsSync()) {
+    if(file!=null && file.existsSync()) {
       return file;
     }
     return null;
