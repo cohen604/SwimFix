@@ -77,14 +77,16 @@ class _VideoUploaderState extends State<VideoUploader> {
   void uploadVideoMobileCamera() async {
     var picker = ImagePicker();
     PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
-    CameraHandler cameraHandler = new CameraHandler(pickedFile.path);
-    var file = cameraHandler.getVideo();
-
+    CameraHandler cameraHandler = new CameraHandler();
+    List<File> files = cameraHandler.cutVideoList(pickedFile.path);
+    File file = files[0];
     if(file != null) {
       setState(() {
-        this.fileBytes = file.readAsBytesSync(); //1 image
+        this.fileBytes = file.readAsBytesSync();
         this.fileLength = file.lengthSync();
         this.filePath = file.path;
+        //todo send feedback
+        //getFeedback(this.fileBytes, this.fileLength, this.filePath)
       });
     }
   }
@@ -105,12 +107,12 @@ class _VideoUploaderState extends State<VideoUploader> {
     }
   }
 
-  void getFeedback(BuildContext innerContext) async {
+  void getFeedback(Uint8List fileBytes, int fileLength, String filePath) async {
     this.setState(() {
       this.clickUpload = true;
       LogicManager logicManager = LogicManager.getInstance();
-      feedbackVideoStreamer = logicManager.postVideoForStreaming(this.fileBytes,
-          this.fileLength, this.filePath);
+      feedbackVideoStreamer = logicManager.postVideoForStreaming(fileBytes,
+          fileLength, filePath);
     });
   }
 
@@ -181,17 +183,18 @@ class _VideoUploaderState extends State<VideoUploader> {
         buildSelectedFile(context),
         SizedBox(height: 10,),
         TitleButton(
-            title:"Take a video from your camera",
-            buttonText: "Recording",
-            onPress: ()=>uploadVideo(flag:true),
-        ),
-        SizedBox(height: 10,),
-        TitleButton(
             title:"Submit video to SwimFix for feedback",
             buttonText: "Submit",
-            onPress: ()=>getFeedback(context)
+            onPress: ()=>getFeedback(this.fileBytes, this.fileLength, this.filePath)
         ),
         SizedBox(height: 20,),
+        TitleButton(
+          title:"Take a video from your camera",
+          buttonText: "Recording",
+          onPress: ()=>uploadVideo(flag:true),
+        ),
+        SizedBox(height: 10,),
+
         buildVideoPreview(context),
       ],
     );
@@ -214,7 +217,7 @@ class _VideoUploaderState extends State<VideoUploader> {
           TitleButton(
               title:"Submit video to SwimFix for feedback",
               buttonText: "Submit",
-              onPress: ()=>getFeedback(context)
+              onPress: ()=>getFeedback(this.fileBytes, this.fileLength, this.filePath)
           ),
           SizedBox(height: 20,),
           buildVideoPreview(context),

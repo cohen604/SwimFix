@@ -2,26 +2,66 @@ import 'dart:io';
 
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
+/// The class responsible for handling the camera files
 class CameraHandler {
 
-  String originalPath;
-  String cuttingPath;
+  List<File> cuttingVideos;
   FlutterFFmpeg fFmpeg;
 
-  CameraHandler(String originalPath) {
-    this.originalPath = originalPath;
-    int last = originalPath.lastIndexOf("/");
-    this.cuttingPath = originalPath; // originalPath = /../video.mp4 => /../videoTmp.mp4
+  CameraHandler() {
     this.fFmpeg = new FlutterFFmpeg();
+    this.cuttingVideos = new List();
+  }
+
+  List<File> cutVideoList(String videoPath) {
+    int last = videoPath.lastIndexOf("/");
+    // originalPath = /same_root/video.mp4 => cuttingPath = /same_root/videoTmp.mp4
+    String folderPath = videoPath.substring(0,last);
+    //todo loop from i to P:
+    File file = cutVideo(videoPath, folderPath, "test1.mp4", 1, 2);
+    cuttingVideos.add(file);
+    return this.cuttingVideos;
+  }
+
+
+  /// The function save new cut of the swimming video from[start_time,end_time]
+  /// videoPath - the name of the video Path
+  /// folderPath - the name of the folder to save the new cutting video to
+  /// name - the name of the cutting video
+  /// startTime - the start time of the cut
+  /// endTime - the end time of the cut
+  /// return the File of the cutting video
+  File cutVideo(String videoPath, String folderPath, String name, int startTime, int endTime) {
+    int duration = endTime - startTime;
+    String command = "";
+    command += "-i $videoPath";
+    command += " -ss ${timeToString(startTime)}";
+    command += " -t ${timeToString(duration)}";
+    command += " -c copy $folderPath/$name";
+    var output = false;
+    this.fFmpeg.executeAsync(command, (arg1, arg2)=>{});
+    String path = "$folderPath/$name";
+    File file = getFile(path);
+    return file;
+  }
+
+  /// The function delete a cutting video with the given name
+  bool clearCuttingVideo(String path) {
+    File file = getFile(path);
+    if(file!=null) {
+      file.deleteSync();
+      return true;
+    }
+    return false;
   }
 
   /// The function get a int time in seconds
   /// time - the time seconds
   /// return a string in the format hh:mm:ss
   String timeToString(int time) {
-    String output ="00";
+    String output = "00";
     int mm = (time / 60).round();
-    if(mm < 10) {
+    if (mm < 10) {
       output += ":0$mm";
     }
     else {
@@ -38,27 +78,21 @@ class CameraHandler {
     return output;
   }
 
-
-  /// The fucntion
-  ///
-  Future<bool> cutVideo(int startTime, int endTime) async{
-    int duration = endTime - startTime;
-    String command = "";
-    command += "-i ${this.originalPath}";
-    command += " -ss ${timeToString(startTime)}";
-    command += " -t ${timeToString(duration)}";
-    command += " -c copy ${this.cuttingPath}";
-    var output = false;
-    await this.fFmpeg.execute(command).then((value) {
-      if(value >= 0) {
-        output = true;
-      }
-    });
-    return output;
+  /// The function return a video file if exists
+  /// path - the path of the file
+  /// return a file
+  File getFile(String path) {
+    File file = File(path);
+    if(file.existsSync()) {
+      return file;
+    }
+    return null;
   }
 
-  File getVideo() {
-    File file = File(this.cuttingPath);
+  List<File> getVideos() {
+    return cuttingVideos;
   }
+
+
 
 }
