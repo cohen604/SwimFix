@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/scheduler.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
 import 'dart:io';
 import 'dart:typed_data';
@@ -11,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'TitleButton.dart';
-import 'VideoPreview.dart';
+import '../VideoPreviewScreen.dart';
 
 class VideoUploader extends StatefulWidget {
 
@@ -73,14 +74,13 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   void uploadVideoMobileCamera() async {
-    // var picker = ImagePicker();
-    // PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera);
-    // var file = File(pickedFile.path);
-    FilePickerResult result = await FilePicker.platform.pickFiles();
-    if(result != null) {
-      File file = File(result.files.single.path);
+    var picker = ImagePicker();
+    PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
+    var file = File(pickedFile.path);
+
+    if(file != null) {
       setState(() {
-        this.fileBytes = file.readAsBytesSync();
+        this.fileBytes = file.readAsBytesSync(); //1 image
         this.fileLength = file.lengthSync();
         this.filePath = file.path;
       });
@@ -150,7 +150,11 @@ class _VideoUploaderState extends State<VideoUploader> {
         future: this.feedbackVideoStreamer,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return VideoPreview(feedbackVideoStreamer:snapshot.data);
+            LogicManager.getInstance().setFeedbackVideoStreamer(snapshot.data);
+            //TODO change this to pass arguments to the screen
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(context, "/videoPreview");
+            });
           }
           if(this.clickUpload) {
             return Center(
@@ -187,7 +191,6 @@ class _VideoUploaderState extends State<VideoUploader> {
         ),
         SizedBox(height: 20,),
         buildVideoPreview(context),
-
       ],
     );
   }
@@ -195,32 +198,26 @@ class _VideoUploaderState extends State<VideoUploader> {
   // Widget that we used to use.
   // the feedback is on the right side and not in the bottom
   Widget buildWeb(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(height: 50,),
-        Column(
-          children: [
-            TitleButton(
-                title:"Pick Video from your computer",
-                buttonText: "Upload",
-                onPress: uploadVideo
-            ),
-            SizedBox(height: 10,),
-            buildSelectedFile(context),
-            SizedBox(height: 10,),
-            TitleButton(
-                title:"Submit video to SwimFix for feedbac  k", 
-                buttonText: "Submit",
-                onPress: ()=>getFeedback(context)
-            ),
-          ],
-        ),
-        SizedBox(height: 20,),
-        Expanded(
-          child:buildVideoPreview(context),
-        ),
-      ],
-    );
+    return
+      Column(
+        children: [
+          TitleButton(
+              title:"Pick Video from your computer",
+              buttonText: "Upload",
+              onPress: uploadVideo
+          ),
+          SizedBox(height: 10,),
+          buildSelectedFile(context),
+          SizedBox(height: 10,),
+          TitleButton(
+              title:"Submit video to SwimFix for feedback",
+              buttonText: "Submit",
+              onPress: ()=>getFeedback(context)
+          ),
+          SizedBox(height: 20,),
+          buildVideoPreview(context),
+        ],
+      );
   }
 
   @override

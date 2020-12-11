@@ -10,6 +10,8 @@ class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
+  FeedbackVideo feedbackVideo;
+  FeedbackVideoStreamer feedbackVideoStreamer;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
@@ -59,4 +61,22 @@ class LogicManager {
     });
     return output;
   }
+
+  setFeedbackVideo(FeedbackVideo feedbackVideo) {
+    this.feedbackVideo = feedbackVideo;
+  }
+
+  setFeedbackVideoStreamer(FeedbackVideoStreamer feedbackVideoStreamer) {
+    this.feedbackVideoStreamer = feedbackVideoStreamer;
+  }
+
+  getFeedbackVideo() {
+    return this.feedbackVideo;
+  }
+
+  getFeedbackVideoStreamer() {
+    return this.feedbackVideoStreamer;
+  }
+
+
 }
