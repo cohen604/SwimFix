@@ -13,12 +13,12 @@ class CameraHandler {
     this.cuttingVideos = new List();
   }
 
-  List<File> cutVideoList(String videoPath) {
+  Future<List<File>> cutVideoList(String videoPath) async {
     int last = videoPath.lastIndexOf("/");
     // originalPath = /same_root/video.mp4 => cuttingPath = /same_root/videoTmp.mp4
     String folderPath = videoPath.substring(0,last);
     //todo loop from i to P:
-    File file = cutVideo(videoPath, folderPath, "test2.mp4", 1, 2);
+    File file = await cutVideo(videoPath, folderPath, "test6.mp4", 1, 2);
     cuttingVideos.add(file);
     return this.cuttingVideos;
   }
@@ -31,15 +31,18 @@ class CameraHandler {
   /// startTime - the start time of the cut
   /// endTime - the end time of the cut
   /// return the File of the cutting video
-  File cutVideo(String videoPath, String folderPath, String name, int startTime, int endTime) {
+  Future<File> cutVideo(String videoPath, String folderPath, String name, int startTime, int endTime) async{
+    String path = "$folderPath/$name";
+    //deleteCuttingVideo(path);
     int duration = endTime - startTime;
     String command = "";
     command += "-i $videoPath";
+    command += " -y";
     command += " -ss ${timeToString(startTime)}";
     command += " -t ${timeToString(duration)}";
     command += " -c copy $folderPath/$name";
-    this.fFmpeg.executeAsync(command, (arg1, arg2)=>{});
-    String path = "$folderPath/$name";
+    await this.fFmpeg.execute(command);
+    // String path = "$folderPath/$name";
     return getFile(path);
   }
 
@@ -55,7 +58,7 @@ class CameraHandler {
     File file = getFile(path);
     if(file!=null) {
       file.deleteSync();
-      print('deleted file from $path}');
+      // print('file is exists: ${file.existsSync()}');
       return true;
     }
     return false;

@@ -21,7 +21,7 @@ class _UploadScreenState extends State<UploadScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Image / Video Picker"),
+          title: Text("Video Upload"),
         ),
         body: SingleChildScrollView(
           child: Center(

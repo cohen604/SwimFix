@@ -85,15 +85,20 @@ class _VideoUploaderState extends State<VideoUploader> {
     var picker = ImagePicker();
     PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
     CameraHandler cameraHandler = new CameraHandler();
-    List<File> files = cameraHandler.cutVideoList(pickedFile.path);
-    File file = files[0];
-    if(file != null) {
-      var fileBytes = file.readAsBytesSync();
-      var fileLength = file.lengthSync();
-      var filePath = file.path;
-      cameraHandler.deleteCuttingVideo(file.path);
-      getFeedback(fileBytes, fileLength, filePath);
+    cameraHandler.cutVideoList(pickedFile.path).then((files) {
+      File file = files.first;
+      if(file != null) {
+        var fileBytes = file.readAsBytesSync();
+        var fileLength = file.lengthSync();
+        var filePath = file.path;
+        //cameraHandler.deleteCuttingVideo(file.path);
+        getFeedback(fileBytes, fileLength, filePath);
+      }
+      else {
+        print("To late to be null!!");
+      }
     }
+    );
   }
 
   /// The function call upload video of mobile or web
