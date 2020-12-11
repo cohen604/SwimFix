@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/Services/CameraHandler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/scheduler.dart';
@@ -76,7 +77,8 @@ class _VideoUploaderState extends State<VideoUploader> {
   void uploadVideoMobileCamera() async {
     var picker = ImagePicker();
     PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
-    var file = File(pickedFile.path);
+    CameraHandler cameraHandler = new CameraHandler(pickedFile.path);
+    var file = cameraHandler.getVideo();
 
     if(file != null) {
       setState(() {
