@@ -18,7 +18,7 @@ class CameraHandler {
     // originalPath = /same_root/video.mp4 => cuttingPath = /same_root/videoTmp.mp4
     String folderPath = videoPath.substring(0,last);
     //todo loop from i to P:
-    File file = cutVideo(videoPath, folderPath, "test1.mp4", 1, 2);
+    File file = cutVideo(videoPath, folderPath, "test2.mp4", 1, 2);
     cuttingVideos.add(file);
     return this.cuttingVideos;
   }
@@ -32,6 +32,12 @@ class CameraHandler {
   /// endTime - the end time of the cut
   /// return the File of the cutting video
   File cutVideo(String videoPath, String folderPath, String name, int startTime, int endTime) {
+    // delete the old file if exits
+    String path = "$folderPath/$name";
+    // File file = getFile(path);
+    // if(file!=null) {
+    //   file.deleteSync();
+    // }
     int duration = endTime - startTime;
     String command = "";
     command += "-i $videoPath";
@@ -40,9 +46,7 @@ class CameraHandler {
     command += " -c copy $folderPath/$name";
     var output = false;
     this.fFmpeg.executeAsync(command, (arg1, arg2)=>{});
-    String path = "$folderPath/$name";
-    File file = getFile(path);
-    return file;
+    return getFile(path);
   }
 
   /// The function delete cutting video list

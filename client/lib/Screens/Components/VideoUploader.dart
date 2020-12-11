@@ -94,8 +94,8 @@ class _VideoUploaderState extends State<VideoUploader> {
       var fileBytes = file.readAsBytesSync();
       var fileLength = file.lengthSync();
       var filePath = file.path;
-      getFeedback(fileBytes, fileLength, filePath);
       cameraHandler.deleteCuttingVideo(file.path);
+      getFeedback(fileBytes, fileLength, filePath);
     }
   }
 
@@ -167,7 +167,7 @@ class _VideoUploaderState extends State<VideoUploader> {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.pushNamed(context, "/videoPreview");
             });
-            this.initVars();
+            return Text("Success");
           }
           if(this.clickUpload) {
             return Center(
