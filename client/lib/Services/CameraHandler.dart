@@ -63,6 +63,7 @@ class CameraHandler {
   /// return duration of the video in seconds
   int getTotalTime(String videoPath) {
     File file = File(videoPath);
+    print(videoPath);
     VideoPlayerController controller = new VideoPlayerController.file(file);
     return controller.value.duration.inSeconds;
   }
