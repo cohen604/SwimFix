@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:video_player/video_player.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 /// The class responsible for handling the camera files
@@ -7,20 +7,64 @@ class CameraHandler {
 
   List<File> cuttingVideos;
   FlutterFFmpeg fFmpeg;
+  Directory directory;
 
   CameraHandler() {
-    this.fFmpeg = new FlutterFFmpeg();
     this.cuttingVideos = new List();
+    this.fFmpeg = new FlutterFFmpeg();
   }
 
   Future<List<File>> cutVideoList(String videoPath) async {
     int last = videoPath.lastIndexOf("/");
     // originalPath = /same_root/video.mp4 => cuttingPath = /same_root/videoTmp.mp4
     String folderPath = videoPath.substring(0,last);
+    int total = getTotalTime(videoPath);
+    print("total video time $total");
+    this.directory = createTmpDirectory(folderPath);
     //todo loop from i to P:
-    File file = await cutVideo(videoPath, folderPath, "test6.mp4", 1, 2);
-    cuttingVideos.add(file);
+    int jumps = 2;
+    for(int i =0; i<total; i+=jumps) {
+      File cutFile = await cutVideo(videoPath, this.directory.path, "cut$i.mp4", i, i+jumps);
+      cuttingVideos.add(cutFile);
+    }
     return this.cuttingVideos;
+  }
+
+  /// The function create a tmp directory
+  /// folder - the folder of the given path
+  /// return the new tmp directory
+  /// Note: if the directory exits deletes the old one
+  Directory createTmpDirectory(String folder) {
+    String path = "$folder/videoCuts";
+    Directory dir = Directory(path);
+    this.deleteTmpDirectory(path);
+    dir.create(recursive: true);
+    if(dir.existsSync()) {
+      print('created dir');
+    }
+    return dir;
+  }
+
+  /// The function delete a tmp directory
+  /// return ture if the directory deleted
+  bool deleteTmpDirectory(String path) {
+    Directory dir = Directory(path);
+    if(dir.existsSync()) {
+      dir.deleteSync(recursive: true);
+      if(dir.existsSync()) {
+        print('delete the old dir');
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// The function return the duration time of the video
+  /// return duration of the video in seconds
+  int getTotalTime(String videoPath) {
+    File file = File(videoPath);
+    VideoPlayerController controller = new VideoPlayerController.file(file);
+    return controller.value.duration.inSeconds;
   }
 
   /// The function save new cut of the swimming video from[start_time,end_time]
