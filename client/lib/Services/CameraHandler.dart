@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:video_player/video_player.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:media_info/media_info.dart';
 
 /// The class responsible for handling the camera files
 class CameraHandler {
@@ -18,7 +18,7 @@ class CameraHandler {
     int last = videoPath.lastIndexOf("/");
     // originalPath = /same_root/video.mp4 => cuttingPath = /same_root/videoTmp.mp4
     String folderPath = videoPath.substring(0,last);
-    int total = getTotalTime(videoPath);
+    int total = await getTotalTime(videoPath);
     print("total video time $total");
     this.directory = createTmpDirectory(folderPath);
     //todo loop from i to P:
@@ -27,6 +27,7 @@ class CameraHandler {
       File cutFile = await cutVideo(videoPath, this.directory.path, "cut$i.mp4", i, i+jumps);
       cuttingVideos.add(cutFile);
     }
+    print("number of video cuts ${cuttingVideos.length}");
     return this.cuttingVideos;
   }
 
@@ -61,11 +62,16 @@ class CameraHandler {
 
   /// The function return the duration time of the video
   /// return duration of the video in seconds
-  int getTotalTime(String videoPath) {
+  Future<int> getTotalTime(String videoPath) async {
     File file = File(videoPath);
-    print(videoPath);
-    VideoPlayerController controller = new VideoPlayerController.file(file);
-    return controller.value.duration.inSeconds;
+    int duration = 0;
+    MediaInfo mediaInfo = MediaInfo();
+    await mediaInfo.getMediaInfo(videoPath).then((value) {
+    Map<String, dynamic> info = value;
+    //print(info.keys);
+    duration = (info["durationMs"] / 1000).floor();
+    });
+    return duration;
   }
 
   /// The function save new cut of the swimming video from[start_time,end_time]
