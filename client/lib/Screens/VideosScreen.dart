@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'Components/VideoStreamerCard.dart';
 import 'Screen.dart';
 
 class VideosScreen extends Screen {
@@ -105,6 +106,7 @@ class _VideosScreenState extends State<VideosScreen> {
             itemBuilder: (context, index) {
               FeedbackVideoStreamer link = this.have[index];
               if(link != null) {
+                return VideoStreamerCard(link: link,);
                 return Text(link.getPath());
               }
               else {
@@ -122,11 +124,13 @@ class _VideosScreenState extends State<VideosScreen> {
                           });
                         });
                     }
+                    // return VideoStreamerCard(link: null,);
                     return Center(
                         child:CircularProgressIndicator()
                     );
                   });
                 }
+                // return VideoStreamerCard(link: null,);
                 return Text("No Link Yet");
               }
             },

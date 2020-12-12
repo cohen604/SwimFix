@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => new UploadScreen(),
-        '/videoPreview': (context) => new VideoPreviewScreen(),
+        '/videoPreview': (context) => new VideoPreviewScreen(
+          feedbackVideoStreamer: ModalRoute.of(context).settings.arguments,),
         '/videos': (context) => new VideosScreen(),
       },
       debugShowCheckedModeBanner: false,

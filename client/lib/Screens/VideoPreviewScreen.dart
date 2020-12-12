@@ -11,11 +11,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class VideoPreviewScreen extends StatefulWidget {
 
   FeedbackVideoStreamer feedbackVideoStreamer;
-
-  VideoPreviewScreen({Key key}): super(key: key){
-    LogicManager logicManager = LogicManager.getInstance();
-    this.feedbackVideoStreamer = logicManager.getFirstFeedbackStreamer();
-  }
+  VideoPreviewScreen({this.feedbackVideoStreamer, Key key}):
+        super(key: key);
 
   @override
   _VideoPreviewScreenState createState()=> new _VideoPreviewScreenState();

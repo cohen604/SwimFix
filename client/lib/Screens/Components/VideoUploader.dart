@@ -171,7 +171,6 @@ class _VideoUploaderState extends State<VideoUploader> {
             lm.setListFileNeedFeedback(this.filesWithNoFeedBack);
             //TODO change this to pass arguments to the screen
             SchedulerBinding.instance.addPostFrameCallback((_) {
-              // Navigator.pushNamed(context, "/videoPreview");
               Navigator.pushNamed(context, "/videos");
             });
             this.initVars();

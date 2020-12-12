@@ -4,8 +4,11 @@ import Storage.VideoService;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Video {
+
+    private static AtomicInteger id = new AtomicInteger(0);
 
     private String path; // The path the video saved into
     private String videoType; // The video type must be in the format ".type"
@@ -18,12 +21,17 @@ public class Video {
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
         //TODO generate here a unique string path that recognize the user so we can load later
-        this.path = "clientVideos/videoTmp"+this.videoType;
+        this.path = generateFileName() + this.videoType;
         this.videoHandler = new VideoHandler();
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         //TODO check if the video is empty?
         this.height = this.video.get(0).height();
         this.width = this.video.get(0).width();
+    }
+
+    public String generateFileName() {
+        int number =  id.getAndIncrement();
+        return "clientVideos/videoTmp"+number;
     }
 
     public Video(ConvertedVideoDTO convertedVideoDTO, String path) {

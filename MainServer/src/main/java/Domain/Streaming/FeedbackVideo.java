@@ -25,7 +25,7 @@ public class FeedbackVideo extends Video {
         this.taggedVideo = taggedVideo;
         this.errorList = errorList;
         //TODO generate here a unique string path that recognize the user so we can load later
-        this.path = "clientVideos/feedbackvideoTmp.mp4";
+        this.path = generateFileName()+"_feedback.mp4";
         this.feedbackFile = null;
         this.feedbackUpdated = false;
     }

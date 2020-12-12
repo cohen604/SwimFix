@@ -92,6 +92,9 @@ class LogicManager {
 
   /// The function return the list of file that need to get Feedback
   List<File> getListNeed() {
+    if(this.listFileNeedFeedback == null) {
+      return List();
+    }
     return this.listFileNeedFeedback;
   }
 
