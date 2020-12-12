@@ -1,4 +1,5 @@
 import 'package:client/Screens/UploadScreen.dart';
+import 'package:client/Screens/VideosScreen.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
 import 'Screens/VideoPreviewScreen.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => new UploadScreen(),
         '/videoPreview': (context) => new VideoPreviewScreen(),
+        '/videos': (context) => new VideosScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

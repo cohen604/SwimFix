@@ -10,13 +10,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class VideoPreviewScreen extends StatefulWidget {
 
-  FeedbackVideo feedbackVideo;
   FeedbackVideoStreamer feedbackVideoStreamer;
 
   VideoPreviewScreen({Key key}): super(key: key){
     LogicManager logicManager = LogicManager.getInstance();
-    this.feedbackVideo = logicManager.getFeedbackVideo();
-    this.feedbackVideoStreamer = logicManager.getFeedbackVideoStreamer();
+    this.feedbackVideoStreamer = logicManager.getFirstFeedbackStreamer();
   }
 
   @override
@@ -37,7 +35,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   }
 
   void setController() async {
-    if(LogicManager.getInstance().getFeedbackVideoStreamer() != null) {
+    if(LogicManager.getInstance().getFirstFeedbackStreamer() != null) {
       ConnectionHandler connectionHandelr = new ConnectionHandler();
       String url = connectionHandelr.getStreamUrl() + this.widget.feedbackVideoStreamer.getPath();
       print(url);
@@ -66,7 +64,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   }
 
   Widget buildChecw(BuildContext context) {
-    if(LogicManager.getInstance().getFeedbackVideoStreamer() == null) {
+    if(LogicManager.getInstance().getFirstFeedbackStreamer() == null) {
       return SafeArea(
         child: Scaffold(
             appBar: AppBar(

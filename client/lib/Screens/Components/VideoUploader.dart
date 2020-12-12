@@ -30,6 +30,7 @@ class _VideoUploaderState extends State<VideoUploader> {
   String filePath;
   bool clickUpload = false;
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
+  List<File> filesWithNoFeedBack;
 
   void initVars() {
     this.fileBytes = null;
@@ -84,14 +85,15 @@ class _VideoUploaderState extends State<VideoUploader> {
   void uploadVideoMobileCamera() async {
     var picker = ImagePicker();
     PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
-    CameraHandler cameraHandler = new CameraHandler();
-    cameraHandler.cutVideoList(pickedFile.path).then((files) {
+    LogicManager logicManager = LogicManager.getInstance();
+    logicManager.cutVideoList(pickedFile.path).then((files) {
       File file = files.first;
       if(file != null) {
+        files.removeAt(0);
+        this.filesWithNoFeedBack = files;
         var fileBytes = file.readAsBytesSync();
         var fileLength = file.lengthSync();
         var filePath = file.path;
-        //cameraHandler.deleteCuttingVideo(file.path);
         getFeedback(fileBytes, fileLength, filePath);
       }
       else {
@@ -164,10 +166,13 @@ class _VideoUploaderState extends State<VideoUploader> {
         future: this.feedbackVideoStreamer,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            LogicManager.getInstance().setFeedbackVideoStreamer(snapshot.data);
+            LogicManager lm = LogicManager.getInstance();
+            lm.addFeedbackVideoStreamer(snapshot.data);
+            lm.setListFileNeedFeedback(this.filesWithNoFeedBack);
             //TODO change this to pass arguments to the screen
             SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, "/videoPreview");
+              // Navigator.pushNamed(context, "/videoPreview");
+              Navigator.pushNamed(context, "/videos");
             });
             this.initVars();
           }

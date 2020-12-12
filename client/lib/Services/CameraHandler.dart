@@ -3,6 +3,7 @@ import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:media_info/media_info.dart';
 
 /// The class responsible for handling the camera files
+//TODO all the function need to be called from the logicManger
 class CameraHandler {
 
   List<File> cuttingVideos;
@@ -22,7 +23,7 @@ class CameraHandler {
     print("total video time $total");
     this.directory = createTmpDirectory(folderPath);
     //todo loop from i to P:
-    int jumps = 2;
+    int jumps = 1;
     for(int i =0; i<total; i+=jumps) {
       File cutFile = await cutVideo(videoPath, this.directory.path, "cut$i.mp4", i, i+jumps);
       cuttingVideos.add(cutFile);
