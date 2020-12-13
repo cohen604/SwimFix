@@ -32,7 +32,7 @@ public class VideoHandler {
      * @return if saved true
      * @precondition there is no file in the given path - if there is it will override it
      */
-    public synchronized boolean saveFrames(byte[] video, String path) {
+    public synchronized boolean saveFramesBytes(byte[] video, String path) {
         if(video == null || path == null || path.isEmpty() || video.length == 0) {
             return false;
         }
@@ -97,6 +97,9 @@ public class VideoHandler {
      * @return list of frames
      */
     public List<Mat> getFrames(String desPath) {
+        if(desPath == null) {
+            return null;
+        }
         File file = new File(desPath);
         if(file.exists()) {
             List<Mat> output = new LinkedList<>();
@@ -124,7 +127,7 @@ public class VideoHandler {
         if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
             return null;
         }
-        if(saveFrames(video, desPath)) {
+        if(saveFramesBytes(video, desPath)) {
             return getFrames(desPath);
         }
         return null;
@@ -204,9 +207,11 @@ public class VideoHandler {
      * @param path - path and the name of the file
      * @param frames - the list of frames
      * @return the file saved
-     * @postcondition videoWriter is working
      */
     public File saveFrames(String path, List<Mat> frames) {
+        if(path == null || path.isEmpty() || frames == null || frames.isEmpty()) {
+            return  null;
+        }
         File output = null;
         Size size = new Size(frames.get(0).width(), frames.get(0).height());
         File file = new File(path);
@@ -266,6 +271,9 @@ public class VideoHandler {
      */
     public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {
+        if(frames == null) {
+            return null;
+        }
         frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
         return saveFrames(desPath, frames);
     }

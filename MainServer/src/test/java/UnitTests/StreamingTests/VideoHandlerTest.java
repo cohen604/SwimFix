@@ -1,9 +1,12 @@
 package UnitTests.StreamingTests;
 
+import Domain.Streaming.SwimmingError;
+import Domain.Streaming.SwimmingTag;
 import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
+import org.opencv.core.Mat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,14 +45,14 @@ public class VideoHandlerTest extends TestCase {
     public void testSaveVideo() {
         try {
             byte[] bytes = Files.readAllBytes(this.testVideo.toPath());
-            String path = VIDEO_FOLDER + "./test.mov";
-            assertTrue(this.videoHandler.saveFrames(bytes, path));
+            String path = VIDEO_FOLDER + "./testSaveVideo.mov";
+            assertTrue(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             this.deleteList.add(file);
             assertTrue(file.exists());
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -58,11 +61,11 @@ public class VideoHandlerTest extends TestCase {
         try {
             byte[] bytes = new byte[0];
             String path = VIDEO_FOLDER + "./test.mov";
-            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             assertFalse(file.exists());
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -70,9 +73,9 @@ public class VideoHandlerTest extends TestCase {
     public void testSaveVideoNullPath() {
         try {
             byte[] bytes = new byte[1];
-            assertFalse(this.videoHandler.saveFrames(bytes, null));
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, null));
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -81,11 +84,11 @@ public class VideoHandlerTest extends TestCase {
         try{
             byte[] bytes = new byte[1];
             String path = "";
-            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             assertFalse(file.exists());
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -94,18 +97,18 @@ public class VideoHandlerTest extends TestCase {
         try {
             byte[] bytes = new byte[1];
             String path = WRONG_FOLDER + "/test.mov";
-            assertFalse(this.videoHandler.saveFrames(bytes, path));
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             assertFalse(file.exists());
         }catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
 
     public void testDeleteVideo() {
         try {
-            String path = VIDEO_FOLDER + "./test.mov";
+            String path = VIDEO_FOLDER + "./testDeleteMove.mov";
             FileOutputStream out = new FileOutputStream(path);
             out.write(new byte[1]);
             out.close();
@@ -113,7 +116,7 @@ public class VideoHandlerTest extends TestCase {
             File file = new File(path);
             assertFalse(file.exists());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -122,7 +125,7 @@ public class VideoHandlerTest extends TestCase {
         try {
             assertFalse(this.videoHandler.deleteVideo(null));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -132,7 +135,7 @@ public class VideoHandlerTest extends TestCase {
             String path = WRONG_FOLDER + "/test.mov";
             assertFalse(this.videoHandler.deleteVideo(path));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -142,7 +145,7 @@ public class VideoHandlerTest extends TestCase {
             String path = "";
             assertFalse(this.videoHandler.deleteVideo(path));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
@@ -164,53 +167,356 @@ public class VideoHandlerTest extends TestCase {
                 assertEquals(bytes[i], result[i]);
             }
         } catch (Exception e ){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             fail();
         }
     }
 
     public void testReadBytesNullPath() {
-        //TODO
+        try {
+            byte[] result = this.videoHandler.readVideo(null);
+            assertNull(result);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     public void testReadBytesWrongPath() {
-        //TODO
+        try {
+            String path = WRONG_FOLDER + "/test.mov";
+            byte[] result = this.videoHandler.readVideo(path);
+            assertNull(result);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     public void testReadBytesEmptyPath() {
-        //TODO
+        try {
+            byte[] result = this.videoHandler.readVideo("");
+            assertNull(result);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     public void testGetFrames() {
-        //TODO
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            assertNotNull(frames);
+            assertFalse(frames.isEmpty());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
-    public void testGetFramesListNull() {
-        //TODO
+    public void testGetFramesWrongPath() {
+        try {
+            String path = WRONG_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            assertNull(frames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
-    public void testGetFramesListEmpty() {
-        //TODO
+    public void testGetFramesEmptyPath() {
+        try {
+            List<Mat> frames = this.videoHandler.getFrames("");
+            assertNull(frames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
-    public void testGetFramesBytesNull() {
-        //TODO
+    public void testGetFramesNullPath() {
+        try {
+            List<Mat> frames = this.videoHandler.getFrames(null);
+            assertNull(frames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
-    public void testGetFramesBytesEmpty() {
-        //TODO
-    }
 
     public void testGetFramesBytes() {
-        //TODO
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            List<byte[]> bytes = this.videoHandler.getFramesBytes(frames);
+            assertNotNull(bytes);
+            assertFalse(bytes.isEmpty());
+            assertEquals(frames.size(), bytes.size());
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFramesBytesEmptyList() {
+        try {
+            List<byte[]> bytes = this.videoHandler.getFramesBytes(new LinkedList<>());
+            assertNull(bytes);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFramesBytesNullList() {
+        try {
+            List<byte[]> bytes = this.videoHandler.getFramesBytes(null);
+            assertNull(bytes);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
     }
 
     public void testSaveFrames() {
-        //TODO
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = VIDEO_FOLDER + "./testSaveFrames.mp4";
+            File file = this.videoHandler.saveFrames(des, frames);
+            assertNotNull(file);
+            assertTrue(file.exists());
+            this.deleteList.add(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesWrongPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            File file = this.videoHandler.saveFrames(des, frames);
+            assertNull(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesNullPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            File file = this.videoHandler.saveFrames(null, frames);
+            assertNull(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesEmptyPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            File file = this.videoHandler.saveFrames("", frames);
+            assertNull(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesNullFrames() {
+        try {
+            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            File file = this.videoHandler.saveFrames(des, null);
+            assertNull(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesEmptyFrames() {
+        try {
+            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            File file = this.videoHandler.saveFrames(des, null);
+            assertNull(file);
+        }catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytes() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            byte[] bytes = this.videoHandler.readVideo(path);
+            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            assertTrue(this.videoHandler.saveFramesBytes(bytes, des));
+            this.deleteList.add(new File(des));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytesWrongPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            byte[] bytes = this.videoHandler.readVideo(path);
+            String des = WRONG_FOLDER + "./testSaveFramesBytes.mp4";
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, des));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytesNullPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            byte[] bytes = this.videoHandler.readVideo(path);
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, null));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytesEmptyPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            byte[] bytes = this.videoHandler.readVideo(path);
+            assertFalse(this.videoHandler.saveFramesBytes(bytes, ""));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytesEmptyBytes() {
+        try {
+            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            assertFalse(this.videoHandler.saveFramesBytes(new byte[0], des));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSaveFramesBytesNullBytes() {
+        try {
+            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            assertFalse(this.videoHandler.saveFramesBytes(null, des));
+        } catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
     }
 
     public void testGetFeedBackVideoFile() {
         //TODO
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNotNull(file);
+            assertTrue(file.exists());
+            this.deleteList.add(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFeedBackVideoFileWrongPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = WRONG_FOLDER + "./testGetFeedbackVideo.mp4";
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNull(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFeedBackVideoFileEmptyPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = "";
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNull(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFeedBackVideoFileNullPath() {
+        try {
+            String path = VIDEO_FOLDER + "./sample.mov";
+            List<Mat> frames = this.videoHandler.getFrames(path);
+            String des = null;
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNull(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFeedBackVideoFileEmptyFrames() {
+        try {
+            List<Mat> frames = new LinkedList<>();
+            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNull(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testGetFeedBackVideoFileNullFrames() {
+        try {
+            List<Mat> frames = null;
+            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingError> errors = new LinkedList<>();
+            List<Object> visuaComment = new LinkedList<>();
+            File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
+            assertNull(file);
+        } catch (Exception e ){
+            e.printStackTrace();
+            fail();
+        }
     }
 
 }
