@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         VideoHandlerTest.class,
         VideoTests.class,
-        VideoService.class,
+        //VideoService.class,
 })
 
 public class AllUnitTests {

@@ -45,7 +45,7 @@ public class VideoHandlerTest extends TestCase {
     public void testSaveVideo() {
         try {
             byte[] bytes = Files.readAllBytes(this.testVideo.toPath());
-            String path = VIDEO_FOLDER + "./testSaveVideo.mov";
+            String path = VIDEO_FOLDER + "/testSaveVideo.mov";
             assertTrue(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             this.deleteList.add(file);
@@ -60,7 +60,7 @@ public class VideoHandlerTest extends TestCase {
     public void testSaveVideoEmptyBytes() {
         try {
             byte[] bytes = new byte[0];
-            String path = VIDEO_FOLDER + "./test.mov";
+            String path = VIDEO_FOLDER + "/test.mov";
             assertFalse(this.videoHandler.saveFramesBytes(bytes, path));
             File file = new File(path);
             assertFalse(file.exists());
@@ -108,7 +108,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testDeleteVideo() {
         try {
-            String path = VIDEO_FOLDER + "./testDeleteMove.mov";
+            String path = VIDEO_FOLDER + "/testDeleteMove.mov";
             FileOutputStream out = new FileOutputStream(path);
             out.write(new byte[1]);
             out.close();
@@ -205,7 +205,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFrames() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             assertNotNull(frames);
             assertFalse(frames.isEmpty());
@@ -217,7 +217,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFramesWrongPath() {
         try {
-            String path = WRONG_FOLDER + "./sample.mov";
+            String path = WRONG_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             assertNull(frames);
         } catch (Exception e) {
@@ -249,7 +249,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFramesBytes() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             List<byte[]> bytes = this.videoHandler.getFramesBytes(frames);
             assertNotNull(bytes);
@@ -283,9 +283,9 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFrames() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
-            String des = VIDEO_FOLDER + "./testSaveFrames.mp4";
+            String des = VIDEO_FOLDER + "/testSaveFrames.mp4";
             File file = this.videoHandler.saveFrames(des, frames);
             assertNotNull(file);
             assertTrue(file.exists());
@@ -298,9 +298,9 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesWrongPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
-            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            String des = WRONG_FOLDER + "/testSaveFrames.mp4";
             File file = this.videoHandler.saveFrames(des, frames);
             assertNull(file);
         }catch (Exception e) {
@@ -311,7 +311,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesNullPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             File file = this.videoHandler.saveFrames(null, frames);
             assertNull(file);
@@ -323,7 +323,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesEmptyPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             File file = this.videoHandler.saveFrames("", frames);
             assertNull(file);
@@ -335,7 +335,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesNullFrames() {
         try {
-            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            String des = WRONG_FOLDER + "/testSaveFrames.mp4";
             File file = this.videoHandler.saveFrames(des, null);
             assertNull(file);
         }catch (Exception e) {
@@ -346,7 +346,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesEmptyFrames() {
         try {
-            String des = WRONG_FOLDER + "./testSaveFrames.mp4";
+            String des = WRONG_FOLDER + "/testSaveFrames.mp4";
             File file = this.videoHandler.saveFrames(des, null);
             assertNull(file);
         }catch (Exception e) {
@@ -357,9 +357,9 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesBytes() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             byte[] bytes = this.videoHandler.readVideo(path);
-            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            String des = VIDEO_FOLDER + "/testSaveFramesBytes.mp4";
             assertTrue(this.videoHandler.saveFramesBytes(bytes, des));
             this.deleteList.add(new File(des));
         } catch (Exception e){
@@ -370,9 +370,9 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesBytesWrongPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             byte[] bytes = this.videoHandler.readVideo(path);
-            String des = WRONG_FOLDER + "./testSaveFramesBytes.mp4";
+            String des = WRONG_FOLDER + "/testSaveFramesBytes.mp4";
             assertFalse(this.videoHandler.saveFramesBytes(bytes, des));
         } catch (Exception e){
             e.printStackTrace();
@@ -382,7 +382,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesBytesNullPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             byte[] bytes = this.videoHandler.readVideo(path);
             assertFalse(this.videoHandler.saveFramesBytes(bytes, null));
         } catch (Exception e){
@@ -404,7 +404,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesBytesEmptyBytes() {
         try {
-            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            String des = VIDEO_FOLDER + "/testSaveFramesBytes.mp4";
             assertFalse(this.videoHandler.saveFramesBytes(new byte[0], des));
         } catch (Exception e){
             e.printStackTrace();
@@ -414,7 +414,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testSaveFramesBytesNullBytes() {
         try {
-            String des = VIDEO_FOLDER + "./testSaveFramesBytes.mp4";
+            String des = VIDEO_FOLDER + "/testSaveFramesBytes.mp4";
             assertFalse(this.videoHandler.saveFramesBytes(null, des));
         } catch (Exception e){
             e.printStackTrace();
@@ -425,9 +425,9 @@ public class VideoHandlerTest extends TestCase {
     public void testGetFeedBackVideoFile() {
         //TODO
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
-            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingTag> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
@@ -443,9 +443,9 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFeedBackVideoFileWrongPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
-            String des = WRONG_FOLDER + "./testGetFeedbackVideo.mp4";
+            String des = WRONG_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingTag> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
@@ -459,7 +459,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFeedBackVideoFileEmptyPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = "";
             List<SwimmingTag> dots = new LinkedList<>();
@@ -475,7 +475,7 @@ public class VideoHandlerTest extends TestCase {
 
     public void testGetFeedBackVideoFileNullPath() {
         try {
-            String path = VIDEO_FOLDER + "./sample.mov";
+            String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = null;
             List<SwimmingTag> dots = new LinkedList<>();
@@ -492,7 +492,7 @@ public class VideoHandlerTest extends TestCase {
     public void testGetFeedBackVideoFileEmptyFrames() {
         try {
             List<Mat> frames = new LinkedList<>();
-            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingTag> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
@@ -507,7 +507,7 @@ public class VideoHandlerTest extends TestCase {
     public void testGetFeedBackVideoFileNullFrames() {
         try {
             List<Mat> frames = null;
-            String des = VIDEO_FOLDER + "./testGetFeedbackVideo.mp4";
+            String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingTag> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
