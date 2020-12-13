@@ -12,7 +12,9 @@ import 'Screen.dart';
 
 class VideosScreen extends Screen {
 
-  VideosScreen({Key key}) : super(key: key);
+  List<FeedbackVideoStreamer> videos;
+  List<File> futureVideos;
+  VideosScreen({this.videos, this.futureVideos, Key key}) : super(key: key);
 
   @override
   _VideosScreenState createState() => _VideosScreenState();
@@ -33,15 +35,15 @@ class _VideosScreenState extends State<VideosScreen> {
   void initState() {
     print("Start Init Video Screen");
     super.initState();
-    LogicManager logicManger = LogicManager.getInstance();
     // create the have map
-    this.have = logicManger.getListFeedbackStreamer();
+    this.have = this.widget.videos;// logicManger.getListFeedbackStreamer();
     // create the future have map
     this.futureHave = Map();
     // create the need map
     this.need = Map();
     int index = this.have.length;
-    for(File file in logicManger.getListNeed()) {
+    // for(File file in logicManger.getListNeed()) {
+    for(File file in this.widget.futureVideos) {
       this.need[index] = file;
       index++;
     }

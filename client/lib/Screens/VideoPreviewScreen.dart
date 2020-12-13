@@ -2,7 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Services/connectionHandler.dart';
+import 'package:client/Services/ConnectionHandler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -32,7 +32,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   }
 
   void setController() async {
-    if(LogicManager.getInstance().getFirstFeedbackStreamer() != null) {
+    if(this.widget.feedbackVideoStreamer != null) {
       ConnectionHandler connectionHandelr = new ConnectionHandler();
       String url = connectionHandelr.getStreamUrl() + this.widget.feedbackVideoStreamer.getPath();
       print(url);
@@ -60,8 +60,8 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     _controller.dispose();
   }
 
-  Widget buildChecw(BuildContext context) {
-    if(LogicManager.getInstance().getFirstFeedbackStreamer() == null) {
+  Widget buildChewie(BuildContext context) {
+    if(this.widget.feedbackVideoStreamer == null) {
       return SafeArea(
         child: Scaffold(
             appBar: AppBar(
@@ -113,7 +113,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return buildChecw(context);
+    return buildChewie(context);
   }
   
 }

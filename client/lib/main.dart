@@ -1,9 +1,8 @@
 import 'package:client/Screens/UploadScreen.dart';
 import 'package:client/Screens/VideosScreen.dart';
-import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
+import 'Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'Screens/VideoPreviewScreen.dart';
-import 'Services/connectionHandler.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +23,13 @@ class MyApp extends StatelessWidget {
         '/': (context) => new UploadScreen(),
         '/videoPreview': (context) => new VideoPreviewScreen(
           feedbackVideoStreamer: ModalRoute.of(context).settings.arguments,),
-        '/videos': (context) => new VideosScreen(),
+        '/videos': (context) {
+          VideoScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return new VideosScreen(
+            videos: args.videos,
+            futureVideos: args.futureVideos,
+          );
+        },
       },
       debugShowCheckedModeBanner: false,
     );

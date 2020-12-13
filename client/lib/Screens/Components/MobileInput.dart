@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Services/connectionHandler.dart';
+import 'package:client/Services/ConnectionHandler.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

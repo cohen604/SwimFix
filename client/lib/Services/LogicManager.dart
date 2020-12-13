@@ -6,23 +6,17 @@ import 'package:client/Services/CameraHandler.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/ServerResponse.dart';
-import 'package:client/Services/connectionHandler.dart';
+import 'package:client/Services/ConnectionHandler.dart';
 
 class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
   CameraHandler cameraHandler;
-  List<FeedbackVideoStreamer> listFeedbackVideoStreamer;
-  List<File> listFileNeedFeedback;
-  //TODO delete this
-  FeedbackVideo feedbackVideo;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
     this.cameraHandler = new CameraHandler();
-    this.listFeedbackVideoStreamer = List();
-    this.listFileNeedFeedback = List();
   }
 
   static LogicManager getInstance() {
@@ -56,46 +50,9 @@ class LogicManager {
     return output;
   }
 
-  /// The function add a feedback video streamer
-  /// feedbackVideoStreamer -
-  void addFeedbackVideoStreamer(FeedbackVideoStreamer feedbackVideoStreamer) {
-    this.listFeedbackVideoStreamer.add(feedbackVideoStreamer);
-  }
-
-  /// The function return the first feedback streamer
-  FeedbackVideoStreamer getFirstFeedbackStreamer() {
-    if(this.listFeedbackVideoStreamer.isEmpty) {
-      return null;
-    }
-    return this.listFeedbackVideoStreamer.first;
-  }
-
-  /// The function return all the feedback streamers
-  List<FeedbackVideoStreamer> getListFeedbackStreamer() {
-    return this.listFeedbackVideoStreamer;
-  }
-
-  //TODO where we need to call this??
-  void emptyListFeedbackStreamer() {
-    this.listFeedbackVideoStreamer = List();
-  }
-
   /// The function cut a video with a given path to List of files
   Future<List<File>> cutVideoList(String videoPath) {
     return this.cameraHandler.cutVideoList(videoPath);
-  }
-
-  /// The function set the list of file need to get feedback
-  void setListFileNeedFeedback(List<File> list) {
-    this.listFileNeedFeedback = list;
-  }
-
-  /// The function return the list of file that need to get Feedback
-  List<File> getListNeed() {
-    if(this.listFileNeedFeedback == null) {
-      return List();
-    }
-    return this.listFileNeedFeedback;
   }
 
   //TODO check if we need this feature ?

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:client/Services/CameraHandler.dart';
+import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/scheduler.dart';
@@ -7,7 +7,6 @@ import 'package:universal_html/prefer_universal/html.dart' as html;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
-import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -166,12 +165,10 @@ class _VideoUploaderState extends State<VideoUploader> {
         future: this.feedbackVideoStreamer,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            LogicManager lm = LogicManager.getInstance();
-            lm.addFeedbackVideoStreamer(snapshot.data);
-            lm.setListFileNeedFeedback(this.filesWithNoFeedBack);
-            //TODO change this to pass arguments to the screen
             SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, "/videos");
+              Navigator.pushNamed(context, "/videos",
+                  arguments: new VideoScreenArguments([snapshot.data],
+                      this.filesWithNoFeedBack));
             });
             this.initVars();
           }
