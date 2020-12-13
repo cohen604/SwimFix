@@ -1,3 +1,6 @@
+import AcceptanceTests.AllAcceptanceTests;
+import ExternalSystemTests.AllExternalSystemTests;
+import IntegrationTests.AllIntegrationTests;
 import UnitTests.AllUnitTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -6,6 +9,9 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
         AllUnitTests.class,
+        AllIntegrationTests.class,
+        AllExternalSystemTests.class,
+        AllAcceptanceTests.class,
 })
 
 public class AllTests {

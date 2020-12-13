@@ -8,7 +8,7 @@ import DTO.FeedbackVideoStreamer;
 public class SwimFixAPI {
    private LogicManager logicManager = new LogicManager();
 
-   public ActionResult<FeedbackVideoDTO> uploadVideo(ConvertedVideoDTO convertedVideoDTO) {
+   public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
       return logicManager.uploadVideoForDownload(convertedVideoDTO);
    }
 

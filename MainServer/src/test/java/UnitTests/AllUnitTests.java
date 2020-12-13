@@ -1,5 +1,6 @@
 package UnitTests;
 
+import Storage.VideoService;
 import UnitTests.StreamingTests.VideoHandlerTest;
 import UnitTests.StreamingTests.VideoTests;
 import junit.framework.Test;
@@ -12,6 +13,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         VideoHandlerTest.class,
         VideoTests.class,
+        VideoService.class,
 })
 
 public class AllUnitTests {

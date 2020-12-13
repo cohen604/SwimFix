@@ -6,8 +6,6 @@ import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
@@ -31,7 +29,7 @@ public class SwimmerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideo(convertedVideo);
+        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideoForDownload(convertedVideo);
         //TODO check here if the action result is ok
         System.out.println("Feedback generated, send feedback");
         return actionResult.toJson();
