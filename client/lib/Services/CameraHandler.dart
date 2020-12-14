@@ -61,6 +61,14 @@ class CameraHandler {
     return false;
   }
 
+  /// The function delete the cutFolder from the mobile phone
+  void deleteDir() {
+    if(this.directory!= null && this.directory.existsSync()) {
+      this.directory.deleteSync(recursive: true);
+      print('Cut Video Folder Deleted=${this.directory.existsSync()}');
+    }
+  }
+
   /// The function return the duration time of the video
   /// return duration of the video in seconds
   Future<int> getTotalTime(String videoPath) async {

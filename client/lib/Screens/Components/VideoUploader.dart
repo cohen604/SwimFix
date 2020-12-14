@@ -37,6 +37,7 @@ class _VideoUploaderState extends State<VideoUploader> {
     this.filePath = null;
     this.clickUpload = false;
     this.feedbackVideoStreamer = null;
+    this.filesWithNoFeedBack = null;
   }
 
   void uploadFileWeb() async {
@@ -165,10 +166,11 @@ class _VideoUploaderState extends State<VideoUploader> {
         future: this.feedbackVideoStreamer,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            var args = new VideoScreenArguments(
+                [snapshot.data],
+                this.filesWithNoFeedBack);
             SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, "/videos",
-                  arguments: new VideoScreenArguments([snapshot.data],
-                      this.filesWithNoFeedBack));
+              Navigator.pushNamed(context, "/videos", arguments: args);
             });
             this.initVars();
           }

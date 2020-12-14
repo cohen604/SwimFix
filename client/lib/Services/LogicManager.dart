@@ -55,6 +55,11 @@ class LogicManager {
     return this.cameraHandler.cutVideoList(videoPath);
   }
 
+  /// The function delete the cutFolder from the mobile phone
+  void cleanCutFolder() {
+    this.cameraHandler.deleteDir();
+  }
+
   //TODO check if we need this feature ?
   Future<FeedbackVideo> postVideoForDownload(Uint8List fileBytes, int length,
       String filePath) async {
