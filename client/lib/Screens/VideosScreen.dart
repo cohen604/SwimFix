@@ -108,7 +108,7 @@ class _VideosScreenState extends State<VideosScreen> {
             itemBuilder: (context, index) {
               FeedbackVideoStreamer link = this.have[index];
               if(link != null) {
-                return VideoStreamerCard(link: link,);
+                return VideoStreamerCard(link: link, number: index,);
                 return Text(link.getPath());
               }
               else {
@@ -126,14 +126,14 @@ class _VideosScreenState extends State<VideosScreen> {
                           });
                         });
                     }
-                    // return VideoStreamerCard(link: null,);
+                    return VideoStreamerCard(link: null, number: index,);
                     return Center(
                         child:CircularProgressIndicator()
                     );
                   });
                 }
-                // return VideoStreamerCard(link: null,);
-                return Text("No Link Yet");
+                return VideoStreamerCard(link: null, number: index,);
+                // return Text("No Link Yet");
               }
             },
           ),
