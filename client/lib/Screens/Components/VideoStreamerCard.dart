@@ -20,7 +20,43 @@ class VideoStreamerCard extends StatelessWidget {
     return "...$output";
   }
 
+  void onTap(context){
+    print(this.link.getPath());
+    Navigator.pushNamed(context, "/videoPreview",
+          arguments: this.link);
+  }
+
   @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        leading: Text("#${this.number}"),
+        title: Text("Feedback"),
+        tileColor: Colors.lightBlueAccent,
+        hoverColor: Colors.lightBlueAccent,
+        selectedTileColor: Colors.lightBlueAccent,
+        subtitle: Column(
+          children: [
+            Builder(
+              builder: (context) {
+                if(link == null) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Text(this.shortName(this.link.getPath()));
+              },
+            ),
+          ],
+        ),
+        onTap: ()=>this.onTap(context),
+        enabled: (link == null)? false: true,
+      ),
+    );
+  }
+
+  /*@override
   Widget build(BuildContext context) {
     if(link == null) {
       return Padding(
@@ -56,5 +92,5 @@ class VideoStreamerCard extends StatelessWidget {
         ),
       ),
     );
-  }
+  }*/
 }

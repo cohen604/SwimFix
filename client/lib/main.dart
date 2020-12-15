@@ -1,3 +1,4 @@
+import 'package:client/Screens/LoginScreen.dart';
 import 'package:client/Screens/UploadScreen.dart';
 import 'package:client/Screens/VideosScreen.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/',
+      initialRoute: '/login',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
       routes: {
-        '/': (context) => new UploadScreen(),
+        '/login': (context) => new LoginScreen(),
+        '/upload': (context) => new UploadScreen(),
         '/videoPreview': (context) => new VideoPreviewScreen(
           feedbackVideoStreamer: ModalRoute.of(context).settings.arguments,),
         '/videos': (context) {
