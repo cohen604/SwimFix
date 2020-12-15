@@ -1,11 +1,14 @@
 import 'package:client/Screens/LoginScreen.dart';
 import 'package:client/Screens/UploadScreen.dart';
 import 'package:client/Screens/VideosScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'Screens/VideoPreviewScreen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

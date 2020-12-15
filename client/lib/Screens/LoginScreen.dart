@@ -1,6 +1,9 @@
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Screens/Components/MobileInput.dart';
 import 'package:client/Screens/Components/VideoUploader.dart';
+import 'package:client/Services/GoogleAuth.dart';
+import 'package:client/Services/LogicManager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -16,12 +19,12 @@ class LoginScreen extends Screen {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final GoogleSignIn googleSignIn = GoogleSignIn.standard(
-    scopes: ['email'],
-  );
+
   void signInWithGoogle() async {
-    final GoogleSignInAccount account = await this.googleSignIn.signIn();
-    print(account.email);
+    GoogleAuth googleAuth = new GoogleAuth();
+    User user = await googleAuth.signIn();
+    // LogicManager.getInstance().login(user);
+    // move screen
   }
 
   Widget buildLoginWithGoogleMobile(context) {
@@ -29,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Card(
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
-          onTap: ()=>{},
+          onTap: signInWithGoogle,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: ListTile(
@@ -49,16 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
     return buildLoginWithGoogleMobile(context);
-  }
-
-  Widget buildGoogleLogin(context) {
-    return ListTile(
-      title: Text("Sign In with Google"),
-      leading: Image(image: AssetImage("assets/google_logo.png")),
-      focusColor: Colors.grey,
-      tileColor: Colors.grey,
-      onTap: ()=>signInWithGoogle(),
-      );
   }
 
   @override
