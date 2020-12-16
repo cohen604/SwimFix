@@ -21,41 +21,49 @@ class ConnectionHandler {
     this.port = '8080';
   }
 
+  /// The function receives a String body and generate form him a server response
+  ServerResponse toServerResponse(String body) {
+    String jsonString = body;
+    Map responseMap = json.decode(jsonString);
+    return ServerResponse.fromJson(responseMap);
+  }
+
   /// function that get response from the server in the address [path]
-  Future<String> getMessage (String path) async {
+  Future<ServerResponse> getMessage (String path) async {
     String url = getUrl() + path;
     final response = await http.get(url);
       if (response.statusCode == 200) {
-        return response.body;
+        return toServerResponse(response.body);
       } else {
         throw Exception('Error code !!! :0');
       }
     }
 
   /// function that post response from the server in the address [path]
-  Future<String> postMessage (String path, Object value) async {
+  /// path - the path to send the post message in the server
+  /// value - the object json to send to the server
+  Future<ServerResponse> postMessage (String path, Object value) async {
     String url = getUrl() + path;
     //TODO change this value to json(value)
     final response = await http.post(url, body: value);
     if (response.statusCode == 200) {
-      return response.body;
+      return toServerResponse(response.body);
     } else {
-      throw Exception('Error code !!! :0');
+      throw Exception('Error: post message send to $path');
     }
   }
 
   /// The function send a post message with a multi part file to the server
-  Future<String> postMultiPartFile(String path, http.MultipartFile file) async {
+  Future<ServerResponse> postMultiPartFile(String path, http.MultipartFile file) async {
     String url = getUrl() + path;
     var request = new http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(file);
     http.Response response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200) {
-      return response.body;
+      return toServerResponse(response.body);
     } else {
-      throw Exception('Error code !!! :0');
+      throw Exception('Error: post message send to $path');
     }
-    return null;
   }
 
   String getUrl() {

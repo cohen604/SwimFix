@@ -30,15 +30,13 @@ dependencies:
   http: ^0.12.2
   image_picker: ^0.6.7+14
   file_picker: ^2.1.0
-#  video_player: ^0.1.1
-#  video_player_web: ^0.1.1
   chewie: ^0.12.0
   file: ^5.2.1
   universal_html: ^1.2.3
   flutter_ffmpeg: ^0.3.0
   media_info: ^0.6.4
   firebase_core: ^0.5.0
-  google_sign_in: ^4.5.6
+  google_sign_in: ^4.5.0
   firebase_auth: ^0.18.4+1
 
 dev_dependencies:
@@ -74,11 +72,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: Satisfy
+      fonts:
+        - asset: assets/fonts/Satisfy-Regular.ttf
+    - family: Langar
+      fonts:
+        - asset: assets/fonts/Langar-Regular.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

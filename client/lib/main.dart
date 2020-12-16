@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'Screens/VideoPreviewScreen.dart';
 
+
+//if running from web:localhost add to project arguments --web-host 5000
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/login',
+      initialRoute: '/upload',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),

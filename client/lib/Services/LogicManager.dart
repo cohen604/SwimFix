@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Domain/Swimer.dart';
 import 'package:client/Services/Authentication.dart';
 import 'package:client/Services/CameraHandler.dart';
 import 'package:client/Services/GoogleAuth.dart';
@@ -16,6 +17,7 @@ class LogicManager {
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
   CameraHandler cameraHandler;
+  Swimmer swimmer;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
@@ -27,6 +29,15 @@ class LogicManager {
       logicManager = new LogicManager();
     }
     return logicManager;
+  }
+
+  Future<bool> login(Swimmer swimmer) async{
+    String path = "/login";
+    ServerResponse response = await connectionHandler.postMessage(path, swimmer.toJson());
+    //TODO check if response is valid
+    Map map = response.value as Map;
+    this.swimmer = swimmer;
+    return true;
   }
 
   /// The function send a post request for receiving a feedback link
@@ -42,15 +53,10 @@ class LogicManager {
         fileBytes,
         filename: filePath,
     );
-    Future<String> result = this.connectionHandler.postMultiPartFile(path, multipartFile);
-    FeedbackVideoStreamer output;
-    await result.then((jsonString) {
-      Map responseMap = json.decode(jsonString);
-      ServerResponse response = ServerResponse.fromJson(responseMap);
-      Map map = response.value as Map;
-      output = FeedbackVideoStreamer.factory(map);
-    });
-    return output;
+    ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+    //TODO check if response is valid
+    Map map = response.value as Map;
+    return FeedbackVideoStreamer.factory(map);
   }
 
   /// The function cut a video with a given path to List of files
@@ -72,15 +78,10 @@ class LogicManager {
         fileBytes,
         filename: filePath
     );
-    Future<String> result = this.connectionHandler.postMultiPartFile(path, multipartFile);
-    FeedbackVideo output;
-    await result.then((jsonString) {
-      Map responseMap = json.decode(jsonString);
-      ServerResponse response = ServerResponse.fromJson(responseMap);
-      Map map = response.value as Map;
-      output = FeedbackVideo.factory(map);
-    });
-    return output;
+    ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+    //TODO check if response is valid
+    Map map = response.value as Map;
+    return FeedbackVideo.factory(map);
   }
 
 }
