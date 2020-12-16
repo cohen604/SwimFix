@@ -1,9 +1,6 @@
 package mainServer.Controllers;
 
-import DTO.ActionResult;
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoDTO;
-import DTO.FeedbackVideoStreamer;
+import DTO.*;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -19,6 +16,16 @@ public class SwimmerController {
 
     private SwimFixAPI swimFixAPI = SingleServiceAPI.getInstance();
 
+    @PostMapping(value = "/login")
+    @CrossOrigin(origins = "*")
+    public String loginSwimmer(@RequestBody SwimmerDTO swimmer) {
+        System.out.println("Received login request from "+swimmer.getEmail());
+        ActionResult<SwimmerDTO> actionResult = swimFixAPI.login(swimmer);
+        System.out.println("Send Login response");
+        return actionResult.toJson();
+    }
+
+    //TODO delete this
     @PostMapping("/uploadForDownload")
     @CrossOrigin(origins = "*")
     public String uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {

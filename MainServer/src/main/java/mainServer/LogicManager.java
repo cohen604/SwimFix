@@ -4,9 +4,11 @@ import DTO.*;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
+import Domain.Swimmer;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.SwimmerDao;
 
 
 import java.io.File;
@@ -21,6 +23,24 @@ public class LogicManager {
 
     public LogicManager() {
         mlConnectionHandler = new MLConnectionHandlerProxy();
+    }
+
+
+    /**
+     * The function handle login of swimmers to the system
+     * @param swimmerDTO the simmers information
+     * @return true
+     */
+    public ActionResult<SwimmerDTO> login(SwimmerDTO swimmerDTO) {
+        //TODO check if swimmer exits and logout
+        //TODO check else it is a new swimmer to the system
+        //TODO here set the users state
+        Swimmer swimmer = new Swimmer(swimmerDTO);
+        SwimmerDao swimmerDao = new SwimmerDao();
+        if(swimmerDao.insert(swimmer)!=null) {
+            return new ActionResult<>(Response.SUCCESS, swimmerDTO);
+        }
+        return new ActionResult<>(Response.FAIL,null);
     }
 
     /**
@@ -88,4 +108,5 @@ public class LogicManager {
         }
         return null;
     }
+
 }

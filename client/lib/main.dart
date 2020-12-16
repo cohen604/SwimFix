@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/upload',
+      initialRoute: '/login',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),

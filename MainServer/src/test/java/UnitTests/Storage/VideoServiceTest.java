@@ -2,7 +2,7 @@ package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.Video;
-import Storage.VideoService;
+import Storage.VideoDao;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -14,14 +14,14 @@ import java.util.List;
 public class VideoServiceTest extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
-    private VideoService videoService;
+    private VideoDao videoService;
 
     private Video video;
 
     @Before
     public void setUp() {
         try {
-            this.videoService = new VideoService();
+            this.videoService = new VideoDao();
             File file = new File(VIDEO_FOLDER + "/sample.mov");
             byte[] bytes = Files.readAllBytes(file.toPath());
             ConvertedVideoDTO convertedVideoDTO = new ConvertedVideoDTO("sample.mov", bytes);

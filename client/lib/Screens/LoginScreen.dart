@@ -1,4 +1,6 @@
+import 'package:client/Domain/Swimer.dart';
 import 'package:client/Services/GoogleAuth.dart';
+import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,17 @@ class _LoginScreenState extends State<LoginScreen> {
   void signInWithGoogle() async {
     GoogleAuth googleAuth = new GoogleAuth();
     User user = await googleAuth.signIn();
-    // LogicManager.getInstance().login(user);
-    // move screen
+    String name = user.displayName;
+    String email = user.email;
+    String uid = user.uid;
+    Swimmer swimmer = new Swimmer(uid, email, name);
+    LogicManager.getInstance().login(swimmer).then((logged) {
+      if (logged) {
+        this.setState(() {
+          Navigator.pushNamed(context, "/upload");
+        });
+      }
+    });
   }
 
   Widget buildLoginWithGoogleMobile(context) {

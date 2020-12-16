@@ -1,23 +1,26 @@
 package Storage;
 
 import Domain.Streaming.Video;
+import Domain.Swimmer;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class VideoService implements Dao<Video> {
+public class SwimmerDao implements Dao<Swimmer> {
 
-    MongoCollection<Video> getVideoCollection() {
+    @Override
+    public MongoCollection<Swimmer> getCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new VideoCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(new SwimmerCodec()), //here we define the codec
                         getDefaultCodecRegistry());
         MongoClientSettings settings = MongoClientSettings.builder()
                 .codecRegistry(codecRegistry).build();
@@ -25,25 +28,18 @@ public class VideoService implements Dao<Video> {
         MongoClient mongoClient = MongoClients.create(settings);
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase("swimfix");
-        return mongoDatabase.getCollection("video", Video.class);
+        return mongoDatabase.getCollection("swimmer", Swimmer.class);
     }
 
     @Override
-    public List<Video> getAll() {
-        try {
-            MongoCollection<Video> collection = getVideoCollection();
-            List<Video> all = collection.find().into(new ArrayList<>());
-            return all;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+    public List<Swimmer> getAll() {
         return null;
     }
 
     @Override
-    public Video insert(Video value) {
+    public Swimmer insert(Swimmer value) {
         try {
-            MongoCollection<Video> collection = getVideoCollection();
+            MongoCollection<Swimmer> collection = getCollection();
             collection.insertOne(value);
             return value;
         } catch ( Exception e) {
@@ -51,5 +47,4 @@ public class VideoService implements Dao<Video> {
         }
         return null;
     }
-
 }

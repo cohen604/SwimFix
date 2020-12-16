@@ -42,10 +42,15 @@ class ConnectionHandler {
   /// function that post response from the server in the address [path]
   /// path - the path to send the post message in the server
   /// value - the object json to send to the server
-  Future<ServerResponse> postMessage (String path, Object value) async {
+  Future<ServerResponse> postMessage (String path, Map<String, dynamic> map) async {
     String url = getUrl() + path;
     //TODO change this value to json(value)
-    final response = await http.post(url, body: value);
+    Map<String,String> headers = {
+      'Content-type' : 'application/json',
+      'Accept': 'application/json',
+    };
+    print('$url json ${json.encode(map)}');
+    final response = await http.post(url, body: json.encode(map), headers: headers);
     if (response.statusCode == 200) {
       return toServerResponse(response.body);
     } else {

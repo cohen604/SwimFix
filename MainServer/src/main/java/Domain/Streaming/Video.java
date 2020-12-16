@@ -1,6 +1,6 @@
 package Domain.Streaming;
 
-import Storage.VideoService;
+import Storage.VideoDao;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Video {
     private int height;
     private int width;
     VideoHandler videoHandler; // The video handler for doing
-    private VideoService videoService = new VideoService();
+    private VideoDao videoService = new VideoDao();
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();

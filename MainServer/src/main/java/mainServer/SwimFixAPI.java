@@ -1,12 +1,13 @@
 package mainServer;
 
-import DTO.ActionResult;
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoDTO;
-import DTO.FeedbackVideoStreamer;
+import DTO.*;
 
 public class SwimFixAPI {
    private LogicManager logicManager = new LogicManager();
+
+   public ActionResult<SwimmerDTO> login(SwimmerDTO swimmerDTO) {
+      return logicManager.login(swimmerDTO);
+   }
 
    public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
       return logicManager.uploadVideoForDownload(convertedVideoDTO);

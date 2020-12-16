@@ -21,7 +21,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="client">
+
   <!-- Web: for running for localhost:5000 use this-->
+  <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-auth.js"></script>
+
   <meta name="google-signin-client_id" content="168590423951-55vrd691opgpk5p1bthhcork63i61g3o.apps.googleusercontent.com">
   <!--  Web: for deployment use this-->
   <!--  <meta name="google-signin-client_id" content="168590423951-hp7nmp9e60m70lpk340s1euf6n0uu2as.apps.googleusercontent.com">-->
@@ -35,8 +39,6 @@
 </head>
 <body>
 
-  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
-
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -49,14 +51,14 @@
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
 
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="/__/firebase/8.2.0/firebase-app.js"></script>
+<!--  &lt;!&ndash; The core Firebase JS SDK is always required and must be listed first &ndash;&gt;-->
+<!--  <script src="/__/firebase/8.2.0/firebase-app.js"></script>-->
 
-  <!--  &lt;!&ndash; Add Firebase products that you want to use &ndash;&gt;-->
-  <script src="/__/firebase/8.1.2/firebase-auth.js"></script>
+<!--  &lt;!&ndash;  &lt;!&ndash; Add Firebase products that you want to use &ndash;&gt;&ndash;&gt;-->
+<!--  <script src="/__/firebase/8.1.2/firebase-auth.js"></script>-->
 
-  <!--  &lt;!&ndash; Initialize Firebase &ndash;&gt;-->
-  <script src="/__/firebase/init.js"></script>
+<!--  &lt;!&ndash;  &lt;!&ndash; Initialize Firebase &ndash;&gt;&ndash;&gt;-->
+<!--  <script src="/__/firebase/init.js"></script>-->
 
   <script>
       var firebaseConfig = {

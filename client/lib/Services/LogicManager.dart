@@ -33,11 +33,14 @@ class LogicManager {
 
   Future<bool> login(Swimmer swimmer) async{
     String path = "/login";
+    print('swiimr json ${swimmer.toJson()}');
     ServerResponse response = await connectionHandler.postMessage(path, swimmer.toJson());
-    //TODO check if response is valid
-    Map map = response.value as Map;
-    this.swimmer = swimmer;
-    return true;
+    if(response!=null && response.isSuccess()) {
+      Map map = response.value as Map;
+      this.swimmer = swimmer;
+      return true;
+    }
+    return false;
   }
 
   /// The function send a post request for receiving a feedback link
@@ -67,21 +70,6 @@ class LogicManager {
   /// The function delete the cutFolder from the mobile phone
   void cleanCutFolder() {
     this.cameraHandler.deleteDir();
-  }
-
-  //TODO check if we need this feature ?
-  Future<FeedbackVideo> postVideoForDownload(Uint8List fileBytes, int length,
-      String filePath) async {
-    String path = "/uploadForDownload";
-    http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
-        'file',
-        fileBytes,
-        filename: filePath
-    );
-    ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
-    //TODO check if response is valid
-    Map map = response.value as Map;
-    return FeedbackVideo.factory(map);
   }
 
 }
