@@ -33,11 +33,11 @@ public class User {
         this.states = new HashMap<>();
     }
 
-    public User(String uid, String email, String name, List<String> keys) {
+    public User(String uid, String email, String name, boolean logged, List<String> keys) {
         this.uid = uid;
         this.email = email;
         this.name = name;
-        this.logged = false;
+        this.logged = logged;
         this.states = new HashMap<>();
         for(String key: keys) {
             this.states.put(key, null);
@@ -101,6 +101,14 @@ public class User {
 
     public Set<String> getStateKeys() {
         return this.states.keySet();
+    }
+
+    public boolean isLogged() {
+        return logged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
     }
 
 }

@@ -21,6 +21,7 @@ public class UserCodec implements Codec<User> {
         String id = bsonReader.readString("_id");
         String email = bsonReader.readString("email");
         String name = bsonReader.readString("name");
+        boolean logged = bsonReader.readBoolean("logged");
         List<String> keys = new LinkedList<>();
         bsonReader.readName("states");
         bsonReader.readStartArray();
@@ -31,7 +32,7 @@ public class UserCodec implements Codec<User> {
         }
         bsonReader.readEndArray();
         bsonReader.readEndDocument();
-        return new User(id, email, name, keys);
+        return new User(id, email, name, logged, keys);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class UserCodec implements Codec<User> {
         bsonWriter.writeString("_id", user.getUid());
         bsonWriter.writeString("email", user.getEmail());
         bsonWriter.writeString("name", user.getName());
+        bsonWriter.writeBoolean("logged", user.isLogged());
         bsonWriter.writeName("states"); // = key
         bsonWriter.writeStartArray();
         Set<String> states = user.getStateKeys();

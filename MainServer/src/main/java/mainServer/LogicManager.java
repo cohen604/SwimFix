@@ -38,7 +38,7 @@ public class LogicManager {
         User user = userDao.find(userDTO.getUid());
         if(user!=null) {
             user.login();
-            //todo change login field in the user dao
+            userDao.update(user);
             return new ActionResult<>(Response.SUCCESS, userDTO);
         }
         // user not exits
