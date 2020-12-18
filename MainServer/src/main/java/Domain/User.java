@@ -12,14 +12,16 @@ public class User {
     private String uid;
     private String email;
     private String name;
+    private boolean logged;
 
-    // <key, state> if state is null need to get him form dao.
+    //Note: <key, state> -> if state is null need to get him form dao.
     private Map<String, State> states;
 
     public User(UserDTO userDTO) {
         this.uid = userDTO.getUid();
         this.email = userDTO.getEmail();
         this.name = userDTO.getName();
+        this.logged = false;
         this.states = new HashMap<>();
     }
 
@@ -27,6 +29,7 @@ public class User {
         this.uid = uid;
         this.email = email;
         this.name = name;
+        this.logged = false;
         this.states = new HashMap<>();
     }
 
@@ -34,15 +37,37 @@ public class User {
         this.uid = uid;
         this.email = email;
         this.name = name;
+        this.logged = false;
         this.states = new HashMap<>();
         for(String key: keys) {
             this.states.put(key, null);
         }
     }
 
+    /**
+     * The function add a state to the user states local
+     * If the state is already exits its overwrite it
+     * @param state the state to add
+     */
     public void addState(State state) {
         String key = state.getState();
         this.states.put(key, state);
+    }
+
+    public boolean login() {
+        if(!logged) {
+            logged = true;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean logout() {
+        if(logged) {
+            logged = false;
+            return true;
+        }
+        return false;
     }
 
     //TODO:

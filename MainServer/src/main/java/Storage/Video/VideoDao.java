@@ -53,4 +53,14 @@ public class VideoDao implements Dao<Video> {
         return null;
     }
 
+    @Override
+    public Video find(String id) {
+        return null;
+    }
+
+    @Override
+    public Video update(Video value) {
+        return null;
+    }
+
 }

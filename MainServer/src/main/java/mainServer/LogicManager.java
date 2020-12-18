@@ -33,15 +33,19 @@ public class LogicManager {
      * @return true
      */
     public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
-        //TODO check if user exits and logout
-        //TODO check else it is a new user to the system
-        //TODO here set the users state
-
-        User user = new User(userDTO);
+        UserDao userDao = new UserDao();
         // TODO synchronized(getLocker(user.getUid())){};
+        User user = userDao.find(userDTO.getUid());
+        if(user!=null) {
+            user.login();
+            //todo change login field in the user dao
+            return new ActionResult<>(Response.SUCCESS, userDTO);
+        }
+        // user not exits
+        user = new User(userDTO);
+        user.login();
         Swimmer swimmer = new Swimmer(user.getUid());
         user.addState(swimmer);
-        UserDao userDao = new UserDao();
         if(userDao.insert(user)!=null) {
             SwimmerDao swimmerDao = new SwimmerDao();
             if(swimmerDao.insert(swimmer)!=null) {

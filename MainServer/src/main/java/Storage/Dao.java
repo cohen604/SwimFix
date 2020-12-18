@@ -10,5 +10,6 @@ public interface Dao<T> {
     MongoCollection<T> getCollection();
     List<T> getAll();
     T insert(T value);
-
+    T find(String id);
+    T update(T value);
 }

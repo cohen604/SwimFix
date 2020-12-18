@@ -47,4 +47,14 @@ public class SwimmerDao implements Dao<Swimmer> {
         }
         return null;
     }
+
+    @Override
+    public Swimmer find(String id) {
+        return null;
+    }
+
+    @Override
+    public Swimmer update(Swimmer value) {
+        return null;
+    }
 }
