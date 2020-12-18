@@ -1,26 +1,13 @@
 package Domain;
-
-import DTO.SwimmerDTO;
-
 import java.util.Queue;
 
 public class Swimmer extends State {
 
     private String uid;
-    private String email;
-    private String name;
     private Queue<Invitation> invitationQueue;
 
-    public Swimmer(SwimmerDTO swimmerDTO) {
-        this.uid = swimmerDTO.getUid();
-        this.email = swimmerDTO.getEmail();
-        this.name = swimmerDTO.getName();
-    }
-
-    public Swimmer(String uid, String email, String name) {
+    public Swimmer(String uid) {
         this.uid = uid;
-        this.email = email;
-        this.name = name;
     }
 
     public String getUid() {
@@ -31,19 +18,8 @@ public class Swimmer extends State {
         this.uid = uid;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    String getState() {
+        return "swimmer";
     }
 }

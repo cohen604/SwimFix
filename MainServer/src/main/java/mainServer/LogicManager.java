@@ -8,7 +8,8 @@ import Domain.Swimmer;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
-import Storage.SwimmerDao;
+import Storage.Swimmer.SwimmerDao;
+import Storage.User.UserDao;
 
 
 import java.io.File;
@@ -28,17 +29,28 @@ public class LogicManager {
 
     /**
      * The function handle login of swimmers to the system
-     * @param swimmerDTO the simmers information
+     * @param userDTO the simmers information
      * @return true
      */
-    public ActionResult<SwimmerDTO> login(SwimmerDTO swimmerDTO) {
-        //TODO check if swimmer exits and logout
-        //TODO check else it is a new swimmer to the system
+    public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
+        //TODO check if user exits and logout
+        //TODO check else it is a new user to the system
         //TODO here set the users state
-        Swimmer swimmer = new Swimmer(swimmerDTO);
-        SwimmerDao swimmerDao = new SwimmerDao();
-        if(swimmerDao.insert(swimmer)!=null) {
-            return new ActionResult<>(Response.SUCCESS, swimmerDTO);
+
+        User user = new User(userDTO);
+        // TODO synchronized(getLocker(user.getUid())){};
+        Swimmer swimmer = new Swimmer(user.getUid());
+        user.addState(swimmer);
+        UserDao userDao = new UserDao();
+        if(userDao.insert(user)!=null) {
+            SwimmerDao swimmerDao = new SwimmerDao();
+            if(swimmerDao.insert(swimmer)!=null) {
+                return new ActionResult<>(Response.SUCCESS, userDTO);
+            }
+            else {
+                // todo delete user from db
+                // return fail
+            }
         }
         return new ActionResult<>(Response.FAIL,null);
     }

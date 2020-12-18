@@ -1,7 +1,7 @@
-package Storage;
+package Storage.Swimmer;
 
-import Domain.Streaming.Video;
 import Domain.Swimmer;
+import Storage.Dao;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

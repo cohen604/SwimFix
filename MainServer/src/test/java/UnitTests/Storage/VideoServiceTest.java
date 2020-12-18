@@ -2,7 +2,7 @@ package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.Video;
-import Storage.VideoDao;
+import Storage.Video.VideoDao;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;

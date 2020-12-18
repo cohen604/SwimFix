@@ -16,15 +16,6 @@ public class SwimmerController {
 
     private SwimFixAPI swimFixAPI = SingleServiceAPI.getInstance();
 
-    @PostMapping(value = "/login")
-    @CrossOrigin(origins = "*")
-    public String loginSwimmer(@RequestBody SwimmerDTO swimmer) {
-        System.out.println("Received login request from "+swimmer.getEmail());
-        ActionResult<SwimmerDTO> actionResult = swimFixAPI.login(swimmer);
-        System.out.println("Send Login response");
-        return actionResult.toJson();
-    }
-
     //TODO delete this
     @PostMapping("/uploadForDownload")
     @CrossOrigin(origins = "*")

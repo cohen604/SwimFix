@@ -1,15 +1,15 @@
 package DTO;
 
-public class SwimmerDTO {
+public class UserDTO {
 
     private String uid;
     private String email;
     private String name;
 
-    public SwimmerDTO() {
+    public UserDTO() {
     }
 
-    public SwimmerDTO(String uid, String email, String name) {
+    public UserDTO(String uid, String email, String name) {
         this.uid = uid;
         this.email = email;
         this.name = name;

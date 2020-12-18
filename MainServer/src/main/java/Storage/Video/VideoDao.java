@@ -1,8 +1,8 @@
-package Storage;
+package Storage.Video;
 
 import Domain.Streaming.Video;
+import Storage.Dao;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.*;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;

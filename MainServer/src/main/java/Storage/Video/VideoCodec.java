@@ -1,4 +1,4 @@
-package Storage;
+package Storage.Video;
 
 import Domain.Streaming.Video;
 import org.bson.BsonReader;

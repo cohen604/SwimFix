@@ -1,6 +1,6 @@
 package Domain.Streaming;
 
-import Storage.VideoDao;
+import Storage.Video.VideoDao;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
 import java.util.List;

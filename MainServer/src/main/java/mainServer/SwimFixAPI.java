@@ -5,8 +5,8 @@ import DTO.*;
 public class SwimFixAPI {
    private LogicManager logicManager = new LogicManager();
 
-   public ActionResult<SwimmerDTO> login(SwimmerDTO swimmerDTO) {
-      return logicManager.login(swimmerDTO);
+   public ActionResult<UserDTO> login(UserDTO userDTO) {
+      return logicManager.login(userDTO);
    }
 
    public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
