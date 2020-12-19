@@ -23,7 +23,7 @@ public class MLConnectionHandlerTest extends TestCase {
     @Before
     public void setUp() {
         try {
-            this.mlConnectionHandler = new MLConnectionHandlerReal("localhost", "5000");
+            this.mlConnectionHandler = new MLConnectionHandlerReal("84.109.116.61", "5000");
             this.video = new Video("./src/test/java/TestingVideos/sample.mov",".mov");
             if(this.video.getVideo() == null) {
                 fail();

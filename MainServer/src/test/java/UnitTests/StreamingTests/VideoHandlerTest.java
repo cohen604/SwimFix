@@ -1,7 +1,7 @@
 package UnitTests.StreamingTests;
 
 import Domain.Streaming.SwimmingError;
-import Domain.Streaming.SwimmingTag;
+import Domain.Streaming.SwimmingSkeleton;
 import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
 import org.junit.After;
@@ -428,7 +428,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -446,7 +446,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = WRONG_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -462,7 +462,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = "";
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -478,7 +478,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = null;
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -493,7 +493,7 @@ public class VideoHandlerTest extends TestCase {
         try {
             List<Mat> frames = new LinkedList<>();
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -508,7 +508,7 @@ public class VideoHandlerTest extends TestCase {
         try {
             List<Mat> frames = null;
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingTag> dots = new LinkedList<>();
+            List<SwimmingSkeleton> dots = new LinkedList<>();
             List<SwimmingError> errors = new LinkedList<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);

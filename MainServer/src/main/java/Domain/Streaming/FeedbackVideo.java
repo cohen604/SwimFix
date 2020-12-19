@@ -3,7 +3,6 @@ import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,10 +35,10 @@ public class FeedbackVideo extends Video {
      * @postcondition generated new feedback file
      */
     private void updateFeedbackFile() {
-        List<SwimmingTag> swimmingTags = null;
+        List<SwimmingSkeleton> swimmingSkeletons = this.taggedVideo.getTags();
         List<Object> visualComments = null; //TODO
         if(this.feedbackFile == null || this.feedbackUpdated) {
-            File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingTags,
+            File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
                     errorList, visualComments);
             if(file != null) {
                 this.feedbackFile = file;

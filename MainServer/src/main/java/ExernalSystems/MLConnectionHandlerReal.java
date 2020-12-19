@@ -1,16 +1,18 @@
 package ExernalSystems;
 
+import Domain.Streaming.SwimmingSkeleton;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
-import org.opencv.core.Mat;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Type;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,11 +49,24 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         body.add("width", width);
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.postForObject(url, requestEntity, String.class);
+        String res = restTemplate.postForObject(url, requestEntity, String.class);
+        return res;
     }
 
     public String getURL(String prefix) {
         return "http://"+this.ip + ":" + this.port + prefix;
+    }
+
+    private List<SwimmingSkeleton> buildSkeleton(String json) {
+        List<SwimmingSkeleton> output = new LinkedList<>();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
+        List<List<Double>> list = gson.fromJson(json, listType);
+        for (List<Double> frame: list) {
+            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
+            output.add(skeleton);
+        }
+        return output;
     }
 
     @Override
@@ -63,11 +78,12 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
                 String frame_string = Base64.getEncoder().encodeToString(frame);
                 frames_string.add(frame_string);
             }
-            postMessage(frames_string, getURL("/detect"), "video", frames.size(),
+            String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
                     video.getHeight(), video.getWidth());
+            List<SwimmingSkeleton> skeletons = buildSkeleton(res);
+            return new TaggedVideo(skeletons);
         } catch (Exception e){
             System.out.println(e.getMessage());
-            return null;
         }
         return null;
     }

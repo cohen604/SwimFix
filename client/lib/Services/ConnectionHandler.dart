@@ -16,8 +16,7 @@ class ConnectionHandler {
 
   /// Constructor
   ConnectionHandler() {
-    //for bezeq 10.0.0.6
-    this.address = 'http://192.168.1.199'; //'http://127.0.0.1';
+    this.address = 'http://127.0.0.1';//'http://192.168.1.199';
     this.port = '8080';
   }
 

@@ -1,8 +1,6 @@
 package Domain.Streaming;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
+import javafx.util.Pair;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
@@ -152,15 +150,44 @@ public class VideoHandler {
     }
 
     /**
+     * The function draw a circle
+     * @param frame
+     * @param skeletonPoint
+     * @param radius
+     */
+    private void drawCircle(Mat frame, SkeletonPoint skeletonPoint, int radius) {
+        Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
+        Scalar color = new Scalar(0,255,0);
+        int thickness = 3;
+        Imgproc.circle(frame, point, radius, color, thickness);
+    }
+
+    private void drawLine(Mat frame, SkeletonPoint a, SkeletonPoint b) {
+        Point pointA = new Point(a.getX(),a.getY());
+        Point pointB = new Point(b.getX(),b.getY());
+        Scalar color = new Scalar(255,0,0);
+        int thickness = 2;
+        Imgproc.line(frame, pointA, pointB, color, thickness);
+    }
+
+    /**
      * The function draw swimming tag into the frame
      * @param frame the current frame
-     * @param swimmingTag the image tag to print
+     * @param skeleton the image tag to print
      * @return the new frame
      */
-    private Mat drawSwimmer(Mat frame, SwimmingTag swimmingTag) {
-        //TODO
-        //Imgproc.rectangle(frame,obj.getLeftBottom(),obj.getRightTop(),new Scalar(255,0,0),1);
-        return frame;
+    private void drawSwimmer(Mat frame, SwimmingSkeleton skeleton) {
+        // points
+        int radius = 2;
+        List<SkeletonPoint> points = skeleton.getPoints();
+        for (SkeletonPoint point: points) {
+            drawCircle(frame, point, radius);
+        }
+        List<Pair<SkeletonPoint , SkeletonPoint>> lines = skeleton.getLines();
+        for(Pair<SkeletonPoint , SkeletonPoint> line: lines) {
+            drawLine(frame, line.getKey(), line.getValue());
+
+        }
     }
 
     /**
@@ -169,9 +196,8 @@ public class VideoHandler {
      * @param error the error to draw
      * @return the new frame
      */
-    private Mat drawErrors(Mat frame, SwimmingError error) {
+    private void drawErrors(Mat frame, SwimmingError error) {
         //TODO
-        return frame;
     }
 
     /**
@@ -180,9 +206,8 @@ public class VideoHandler {
      * @param visualComment the visual comment
      * @return the new frame
      */
-    private Mat drawVisualComment(Mat frame, Object visualComment) {
+    private void drawVisualComment(Mat frame, Object visualComment) {
         //TODO
-        return frame;
     }
 
     /**
@@ -235,23 +260,24 @@ public class VideoHandler {
      * @return new byte video
      * @precondition all lists must be the insert of the same video frames
      */
-    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingSkeleton> dots, List<SwimmingError> errors,
                                              List<Object> visualComments) {
         for(int i=0; i<frames.size(); i++) {
             Mat frame = frames.get(i);
             if(dots!=null && !dots.isEmpty()) {
-                SwimmingTag swimmingTag = dots.get(i);
-                frame = drawSwimmer(frame, swimmingTag);
+                SwimmingSkeleton swimmingSkeleton = dots.get(i);
+                drawSwimmer(frame, swimmingSkeleton);
             }
             if(errors!=null && !errors.isEmpty()) {
                 SwimmingError swimmingError = errors.get(i);
-                frame = drawErrors(frame, swimmingError);
+                drawErrors(frame, swimmingError);
             }
             if(visualComments!= null && ! visualComments.isEmpty()) {
                 //TODO
                 Object visualComment = visualComments.get(i);
-                frame = drawVisualComment(frame, visualComment);
+                drawVisualComment(frame, visualComment);
             }
+            //TODO check if we print the logo in the end
             drawLogo(frame);
             frames.set(i, frame);
         }
@@ -269,7 +295,7 @@ public class VideoHandler {
      * @precondition all lists must be the insert of the same video frames
      * @postcondition insert the newest feedback generated in the des path
      */
-    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingTag> dots, List<SwimmingError> errors,
+    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingSkeleton> dots, List<SwimmingError> errors,
                                      List<Object> visualComments) {
         if(frames == null) {
             return null;

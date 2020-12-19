@@ -4,13 +4,13 @@ import java.util.List;
 
 public class TaggedVideo {
 
-    private List<SwimmingTag> tags;
+    private List<SwimmingSkeleton> tags;
 
-    public TaggedVideo(List<SwimmingTag> tags) {
+    public TaggedVideo(List<SwimmingSkeleton> tags) {
         this.tags = tags;
     }
 
-    public List<SwimmingTag> getTags() {
+    public List<SwimmingSkeleton> getTags() {
         return this.tags;
     }
 }
