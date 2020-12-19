@@ -1,9 +1,6 @@
-import 'package:client/Domain/FeedbackVideo.dart';
-import 'package:client/Screens/Components/MobileInput.dart';
 import 'package:client/Screens/Components/VideoUploader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'Screen.dart';
 
 class UploadScreen extends Screen {
@@ -21,7 +18,7 @@ class _UploadScreenState extends State<UploadScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Image / Video Picker"),
+          title: Text("Video Upload"),
         ),
         body: SingleChildScrollView(
           child: Center(

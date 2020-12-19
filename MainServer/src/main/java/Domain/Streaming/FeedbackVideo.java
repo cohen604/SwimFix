@@ -3,7 +3,6 @@ import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class FeedbackVideo extends Video {
     private TextualComment textualComment;
     private List<SwimmingError> errorList;
     private TaggedVideo taggedVideo;
-    // The feedback video path to save into
+    // The feedback video path to insert into
     private String path;
     // The file generated in the video handler for the for the feedback
     private File feedbackFile;
@@ -25,7 +24,7 @@ public class FeedbackVideo extends Video {
         this.taggedVideo = taggedVideo;
         this.errorList = errorList;
         //TODO generate here a unique string path that recognize the user so we can load later
-        this.path = "clientVideos/feedbackvideoTmp.mp4";
+        this.path = generateFileName()+"_feedback.mp4";
         this.feedbackFile = null;
         this.feedbackUpdated = false;
     }
@@ -36,10 +35,10 @@ public class FeedbackVideo extends Video {
      * @postcondition generated new feedback file
      */
     private void updateFeedbackFile() {
-        List<SwimmingTag> swimmingTags = null;
+        List<SwimmingSkeleton> swimmingSkeletons = this.taggedVideo.getTags();
         List<Object> visualComments = null; //TODO
         if(this.feedbackFile == null || this.feedbackUpdated) {
-            File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingTags,
+            File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
                     errorList, visualComments);
             if(file != null) {
                 this.feedbackFile = file;

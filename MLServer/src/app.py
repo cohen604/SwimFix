@@ -1,6 +1,7 @@
 import os
 import io
 import pickle
+import json
 from typing import List, Tuple, Dict
 
 from model import get_model
@@ -32,12 +33,14 @@ def get_predictions(frames: np.ndarray) -> np.ndarray:
         List of keypoints detected for each frame.
 
     """
-
     preds = []
-    for frame in frames:
+    for i, frame in enumerate(frames):
         outputs = model(frame)
-        keypoints = outputs['instances'].get_fields()['pred_keypoints'].cpu().numpy()[0]
-        preds.append(keypoints)
+        try:
+            keypoints = outputs['instances'].get_fields()['pred_keypoints'].cpu().numpy()[0]
+        except Exception as e:
+            keypoints = [0] * 21
+        preds.append(list(keypoints.ravel().astype(np.float64)))
 
     return preds
 
@@ -54,7 +57,6 @@ def detect():
         frames.append(frame)
 
     frames = np.array(frames)
-
     predictions = get_predictions(frames)
 
     return jsonify(predictions)

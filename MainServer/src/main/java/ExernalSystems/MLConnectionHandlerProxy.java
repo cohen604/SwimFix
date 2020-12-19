@@ -9,7 +9,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     private MLConnectionHandler mlConnectionHandler = null;
 
     public MLConnectionHandlerProxy() {
-        mlConnectionHandler = new MLConnectionHandlerReal("localhost", "5000");
+        mlConnectionHandler = new MLConnectionHandlerReal("84.109.116.61", "5000");
     }
 
     @Override

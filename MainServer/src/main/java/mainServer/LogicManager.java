@@ -4,21 +4,59 @@ import DTO.*;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
+import Domain.Swimmer;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.Swimmer.SwimmerDao;
+import Storage.User.UserDao;
+
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 
 public class LogicManager {
-    MLConnectionHandler mlConnectionHandler;
+
+    private MLConnectionHandler mlConnectionHandler;
     //TODO: hold all the logged users
     List<User> userList;
 
     public LogicManager() {
         mlConnectionHandler = new MLConnectionHandlerProxy();
+    }
+
+
+    /**
+     * The function handle login of swimmers to the system
+     * @param userDTO the simmers information
+     * @return true
+     */
+    public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
+        UserDao userDao = new UserDao();
+        // TODO synchronized(getLocker(user.getUid())){};
+        User user = userDao.find(userDTO.getUid());
+        if(user!=null) {
+            user.login();
+            userDao.update(user);
+            return new ActionResult<>(Response.SUCCESS, userDTO);
+        }
+        // user not exits
+        user = new User(userDTO);
+        user.login();
+        Swimmer swimmer = new Swimmer(user.getUid());
+        user.addState(swimmer);
+        if(userDao.insert(user)!=null) {
+            SwimmerDao swimmerDao = new SwimmerDao();
+            if(swimmerDao.insert(swimmer)!=null) {
+                return new ActionResult<>(Response.SUCCESS, userDTO);
+            }
+            else {
+                // todo delete user from db
+                // return fail
+            }
+        }
+        return new ActionResult<>(Response.FAIL,null);
     }
 
     /**
@@ -86,4 +124,5 @@ public class LogicManager {
         }
         return null;
     }
+
 }

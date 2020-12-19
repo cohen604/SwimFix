@@ -1,17 +1,18 @@
 import 'dart:convert';
+import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/scheduler.dart';
 import 'package:universal_html/prefer_universal/html.dart' as html;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
-import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'TitleButton.dart';
-import 'VideoPreview.dart';
+import '../VideoPreviewScreen.dart';
 
 class VideoUploader extends StatefulWidget {
 
@@ -27,8 +28,17 @@ class _VideoUploaderState extends State<VideoUploader> {
   int fileLength;
   String filePath;
   bool clickUpload = false;
-  Future<FeedbackVideo> feedbackVideo;
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
+  List<File> filesWithNoFeedBack;
+
+  void initVars() {
+    this.fileBytes = null;
+    this.fileLength = 0;
+    this.filePath = null;
+    this.clickUpload = false;
+    this.feedbackVideoStreamer = null;
+    this.filesWithNoFeedBack = null;
+  }
 
   void uploadFileWeb() async {
     html.InputElement uploadInput = html.FileUploadInputElement();
@@ -73,18 +83,24 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   void uploadVideoMobileCamera() async {
-    // var picker = ImagePicker();
-    // PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera);
-    // var file = File(pickedFile.path);
-    FilePickerResult result = await FilePicker.platform.pickFiles();
-    if(result != null) {
-      File file = File(result.files.single.path);
-      setState(() {
-        this.fileBytes = file.readAsBytesSync();
-        this.fileLength = file.lengthSync();
-        this.filePath = file.path;
-      });
+    var picker = ImagePicker();
+    PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
+    LogicManager logicManager = LogicManager.getInstance();
+    logicManager.cutVideoList(pickedFile.path).then((files) {
+      File file = files.first;
+      if(file != null) {
+        files.removeAt(0);
+        this.filesWithNoFeedBack = files;
+        var fileBytes = file.readAsBytesSync();
+        var fileLength = file.lengthSync();
+        var filePath = file.path;
+        getFeedback(fileBytes, fileLength, filePath);
+      }
+      else {
+        print("To late to be null!!");
+      }
     }
+    );
   }
 
   /// The function call upload video of mobile or web
@@ -103,12 +119,12 @@ class _VideoUploaderState extends State<VideoUploader> {
     }
   }
 
-  void getFeedback(BuildContext innerContext) async {
+  void getFeedback(Uint8List fileBytes, int fileLength, String filePath) async {
     this.setState(() {
       this.clickUpload = true;
       LogicManager logicManager = LogicManager.getInstance();
-      feedbackVideoStreamer = logicManager.postVideoForStreaming(this.fileBytes,
-          this.fileLength, this.filePath);
+      feedbackVideoStreamer = logicManager.postVideoForStreaming(fileBytes,
+          fileLength, filePath);
     });
   }
 
@@ -150,7 +166,13 @@ class _VideoUploaderState extends State<VideoUploader> {
         future: this.feedbackVideoStreamer,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return VideoPreview(feedbackVideoStreamer:snapshot.data);
+            var args = new VideoScreenArguments(
+                [snapshot.data],
+                this.filesWithNoFeedBack);
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(context, "/videos", arguments: args);
+            });
+            this.initVars();
           }
           if(this.clickUpload) {
             return Center(
@@ -163,11 +185,11 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildMobile(BuildContext context) {
     return Column(
       children: [
         TitleButton(
-            title:"Pick Video from your computer",
+            title:"Pick Video from your mobile device",
             buttonText: "Upload",
             onPress: uploadVideo
         ),
@@ -177,44 +199,52 @@ class _VideoUploaderState extends State<VideoUploader> {
         TitleButton(
             title:"Submit video to SwimFix for feedback",
             buttonText: "Submit",
-            onPress: ()=>getFeedback(context)
+            onPress: ()=>getFeedback(this.fileBytes, this.fileLength, this.filePath)
         ),
         SizedBox(height: 20,),
-        buildVideoPreview(context),
+        TitleButton(
+          title:"Take a video from your camera",
+          buttonText: "Recording",
+          onPress: ()=>uploadVideo(flag:true),
+        ),
+        SizedBox(height: 10,),
 
+        buildVideoPreview(context),
       ],
     );
   }
 
-  //@override
   // Widget that we used to use.
   // the feedback is on the right side and not in the bottom
-  Widget build2(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(height: 50,),
-        Column(
-          children: [
-            TitleButton(
-                title:"Pick Video from your computer",
-                buttonText: "Upload",
-                onPress: uploadVideo
-            ),
-            SizedBox(height: 10,),
-            buildSelectedFile(context),
-            SizedBox(height: 10,),
-            TitleButton(
-                title:"Submit video to SwimFix for feedback",
-                buttonText: "Submit",
-                onPress: ()=>getFeedback(context)
-            ),
-          ],
-        ),
-        SizedBox(height: 20,),
-        Expanded(
-          child:buildVideoPreview(context),
-        ),
-      ],
-    );
+  Widget buildWeb(BuildContext context) {
+    return
+      Column(
+        children: [
+          TitleButton(
+              title:"Pick Video from your computer",
+              buttonText: "Upload",
+              onPress: uploadVideo
+          ),
+          SizedBox(height: 10,),
+          buildSelectedFile(context),
+          SizedBox(height: 10,),
+          TitleButton(
+              title:"Submit video to SwimFix for feedback",
+              buttonText: "Submit",
+              onPress: ()=>getFeedback(this.fileBytes, this.fileLength, this.filePath)
+          ),
+          SizedBox(height: 20,),
+          buildVideoPreview(context),
+        ],
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //here we check if we   are on mobile or web
+    if(kIsWeb) {
+      return buildWeb(context);
+    }
+    return buildMobile(context);
   }
 }

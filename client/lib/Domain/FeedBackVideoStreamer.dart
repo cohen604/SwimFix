@@ -1,6 +1,6 @@
 class FeedbackVideoStreamer {
-  final String path;
 
+  final String path;
   FeedbackVideoStreamer(this.path);
 
   FeedbackVideoStreamer.fromJson(Map<String, dynamic> json)
