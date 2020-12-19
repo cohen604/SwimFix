@@ -277,7 +277,6 @@ public class VideoHandler {
                 Object visualComment = visualComments.get(i);
                 drawVisualComment(frame, visualComment);
             }
-            //TODO check if we print the logo in the end
             drawLogo(frame);
             frames.set(i, frame);
         }
