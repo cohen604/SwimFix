@@ -2,6 +2,7 @@
 --find-links https://download.pytorch.org/whl/torch_stable.html
 detectron2
 torch==1.7.0+cu101
+torchvision==0.8.1+cu101
 flask==1.1.2
 numpy==1.19.3
 opencv-python==4.4.0.44
