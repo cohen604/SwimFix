@@ -26,8 +26,34 @@ class VideoStreamerCard extends StatelessWidget {
           arguments: this.link);
   }
 
+  Widget buildCard(BuildContext context) {
+    return Container(
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Builder(
+            builder: (context) {
+                if(link==null) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return InkWell(
+                  borderRadius: BorderRadius.circular(10.0),
+                  splashColor: Colors.blue.withAlpha(60),
+                  child: Text("Feedback"),
+                );
+            },
+          ),
+        ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    //return buildCard(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
@@ -56,41 +82,4 @@ class VideoStreamerCard extends StatelessWidget {
     );
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    if(link == null) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Column(
-            children: [
-              Text("Feedback ${this.number}"),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-              ],
-          ),
-        ),
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-            print(this.link.getPath());
-            Navigator.pushNamed(context, "/videoPreview",
-              arguments: this.link);
-            },
-        child: Card(
-            child: Column(
-              children: [
-                Text("Feedback ${this.number}"),
-                Text(this.shortName(this.link.getPath())),
-                Text("Date"),
-              ],
-            ),
-        ),
-      ),
-    );
-  }*/
 }
