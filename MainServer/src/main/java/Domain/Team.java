@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public class Team {
 
+    // team id
+    String tid;
     Coach coach;
     // <key, swimmer> = <swimmer id>
     HashMap<String, Swimmer> swimmers;

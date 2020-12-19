@@ -1,4 +1,4 @@
-package Domain.Streaming;
+package Domain.SwimmingData;
 
 import javafx.util.Pair;
 import java.util.HashMap;

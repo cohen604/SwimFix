@@ -1,4 +1,7 @@
 package Domain.Streaming;
+import Domain.SwimmingData.SkeletonPoint;
+import Domain.SwimmingData.SwimmingError;
+import Domain.SwimmingData.SwimmingSkeleton;
 import javafx.util.Pair;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;

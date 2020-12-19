@@ -1,9 +1,13 @@
 package Domain;
+import Domain.Streaming.FeedbackVideo;
+
+import java.util.List;
 import java.util.Queue;
 
 public class Swimmer extends State {
 
     private String uid;
+    private List<FeedbackVideo> feedbackVideos;
     private Queue<Invitation> invitationQueue;
 
     public Swimmer(String uid) {

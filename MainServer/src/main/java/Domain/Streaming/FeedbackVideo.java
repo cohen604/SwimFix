@@ -1,6 +1,8 @@
 package Domain.Streaming;
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.SwimmingData.SwimmingError;
+import Domain.SwimmingData.SwimmingSkeleton;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -35,7 +37,10 @@ public class FeedbackVideo extends Video {
      * @postcondition generated new feedback file
      */
     private void updateFeedbackFile() {
-        List<SwimmingSkeleton> swimmingSkeletons = this.taggedVideo.getTags();
+        List<SwimmingSkeleton> swimmingSkeletons = null;
+        if(this.taggedVideo!=null) {
+            swimmingSkeletons = this.taggedVideo.getTags();
+        }
         List<Object> visualComments = null; //TODO
         if(this.feedbackFile == null || this.feedbackUpdated) {
             File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
