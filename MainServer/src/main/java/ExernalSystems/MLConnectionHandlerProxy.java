@@ -15,7 +15,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public TaggedVideo getSkeletons(Video video) {
         if (mlConnectionHandler != null) {
-            //return mlConnectionHandler.getSkeletons(video);
+            return mlConnectionHandler.getSkeletons(video);
         }
         return null;
     }

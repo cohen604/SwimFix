@@ -9,8 +9,7 @@ class VideoScreenArguments {
 
   VideoScreenArguments(this.videos, this.futureVideos){
     if(this.videos == null){
-      this.videos = List();
-    }
+      this.videos = List();    }
     if(this.futureVideos == null) {
       this.futureVideos = List();
     }

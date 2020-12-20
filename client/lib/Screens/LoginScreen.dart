@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          splashColor: Colors.blue.withAlpha(60),
+          splashColor: Theme.of(context).splashColor,
           onTap: signInWithGoogle,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
