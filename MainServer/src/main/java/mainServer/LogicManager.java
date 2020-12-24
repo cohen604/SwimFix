@@ -68,6 +68,7 @@ public class LogicManager {
         Video video = new Video(convertedVideoDTO);
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         //TODO here need to be call for generate errors list
+        //TODO map of error list
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, null);
         return feedbackVideo;
     }
