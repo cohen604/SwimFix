@@ -13,6 +13,7 @@ import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import mainServer.SwimmingErrorDetectors.ElbowErrorDetector;
+import mainServer.SwimmingErrorDetectors.ForearmErrorDetector;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
 
@@ -75,7 +76,7 @@ public class LogicManager {
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
         for(int i =0; i<skeletons.size(); i++) {
             SwimmingSkeleton skeleton = skeletons.get(i);
-            SwimmingErrorDetector detector = new ElbowErrorDetector(90, 175);
+            SwimmingErrorDetector detector = new ForearmErrorDetector();
             List<SwimmingError> detectorErrors = detector.detect(skeleton);
             if(!detectorErrors.isEmpty()) {
                 System.out.println("found for frame "+ i);

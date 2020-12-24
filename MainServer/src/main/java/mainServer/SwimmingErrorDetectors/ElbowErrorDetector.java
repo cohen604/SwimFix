@@ -80,8 +80,6 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
         return points;
     }
 
-
-
     /**
      * The function detect right side
      * @param skeleton - the skelaton
@@ -95,7 +93,6 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             if(!isValidAngle(angle)) {
-                System.out.println("found angle with " + angle);
                 errors.add(new RightElbowError(angle));
             }
         }
@@ -109,10 +106,8 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             if(!isValidAngle(angle)) {
-                System.out.println("found angle with " + angle);
                 errors.add(new LeftElbowError(angle)) ;
             }
         }
     }
-
 }

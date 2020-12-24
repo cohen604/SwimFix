@@ -5,7 +5,6 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-
 import java.util.List;
 
 public abstract class Draw {
@@ -24,7 +23,7 @@ public abstract class Draw {
     }
 
     /**
-     * The function draw linew
+     * The function draw line
      * @param frame
      * @param a
      * @param b
@@ -72,7 +71,6 @@ public abstract class Draw {
         List<Pair<SkeletonPoint , SkeletonPoint>> lines = skeleton.getLines();
         for(Pair<SkeletonPoint , SkeletonPoint> line: lines) {
             drawLine(frame, line.getKey(), line.getValue());
-
         }
     }
 }
