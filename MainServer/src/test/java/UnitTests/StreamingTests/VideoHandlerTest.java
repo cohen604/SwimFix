@@ -11,8 +11,10 @@ import org.opencv.core.Mat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class VideoHandlerTest extends TestCase {
 
@@ -429,7 +431,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNotNull(file);
@@ -447,7 +449,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = WRONG_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNull(file);
@@ -463,7 +465,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = "";
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNull(file);
@@ -479,7 +481,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = null;
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNull(file);
@@ -494,7 +496,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = new LinkedList<>();
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNull(file);
@@ -509,7 +511,7 @@ public class VideoHandlerTest extends TestCase {
             List<Mat> frames = null;
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
             List<SwimmingSkeleton> dots = new LinkedList<>();
-            List<SwimmingError> errors = new LinkedList<>();
+            Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
             assertNull(file);

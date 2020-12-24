@@ -14,6 +14,21 @@ public class SkeletonPoint {
         this.confident = confident;
     }
 
+    /**
+     * The function calc a distance between this and the other point
+     * @param other
+     * @return
+     */
+    public double calcDistance(SkeletonPoint other) {
+        double dx = Math.pow(this.x - other.x, 2);
+        double dy = Math.pow(this.y - other.y, 2);
+        return Math.sqrt(dx + dy);
+    }
+
+    /**
+     * Getters
+     */
+
     public boolean isConfedent() {
         return this.confident > ThRESHOLD;
     }

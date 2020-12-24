@@ -5,16 +5,20 @@ import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 import Domain.Swimmer;
+import Domain.SwimmingData.SwimmingError;
+import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
+import mainServer.SwimmingErrorDetectors.ElbowErrorDetector;
+import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.List;
+import java.util.*;
 
 public class LogicManager {
 
@@ -67,9 +71,18 @@ public class LogicManager {
     private FeedbackVideo getFeedbackVideo(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
-        //TODO here need to be call for generate errors list
-        //TODO map of error list
-        FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, null);
+        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
+        List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
+        for(int i =0; i<skeletons.size(); i++) {
+            SwimmingSkeleton skeleton = skeletons.get(i);
+            SwimmingErrorDetector detector = new ElbowErrorDetector(90, 175);
+            List<SwimmingError> detectorErrors = detector.detect(skeleton);
+            if(!detectorErrors.isEmpty()) {
+                System.out.println("found for frame "+ i);
+            }
+            errorMap.put(i, detectorErrors);
+        }
+        FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorMap);
         return feedbackVideo;
     }
 
