@@ -13,6 +13,7 @@ import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import mainServer.SwimmingErrorDetectors.ElbowErrorDetector;
+import mainServer.SwimmingErrorDetectors.ForearmErrorDetector;
 import mainServer.SwimmingErrorDetectors.PalmCrossHeadDetector;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
