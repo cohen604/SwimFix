@@ -1,6 +1,4 @@
 package Domain.Streaming;
-
-import Storage.Video.VideoDao;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
 import java.util.List;
@@ -16,7 +14,6 @@ public class Video {
     private int height;
     private int width;
     VideoHandler videoHandler; // The video handler for doing
-    private VideoDao videoService = new VideoDao();
 
     public Video(ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
@@ -74,8 +71,10 @@ public class Video {
     }
 
     /**
-     * The function a list of bytes of the video
+     * The function return a list of bytes of the video
      * @return list of bytes
+     * @postcondition None
+     * @precondition list size == number of frames in the video
      */
     public List<byte[]> getVideo() {
         if(this.video == null || this.video.isEmpty()) {

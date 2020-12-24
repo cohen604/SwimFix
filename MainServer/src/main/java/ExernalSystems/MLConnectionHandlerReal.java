@@ -1,6 +1,6 @@
 package ExernalSystems;
 
-import Domain.Streaming.SwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 import com.google.gson.Gson;

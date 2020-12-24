@@ -1,4 +1,4 @@
-package Domain.Streaming;
+package Domain.SwimmingData;
 
 public class SkeletonPoint {
 

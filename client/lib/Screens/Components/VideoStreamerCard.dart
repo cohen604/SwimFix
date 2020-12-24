@@ -1,5 +1,6 @@
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoStreamerCard extends StatelessWidget {
@@ -9,6 +10,9 @@ class VideoStreamerCard extends StatelessWidget {
   VideoStreamerCard({this.link, this.number}): super();
 
   String shortName(String name) {
+    if(kIsWeb) {
+      return name;
+    }
     int maxLen = 28;
     if(name.length < maxLen) {
       return name;
@@ -26,34 +30,56 @@ class VideoStreamerCard extends StatelessWidget {
           arguments: this.link);
   }
 
+  Widget buildCardFields(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: Text("#${this.number}",
+              style: TextStyle(fontSize: 21)
+            )
+          ),
+          Text(this.shortName(this.link.getPath())),
+          Spacer(flex:3),
+        ],
+      ),
+    );
+  }
+
   Widget buildCard(BuildContext context) {
     return Container(
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Builder(
-            builder: (context) {
-                if(link==null) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return InkWell(
-                  borderRadius: BorderRadius.circular(10.0),
-                  splashColor: Colors.blue.withAlpha(60),
-                  child: Text("Feedback"),
-                );
-            },
-          ),
+      padding: EdgeInsets.all(10),
+      child: Card(
+        color: Theme.of(context).primaryColor.withAlpha(30),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        child: Builder(
+          builder: (context) {
+              if(link==null) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return InkWell(
+                borderRadius: BorderRadius.circular(10.0),
+                splashColor: Theme.of(context).primaryColor.withAlpha(50),
+                onTap: ()=>this.onTap(context),
+                child: buildCardFields(context),
+              );
+          },
+        ),
+      ),
     );
   }
 
 
   @override
   Widget build(BuildContext context) {
-    //return buildCard(context);
+    return buildCard(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(

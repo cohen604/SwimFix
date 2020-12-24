@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          splashColor: Colors.blue.withAlpha(60),
+          splashColor: Theme.of(context).splashColor,
           onTap: signInWithGoogle,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
@@ -94,33 +94,42 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0),
-                    bottomLeft: Radius.circular(40.0)),
-                color: Theme.of(context).primaryColor,
-              ),
-              width: MediaQuery.of(context).size.width / 3.3,
-              height: MediaQuery.of(context).size.height / 2,
-              padding: EdgeInsets.only(left:50, right: 50),
-              child: Center(
-                child: Text( "SwimFix",
-                    style: TextStyle(fontSize: 80.0, color:Colors.white,
-                        fontFamily: "Satisfy")
+            Flexible(
+              flex: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0),
+                      bottomLeft: Radius.circular(40.0)),
+                  color: Theme.of(context).primaryColor,
+                ),
+                //width: MediaQuery.of(context).size.width / 3,
+                //height: MediaQuery.of(context).size.height / 2,
+                padding: EdgeInsets.only(left:50, right: 50),
+                child: Center(
+                  child: Text( "SwimFix",
+                      style: TextStyle(fontSize: 80 * MediaQuery.of(context).textScaleFactor, color:Colors.white,
+                          fontFamily: "Satisfy")
+                  ),
                 ),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height / 2,
-              padding: EdgeInsets.only(top: 50.0, left: 20.0),
-              child: Column(
-                children: [
-                  Container(
-                      width: 300.0,
-                      height: 65.0,
+            Flexible(
+              flex: 3,
+              child: Container(
+                //height: MediaQuery.of(context).size.height / 2,
+                padding: EdgeInsets.all(30.0),
+                child: Column(
+                  children: [
+                    Flexible(
+                      flex: 1,
                       child: buildLoginWithGoogleMobile(context)
-                  ),
-                ],
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: Text(""),
+                    )
+                  ],
+                ),
               ),
             ),
           ],

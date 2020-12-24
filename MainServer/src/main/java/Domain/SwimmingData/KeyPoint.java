@@ -1,4 +1,4 @@
-package Domain.Streaming;
+package Domain.SwimmingData;
 
 public enum KeyPoint {
     HEAD(0),

@@ -1,5 +1,7 @@
 package Domain.Streaming;
 
+import Domain.SwimmingData.SwimmingSkeleton;
+
 import java.util.List;
 
 public class TaggedVideo {

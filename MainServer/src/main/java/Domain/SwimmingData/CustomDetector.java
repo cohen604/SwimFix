@@ -1,6 +1,4 @@
-package Domain;
-
-import Domain.Streaming.SwimmingError;
+package Domain.SwimmingData;
 
 import java.util.List;
 
