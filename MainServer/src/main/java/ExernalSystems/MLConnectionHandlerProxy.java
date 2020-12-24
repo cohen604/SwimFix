@@ -39,9 +39,8 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public TaggedVideo getSkeletons(Video video) {
         if (mlConnectionHandler != null) {
-            return mlConnectionHandler.getSkeletons(video);
-            /*
-            TODO for testing when eyal not avilable sample2
+            //return mlConnectionHandler.getSkeletons(video);
+            //TODO for testing when eyal not avilable sample2
             try {
                 String path = "C:\\Users\\avrah\\Desktop\\sample2_skeletons.txt";
                 File file = new File(path);
@@ -52,8 +51,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
             } catch (Exception e ) {
                 e.printStackTrace();
                 return null;
-            }*/
-
+            }
         }
         return null;
     }
