@@ -42,7 +42,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
             //return mlConnectionHandler.getSkeletons(video);
             //TODO for testing when eyal not avilable sample2
             try {
-                String path = "C:\\Users\\avrah\\Desktop\\sample2_skeletons.txt";
+                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
                 File file = new File(path);
                 List<String> lines = readAllLines(file.toPath());
                 String json = lines.stream().reduce("",(acc, cur)->acc+cur);

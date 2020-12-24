@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Screens/Components/TitleButton.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Services/ConnectionHandler.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +25,9 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   VideoPlayerController _controller;
   Future<void> _futureController;
   ChewieController _chewieController;
-
+  //TODO need to get the list of filters from the feedbackVideoStreamer
+  List<String> errors = ["Elbow", "Forearm", "Palm"];
+  Map<String, bool> filters = {"Elbow": true, "Forearm": true, "Palm": true};
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
 
       _chewieController = ChewieController(
         videoPlayerController: _controller,
+        // aspectRatio: 16 / 9,
         autoPlay: true,
         looping: false,
         //note: this muse be false cause chewiew having problem in full screen
@@ -60,33 +64,17 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     _controller.dispose();
   }
 
-  Widget buildChewie(BuildContext context) {
+  Widget buildChewieMobile(BuildContext context) {
     if(this.widget.feedbackVideoStreamer == null) {
-      return SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text("Video Preview"),
-            ),
-            body: SingleChildScrollView(
-                child: Center(
-                  child: Text("Video didnt uploaded"),
-                ),
-            ),
-        ),
+      return Center(
+        child: Text("Video didnt uploaded"),
       );
     }
     if(_chewieController != null && _chewieController.videoPlayerController.value.initialized) {
-      return SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Video Preview"),
-          ),
-          body: SingleChildScrollView(
-            child: Container(
-                child:Chewie(
-                  controller: _chewieController,)
-            ),
-          ),
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Chewie(
+          controller: _chewieController,
         ),
       );
     }
@@ -95,24 +83,57 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     );
   }
 
-  Widget buildVideoPlayer(BuildContext context) {
-    if(_controller != null && _controller.value.initialized)
-      return FittedBox(
-          fit:BoxFit.cover,
-          child: SizedBox(
-            width: _controller.value.size?.width ?? 0,
-            height: _controller.value.size?.height ?? 0,
-            child: Container(
-                child:VideoPlayer( _controller))
-          )
-      );
-    return Center(
-      child:CircularProgressIndicator()
+  Widget buildErrorList(BuildContext context) {
+    return ListView.builder(
+      itemCount: this.errors.length,
+      shrinkWrap: true,
+      itemBuilder: (_, index) {
+        return CheckboxListTile(
+          title: Text("${this.errors[index]} Detector"),
+          controlAffinity: ListTileControlAffinity.leading,
+          value: this.filters[this.errors[index]],
+          onChanged: (value) {
+            this.setState(() {
+              this.filters[this.errors[index]] = !this.filters[this.errors[index]];
+            });
+          },
+        );
+      }
     );
+  }
+
+  Widget buildChewie(BuildContext context) {
+    if(kIsWeb) {
+      return Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: buildErrorList(context)),
+          Expanded(
+            flex:  4,
+            child: LimitedBox(
+              maxHeight: MediaQuery.of(context).size.height - 70,
+              child: buildChewieMobile(context)
+            ),
+          ),
+        ],
+      );
+    }
+    return buildChewieMobile(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+      appBar: AppBar(
+      title: Text("Video Preview"),
+        ),
+      body: SingleChildScrollView(
+      child: buildChewie(context),
+        ),
+      ),
+    );
     return buildChewie(context);
   }
   
