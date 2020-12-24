@@ -66,6 +66,19 @@ public class LogicManager {
     }
 
     /**
+     * The function return a list of error detectors to check
+     * @return
+     */
+    private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
+        //TODO
+        List<SwimmingErrorDetector> output = new LinkedList<>();
+        output.add(new ElbowErrorDetector(90, 175));
+        output.add(new ForearmErrorDetector());
+        output.add(new PalmCrossHeadDetector());
+        return output;
+    }
+
+    /**
      * The function generate a feedback video form a swimming video
      * @param convertedVideoDTO the video
      * @return the feedback video
@@ -77,12 +90,12 @@ public class LogicManager {
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
         for(int i =0; i<skeletons.size(); i++) {
             SwimmingSkeleton skeleton = skeletons.get(i);
-            SwimmingErrorDetector detector = new PalmCrossHeadDetector();
-            List<SwimmingError> detectorErrors = detector.detect(skeleton);
-            if(!detectorErrors.isEmpty()) {
-                System.out.println("found for frame "+ i);
+            List<SwimmingError> errors = new LinkedList<>();
+            for(SwimmingErrorDetector detector: getSwimmingErrorDetectors()) {
+                List<SwimmingError> detectorErrors = detector.detect(skeleton);
+                errors.addAll(detectorErrors);
             }
-            errorMap.put(i, detectorErrors);
+            errorMap.put(i, errors);
         }
         FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorMap);
         return feedbackVideo;

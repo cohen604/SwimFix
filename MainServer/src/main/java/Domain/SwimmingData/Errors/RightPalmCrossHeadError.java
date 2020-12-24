@@ -9,8 +9,8 @@ public class RightPalmCrossHeadError extends PalmCrossHeadError{
 
     @Override
     public void draw(Mat frame, SwimmingSkeleton skeleton) {
-        SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
+        SkeletonPoint head = skeleton.getPoint(KeyPoint.HEAD);
         SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
-        drawPalmCrossHead(frame, elbow, wrist);
+        drawPalmCrossHead(frame, head, wrist);
     }
 }
