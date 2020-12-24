@@ -80,6 +80,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
             }
             String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
                     video.getHeight(), video.getWidth());
+
             List<SwimmingSkeleton> skeletons = buildSkeleton(res);
             return new TaggedVideo(skeletons);
         } catch (Exception e){
