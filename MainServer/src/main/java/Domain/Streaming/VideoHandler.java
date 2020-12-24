@@ -218,6 +218,10 @@ public class VideoHandler extends Draw {
                                              List<Object> visualComments) {
         for(int i=0; i<frames.size(); i++) {
             Mat frame = frames.get(i);
+            //TODO convert to 4 dimensions
+            //Mat des = new Mat(frame.rows(), frame.cols(), CvType.CV_8UC4);
+            //Imgproc.cvtColor(frame, des, Imgproc.COLOR_BGR2BGRA,4);
+            //frame = des;
             if (skeletons != null && !skeletons.isEmpty()) {
                 SwimmingSkeleton skeleton = skeletons.get(i);
                 drawSwimmer(frame, skeleton);

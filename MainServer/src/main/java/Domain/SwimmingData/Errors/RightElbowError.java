@@ -16,6 +16,6 @@ public class RightElbowError extends ElbowError {
         SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.R_SHOULDER);
         SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
         SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
-        drawShoulderElbowWrist(frame, shoulder, elbow, wrist);
+        drawShoulderElbowWrist(frame, shoulder, elbow, wrist, 50);
     }
 }

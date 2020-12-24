@@ -16,7 +16,7 @@ public class LeftForearmError extends ForearmError{
         SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
         SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
         int thickness = 2;
-        double r = 240, g = 88, b = 248;
-        drawLine(frame, elbow, wrist, r, g, b, 0, thickness);
+        double r = 240, g = 88, b = 248, a = 255.0;
+        drawLine(frame, elbow, wrist, r, g, b, a, thickness);
     }
 }

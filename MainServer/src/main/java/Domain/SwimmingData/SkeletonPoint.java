@@ -26,6 +26,47 @@ public class SkeletonPoint {
     }
 
     /**
+     *
+     * @param other
+     * @return
+     */
+    public double dotProduct(SkeletonPoint other) {
+        return this.x * other.x + this.y * other.y;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public double getSize() {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    /**
+     *
+     * @param other
+     * @return
+     */
+    public SkeletonPoint getNormalVec(SkeletonPoint other) {
+        double x = other.getX() - this.x;
+        double y = other.getY() - this.y;
+        double size = Math.sqrt(x*x + y*y);
+        return new SkeletonPoint( x/size, y/size, -1);
+    }
+
+    /**
+     *
+     * @param other
+     * @return
+     */
+    public double getAngleBetween(SkeletonPoint other) {
+        double top = dotProduct(other);
+        double bottom = getSize() * other.getSize();
+        double angleRad = Math.acos(top/bottom);
+        return Math.toDegrees(angleRad);
+    }
+
+    /**
      * Getters
      */
 

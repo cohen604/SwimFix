@@ -70,7 +70,7 @@ public class LogicManager {
      * @return
      */
     private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
-        //TODO
+        //TODO change this by the selected filters
         List<SwimmingErrorDetector> output = new LinkedList<>();
         output.add(new ElbowErrorDetector(90, 175));
         output.add(new ForearmErrorDetector());
@@ -86,12 +86,13 @@ public class LogicManager {
     private FeedbackVideo getFeedbackVideo(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
+        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
         for(int i =0; i<skeletons.size(); i++) {
             SwimmingSkeleton skeleton = skeletons.get(i);
             List<SwimmingError> errors = new LinkedList<>();
-            for(SwimmingErrorDetector detector: getSwimmingErrorDetectors()) {
+            for(SwimmingErrorDetector detector: errorDetectors) {
                 List<SwimmingError> detectorErrors = detector.detect(skeleton);
                 errors.addAll(detectorErrors);
             }
@@ -128,6 +129,12 @@ public class LogicManager {
             //TODO return here action result error!!
         }
         return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+    }
+
+    public ActionResult<FeedbackVideoStreamer> getVideoForStreamer(String path, List<String> errorsToSee) {
+        //TODO check if path exits with the prev feedback and user
+
+        return null;
     }
 
     /**

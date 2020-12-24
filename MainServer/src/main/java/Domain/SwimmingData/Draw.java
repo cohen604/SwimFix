@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import java.util.List;
 
@@ -20,6 +21,30 @@ public abstract class Draw {
         Scalar color = new Scalar(0,255,0);
         int thickness = 3;
         Imgproc.circle(frame, point, radius, color, thickness);
+    }
+
+    /**
+     *
+     * @param frame
+     * @param radius
+     * @param angle
+     * @param startAngle
+     * @param endAngle
+     * @param center
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     */
+    public void drawElipce(Mat frame, double radius, double angle, double startAngle,
+                           double endAngle, SkeletonPoint center, double r, double g,
+                           double b, double a) {
+        Point centerPoint = new Point(center.getX(), center.getY());
+        Size size = new Size(radius, radius);
+        Scalar scalar = new Scalar(b, g, r, a);
+        int thickness = -1;
+        Imgproc.ellipse(frame, centerPoint, size, angle, startAngle, endAngle,
+                scalar, thickness);
     }
 
     /**
