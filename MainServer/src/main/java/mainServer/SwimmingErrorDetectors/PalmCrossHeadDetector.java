@@ -34,6 +34,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             SkeletonPoint neck = skeleton.getPoint(KeyPoint.HEAD);
             SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+            //TODO refactor to function
             l1 = elbow.calcDistance(wrist);
             l2 = l1 / ratio;
             double x, y;
@@ -79,16 +80,12 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             System.out.println("left hand");
             System.out.println("the wrist x is " + wrist.getX());
             System.out.println("the middle x is " + middlePalmX);
-//            double angle = Math.asin(((elbow.getY() - wrist.getY()) / l1));
-//            double middlePalmX = wrist.getX() + (l2 / 2) * Math.cos(angle);
             if (middlePalmX > neck.getX()) {
                 System.out.println("left palm cross the head");
                 errors.add(new LeftPalmCrossHeadError()) ;
             }
         }
     }
-
-
 
     /**
      * The function return the key point need for the right side
@@ -102,7 +99,6 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
         return points;
     }
 
-
     /**
      * The function return the key point need for the left side
      * @return key points
@@ -114,6 +110,5 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
         points.add(KeyPoint.L_WRIST);
         return points;
     }
-
 
 }
