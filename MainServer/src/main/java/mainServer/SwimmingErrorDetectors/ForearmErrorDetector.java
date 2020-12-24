@@ -29,29 +29,55 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return angle;
     }
 
+    /**
+     * The function return the key point need for the right side
+     * @return key points
+     */
+    private List<KeyPoint> getRightKeys() {
+        List<KeyPoint> points = new LinkedList<>();
+        points.add(KeyPoint.R_ELBOW);
+        points.add(KeyPoint.R_WRIST);
+        return points;
+    }
+
+    /**
+     * The function return the key point need for the left side
+     * @return key points
+     */
+    private List<KeyPoint> getLeftKeys() {
+        List<KeyPoint> points = new LinkedList<>();
+        points.add(KeyPoint.L_ELBOW);
+        points.add(KeyPoint.L_WRIST);
+        return points;
+    }
+
     public void detectLeft(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
-        SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
-        double angle = calcAngle(elbow, wrist);
-        if (angle < 0 && angle > minAngle) { // range is -10 degrees
-            errors.add(new LeftForearmError(angle));
-        }
-        else if (angle > 0 && angle < maxAngle) { // range is 45 degrees
-            errors.add(new LeftForearmError(angle));
+        List<KeyPoint> leftKeys = getLeftKeys();
+        if(skeleton.contatinsKeys(leftKeys)) {
+            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
+            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
+            double angle = calcAngle(elbow, wrist);
+            if (angle < 0 && angle < minAngle) { // range is -10 degrees
+                errors.add(new LeftForearmError(angle));
+            } else if (angle > 0 && angle > maxAngle) { // range is 45 degrees
+                errors.add(new LeftForearmError(angle));
+            }
         }
     }
 
     public void detectRight(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        // right forearm: delta_x will get positive value in 45 degrees case
-        // delta_x will get negative value in 10 degrees case
-        SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-        SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
-        double angle = calcAngle(elbow, wrist);
-        if (angle < 0 && angle > -maxAngle) { // range is 45 degrees
-            errors.add(new RightForearmError(angle));
-        }
-        else if (angle > 0 && angle < -minAngle) { // range is 10 degrees
-            errors.add(new RightForearmError(angle));
+        List<KeyPoint> rightKeys = getRightKeys();
+        if(skeleton.contatinsKeys(rightKeys)) {
+            // right forearm: delta_x will get positive value in 45 degrees case
+            // delta_x will get negative value in 10 degrees case
+            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
+            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+            double angle = calcAngle(elbow, wrist);
+            if (angle < 0 && angle < -maxAngle) { // range is 45 degrees
+                errors.add(new RightForearmError(angle));
+            } else if (angle > 0 && angle > -minAngle) { // range is 10 degrees
+                errors.add(new RightForearmError(angle));
+            }
         }
     }
 }
