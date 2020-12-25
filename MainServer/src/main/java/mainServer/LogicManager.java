@@ -28,10 +28,12 @@ public class LogicManager {
     //TODO: hold all the logged users
     List<User> userList;
 
+    FeedbackVideo lastFeedbackVideo;
+
+
     public LogicManager() {
         mlConnectionHandler = new MLConnectionHandlerProxy();
     }
-
 
     /**
      * The function handle login of swimmers to the system
@@ -80,13 +82,11 @@ public class LogicManager {
 
     /**
      * The function generate a feedback video form a swimming video
-     * @param convertedVideoDTO the video
+     * @param video the video
      * @return the feedback video
      */
-    private FeedbackVideo getFeedbackVideo(ConvertedVideoDTO convertedVideoDTO) {
-        Video video = new Video(convertedVideoDTO);
+    private FeedbackVideo getFeedbackVideo(Video video, List<SwimmingErrorDetector> errorDetectors) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
-        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
         for(int i =0; i<skeletons.size(); i++) {
@@ -108,7 +108,9 @@ public class LogicManager {
      * @return the feedback video
      */
     public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-        FeedbackVideo feedbackVideo = getFeedbackVideo(convertedVideoDTO);
+        Video video = new Video(convertedVideoDTO);
+        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+        FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
         FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
         if(feedbackVideoDTO == null) {
             //TODO return here a action result error!!
@@ -123,18 +125,16 @@ public class LogicManager {
      * @precondition the feedback video we are generating doesn't exits!
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-        FeedbackVideo feedbackVideo = getFeedbackVideo(convertedVideoDTO);
+        Video video = new Video(convertedVideoDTO);
+        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+        FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+        //TODO delete this after removing lastFeedbackVideo
+        this.lastFeedbackVideo = feedbackVideo;
         FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
         if(feedbackVideoStreamer == null) {
             //TODO return here action result error!!
         }
         return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
-    }
-
-    public ActionResult<FeedbackVideoStreamer> getVideoForStreamer(String path, List<String> errorsToSee) {
-        //TODO check if path exits with the prev feedback and user
-
-        return null;
     }
 
     /**
@@ -161,4 +161,47 @@ public class LogicManager {
         return null;
     }
 
+    /**
+     * The function build an error detector list from a given filter
+     * @param filterDTO - filter
+     * @return
+     */
+    private List<SwimmingErrorDetector> buildDetectors(FeedbackFilterDTO filterDTO) {
+        List<SwimmingErrorDetector> output = new LinkedList<>();
+        for(String name: filterDTO.getFilters()) {
+            //todo Change this in the future to recive not a list of string but list of errorsTDO
+            switch (name) {
+                case "Elbow":
+                    output.add(new ElbowErrorDetector(90,175));
+                    break;
+                case "Forearm":
+                    output.add(new ForearmErrorDetector());
+                    break;
+                case "Palm":
+                    output.add(new PalmCrossHeadDetector());
+                    break;
+            }
+        }
+        return output;
+    }
+
+    /**
+     * The function create a new feedback video, filter, and send a new feedback link
+     * @param filterDTO - the feedback to filter
+     * @return new feedbackVideoStreamer
+     */
+    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
+        //TODO checkif feedback video exits
+        if(this.lastFeedbackVideo!=null){
+            Video video = this.lastFeedbackVideo;
+            List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
+            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
+            if(feedbackVideoStreamer == null) {
+                //TODO return here action result error!!
+            }
+            return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+        }
+        return null;
+    }
 }

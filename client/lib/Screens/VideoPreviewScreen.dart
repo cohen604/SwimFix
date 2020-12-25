@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/FeedbackFilters.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Screens/Components/TitleButton.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -83,23 +84,48 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     );
   }
 
-  Widget buildErrorList(BuildContext context) {
-    return ListView.builder(
-      itemCount: this.errors.length,
-      shrinkWrap: true,
-      itemBuilder: (_, index) {
-        return CheckboxListTile(
-          title: Text("${this.errors[index]} Detector"),
-          controlAffinity: ListTileControlAffinity.leading,
-          value: this.filters[this.errors[index]],
-          onChanged: (value) {
-            this.setState(() {
-              this.filters[this.errors[index]] = !this.filters[this.errors[index]];
-            });
-          },
-        );
+  void clickView() {
+    if(this.widget.feedbackVideoStreamer != null) {
+      String path = this.widget.feedbackVideoStreamer.path;
+      List<String> output = new List();
+      for (String error in this.errors) {
+        if (this.filters[error]) {
+          output.add(error);
+        }
       }
-    );
+      if(output.isNotEmpty) {
+        FeedbackFilters filter = new FeedbackFilters(path, output);
+        LogicManager.getInstance().filterFeedback(filter).then((link) {
+          Navigator.pushNamed(context, "/videoPreview",
+              arguments: link);
+        });
+      }
+    }
+  }
+
+  Widget buildErrorList(BuildContext context) {
+    return Column(
+      children: [ListView.builder(
+        itemCount: this.errors.length,
+        shrinkWrap: true,
+        itemBuilder: (_, index) {
+          return CheckboxListTile(
+            title: Text("${this.errors[index]} Detector"),
+            controlAffinity: ListTileControlAffinity.leading,
+            value: this.filters[this.errors[index]],
+            onChanged: (value) {
+              this.setState(() {
+                this.filters[this.errors[index]] = !this.filters[this.errors[index]];
+              });
+            },
+          );
+        }
+      ),
+      RaisedButton(
+          onPressed: this.clickView,
+          child:Text("View")
+      ),
+    ]);
   }
 
   Widget buildChewie(BuildContext context) {

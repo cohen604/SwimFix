@@ -20,4 +20,8 @@ public class SwimFixAPI {
    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
       return logicManager.streamFile(path);
    }
+
+   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
+      return logicManager.filterFeedbackVideo(filterDTO);
+   }
 }
