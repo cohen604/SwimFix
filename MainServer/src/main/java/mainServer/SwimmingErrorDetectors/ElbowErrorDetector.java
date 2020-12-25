@@ -29,6 +29,11 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
         return output;
     }
 
+    @Override
+    public String getTag() {
+        return "Elbow";
+    }
+
     /**
      * The functoion calc the angle between the shoulder, elbow, wrist
      * Computes angle using law of cosines

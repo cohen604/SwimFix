@@ -9,4 +9,5 @@ import java.util.List;
 public interface SwimmingErrorDetector {
 
     List<SwimmingError> detect(SwimmingSkeleton skeleton);
+    String getTag();
 }

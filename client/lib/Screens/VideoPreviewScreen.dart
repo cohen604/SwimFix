@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+//TODO change this
+List<String> maxErrors = List();
+
 class VideoPreviewScreen extends StatefulWidget {
 
   FeedbackVideoStreamer feedbackVideoStreamer;
@@ -27,12 +30,24 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   Future<void> _futureController;
   ChewieController _chewieController;
   //TODO need to get the list of filters from the feedbackVideoStreamer
-  List<String> errors = ["Elbow", "Forearm", "Palm"];
-  Map<String, bool> filters = {"Elbow": true, "Forearm": true, "Palm": true};
+  List<String> errors; // = ["Elbow", "Forearm", "Palm"];
+  Map<String, bool> filters; // = {"Elbow": true, "Forearm": true, "Palm": true};
+
   @override
   void initState() {
     super.initState();
     setController();
+    List<String> errorsNames = this.widget.feedbackVideoStreamer.detectors;
+    this.errors = List();
+    this.filters = Map();
+    for(String name in errorsNames) {
+      if(!maxErrors.contains(name)) {
+        maxErrors.add(name);
+      }
+      this.errors.add(name);
+      this.filters.putIfAbsent(name, () => true);
+    }
+    print(maxErrors);
   }
 
   void setController() async {
@@ -93,14 +108,21 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
           output.add(error);
         }
       }
-      if(output.isNotEmpty) {
-        FeedbackFilters filter = new FeedbackFilters(path, output);
-        LogicManager.getInstance().filterFeedback(filter).then((link) {
-          Navigator.pushNamed(context, "/videoPreview",
-              arguments: link);
-        });
-      }
+      FeedbackFilters filter = new FeedbackFilters(path, output);
+      LogicManager.getInstance().filterFeedback(filter).then((link) {
+        Navigator.pushNamed(context, "/videoPreview",
+            arguments: link);
+      });
     }
+  }
+
+  void clickReset() {
+    String path = this.widget.feedbackVideoStreamer.path;
+    FeedbackFilters filter = new FeedbackFilters(path, maxErrors);
+    LogicManager.getInstance().filterFeedback(filter).then((link) {
+      Navigator.pushNamed(context, "/videoPreview",
+          arguments: link);
+    });
   }
 
   Widget buildErrorList(BuildContext context) {
@@ -124,6 +146,13 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
       RaisedButton(
           onPressed: this.clickView,
           child:Text("View")
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      RaisedButton(
+          onPressed: this.clickReset,
+          child:Text("Reset")
       ),
     ]);
   }

@@ -127,10 +127,14 @@ public class LogicManager {
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
         List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+        List<String> detectorsNames = new LinkedList<>();
+        for(SwimmingErrorDetector detector: errorDetectors) {
+            detectorsNames.add(detector.getTag());
+        }
         FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
         //TODO delete this after removing lastFeedbackVideo
         this.lastFeedbackVideo = feedbackVideo;
-        FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
+        FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
         if(feedbackVideoStreamer == null) {
             //TODO return here action result error!!
         }
@@ -149,7 +153,7 @@ public class LogicManager {
         if(!file.exists()) {
             //TODO return error
             //TODO maybe always generate a video if it a error video then return error video ?
-        }
+        }   
         try {
             byte[] data = Files.readAllBytes(file.toPath());
             FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath() ,data);
@@ -170,6 +174,7 @@ public class LogicManager {
         List<SwimmingErrorDetector> output = new LinkedList<>();
         for(String name: filterDTO.getFilters()) {
             //todo Change this in the future to recive not a list of string but list of errorsTDO
+            //  for now its the same as the getTag function in the detectors
             switch (name) {
                 case "Elbow":
                     output.add(new ElbowErrorDetector(90,175));
@@ -182,6 +187,11 @@ public class LogicManager {
                     break;
             }
         }
+//        if(output.isEmpty()) {
+//            output.add(new ElbowErrorDetector(90,175));
+//            output.add(new ForearmErrorDetector());
+//            output.add(new PalmCrossHeadDetector());
+//        }
         return output;
     }
 
@@ -191,12 +201,16 @@ public class LogicManager {
      * @return new feedbackVideoStreamer
      */
     public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
-        //TODO checkif feedback video exits
+        //TODO check if feedback video exits
         if(this.lastFeedbackVideo!=null){
             Video video = this.lastFeedbackVideo;
             List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
+            List<String> detectorsNames = new LinkedList<>();
+            for(SwimmingErrorDetector detector: errorDetectors) {
+                detectorsNames.add(detector.getTag());
+            }
             FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
+            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!
             }

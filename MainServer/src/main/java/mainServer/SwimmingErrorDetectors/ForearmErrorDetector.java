@@ -22,6 +22,11 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return errors;
     }
 
+    @Override
+    public String getTag() {
+        return "Forearm";
+    }
+
     private double calcAngle(SkeletonPoint elbow, SkeletonPoint wrist) {
         double delta_x = wrist.getX() - elbow.getX();
         double delta_y = wrist.getY() - elbow.getY(); //will get positive value

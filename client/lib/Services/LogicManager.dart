@@ -60,6 +60,7 @@ class LogicManager {
     ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
     //TODO check if response is valid
     Map map = response.value as Map;
+    print(map);
     return FeedbackVideoStreamer.factory(map);
   }
 

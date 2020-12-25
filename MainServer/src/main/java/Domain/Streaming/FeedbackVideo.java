@@ -71,14 +71,15 @@ public class FeedbackVideo extends Video {
 
     /**
      * The function generate a feedback video for streaming
+     * @param detectors - list of detectors
      * @return feedback streamer
      */
-    public FeedbackVideoStreamer generateFeedbackStreamer() {
+    public FeedbackVideoStreamer generateFeedbackStreamer(List<String> detectors) {
         updateFeedbackFile();
         if(this.feedbackFile == null) {
             return null;
         }
-        return new FeedbackVideoStreamer(this.feedbackFile);
+        return new FeedbackVideoStreamer(this.feedbackFile, detectors);
     }
 
 }

@@ -20,6 +20,11 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
         return output;
     }
 
+    @Override
+    public String getTag() {
+        return "Palm";
+    }
+
     /**
      * find and add an error of the right palm
      * @param skeleton - the skeleton of the swimmer
