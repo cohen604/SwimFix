@@ -62,14 +62,17 @@ public class Video {
 
     /***
      * Copy Constructor
+     * @precondition other not null
      * @param other
      */
     public Video(Video other) {
+        this.path = other.path;
         this.videoType = other.videoType;
         this.video = other.video;
         this.height = other.height;
         this.width = other.width;
         this.videoHandler = other.videoHandler;
+
     }
 
     /**
