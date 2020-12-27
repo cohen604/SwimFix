@@ -94,4 +94,23 @@ public class FeedbackVideo extends Video {
         return new FeedbackVideoStreamer(this.feedbackFile, detectors);
     }
 
+    /**
+     * The function turn up the feedback to need to be updated
+     */
+    public void updateVideo() {
+        this.feedbackUpdated = true;
+    }
+
+    /**
+     * Getters
+     */
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    public boolean isFeedbackUpdated() {
+        return feedbackUpdated;
+    }
 }

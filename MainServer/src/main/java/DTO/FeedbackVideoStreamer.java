@@ -21,4 +21,8 @@ public class FeedbackVideoStreamer {
     public String getPath() {
         return this.path;
     }
+
+    public List<String> getDetectors() {
+        return detectors;
+    }
 }
