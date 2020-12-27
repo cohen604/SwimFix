@@ -21,24 +21,32 @@ public class Video {
         this.path = generateFileName() + this.videoType;
         this.videoHandler = new VideoHandler();
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
-        //TODO check if the video is empty?
-        this.height = this.video.get(0).height();
-        this.width = this.video.get(0).width();
+        if(isVideoExists()) {
+            this.height = this.video.get(0).height();
+            this.width = this.video.get(0).width();
+        }
     }
 
-    public String generateFileName() {
+    protected String generateFileName() {
         int number =  id.getAndIncrement();
         return "clientVideos/videoTmp"+number;
     }
 
+    /**
+     * constructor
+     * @precondition convertedVideoDTO not null
+     * @param convertedVideoDTO - the data
+     * @param path - the path of the video
+     */
     public Video(ConvertedVideoDTO convertedVideoDTO, String path) {
         this.videoType = convertedVideoDTO.getVideoType();
         this.path = path;
         this.videoHandler = new VideoHandler();
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
-        //TODO check if the video is empty?
-        this.height = this.video.get(0).height();
-        this.width = this.video.get(0).width();
+        if(isVideoExists()) {
+            this.height = this.video.get(0).height();
+            this.width = this.video.get(0).width();
+        }
     }
 
     public Video(String path, String videoType) {
@@ -46,9 +54,10 @@ public class Video {
         this.videoType = videoType;
         this.videoHandler = new VideoHandler();
         this.video = this.videoHandler.getFrames(path);
-        //TODO check if the video is empty?
-        this.height = this.video.get(0).height();
-        this.width = this.video.get(0).width();
+        if(isVideoExists()) {
+            this.height = this.video.get(0).height();
+            this.width = this.video.get(0).width();
+        }
     }
 
     /***
@@ -63,39 +72,73 @@ public class Video {
         this.videoHandler = other.videoHandler;
     }
 
-    @Override
-    public String toString() {
-        return "Video [ path: " + this.path +
-                ", type: " + this.videoType +
-                "]";
+    /**
+     * The function return if the video is Exists
+     * @return true if the video is exits
+     */
+    public boolean isVideoExists() {
+        if(this.path == null || this.path.isEmpty())
+            return false;
+        if(this.video==null) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * The function return a list of bytes of the video
+     * The function return a list of bytes of the video if he exits
      * @return list of bytes
      * @postcondition None
      * @precondition list size == number of frames in the video
      */
     public List<byte[]> getVideo() {
-        if(this.video == null || this.video.isEmpty()) {
-            return null;
+        if(isVideoExists()) {
+            return videoHandler.getFramesBytes(this.video);
         }
-        return videoHandler.getFramesBytes(this.video);
+        return null;
     }
 
+    /**
+     * The function return the height of the video if he exits
+     * @return the height
+     */
     public int getHeight() {
-        return height;
+        if(isVideoExists()) {
+            return height;
+        }
+        return -1;
     }
 
+    /**
+     * The function return the width of the video if he exits
+     * @return the width
+     */
     public int getWidth() {
-        return width;
+        if(isVideoExists()) {
+            return width;
+        }
+        return -1;
     }
 
+    /**
+     * The function return the path of the video if he exits
+     * @return the path
+     */
     public String getPath() {
-        return path;
+        if(isVideoExists()) {
+            return path;
+        }
+        return null;
     }
 
+    /**
+     * The function return the type of the video if he exits
+     * @return the type
+     */
     public String getVideoType() {
-        return videoType;
+        if(isVideoExists()) {
+            return videoType;
+        }
+        return null;
     }
 }

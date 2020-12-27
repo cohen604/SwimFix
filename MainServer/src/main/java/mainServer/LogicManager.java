@@ -109,13 +109,18 @@ public class LogicManager {
      */
     public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
-        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-        FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-        FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
-        if(feedbackVideoDTO == null) {
-            //TODO return here a action result error!!
+        if(video.isVideoExists()) {
+            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
+            if (feedbackVideoDTO == null) {
+                //TODO return here a action result error!!
+            }
+            return new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
         }
-        return new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
+        //TODO what to return when fail
+        return new ActionResult<>(Response.FAIL, null);
+
     }
 
     /**
@@ -126,19 +131,23 @@ public class LogicManager {
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
         Video video = new Video(convertedVideoDTO);
-        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-        List<String> detectorsNames = new LinkedList<>();
-        for(SwimmingErrorDetector detector: errorDetectors) {
-            detectorsNames.add(detector.getTag());
+        if(video.isVideoExists()) {
+            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+            List<String> detectorsNames = new LinkedList<>();
+            for (SwimmingErrorDetector detector : errorDetectors) {
+                detectorsNames.add(detector.getTag());
+            }
+            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            //TODO delete this after removing lastFeedbackVideo
+            this.lastFeedbackVideo = feedbackVideo;
+            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
+            if (feedbackVideoStreamer == null) {
+                //TODO return here action result error!!
+            }
+            return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
         }
-        FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-        //TODO delete this after removing lastFeedbackVideo
-        this.lastFeedbackVideo = feedbackVideo;
-        FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-        if(feedbackVideoStreamer == null) {
-            //TODO return here action result error!!
-        }
-        return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+        //TODO what to return when fail
+        return new ActionResult<>(Response.FAIL, null);
     }
 
     /**
@@ -150,18 +159,18 @@ public class LogicManager {
         //TODO need to refactor this in the future for a class responsible of our resources
         //TODO need here to be access check
         File file = new File(path);
-        if(!file.exists()) {
-            //TODO return error
-            //TODO maybe always generate a video if it a error video then return error video ?
-        }   
-        try {
-            byte[] data = Files.readAllBytes(file.toPath());
-            FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath() ,data);
-            return new ActionResult<>(Response.SUCCESS, output);
-        } catch (Exception e ){
-            //TODO return here error
-            System.out.println(e.getMessage());
+        if(file.exists()) {
+            try {
+                byte[] data = Files.readAllBytes(file.toPath());
+                FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath(), data);
+                return new ActionResult<>(Response.SUCCESS, output);
+            } catch (Exception e) {
+                //TODO return here error
+                System.out.println(e.getMessage());
+            }
         }
+        //TODO return error
+        //TODO maybe always generate a video if it a error video then return error video ?
         return null;
     }
 

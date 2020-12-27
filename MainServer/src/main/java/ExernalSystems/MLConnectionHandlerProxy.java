@@ -23,35 +23,22 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
         mlConnectionHandler = new MLConnectionHandlerReal("84.109.116.61", "5050");
     }
 
-    //TODO delete this
-    private List<SwimmingSkeleton> buildSkeleton(String json) {
-        List<SwimmingSkeleton> output = new LinkedList<>();
-        Gson gson = new Gson();
-        Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
-        List<List<Double>> list = gson.fromJson(json, listType);
-        for (List<Double> frame: list) {
-            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
-            output.add(skeleton);
-        }
-        return output;
-    }
-
     @Override
     public TaggedVideo getSkeletons(Video video) {
         if (mlConnectionHandler != null) {
-            //return mlConnectionHandler.getSkeletons(video);
+            return mlConnectionHandler.getSkeletons(video);
             //TODO for testing when eyal not avilable sample2
-            try {
-                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
-                File file = new File(path);
-                List<String> lines = readAllLines(file.toPath());
-                String json = lines.stream().reduce("",(acc, cur)->acc+cur);
-                List<SwimmingSkeleton> skeletons = buildSkeleton(json);
-                return new TaggedVideo(skeletons);
-            } catch (Exception e ) {
-                e.printStackTrace();
-                return null;
-            }
+//            try {
+//                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
+//                File file = new File(path);
+//                List<String> lines = readAllLines(file.toPath());
+//                String json = lines.stream().reduce("",(acc, cur)->acc+cur);
+//                List<SwimmingSkeleton> skeletons = buildSkeleton(json);
+//                return new TaggedVideo(skeletons);
+//            } catch (Exception e ) {
+//                e.printStackTrace();
+//                return null;
+//            }
         }
         return null;
     }
