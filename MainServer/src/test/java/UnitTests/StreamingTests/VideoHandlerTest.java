@@ -248,7 +248,6 @@ public class VideoHandlerTest extends TestCase {
         }
     }
 
-
     public void testGetFramesBytes() {
         try {
             String path = VIDEO_FOLDER + "/sample.mov";
@@ -425,7 +424,6 @@ public class VideoHandlerTest extends TestCase {
     }
 
     public void testGetFeedBackVideoFile() {
-        //TODO
         try {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
