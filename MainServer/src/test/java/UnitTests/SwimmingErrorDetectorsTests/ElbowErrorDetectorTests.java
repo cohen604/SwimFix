@@ -1,6 +1,22 @@
 package UnitTests.SwimmingErrorDetectorsTests;
 
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
-public class ElbowErrorDetectorTests extends TestSuite {
+public class ElbowErrorDetectorTests extends TestCase {
+
+    public void testDetectRightError() {
+        //TODO
+    }
+
+    public void testDetectLeftError() {
+        //TODO
+    }
+
+    public void testDetectRightLeftErrors() {
+        //TODO
+    }
+
+    public void testDetectNoError() {
+        //TODO
+    }
 }
