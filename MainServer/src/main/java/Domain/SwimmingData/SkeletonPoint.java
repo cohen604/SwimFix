@@ -2,7 +2,7 @@ package Domain.SwimmingData;
 
 public class SkeletonPoint {
 
-    private final static double ThRESHOLD =  0.05;
+    private final static double THRESHOLD =  0.05;
 
     private double x;
     private double y;
@@ -16,8 +16,8 @@ public class SkeletonPoint {
 
     /**
      * The function calc a distance between this and the other point
-     * @param other
-     * @return
+     * @param other - skeleton point
+     * @return the distance between the points
      */
     public double calcDistance(SkeletonPoint other) {
         double dx = Math.pow(this.x - other.x, 2);
@@ -26,26 +26,26 @@ public class SkeletonPoint {
     }
 
     /**
-     *
-     * @param other
-     * @return
+     * The function calc dot product between 2 points.
+     * @param other - skeleton point
+     * @return the dot product between them
      */
     public double dotProduct(SkeletonPoint other) {
         return this.x * other.x + this.y * other.y;
     }
 
     /**
-     *
-     * @return
+     * The function calc the size of the skeleton point
+     * @return the size of the skeleton point
      */
     public double getSize() {
         return Math.sqrt(x * x + y * y);
     }
 
     /**
-     *
-     * @param other
-     * @return
+     * The function return the normal vector direction between 2 skeleton points
+     * @param other - skeleton point
+     * @return the normal vector direction
      */
     public SkeletonPoint getNormalVec(SkeletonPoint other) {
         double x = other.getX() - this.x;
@@ -55,9 +55,9 @@ public class SkeletonPoint {
     }
 
     /**
-     *
-     * @param other
-     * @return
+     * The function return the angle this skeleton point and other skeletons point
+     * @param other - skeleton point
+     * @return the angle between them
      */
     public double getAngleBetween(SkeletonPoint other) {
         double top = dotProduct(other);
@@ -70,8 +70,8 @@ public class SkeletonPoint {
      * Getters
      */
 
-    public boolean isConfedent() {
-        return this.confident > ThRESHOLD;
+    public boolean isConfident() {
+        return this.confident > THRESHOLD;
     }
 
     public double getX() {

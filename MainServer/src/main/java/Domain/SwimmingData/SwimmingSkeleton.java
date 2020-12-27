@@ -2,7 +2,6 @@ package Domain.SwimmingData;
 
 import javafx.util.Pair;
 
-import java.security.Key;
 import java.util.*;
 
 public class SwimmingSkeleton {
@@ -14,7 +13,7 @@ public class SwimmingSkeleton {
         this.pointMap = new HashMap<>();
         for(KeyPoint keyPoint : KeyPoint.values()) {
             SkeletonPoint point = toPoint(frame, keyPoint);
-            if(point.isConfedent()) {
+            if(point.isConfident()) {
                 this.pointMap.put(keyPoint, point);
             }
         }
