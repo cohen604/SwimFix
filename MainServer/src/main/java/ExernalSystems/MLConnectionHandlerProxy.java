@@ -26,18 +26,18 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public TaggedVideo getSkeletons(Video video) {
         if (mlConnectionHandler != null) {
-//            return mlConnectionHandler.getSkeletons(video);
+            return mlConnectionHandler.getSkeletons(video);
             //TODO for testing when eyal not avilable sample2
-            try {
-                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
-                File file = new File(path);
-                List<String> lines = readAllLines(file.toPath());
-                String json = lines.stream().reduce("",(acc, cur)->acc+cur);
-                return new TaggedVideo(json);
-            } catch (Exception e ) {
-                e.printStackTrace();
-                return null;
-            }
+//            try {
+//                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
+//                File file = new File(path);
+//                List<String> lines = readAllLines(file.toPath());
+//                String json = lines.stream().reduce("",(acc, cur)->acc+cur);
+//                return new TaggedVideo(json);
+//            } catch (Exception e ) {
+//                e.printStackTrace();
+//                return null;
+//            }
         }
         return null;
     }
