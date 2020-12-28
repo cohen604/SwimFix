@@ -8,6 +8,10 @@ public class SkeletonPointTests extends TestCase {
         //TODO
     }
 
+    public void testCalcSlope() {
+        //TODO
+    }
+
     public void testDotProduct() {
         //TODO
     }

@@ -17,8 +17,8 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
     @Override
     public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
         List<SwimmingError> errors = new LinkedList<>();
-        detectLeft(errors, skeleton);
         detectRight(errors, skeleton);
+        detectLeft(errors, skeleton);
         return errors;
     }
 

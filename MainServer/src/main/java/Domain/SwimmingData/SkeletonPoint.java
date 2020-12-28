@@ -25,6 +25,7 @@ public class SkeletonPoint {
         return Math.sqrt(dx + dy);
     }
 
+    //TODO add unit test
     /**
      * The function calc the slop between this point and the other point
      * @param other - skeleton point

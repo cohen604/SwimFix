@@ -9,4 +9,8 @@ public abstract class ForearmError extends Draw implements SwimmingError{
     public ForearmError(double angle){
         this.angle = angle;
     }
+
+    public double getAngle() {
+        return angle;
+    }
 }
