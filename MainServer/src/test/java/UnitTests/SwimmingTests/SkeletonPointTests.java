@@ -4,6 +4,7 @@ import Domain.SwimmingData.SkeletonPoint;
 import junit.framework.TestCase;
 
 public class SkeletonPointTests extends TestCase {
+
     private SkeletonPoint a = new SkeletonPoint(2,2, 1);
     private SkeletonPoint b = new SkeletonPoint(4,4, 1);
 
