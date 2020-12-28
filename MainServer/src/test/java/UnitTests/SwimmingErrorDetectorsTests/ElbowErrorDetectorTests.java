@@ -1,5 +1,6 @@
 package UnitTests.SwimmingErrorDetectorsTests;
 
+import Domain.SwimmingData.Errors.LeftElbowError;
 import Domain.SwimmingData.Errors.RightElbowError;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
@@ -61,7 +62,7 @@ public class ElbowErrorDetectorTests extends TestCase {
         addPointToList(points, 1.5, 0.5, 1); //HEAD
         addPointToList(points, 2, 0.5, 1); //Right Shoulder
         addPointToList(points, 2.5, 1, 1); //Right Elbow
-        addPointToList(points, 3, 1.5, 1); //Right Wrist
+        addPointToList(points, 3.5, 1.5, 1); //Right Wrist
         addPointToList(points, 1, 0.5, 1); //Left Shoulder
         addPointToList(points, 0.5, 1, 1); //Left Elbow
         addPointToList(points, 1, 1.6, 1); //Left Wrist
@@ -91,9 +92,9 @@ public class ElbowErrorDetectorTests extends TestCase {
         addPointToList(points, 2, 0.5, 1); //Right Shoulder
         addPointToList(points, 2.5, 1, 1); //Right Elbow
         addPointToList(points, 2.3, 1.5, 1); //Right Wrist
-        addPointToList(points, 1, 0.5, 1); //Left Shoulder
-        addPointToList(points, 0.5, 1, 1); //Left Elbow
-        addPointToList(points, 0.15, 1.5, 1); //Left Wrist
+        addPointToList(points, 1.3, 0.5, 1); //Left Shoulder
+        addPointToList(points, 1, 1, 1); //Left Elbow
+        addPointToList(points, 0.05, 1.6, 1); //Left Wrist
         this.skeletonLeftErrorMax = new SwimmingSkeleton(points);
     }
 
@@ -121,8 +122,8 @@ public class ElbowErrorDetectorTests extends TestCase {
         addPointToList(points, 2.5, 1, 1); //Right Elbow
         addPointToList(points, 2, 1, 1); //Right Wrist
         addPointToList(points, 1, 0.5, 1); //Left Shoulder
-        addPointToList(points, 0.5, 1, 1); //Left Elbow
-        addPointToList(points, 0.15, 1.5, 1); //Left Wrist
+        addPointToList(points, 1, 1, 1); //Left Elbow
+        addPointToList(points, 0.05, 1.6, 1); //Left Wrist
         this.skeletonMinRightMaxLeftErrors = new SwimmingSkeleton(points);
     }
 
@@ -131,7 +132,7 @@ public class ElbowErrorDetectorTests extends TestCase {
         addPointToList(points, 1.5, 0.5, 1); //HEAD
         addPointToList(points, 2, 0.5, 1); //Right Shoulder
         addPointToList(points, 2.5, 1, 1); //Right Elbow
-        addPointToList(points, 2.8, 1.5, 1); //Right Wrist
+        addPointToList(points, 3, 1.5, 1); //Right Wrist
         addPointToList(points, 1, 0.5, 1); //Left Shoulder
         addPointToList(points, 0.5, 1, 1); //Left Elbow
         addPointToList(points, 1, 1.15, 1); //Left Wrist
@@ -143,10 +144,10 @@ public class ElbowErrorDetectorTests extends TestCase {
         addPointToList(points, 1.5, 0.5, 1); //HEAD
         addPointToList(points, 2, 0.5, 1); //Right Shoulder
         addPointToList(points, 2.5, 1, 1); //Right Elbow
-        addPointToList(points, 2.8, 1.5, 1); //Right Wrist
+        addPointToList(points, 3, 1.5, 1); //Right Wrist
         addPointToList(points, 1, 0.5, 1); //Left Shoulder
-        addPointToList(points, 0.5, 1, 1); //Left Elbow
-        addPointToList(points, 0.15, 1.5, 1); //Left Wrist
+        addPointToList(points, 1, 1, 1); //Left Elbow
+        addPointToList(points, 0.05, 1.6, 1); //Left Wrist
         this.skeletonMaxRightMaxLeftErrors = new SwimmingSkeleton(points);
     }
 
@@ -191,26 +192,80 @@ public class ElbowErrorDetectorTests extends TestCase {
     }
 
     public void testDetectMinLeftError() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonLeftErrorMin);
+        assertEquals(1, errors.size());
+        SwimmingError error = errors.get(0);
+        assertTrue(error instanceof LeftElbowError);
+        LeftElbowError right = (LeftElbowError)error;
+        assertTrue(right.getAngle() < MIN_ANGLE);
     }
 
     public void testDetectMaxLeftError() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonLeftErrorMax);
+        assertEquals(1, errors.size());
+        SwimmingError error = errors.get(0);
+        assertTrue(error instanceof LeftElbowError);
+        LeftElbowError right = (LeftElbowError)error;
+        assertTrue(right.getAngle() > MAX_ANGLE);
     }
 
     public void testDetectMinRightMinLeftErrors() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonMinRightMinLeftErrors);
+        assertEquals(2, errors.size());
+        // right side check
+        SwimmingError errorRight = errors.get(0);
+        assertTrue(errorRight instanceof RightElbowError);
+        RightElbowError right = (RightElbowError)errorRight ;
+        assertTrue(right.getAngle() < MIN_ANGLE);
+        // left side check
+        SwimmingError errorLeft = errors.get(1);
+        assertTrue(errorLeft instanceof LeftElbowError);
+        LeftElbowError left = (LeftElbowError)errorLeft;
+        assertTrue(left.getAngle() < MIN_ANGLE);
     }
 
     public void testDetectMinRightMaxLeftErrors() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonMinRightMaxLeftErrors);
+        assertEquals(2, errors.size());
+        // right side check
+        SwimmingError errorRight = errors.get(0);
+        assertTrue(errorRight instanceof RightElbowError);
+        RightElbowError right = (RightElbowError)errorRight ;
+        assertTrue(right.getAngle() < MIN_ANGLE);
+        // left side check
+        SwimmingError errorLeft = errors.get(1);
+        assertTrue(errorLeft instanceof LeftElbowError);
+        LeftElbowError left = (LeftElbowError)errorLeft;
+        assertTrue(left.getAngle() > MAX_ANGLE);
     }
 
     public void testDetectMaxRightMinLeftErrors() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonMaxRightMinLeftErrors);
+        assertEquals(2, errors.size());
+        // right side check
+        SwimmingError errorRight = errors.get(0);
+        assertTrue(errorRight instanceof RightElbowError);
+        RightElbowError right = (RightElbowError)errorRight ;
+        assertTrue(right.getAngle() > MAX_ANGLE);
+        // left side check
+        SwimmingError errorLeft = errors.get(1);
+        assertTrue(errorLeft instanceof LeftElbowError);
+        LeftElbowError left = (LeftElbowError)errorLeft;
+        assertTrue(left.getAngle() < MIN_ANGLE);
     }
 
     public void testDetectMaxRightMaxLeftErrors() {
-        //TODO
+        List<SwimmingError> errors = this.elbowErrorDetector.detect(this.skeletonMaxRightMaxLeftErrors);
+        assertEquals(2, errors.size());
+        // right side check
+        SwimmingError errorRight = errors.get(0);
+        assertTrue(errorRight instanceof RightElbowError);
+        RightElbowError right = (RightElbowError)errorRight ;
+        assertTrue(right.getAngle() > MAX_ANGLE);
+        // left side check
+        SwimmingError errorLeft = errors.get(1);
+        assertTrue(errorLeft instanceof LeftElbowError);
+        LeftElbowError left = (LeftElbowError)errorLeft;
+        assertTrue(left.getAngle() > MAX_ANGLE);
     }
 }

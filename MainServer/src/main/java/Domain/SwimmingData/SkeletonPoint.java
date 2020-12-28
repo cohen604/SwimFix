@@ -26,6 +26,17 @@ public class SkeletonPoint {
     }
 
     /**
+     * The function calc the slop between this point and the other point
+     * @param other - skeleton point
+     * @return the slop
+     */
+    public double calcSlope(SkeletonPoint other) {
+        double dy = other.y - y;
+        double dx = other.x - x;
+        return dy / dx;
+    }
+
+    /**
      * The function calc dot product between 2 points.
      * @param other - skeleton point
      * @return the dot product between them

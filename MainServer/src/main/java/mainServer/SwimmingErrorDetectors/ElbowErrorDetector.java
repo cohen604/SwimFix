@@ -53,6 +53,18 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
     }
 
     /**
+     * The function calc the expected x from y with the linear equation from shoulder to elbow
+     * @param shoulder - skeleton point
+     * @param elbow - skeleton point
+     * @param yNew - the y value
+     * @return the expected x value
+     */
+    private double calcExpectedX(SkeletonPoint shoulder, SkeletonPoint elbow, double yNew) {
+        double slope = elbow.calcSlope(shoulder);
+        return (yNew - shoulder.getY()) / slope + shoulder.getX();
+    }
+
+    /**
      * The function return a if an angle is valid angle
      * @param angle
      * @return
@@ -97,6 +109,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
             double angle = calcElbowAngle(shoulder, elbow, wrist);
+            double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
+            if(expectedX < wrist.getX()) {
+                angle = 360 - angle;
+            }
             if(!isValidAngle(angle)) {
                 errors.add(new RightElbowError(angle));
             }
@@ -110,6 +126,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
             double angle = calcElbowAngle(shoulder, elbow, wrist);
+            double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
+            if(expectedX > wrist.getX()) {
+                angle = 360 - angle;
+            }
             if(!isValidAngle(angle)) {
                 errors.add(new LeftElbowError(angle)) ;
             }
