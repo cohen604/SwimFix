@@ -33,4 +33,8 @@ public abstract class ElbowError extends Draw implements SwimmingError {
         //angle = (180 - angle) / 2;
         drawElipce(frame, raduis, angle, 0, 85, elbow, r, g, b, a); */
     }
+
+    public double getAngle() {
+        return angle;
+    }
 }

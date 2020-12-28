@@ -46,8 +46,8 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
         double a = shoulder.calcDistance(elbow);
         double b = elbow.calcDistance(wrist);
         double c = shoulder.calcDistance(wrist);
-        double top = Math.pow(c, 2) - Math.pow(a, 2) - Math.pow(b, 2);
-        double bottom = - 2 * a * b;
+        double top = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
+        double bottom = 2 * a * b;
         double radAngle = Math.acos(top/bottom);
         return Math.toDegrees(radAngle);
     }
