@@ -1,8 +1,7 @@
 package Domain.Streaming;
-import Domain.SwimmingData.SkeletonPoint;
+import Domain.SwimmingData.Draw;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
-import javafx.util.Pair;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
@@ -13,9 +12,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 //TODO this class need be a synchronize methods ?
-public class VideoHandler {
+public class VideoHandler extends Draw {
 
     /**
      * constractor
@@ -152,56 +152,6 @@ public class VideoHandler {
         return output;
     }
 
-    /**
-     * The function draw a circle
-     * @param frame
-     * @param skeletonPoint
-     * @param radius
-     */
-    private void drawCircle(Mat frame, SkeletonPoint skeletonPoint, int radius) {
-        Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
-        Scalar color = new Scalar(0,255,0);
-        int thickness = 3;
-        Imgproc.circle(frame, point, radius, color, thickness);
-    }
-
-    private void drawLine(Mat frame, SkeletonPoint a, SkeletonPoint b) {
-        Point pointA = new Point(a.getX(),a.getY());
-        Point pointB = new Point(b.getX(),b.getY());
-        Scalar color = new Scalar(255,0,0);
-        int thickness = 2;
-        Imgproc.line(frame, pointA, pointB, color, thickness);
-    }
-
-    /**
-     * The function draw swimming tag into the frame
-     * @param frame the current frame
-     * @param skeleton the image tag to print
-     * @return the new frame
-     */
-    private void drawSwimmer(Mat frame, SwimmingSkeleton skeleton) {
-        // points
-        int radius = 2;
-        List<SkeletonPoint> points = skeleton.getPoints();
-        for (SkeletonPoint point: points) {
-            drawCircle(frame, point, radius);
-        }
-        List<Pair<SkeletonPoint , SkeletonPoint>> lines = skeleton.getLines();
-        for(Pair<SkeletonPoint , SkeletonPoint> line: lines) {
-            drawLine(frame, line.getKey(), line.getValue());
-
-        }
-    }
-
-    /**
-     * The function draw error on the frame
-     * @param frame the current frame
-     * @param error the error to draw
-     * @return the new frame
-     */
-    private void drawErrors(Mat frame, SwimmingError error) {
-        //TODO
-    }
 
     /**
      * The function draw a visual comment on the frame
@@ -257,23 +207,30 @@ public class VideoHandler {
     /**
      * The function generate a feedback video frames
      * @param frames - the video data
-     * @param dots - the tags of the swimmer
+     * @param skeletons - the tags of the swimmer
      * @param errors - the list of errors
      * @param visualComments - the list of visual comments
      * @return new byte video
      * @precondition all lists must be the insert of the same video frames
      */
-    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingSkeleton> dots, List<SwimmingError> errors,
+    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingSkeleton> skeletons,
+                                             Map<Integer, List<SwimmingError>> errors,
                                              List<Object> visualComments) {
         for(int i=0; i<frames.size(); i++) {
             Mat frame = frames.get(i);
-            if(dots!=null && !dots.isEmpty()) {
-                SwimmingSkeleton swimmingSkeleton = dots.get(i);
-                drawSwimmer(frame, swimmingSkeleton);
-            }
-            if(errors!=null && !errors.isEmpty()) {
-                SwimmingError swimmingError = errors.get(i);
-                drawErrors(frame, swimmingError);
+            //TODO convert to 4 dimensions
+            //Mat des = new Mat(frame.rows(), frame.cols(), CvType.CV_8UC4);
+            //Imgproc.cvtColor(frame, des, Imgproc.COLOR_BGR2BGRA,4);
+            //frame = des;
+            if (skeletons != null && !skeletons.isEmpty()) {
+                SwimmingSkeleton skeleton = skeletons.get(i);
+                drawSwimmer(frame, skeleton);
+                if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {
+                    List<SwimmingError> frameErrors = errors.get(i);
+                    for (SwimmingError error : frameErrors) {
+                        error.draw(frame, skeleton);
+                    }
+                }
             }
             if(visualComments!= null && ! visualComments.isEmpty()) {
                 //TODO
@@ -297,7 +254,8 @@ public class VideoHandler {
      * @precondition all lists must be the insert of the same video frames
      * @postcondition insert the newest feedback generated in the des path
      */
-    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingSkeleton> dots, List<SwimmingError> errors,
+    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingSkeleton> dots,
+                                     Map<Integer, List<SwimmingError>> errors,
                                      List<Object> visualComments) {
         if(frames == null) {
             return null;

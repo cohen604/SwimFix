@@ -48,6 +48,18 @@ public class SwimmerController {
         return actionResult.toJson();
     }
 
+    @PostMapping("/filterFeedback")
+    @CrossOrigin(origins = "*")
+    public String filterFeedback(@RequestBody FeedbackFilterDTO filterDTO) {
+        System.out.println("Received feedback video Filter DTO");
+        for(String filter: filterDTO.getFilters()) {
+            System.out.println(filter);
+        }
+        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.filterFeedbackVideo(filterDTO);
+        System.out.println("Streaming link generated, send link");
+        return actionResult.toJson();
+    }
+
     @GetMapping("/stream/{folder}/{fileName}")
     public ResponseEntity streamFile(@PathVariable String folder, @PathVariable String fileName) {
         System.out.println("Received file request for streaming");

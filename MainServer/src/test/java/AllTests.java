@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         AllUnitTests.class,
         AllIntegrationTests.class,
-        AllExternalSystemTests.class,
+        //TODO AllExternalSystemTests.class,
         AllAcceptanceTests.class,
 })
 

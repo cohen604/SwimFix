@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:client/Domain/FeedbackFilters.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
 import 'package:client/Domain/Swimer.dart';
 import 'package:client/Services/Authentication.dart';
@@ -57,6 +58,15 @@ class LogicManager {
         filename: filePath,
     );
     ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+    //TODO check if response is valid
+    Map map = response.value as Map;
+    print(map);
+    return FeedbackVideoStreamer.factory(map);
+  }
+
+  Future<FeedbackVideoStreamer> filterFeedback(FeedbackFilters filter) async {
+    String path = "/filterFeedback";
+    ServerResponse response = await this.connectionHandler.postMessage(path, filter.toMap());
     //TODO check if response is valid
     Map map = response.value as Map;
     return FeedbackVideoStreamer.factory(map);

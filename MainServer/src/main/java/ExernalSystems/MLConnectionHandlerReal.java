@@ -57,18 +57,6 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         return "http://"+this.ip + ":" + this.port + prefix;
     }
 
-    private List<SwimmingSkeleton> buildSkeleton(String json) {
-        List<SwimmingSkeleton> output = new LinkedList<>();
-        Gson gson = new Gson();
-        Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
-        List<List<Double>> list = gson.fromJson(json, listType);
-        for (List<Double> frame: list) {
-            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
-            output.add(skeleton);
-        }
-        return output;
-    }
-
     @Override
     public TaggedVideo getSkeletons(Video video) {
         try {
@@ -80,8 +68,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
             }
             String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
                     video.getHeight(), video.getWidth());
-            List<SwimmingSkeleton> skeletons = buildSkeleton(res);
-            return new TaggedVideo(skeletons);
+            return new TaggedVideo(res);
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

@@ -7,7 +7,6 @@ public class ConvertedVideoDTO {
     private byte[] video;
 
     public ConvertedVideoDTO(String videoName, byte[] video) {
-        System.out.println(videoName);
         if(videoName != null) {
             this.videoType = videoName.substring(videoName.lastIndexOf("."));
         }
