@@ -2,6 +2,8 @@ package UnitTests.StreamingTests;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.Video;
+import Domain.Streaming.VideoHandler;
+import Domain.SwimmingData.Draw;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +43,7 @@ public class VideoTests extends TestCase {
     public void testCreateNewVideo() {
         try {
             String path = VIDEO_FOLDER + "/test.mov";
-            Video video = new Video(this.convertedVideoDTO, path);
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path);
             File file = new File(video.getPath());
             assertTrue(file.exists());
             deleteList.add(file);
@@ -54,7 +56,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathEmpty() {
         try {
-            Video video = new Video(this.convertedVideoDTO, "");
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "");
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -64,7 +66,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathNull() {
         try {
-            Video video = new Video(this.convertedVideoDTO, null);
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, null);
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -77,7 +79,7 @@ public class VideoTests extends TestCase {
      */
     private void setUpVideo() {
         String path = VIDEO_FOLDER + "/test.mov";
-        this.video = new Video(this.convertedVideoDTO, path);
+        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path);
         File file = new File(path);
         deleteList.add(file);
     }
@@ -86,7 +88,7 @@ public class VideoTests extends TestCase {
      * The function is a setUp for a video
      */
     private void setUpVideoNotExits() {
-        this.video = new Video(this.convertedVideoDTO, "");
+        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "");
     }
 
     public void testGetHeight() {

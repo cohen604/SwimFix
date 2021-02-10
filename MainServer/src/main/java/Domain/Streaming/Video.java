@@ -4,7 +4,7 @@ import org.opencv.core.Mat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Video {
+public class Video implements IVideo {
 
     private static AtomicInteger id = new AtomicInteger(0);
 
@@ -13,13 +13,13 @@ public class Video {
     protected List<Mat> video; // The original frames of the video
     private int height;
     private int width;
-    VideoHandler videoHandler; // The video handler for doing
+    IVideoHandler videoHandler; // The video handler for doing
 
-    public Video(ConvertedVideoDTO convertedVideoDTO) {
+    public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
         //TODO generate here a unique string path that recognize the user so we can load later
         this.path = generateFileName() + this.videoType;
-        this.videoHandler = new VideoHandler();
+        this.videoHandler = videoHandler;
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         if(isVideoExists()) {
             this.height = this.video.get(0).height();
@@ -38,10 +38,10 @@ public class Video {
      * @param convertedVideoDTO - the data
      * @param path - the path of the video
      */
-    public Video(ConvertedVideoDTO convertedVideoDTO, String path) {
+    public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO, String path) {
         this.videoType = convertedVideoDTO.getVideoType();
         this.path = path;
-        this.videoHandler = new VideoHandler();
+        this.videoHandler = videoHandler;
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         if(isVideoExists()) {
             this.height = this.video.get(0).height();
@@ -49,10 +49,10 @@ public class Video {
         }
     }
 
-    public Video(String path, String videoType) {
+    public Video(IVideoHandler videoHandler, String path, String videoType) {
         this.path = path;
         this.videoType = videoType;
-        this.videoHandler = new VideoHandler();
+        this.videoHandler = videoHandler;
         this.video = this.videoHandler.getFrames(path);
         if(isVideoExists()) {
             this.height = this.video.get(0).height();
@@ -72,7 +72,15 @@ public class Video {
         this.height = other.height;
         this.width = other.width;
         this.videoHandler = other.videoHandler;
+    }
 
+    public Video(IVideo iVideo) {
+        this.path = iVideo.getPath();
+        this.videoType = iVideo.getVideoType();
+        this.video = iVideo.getVideoFrames();
+        this.height = iVideo.getHeight();
+        this.width = iVideo.getWidth();
+//        this.videoHandler = null;
     }
 
     /**
@@ -100,6 +108,14 @@ public class Video {
         }
         return null;
     }
+
+    public List<Mat> getVideoFrames() {
+        if (isVideoExists()) {
+            return video;
+        }
+        return  null;
+    }
+
 
     /**
      * The function return the height of the video if he exits

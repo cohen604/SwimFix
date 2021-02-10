@@ -1,18 +1,13 @@
 package ExernalSystems;
 
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
-import Domain.Streaming.Video;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.lang.reflect.Type;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +53,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
     }
 
     @Override
-    public TaggedVideo getSkeletons(Video video) {
+    public TaggedVideo getSkeletons(IVideo video) {
         try {
             List<byte[]> frames = video.getVideo();
             List<String> frames_string = new LinkedList<>();
