@@ -1,15 +1,16 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.IDraw;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingError;
 import org.opencv.core.Mat;
 
-public abstract class ElbowError extends Draw implements SwimmingError {
+public abstract class ElbowError extends SwimmingError {
 
     private double angle;
 
-    public ElbowError(double angle) {
+    public ElbowError(IDraw drawer, double angle) {
+        super(drawer);
         this.angle = angle;
     }
 

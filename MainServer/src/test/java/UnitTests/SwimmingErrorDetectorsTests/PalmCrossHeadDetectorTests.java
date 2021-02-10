@@ -5,7 +5,7 @@ import Domain.SwimmingData.Errors.RightPalmCrossHeadError;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.PalmCrossHeadDetector;
+import mainServer.SwimmingErrorDetectors.*;
 import org.junit.Before;
 
 import java.util.LinkedList;
@@ -76,7 +76,9 @@ public class PalmCrossHeadDetectorTests extends TestCase {
 
     @Before
     public void setUp(){
-        this.detector = new PalmCrossHeadDetector();
+        IFactoryDraw iFactoryDraw = new FactoryDraw();
+        IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError = new FactoryPalmCrossHeadError(iFactoryDraw);
+        this.detector = new PalmCrossHeadDetector(iFactoryPalmCrossHeadError);
         setUpSkeletonNoError();
         setUpSkeletonRightError();
         setUpSkeletonLeftError();

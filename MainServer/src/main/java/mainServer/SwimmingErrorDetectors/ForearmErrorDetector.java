@@ -10,9 +10,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ForearmErrorDetector implements SwimmingErrorDetector{
-    //TODO move to constructor
-    double minAngle = -10;
-    double maxAngle = 45;
+    private double minAngle;
+    private double maxAngle;
+    private IFactoryForearmError iFactoryForearmError;
+
+    public ForearmErrorDetector(IFactoryForearmError iFactoryForearmError, double minAngle, double maxAngle) {
+        this.iFactoryForearmError = iFactoryForearmError;
+        this.minAngle = minAngle;
+        this.maxAngle = maxAngle;
+    }
 
     @Override
     public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
@@ -63,9 +69,9 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < minAngle) { // range is -10 degrees
-                errors.add(new LeftForearmError(angle));
+                errors.add(iFactoryForearmError.createLeft(angle));
             } else if (angle > 0 && angle > maxAngle) { // range is 45 degrees
-                errors.add(new LeftForearmError(angle));
+                errors.add(iFactoryForearmError.createLeft(angle));
             }
         }
     }
@@ -79,9 +85,9 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
             SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < -maxAngle) { // range is 45 degrees
-                errors.add(new RightForearmError(angle));
+                errors.add(iFactoryForearmError.createRight(angle));
             } else if (angle > 0 && angle > -minAngle) { // range is 10 degrees
-                errors.add(new RightForearmError(angle));
+                errors.add(iFactoryForearmError.createRight(angle));
             }
         }
     }

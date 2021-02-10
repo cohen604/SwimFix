@@ -1,5 +1,6 @@
 package Domain.SwimmingData.Errors;
 
+import Domain.SwimmingData.IDraw;
 import Domain.SwimmingData.KeyPoint;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingSkeleton;
@@ -7,8 +8,8 @@ import org.opencv.core.Mat;
 
 public class LeftElbowError extends ElbowError {
 
-    public LeftElbowError(double angle) {
-        super(angle);
+    public LeftElbowError(IDraw drawer, double angle) {
+        super(drawer, angle);
     }
 
     @Override

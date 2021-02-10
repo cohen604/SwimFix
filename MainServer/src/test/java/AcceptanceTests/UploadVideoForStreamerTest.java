@@ -36,6 +36,8 @@ public class UploadVideoForStreamerTest extends AcceptanceTests {
         tearDownBridge();
     }
 
+    // TODO - try to fix the heap space bug
+    // java.lang.OutOfMemoryError: Java heap space
     public void testUploadVideoForStreamerSuccess() {
         ActionResult<FeedbackVideoStreamer> result = this.bridge.uploadVideoForStreamer(this.convertedVideoDTO);
         assertNotNull(result);
