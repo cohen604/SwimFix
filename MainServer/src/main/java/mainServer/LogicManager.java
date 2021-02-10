@@ -12,10 +12,7 @@ import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
-import mainServer.SwimmingErrorDetectors.ElbowErrorDetector;
-import mainServer.SwimmingErrorDetectors.ForearmErrorDetector;
-import mainServer.SwimmingErrorDetectors.PalmCrossHeadDetector;
-import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
+import mainServer.SwimmingErrorDetectors.*;
 
 
 import java.io.File;
@@ -29,10 +26,12 @@ public class LogicManager {
     List<User> userList;
 
     FeedbackVideo lastFeedbackVideo;
+    private IFactoryErrorDetectors iFactoryErrorDetectors;
 
 
-    public LogicManager() {
+    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors) {
         mlConnectionHandler = new MLConnectionHandlerProxy();
+        this.iFactoryErrorDetectors = iFactoryErrorDetectors;
     }
 
     /**
@@ -74,9 +73,9 @@ public class LogicManager {
     private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
         //TODO change this by the selected filters
         List<SwimmingErrorDetector> output = new LinkedList<>();
-        output.add(new ElbowErrorDetector(90, 175));
-        output.add(new ForearmErrorDetector());
-        output.add(new PalmCrossHeadDetector());
+        output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
+        output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
+        output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
         return output;
     }
 
@@ -186,13 +185,13 @@ public class LogicManager {
             //  for now its the same as the getTag function in the detectors
             switch (name) {
                 case "Elbow":
-                    output.add(new ElbowErrorDetector(90,175));
+                    output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
                     break;
                 case "Forearm":
-                    output.add(new ForearmErrorDetector());
+                    output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
                     break;
                 case "Palm":
-                    output.add(new PalmCrossHeadDetector());
+                    output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
                     break;
             }
         }

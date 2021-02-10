@@ -1,12 +1,13 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.IDraw;
 import Domain.SwimmingData.SwimmingError;
 
-public abstract class ForearmError extends Draw implements SwimmingError{
+public abstract class ForearmError extends SwimmingError{
     private double angle;
 
-    public ForearmError(double angle){
+    public ForearmError(IDraw drawer, double angle){
+        super(drawer);
         this.angle = angle;
     }
 

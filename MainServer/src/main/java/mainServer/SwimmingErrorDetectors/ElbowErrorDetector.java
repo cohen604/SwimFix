@@ -15,8 +15,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
 
     private double minAngle; //the minimum angle between wrist to elbow to shoulder
     private double maxAngle; //the maximum angle between wrist to elbow to shoulder
+    private IFactoryElbowError iFactoryElbowError;
 
-    public ElbowErrorDetector(double minAngle, double maxAngle) {
+    public ElbowErrorDetector( IFactoryElbowError iFactoryElbowError, double minAngle, double maxAngle) {
+        this.iFactoryElbowError = iFactoryElbowError;
         this.minAngle = minAngle;
         this.maxAngle = maxAngle;
     }
@@ -114,7 +116,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
                 angle = 360 - angle;
             }
             if(!isValidAngle(angle)) {
-                errors.add(new RightElbowError(angle));
+                errors.add(iFactoryElbowError.createRight(angle));
             }
         }
     }
@@ -131,7 +133,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
                 angle = 360 - angle;
             }
             if(!isValidAngle(angle)) {
-                errors.add(new LeftElbowError(angle)) ;
+                errors.add(iFactoryElbowError.createLeft(angle)) ;
             }
         }
     }

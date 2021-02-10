@@ -5,7 +5,7 @@ import Domain.SwimmingData.Errors.RightForearmError;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.ForearmErrorDetector;
+import mainServer.SwimmingErrorDetectors.*;
 import org.junit.Before;
 
 import java.util.LinkedList;
@@ -162,7 +162,9 @@ public class ForearmErrorDetectorTests extends TestCase {
 
     @Before
     public void setUp() {
-        this.detector = new ForearmErrorDetector();
+        IFactoryDraw iFactoryDraw = new FactoryDraw();
+        IFactoryForearmError iFactoryForearmError = new FactoryForearmError(iFactoryDraw);
+        this.detector = new ForearmErrorDetector(iFactoryForearmError, -10, 45);
         setUpNoErrorSkeleton();
         setUpSkeletonRightError();
         setUpSkeletonLeftError();

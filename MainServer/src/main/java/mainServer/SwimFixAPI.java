@@ -1,9 +1,17 @@
 package mainServer;
 
 import DTO.*;
+import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
+import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
 
 public class SwimFixAPI {
-   private LogicManager logicManager = new LogicManager();
+
+   private LogicManager logicManager;
+
+   public SwimFixAPI() {
+      IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
+      this.logicManager = new LogicManager(iFactoryErrorDetectors);
+   }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
       return logicManager.login(userDTO);

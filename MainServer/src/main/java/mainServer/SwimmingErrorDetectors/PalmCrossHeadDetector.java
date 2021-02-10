@@ -1,16 +1,20 @@
 package mainServer.SwimmingErrorDetectors;
 
+import Domain.SwimmingData.*;
 import Domain.SwimmingData.Errors.LeftPalmCrossHeadError;
+import Domain.SwimmingData.Errors.PalmCrossHeadError;
 import Domain.SwimmingData.Errors.RightPalmCrossHeadError;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class PalmCrossHeadDetector implements SwimmingErrorDetector {
+
+    private IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError;
+
+    public PalmCrossHeadDetector(IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError) {
+        this.iFactoryPalmCrossHeadError = iFactoryPalmCrossHeadError;
+    }
 
     @Override
     public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
@@ -55,7 +59,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX < neck.getX()) {
                 System.out.println("right palm cross the head");
-                errors.add(new RightPalmCrossHeadError()) ;
+                errors.add(iFactoryPalmCrossHeadError.createRight()) ;
             }
         }
     }
@@ -74,7 +78,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX > neck.getX()) {
                 System.out.println("left palm cross the head");
-                errors.add(new LeftPalmCrossHeadError()) ;
+                errors.add(iFactoryPalmCrossHeadError.createLeft()) ;
             }
         }
     }
