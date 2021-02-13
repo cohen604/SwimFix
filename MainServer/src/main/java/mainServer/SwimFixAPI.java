@@ -1,10 +1,9 @@
 package mainServer;
 
 import DTO.*;
-import Domain.Streaming.FactoryVideo;
-import Domain.Streaming.FactoryVideoHandler;
-import Domain.Streaming.IFactoryVideo;
-import Domain.Streaming.IFactoryVideoHandler;
+import Domain.Streaming.*;
+import ExernalSystems.MLConnectionHandler;
+import ExernalSystems.MLConnectionHandlerProxy;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
 import mainServer.SwimmingErrorDetectors.IFactoryDraw;
@@ -19,7 +18,10 @@ public class SwimFixAPI {
       IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
       IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
-      this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo);
+      IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
+      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+      this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
+                                             iFactoryFeedbackVideo, mlConnectionHandler);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {

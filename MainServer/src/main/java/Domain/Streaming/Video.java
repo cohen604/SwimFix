@@ -80,7 +80,7 @@ public class Video implements IVideo {
         this.video = iVideo.getVideoFrames();
         this.height = iVideo.getHeight();
         this.width = iVideo.getWidth();
-//        this.videoHandler = null;
+        this.videoHandler = iVideo.getIVideoHandler();
     }
 
     /**
@@ -114,6 +114,11 @@ public class Video implements IVideo {
             return video;
         }
         return  null;
+    }
+
+    @Override
+    public IVideoHandler getIVideoHandler() {
+        return this.videoHandler;
     }
 
 

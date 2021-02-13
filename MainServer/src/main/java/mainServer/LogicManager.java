@@ -24,15 +24,17 @@ public class LogicManager {
     //TODO: hold all the logged users
     List<User> userList;
 
-    FeedbackVideo lastFeedbackVideo;
+    private IFeedbackVideo lastFeedbackVideo;
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
+    private IFactoryFeedbackVideo iFactoryFeedbackVideo;
 
-
-    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo) {
-        mlConnectionHandler = new MLConnectionHandlerProxy();
+    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
+                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler) {
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
+        this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
+        this.mlConnectionHandler = mlConnectionHandler;
     }
 
     /**
@@ -85,7 +87,7 @@ public class LogicManager {
      * @param video the video
      * @return the feedback video
      */
-    private FeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
+    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
@@ -98,8 +100,7 @@ public class LogicManager {
             }
             errorMap.put(i, errors);
         }
-        // TODO - change null
-        FeedbackVideo feedbackVideo = null;//new FeedbackVideo(video, taggedVideo, errorMap);
+        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap);
         return feedbackVideo;
     }
 
@@ -112,7 +113,7 @@ public class LogicManager {
         IVideo video = iFactoryVideo.create(convertedVideoDTO);
         if(video.isVideoExists()) {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
             if (feedbackVideoDTO == null) {
                 //TODO return here a action result error!!
@@ -138,7 +139,7 @@ public class LogicManager {
             for (SwimmingErrorDetector detector : errorDetectors) {
                 detectorsNames.add(detector.getTag());
             }
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             //TODO delete this after removing lastFeedbackVideo
             this.lastFeedbackVideo = feedbackVideo;
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
@@ -197,11 +198,6 @@ public class LogicManager {
                     break;
             }
         }
-//        if(output.isEmpty()) {
-//            output.add(new ElbowErrorDetector(90,175));
-//            output.add(new ForearmErrorDetector());
-//            output.add(new PalmCrossHeadDetector());
-//        }
         return output;
     }
 
@@ -214,13 +210,13 @@ public class LogicManager {
         //TODO check if feedback video exits
         if(this.lastFeedbackVideo!=null){
             // TODO - feedback video isn't video any more
-            IVideo video = this.lastFeedbackVideo;
+            IVideo video = this.lastFeedbackVideo.getIVideo();
             List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
             List<String> detectorsNames = new LinkedList<>();
             for(SwimmingErrorDetector detector: errorDetectors) {
                 detectorsNames.add(detector.getTag());
             }
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!
