@@ -1,9 +1,12 @@
 package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
-import Domain.Streaming.Video;
+import Domain.Streaming.*;
+import Domain.SwimmingData.Draw;
 import Storage.Video.VideoDao;
 import junit.framework.TestCase;
+import mainServer.SwimmingErrorDetectors.FactoryDraw;
+import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 
@@ -16,17 +19,20 @@ public class VideoServiceTest extends TestCase {
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
     private VideoDao videoService;
 
-    private Video video;
+    private IVideo video;
 
     @Before
     public void setUp() {
         try {
-            this.videoService = new VideoDao();
+            IFactoryDraw iFactoryDraw = new FactoryDraw();
+            IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
+            IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+            this.videoService = new VideoDao(iFactoryVideo);
             File file = new File(VIDEO_FOLDER + "/sample.mov");
             byte[] bytes = Files.readAllBytes(file.toPath());
             ConvertedVideoDTO convertedVideoDTO = new ConvertedVideoDTO("sample.mov", bytes);
             String path = VIDEO_FOLDER + "/test.mov";
-            this.video = new Video(convertedVideoDTO, path);
+            this.video = new Video(new VideoHandler(new Draw()), convertedVideoDTO, path);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -44,10 +50,10 @@ public class VideoServiceTest extends TestCase {
 
 
     public void testGetAll() {
-        List<Video> videoList = this.videoService.getAll();
+        List<? extends IVideo> videoList = this.videoService.getAll();
         assertNotNull(videoList);
         assertFalse(videoList.isEmpty());
-        for (Video video:videoList) {
+        for (IVideo video:videoList) {
             System.out.println(video);
         }
     }

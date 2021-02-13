@@ -1,5 +1,7 @@
 package Storage.Video;
 
+import Domain.Streaming.IFactoryVideo;
+import Domain.Streaming.IVideo;
 import Domain.Streaming.Video;
 import Storage.Dao;
 import com.mongodb.MongoClientSettings;
@@ -12,13 +14,19 @@ import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class VideoDao implements Dao<Video> {
+public class VideoDao {//implements Dao<Video> {
 
-    @Override
+    private IFactoryVideo iFactoryVideo;
+
+    public VideoDao(IFactoryVideo iFactoryVideo) {
+        this.iFactoryVideo = iFactoryVideo;
+    }
+
+    //@Override
     public MongoCollection<Video> getCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new VideoCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(new VideoCodec(iFactoryVideo)), //here we define the codec
                         getDefaultCodecRegistry());
         MongoClientSettings settings = MongoClientSettings.builder()
                 .codecRegistry(codecRegistry).build();
@@ -29,8 +37,8 @@ public class VideoDao implements Dao<Video> {
         return mongoDatabase.getCollection("video", Video.class);
     }
 
-    @Override
-    public List<Video> getAll() {
+    //@Override
+    public List<? extends IVideo> getAll() {
         try {
             MongoCollection<Video> collection = getCollection();
             List<Video> all = collection.find().into(new ArrayList<>());
@@ -41,11 +49,12 @@ public class VideoDao implements Dao<Video> {
         return null;
     }
 
-    @Override
-    public Video insert(Video value) {
+    //@Override
+    public IVideo insert(IVideo value) {
+        System.out.println("a");
         try {
             MongoCollection<Video> collection = getCollection();
-            collection.insertOne(value);
+            collection.insertOne(new Video(value)); //value
             return value;
         } catch ( Exception e) {
             e.printStackTrace();
@@ -53,13 +62,13 @@ public class VideoDao implements Dao<Video> {
         return null;
     }
 
-    @Override
-    public Video find(String id) {
+    //@Override
+    public IVideo find(String id) {
         return null;
     }
 
-    @Override
-    public Video update(Video value) {
+    //@Override
+    public IVideo update(IVideo value) {
         return null;
     }
 

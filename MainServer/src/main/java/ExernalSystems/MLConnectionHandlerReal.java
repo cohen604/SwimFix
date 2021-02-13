@@ -1,8 +1,8 @@
 package ExernalSystems;
 
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
-import Domain.Streaming.Video;
+import Domain.SwimmingData.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpEntity;
@@ -58,7 +58,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
     }
 
     @Override
-    public TaggedVideo getSkeletons(Video video) {
+    public TaggedVideo getSkeletons(IVideo video) {
         try {
             List<byte[]> frames = video.getVideo();
             List<String> frames_string = new LinkedList<>();
@@ -68,10 +68,28 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
             }
             String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
                     video.getHeight(), video.getWidth());
-            return new TaggedVideo(res);
+            return createTaggedVideo(res);
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
         return null;
     }
+
+    /**
+     * create a TaggedVideo from a json
+     * @param json - the json from the ML
+     * @return - TaggedVidoe
+     */
+    private TaggedVideo createTaggedVideo(String json) {
+        TaggedVideo taggedVideo = new TaggedVideo();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
+        List<List<Double>> list = gson.fromJson(json, listType);
+        for (List<Double> frame: list) {
+            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
+            taggedVideo.addTag(skeleton);
+        }
+        return taggedVideo;
+    }
+
 }

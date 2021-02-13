@@ -1,10 +1,9 @@
 package mainServer;
 
 import DTO.*;
-import Domain.Streaming.FeedbackVideo;
-import Domain.Streaming.TaggedVideo;
-import Domain.Streaming.Video;
+import Domain.Streaming.*;
 import Domain.Swimmer;
+import Domain.SwimmingData.Draw;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.User;
@@ -25,13 +24,17 @@ public class LogicManager {
     //TODO: hold all the logged users
     List<User> userList;
 
-    FeedbackVideo lastFeedbackVideo;
+    private IFeedbackVideo lastFeedbackVideo;
     private IFactoryErrorDetectors iFactoryErrorDetectors;
+    private IFactoryVideo iFactoryVideo;
+    private IFactoryFeedbackVideo iFactoryFeedbackVideo;
 
-
-    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors) {
-        mlConnectionHandler = new MLConnectionHandlerProxy();
+    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
+                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler) {
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
+        this.iFactoryVideo = iFactoryVideo;
+        this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
+        this.mlConnectionHandler = mlConnectionHandler;
     }
 
     /**
@@ -84,7 +87,7 @@ public class LogicManager {
      * @param video the video
      * @return the feedback video
      */
-    private FeedbackVideo getFeedbackVideo(Video video, List<SwimmingErrorDetector> errorDetectors) {
+    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
@@ -97,7 +100,7 @@ public class LogicManager {
             }
             errorMap.put(i, errors);
         }
-        FeedbackVideo feedbackVideo = new FeedbackVideo(video, taggedVideo, errorMap);
+        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap);
         return feedbackVideo;
     }
 
@@ -107,10 +110,10 @@ public class LogicManager {
      * @return the feedback video
      */
     public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-        Video video = new Video(convertedVideoDTO);
+        IVideo video = iFactoryVideo.create(convertedVideoDTO);
         if(video.isVideoExists()) {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
             if (feedbackVideoDTO == null) {
                 //TODO return here a action result error!!
@@ -129,14 +132,14 @@ public class LogicManager {
      * @precondition the feedback video we are generating doesn't exits!
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-        Video video = new Video(convertedVideoDTO);
+        IVideo video = iFactoryVideo.create(convertedVideoDTO);
         if(video.isVideoExists()) {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
             List<String> detectorsNames = new LinkedList<>();
             for (SwimmingErrorDetector detector : errorDetectors) {
                 detectorsNames.add(detector.getTag());
             }
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             //TODO delete this after removing lastFeedbackVideo
             this.lastFeedbackVideo = feedbackVideo;
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
@@ -195,11 +198,6 @@ public class LogicManager {
                     break;
             }
         }
-//        if(output.isEmpty()) {
-//            output.add(new ElbowErrorDetector(90,175));
-//            output.add(new ForearmErrorDetector());
-//            output.add(new PalmCrossHeadDetector());
-//        }
         return output;
     }
 
@@ -211,13 +209,14 @@ public class LogicManager {
     public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
         //TODO check if feedback video exits
         if(this.lastFeedbackVideo!=null){
-            Video video = this.lastFeedbackVideo;
+            // TODO - feedback video isn't video any more
+            IVideo video = this.lastFeedbackVideo.getIVideo();
             List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
             List<String> detectorsNames = new LinkedList<>();
             for(SwimmingErrorDetector detector: errorDetectors) {
                 detectorsNames.add(detector.getTag());
             }
-            FeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!

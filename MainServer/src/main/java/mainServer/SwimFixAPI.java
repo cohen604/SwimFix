@@ -1,7 +1,12 @@
 package mainServer;
 
 import DTO.*;
+import Domain.Streaming.*;
+import ExernalSystems.MLConnectionHandler;
+import ExernalSystems.MLConnectionHandlerProxy;
+import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
+import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
 
 public class SwimFixAPI {
@@ -9,8 +14,14 @@ public class SwimFixAPI {
    private LogicManager logicManager;
 
    public SwimFixAPI() {
+      IFactoryDraw iFactoryDraw = new FactoryDraw();
+      IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
-      this.logicManager = new LogicManager(iFactoryErrorDetectors);
+      IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+      IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
+      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+      this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
+                                             iFactoryFeedbackVideo, mlConnectionHandler);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {

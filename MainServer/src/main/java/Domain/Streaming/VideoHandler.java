@@ -16,12 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 //TODO this class need be a synchronize methods ?
-public class VideoHandler extends Draw {
+public class VideoHandler implements IVideoHandler {
+
+    private IDraw drawer;
 
     /**
      * constractor
      */
-    public VideoHandler() {
+    public VideoHandler(IDraw drawer) {
+        this.drawer = drawer;
         //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         nu.pattern.OpenCV.loadShared();
         nu.pattern.OpenCV.loadLocally(); // Use in case loadShared() doesn't work
@@ -225,7 +228,7 @@ public class VideoHandler extends Draw {
             //frame = des;
             if (skeletons != null && !skeletons.isEmpty()) {
                 SwimmingSkeleton skeleton = skeletons.get(i);
-                drawSwimmer(frame, skeleton);
+                drawer.drawSwimmer(frame, skeleton);
                 if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {
                     List<SwimmingError> frameErrors = errors.get(i);
                     for (SwimmingError error : frameErrors) {
@@ -265,8 +268,4 @@ public class VideoHandler extends Draw {
         return saveFrames(desPath, frames);
     }
 
-//    @Override
-//    public void draw(Mat frame, SwimmingSkeleton skeleton) {
-//        // TODO - SMELLY!
-//    }
 }

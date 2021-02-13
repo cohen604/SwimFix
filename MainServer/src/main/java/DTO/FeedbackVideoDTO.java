@@ -1,9 +1,5 @@
 package DTO;
 
-import Domain.Streaming.FeedbackVideo;
-
-import java.io.File;
-import java.nio.file.Files;
 import java.util.List;
 
 /**
@@ -12,7 +8,7 @@ import java.util.List;
 public class FeedbackVideoDTO {
 
     private String path;
-    private String type;
+    private String type; // TODO - why we need this?
     private byte[] bytes;
     private List<String> comments;
 
