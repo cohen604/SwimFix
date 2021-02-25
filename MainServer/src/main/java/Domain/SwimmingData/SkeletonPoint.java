@@ -1,6 +1,6 @@
 package Domain.SwimmingData;
 
-public class SkeletonPoint {
+public class SkeletonPoint implements IPoint {
 
     private final static double THRESHOLD =  0.05;
 
