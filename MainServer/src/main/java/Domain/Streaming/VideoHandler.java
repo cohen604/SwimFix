@@ -1,8 +1,5 @@
 package Domain.Streaming;
-import Domain.SwimmingData.Draw;
-import Domain.SwimmingData.IDraw;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
@@ -217,7 +214,7 @@ public class VideoHandler implements IVideoHandler {
      * @return new byte video
      * @precondition all lists must be the insert of the same video frames
      */
-    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<SwimmingSkeleton> skeletons,
+    private List<Mat> generatedFeedbackVideo(List<Mat> frames, List<ISwimmingSkeleton> skeletons,
                                              Map<Integer, List<SwimmingError>> errors,
                                              List<Object> visualComments) {
         for(int i=0; i<frames.size(); i++) {
@@ -227,7 +224,7 @@ public class VideoHandler implements IVideoHandler {
             //Imgproc.cvtColor(frame, des, Imgproc.COLOR_BGR2BGRA,4);
             //frame = des;
             if (skeletons != null && !skeletons.isEmpty()) {
-                SwimmingSkeleton skeleton = skeletons.get(i);
+                ISwimmingSkeleton skeleton = skeletons.get(i);
                 drawer.drawSwimmer(frame, skeleton);
                 if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {
                     List<SwimmingError> frameErrors = errors.get(i);
@@ -258,7 +255,7 @@ public class VideoHandler implements IVideoHandler {
      * @precondition all lists must be the insert of the same video frames
      * @postcondition insert the newest feedback generated in the des path
      */
-    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<SwimmingSkeleton> dots,
+    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<ISwimmingSkeleton> dots,
                                      Map<Integer, List<SwimmingError>> errors,
                                      List<Object> visualComments) {
         if(frames == null) {

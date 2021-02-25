@@ -16,7 +16,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
     }
 
     @Override
-    public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
+    public List<SwimmingError> detect(ISwimmingSkeleton skeleton) {
         List<SwimmingError> output = new LinkedList<>();
         detectRightPalmCross(skeleton, output);
         detectLeftPalmCross(skeleton, output);
@@ -49,7 +49,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      * @param skeleton - the skeleton of the swimmer
      * @param errors - the list of error the function update
      */
-    private void detectRightPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
+    private void detectRightPalmCross(ISwimmingSkeleton skeleton, List<SwimmingError> errors) {
         if (containsRightSide(skeleton)) {
             IPoint neck = skeleton.getHead();
             IPoint elbow = skeleton.getRightElbow();
@@ -67,7 +67,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      * @param skeleton - the skeleton of the swimmer
      * @param errors - the list of error the function update
      */
-    private void detectLeftPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
+    private void detectLeftPalmCross(ISwimmingSkeleton skeleton, List<SwimmingError> errors) {
         if (containsLeftSide(skeleton)) {
             IPoint neck = skeleton.getHead();
             IPoint elbow = skeleton.getLeftElbow();
@@ -80,13 +80,13 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
         }
     }
 
-    private boolean containsRightSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containsRightSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsHead()
                 && swimmingSkeleton.containsRightElbow()
                 && swimmingSkeleton.containsRightWrist();
     }
 
-    private boolean containsLeftSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containsLeftSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsHead()
                 && swimmingSkeleton.containsLeftElbow()
                 && swimmingSkeleton.containsLeftWrist();

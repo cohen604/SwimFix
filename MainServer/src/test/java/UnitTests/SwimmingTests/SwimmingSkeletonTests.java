@@ -1,9 +1,6 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.IPoint;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
 import javafx.util.Pair;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -13,8 +10,8 @@ import java.util.List;
 
 public class SwimmingSkeletonTests extends TestCase {
 
-    private SwimmingSkeleton swimmingSkeleton;
-    private SwimmingSkeleton swimmingSkeletonNoHead;
+    private ISwimmingSkeleton swimmingSkeleton;
+    private ISwimmingSkeleton swimmingSkeletonNoHead;
 
     private void addPointToList(List<Double> list, double x, double y, double confidence) {
         list.add(x);

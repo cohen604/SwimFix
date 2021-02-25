@@ -58,5 +58,5 @@ public interface IDraw {
      * @return the new frame
      */
     //TODO change the type of swimmingSkeleton to interface when you have it
-    void drawSwimmer(Mat frame, SwimmingSkeleton skeleton);
+    void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton);
 }

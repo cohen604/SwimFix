@@ -4,7 +4,7 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-public class SwimmingSkeleton {
+public class SwimmingSkeleton implements ISwimmingSkeleton {
 
     private Map<KeyPoint, IPoint> pointMap;
     private List<Pair<KeyPoint, KeyPoint>> edges;

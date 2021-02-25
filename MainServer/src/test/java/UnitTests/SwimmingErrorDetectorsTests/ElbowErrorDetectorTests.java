@@ -2,6 +2,7 @@ package UnitTests.SwimmingErrorDetectorsTests;
 
 import Domain.SwimmingData.Errors.LeftElbowError;
 import Domain.SwimmingData.Errors.RightElbowError;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import junit.framework.TestCase;
@@ -16,15 +17,15 @@ public class ElbowErrorDetectorTests extends TestCase {
     private final double MIN_ANGLE = 90;
     private final double MAX_ANGLE = 175;
     private ElbowErrorDetector elbowErrorDetector;
-    private SwimmingSkeleton skeletonNoError;
-    private SwimmingSkeleton skeletonRightErrorMin;
-    private SwimmingSkeleton skeletonRightErrorMax;
-    private SwimmingSkeleton skeletonLeftErrorMin;
-    private SwimmingSkeleton skeletonLeftErrorMax;
-    private SwimmingSkeleton skeletonMinRightMinLeftErrors;
-    private SwimmingSkeleton skeletonMinRightMaxLeftErrors;
-    private SwimmingSkeleton skeletonMaxRightMinLeftErrors;
-    private SwimmingSkeleton skeletonMaxRightMaxLeftErrors;
+    private ISwimmingSkeleton skeletonNoError;
+    private ISwimmingSkeleton skeletonRightErrorMin;
+    private ISwimmingSkeleton skeletonRightErrorMax;
+    private ISwimmingSkeleton skeletonLeftErrorMin;
+    private ISwimmingSkeleton skeletonLeftErrorMax;
+    private ISwimmingSkeleton skeletonMinRightMinLeftErrors;
+    private ISwimmingSkeleton skeletonMinRightMaxLeftErrors;
+    private ISwimmingSkeleton skeletonMaxRightMinLeftErrors;
+    private ISwimmingSkeleton skeletonMaxRightMaxLeftErrors;
 
 
     private void addPointToList(List<Double> list, double x, double y, double confidence) {

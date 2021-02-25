@@ -17,7 +17,7 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
     }
 
     @Override
-    public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
+    public List<SwimmingError> detect(ISwimmingSkeleton skeleton) {
         List<SwimmingError> errors = new LinkedList<>();
         detectRight(errors, skeleton);
         detectLeft(errors, skeleton);
@@ -36,17 +36,17 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return angle;
     }
 
-    private boolean containsRightSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containsRightSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsRightElbow()
                 && swimmingSkeleton.containsRightWrist();
     }
 
-    private boolean containsLeftSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containsLeftSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsLeftElbow()
                 && swimmingSkeleton.containsLeftWrist();
     }
 
-    public void detectLeft(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
+    public void detectLeft(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
         if(containsLeftSide(skeleton)) {
             IPoint elbow = skeleton.getLeftElbow();
             IPoint wrist = skeleton.getLeftWrist();
@@ -59,7 +59,7 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         }
     }
 
-    public void detectRight(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
+    public void detectRight(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
         if(containsRightSide(skeleton)) {
             // right forearm: delta_x will get positive value in 45 degrees case
             // delta_x will get negative value in 10 degrees case

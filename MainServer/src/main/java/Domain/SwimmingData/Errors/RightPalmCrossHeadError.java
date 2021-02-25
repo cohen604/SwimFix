@@ -10,7 +10,7 @@ public class RightPalmCrossHeadError extends PalmCrossHeadError{
     }
 
     @Override
-    public void draw(Mat frame, SwimmingSkeleton skeleton) {
+    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint head = skeleton.getHead();
         IPoint wrist = skeleton.getRightWrist();
         drawPalmCrossHead(frame, head, wrist);

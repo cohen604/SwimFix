@@ -46,7 +46,7 @@ public class Draw implements IDraw {
         Imgproc.line(frame, pointA, pointB, color, thickness);
     }
 
-    public void drawSwimmer(Mat frame, SwimmingSkeleton skeleton) {
+    public void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton) {
         // points
         int radius = 2;
         List<IPoint> points = skeleton.getPoints();

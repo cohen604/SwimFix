@@ -2,7 +2,7 @@ package Domain.SwimmingData.Errors;
 
 import Domain.SwimmingData.IDraw;
 import Domain.SwimmingData.IPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import org.opencv.core.Mat;
 
 public class RightForearmError extends ForearmError{
@@ -12,7 +12,7 @@ public class RightForearmError extends ForearmError{
     }
 
     @Override
-    public void draw(Mat frame, SwimmingSkeleton skeleton) {
+    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint elbow = skeleton.getRightElbow();
         IPoint wrist = skeleton.getRightWrist();
         int thickness = 2;

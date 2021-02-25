@@ -2,6 +2,7 @@ package ExernalSystems;
 
 import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -86,7 +87,8 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
         List<List<Double>> list = gson.fromJson(json, listType);
         for (List<Double> frame: list) {
-            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
+            //TODO remove NEW!!!
+            ISwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
             taggedVideo.addTag(skeleton);
         }
         return taggedVideo;

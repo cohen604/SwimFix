@@ -2,6 +2,7 @@ package UnitTests.SwimmingErrorDetectorsTests;
 
 import Domain.SwimmingData.Errors.LeftPalmCrossHeadError;
 import Domain.SwimmingData.Errors.RightPalmCrossHeadError;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import junit.framework.TestCase;
@@ -14,10 +15,10 @@ import java.util.List;
 public class PalmCrossHeadDetectorTests extends TestCase {
 
     private PalmCrossHeadDetector detector;
-    private SwimmingSkeleton skeletonNoError;
-    private SwimmingSkeleton skeletonRightError;
-    private SwimmingSkeleton skeletonLeftError;
-    private SwimmingSkeleton skeletonRightLeftError;
+    private ISwimmingSkeleton skeletonNoError;
+    private ISwimmingSkeleton skeletonRightError;
+    private ISwimmingSkeleton skeletonLeftError;
+    private ISwimmingSkeleton skeletonRightLeftError;
 
 
     private void addPointToList(List<Double> list, double x, double y, double confidence) {

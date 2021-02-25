@@ -21,7 +21,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
     }
 
     @Override
-    public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
+    public List<SwimmingError> detect(ISwimmingSkeleton skeleton) {
         List<SwimmingError> output = new LinkedList<>();
         addRightError(output, skeleton);
         addLeftError(output, skeleton);
@@ -72,13 +72,13 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
        return angle >= minAngle && angle <= maxAngle;
     }
 
-    private boolean containesRightSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containesRightSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsRightShoulder()
                 && swimmingSkeleton.containsRightElbow()
                 && swimmingSkeleton.containsRightWrist();
     }
 
-    private boolean containesLeftSide(SwimmingSkeleton swimmingSkeleton) {
+    private boolean containesLeftSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsLeftShoulder()
                 && swimmingSkeleton.containsLeftElbow()
                     && swimmingSkeleton.containsLeftWrist();
@@ -89,7 +89,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @param skeleton - the skelaton
      * @return a list of
      */
-    private void addRightError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
+    private void addRightError(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
         if(containesRightSide(skeleton)) {
             IPoint shoulder = skeleton.getRightShoulder();
             IPoint elbow = skeleton.getRightElbow();
@@ -105,7 +105,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
         }
     }
 
-    private void addLeftError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
+    private void addLeftError(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
         if(containesLeftSide(skeleton)) {
             IPoint shoulder = skeleton.getLeftShoulder();
             IPoint elbow = skeleton.getLeftElbow();

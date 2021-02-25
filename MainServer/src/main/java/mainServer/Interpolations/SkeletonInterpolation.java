@@ -1,7 +1,7 @@
 package mainServer.Interpolations;
 
 import Domain.SwimmingData.IPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.ISwimmingSkeleton;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     Interpolation interpolation;
 
     @Override
-    public List<SwimmingSkeleton> interpolate(List<SwimmingSkeleton> skeletons) {
+    public List<ISwimmingSkeleton> interpolate(List<ISwimmingSkeleton> skeletons) {
         collectPoints(skeletons);
         runInterpolation();
         return buildNewSwimmingSkeletons();
@@ -30,8 +30,8 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
      *           means there is lists with null elements !!!!
      * @param skeletons the skeletons of the swimmer
      */
-    private void collectPoints(List<SwimmingSkeleton> skeletons) {
-        for(SwimmingSkeleton skeleton : skeletons) {
+    private void collectPoints(List<ISwimmingSkeleton> skeletons) {
+        for(ISwimmingSkeleton skeleton : skeletons) {
             heads.add(skeleton.getHead());
             rightShoulders.add(skeleton.getRightShoulder());
             rightElbows.add(skeleton.getRightElbow());
@@ -49,7 +49,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
 
     }
 
-    private List<SwimmingSkeleton> buildNewSwimmingSkeletons() {
+    private List<ISwimmingSkeleton> buildNewSwimmingSkeletons() {
         return null;
     }
 }

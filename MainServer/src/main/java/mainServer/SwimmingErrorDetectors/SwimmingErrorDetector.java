@@ -1,8 +1,7 @@
 package mainServer.SwimmingErrorDetectors;
 
-import Domain.SwimmingData.KeyPoint;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public interface SwimmingErrorDetector {
      * @return list of points
      * @precondition skeleton is a valid skeleton
      */
-    List<SwimmingError> detect(SwimmingSkeleton skeleton);
+    List<SwimmingError> detect(ISwimmingSkeleton skeleton);
 
     String getTag();
 }

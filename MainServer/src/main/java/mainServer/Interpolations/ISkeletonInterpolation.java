@@ -1,11 +1,11 @@
 package mainServer.Interpolations;
 
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.ISwimmingSkeleton;
 
 import java.util.List;
 
 public interface ISkeletonInterpolation {
 
-    List<SwimmingSkeleton> interpolate(List<SwimmingSkeleton> skeletons);
+    List<ISwimmingSkeleton> interpolate(List<ISwimmingSkeleton> skeletons);
 
 }
