@@ -1,9 +1,6 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.IDraw;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
 import org.opencv.core.Mat;
 
 public class RightPalmCrossHeadError extends PalmCrossHeadError{
@@ -14,8 +11,8 @@ public class RightPalmCrossHeadError extends PalmCrossHeadError{
 
     @Override
     public void draw(Mat frame, SwimmingSkeleton skeleton) {
-        SkeletonPoint head = skeleton.getHead();
-        SkeletonPoint wrist = skeleton.getRightWrist();
+        IPoint head = skeleton.getHead();
+        IPoint wrist = skeleton.getRightWrist();
         drawPalmCrossHead(frame, head, wrist);
     }
 }

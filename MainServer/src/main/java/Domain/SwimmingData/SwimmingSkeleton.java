@@ -4,12 +4,12 @@ import javafx.util.Pair;
 
 import java.util.*;
 
-// TODO should be a builder class that returns a ISwimmerSkeleton (its better)
 public class SwimmingSkeleton {
 
-    private Map<KeyPoint, SkeletonPoint> pointMap;
+    private Map<KeyPoint, IPoint> pointMap;
     private List<Pair<KeyPoint, KeyPoint>> edges;
 
+    // TODO should be a builder class that do this complex building (its better)
     public SwimmingSkeleton(List<Double> frame) {
         this.pointMap = new HashMap<>();
         for(KeyPoint keyPoint : KeyPoint.values()) {
@@ -44,13 +44,13 @@ public class SwimmingSkeleton {
      * The function return a list of edges of skeleton points
      * @return the a list of edges
      */
-    public List<Pair<SkeletonPoint, SkeletonPoint>> getLines() {
-        List<Pair<SkeletonPoint, SkeletonPoint>> output = new LinkedList<>();
+    public List<Pair<IPoint, IPoint>> getLines() {
+        List<Pair<IPoint, IPoint>> output = new LinkedList<>();
         for(Pair<KeyPoint, KeyPoint> edge: this.edges) {
             if(this.pointMap.containsKey(edge.getKey()) &&
                     this.pointMap.containsKey(edge.getValue())) {
-                SkeletonPoint first = this.pointMap.get(edge.getKey());
-                SkeletonPoint second = this.pointMap.get(edge.getValue());
+                IPoint first = this.pointMap.get(edge.getKey());
+                IPoint second = this.pointMap.get(edge.getValue());
                 output.add(new Pair<>(first, second));
             }
         }
@@ -89,35 +89,35 @@ public class SwimmingSkeleton {
      * Getters
      */
 
-    public List<SkeletonPoint> getPoints() {
+    public List<IPoint> getPoints() {
         return new LinkedList<>(this.pointMap.values());
     }
 
-    public SkeletonPoint getHead() {
+    public IPoint getHead() {
         return this.pointMap.get(KeyPoint.HEAD);
     }
 
-    public SkeletonPoint getRightShoulder() {
+    public IPoint getRightShoulder() {
         return this.pointMap.get(KeyPoint.R_SHOULDER);
     }
 
-    public SkeletonPoint getRightElbow() {
+    public IPoint getRightElbow() {
         return this.pointMap.get(KeyPoint.R_ELBOW);
     }
 
-    public SkeletonPoint getRightWrist() {
+    public IPoint getRightWrist() {
         return this.pointMap.get(KeyPoint.R_WRIST);
     }
 
-    public SkeletonPoint getLeftShoulder() {
+    public IPoint getLeftShoulder() {
         return this.pointMap.get(KeyPoint.L_SHOULDER);
     }
 
-    public SkeletonPoint getLeftElbow() {
+    public IPoint getLeftElbow() {
         return this.pointMap.get(KeyPoint.L_ELBOW);
     }
 
-    public SkeletonPoint getLeftWrist() {
+    public IPoint getLeftWrist() {
         return this.pointMap.get(KeyPoint.L_WRIST);
     }
 }

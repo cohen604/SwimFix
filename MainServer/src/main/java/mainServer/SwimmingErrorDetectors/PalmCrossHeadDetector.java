@@ -5,6 +5,8 @@ import Domain.SwimmingData.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import static Domain.SwimmingData.IPointUtils.*;
+
 public class PalmCrossHeadDetector implements SwimmingErrorDetector {
 
     private IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError;
@@ -27,11 +29,11 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      * @param wrist - skeleton point
      * @return the middle palm X.
      */
-    private double calcMiddlePalmX(SkeletonPoint elbow, SkeletonPoint wrist) {
+    private double calcMiddlePalmX(IPoint elbow, IPoint wrist) {
         double l1;  // the length between elbow and wrist
         double l2;  // the length between wrist and the end of the palm
         double ratio = 1.35;    // the ratio between l1 and l2
-        l1 = elbow.calcDistance(wrist);
+        l1 = calcDistance(elbow, wrist);
         l2 = l1 / ratio;
         double x, y;
         x = wrist.getX() - elbow.getX();
@@ -49,9 +51,9 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      */
     private void detectRightPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
         if (containsRightSide(skeleton)) {
-            SkeletonPoint neck = skeleton.getHead();
-            SkeletonPoint elbow = skeleton.getRightElbow();
-            SkeletonPoint wrist = skeleton.getRightWrist();
+            IPoint neck = skeleton.getHead();
+            IPoint elbow = skeleton.getRightElbow();
+            IPoint wrist = skeleton.getRightWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX < neck.getX()) {
                 System.out.println("right palm cross the head");
@@ -67,9 +69,9 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      */
     private void detectLeftPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
         if (containsLeftSide(skeleton)) {
-            SkeletonPoint neck = skeleton.getHead();
-            SkeletonPoint elbow = skeleton.getLeftElbow();
-            SkeletonPoint wrist = skeleton.getLeftWrist();
+            IPoint neck = skeleton.getHead();
+            IPoint elbow = skeleton.getLeftElbow();
+            IPoint wrist = skeleton.getLeftWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX > neck.getX()) {
                 System.out.println("left palm cross the head");

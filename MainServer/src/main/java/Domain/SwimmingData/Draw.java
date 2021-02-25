@@ -49,12 +49,12 @@ public class Draw implements IDraw {
     public void drawSwimmer(Mat frame, SwimmingSkeleton skeleton) {
         // points
         int radius = 2;
-        List<SkeletonPoint> points = skeleton.getPoints();
-        for (SkeletonPoint point: points) {
+        List<IPoint> points = skeleton.getPoints();
+        for (IPoint point: points) {
             drawCircle(frame, point, radius);
         }
-        List<Pair<SkeletonPoint , SkeletonPoint>> lines = skeleton.getLines();
-        for(Pair<SkeletonPoint , SkeletonPoint> line: lines) {
+        List<Pair<IPoint , IPoint>> lines = skeleton.getLines();
+        for(Pair<IPoint , IPoint> line: lines) {
             drawLine(frame, line.getKey(), line.getValue());
         }
     }

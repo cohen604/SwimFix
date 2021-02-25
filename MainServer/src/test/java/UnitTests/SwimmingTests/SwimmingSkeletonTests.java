@@ -1,5 +1,6 @@
 package UnitTests.SwimmingTests;
 
+import Domain.SwimmingData.IPoint;
 import Domain.SwimmingData.KeyPoint;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingSkeleton;
@@ -52,12 +53,12 @@ public class SwimmingSkeletonTests extends TestCase {
     }
 
     public void testGetLines() {
-        List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeleton.getLines();
+        List<Pair<IPoint, IPoint>> lines = this.swimmingSkeleton.getLines();
         assertEquals(6 ,lines.size());
     }
 
     public void testGetLinesWithHeadConfidenceLow() {
-        List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeletonNoHead.getLines();
+        List<Pair<IPoint, IPoint>> lines = this.swimmingSkeletonNoHead.getLines();
         assertEquals(4 ,lines.size());
         assertFalse(this.swimmingSkeletonNoHead.containsHead());
     }

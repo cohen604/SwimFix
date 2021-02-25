@@ -1,6 +1,7 @@
 package Domain.SwimmingData.Errors;
 
 import Domain.SwimmingData.IDraw;
+import Domain.SwimmingData.IPoint;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingError;
 import org.opencv.core.Mat;
@@ -14,8 +15,8 @@ public abstract class ElbowError extends SwimmingError {
         this.angle = angle;
     }
 
-    public void drawShoulderElbowWrist(Mat frame, SkeletonPoint shoulder, SkeletonPoint elbow,
-                                       SkeletonPoint wrist, double delta) {
+    public void drawShoulderElbowWrist(Mat frame, IPoint shoulder, IPoint elbow,
+                                       IPoint wrist, double delta) {
         double r = 255.0, g = 0.0, b = 0.0, a = 255.0;
         double raduis = 5.0;
         int thickness = 3;

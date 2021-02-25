@@ -1,9 +1,7 @@
 package mainServer.SwimmingErrorDetectors;
 
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return "Forearm";
     }
 
-    private double calcAngle(SkeletonPoint elbow, SkeletonPoint wrist) {
+    private double calcAngle(IPoint elbow, IPoint wrist) {
         double delta_x = wrist.getX() - elbow.getX();
         double delta_y = wrist.getY() - elbow.getY(); //will get positive value
         double angle = Math.toDegrees(Math.atan(delta_x / delta_y));
@@ -47,11 +45,11 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return swimmingSkeleton.containsLeftElbow()
                 && swimmingSkeleton.containsLeftWrist();
     }
-    
+
     public void detectLeft(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
         if(containsLeftSide(skeleton)) {
-            SkeletonPoint elbow = skeleton.getLeftElbow();
-            SkeletonPoint wrist = skeleton.getLeftWrist();
+            IPoint elbow = skeleton.getLeftElbow();
+            IPoint wrist = skeleton.getLeftWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < minAngle) { // range is -10 degrees
                 errors.add(iFactoryForearmError.createLeft(angle));
@@ -65,8 +63,8 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         if(containsRightSide(skeleton)) {
             // right forearm: delta_x will get positive value in 45 degrees case
             // delta_x will get negative value in 10 degrees case
-            SkeletonPoint elbow = skeleton.getRightElbow();
-            SkeletonPoint wrist = skeleton.getRightWrist();
+            IPoint elbow = skeleton.getRightElbow();
+            IPoint wrist = skeleton.getRightWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < -maxAngle) { // range is 45 degrees
                 errors.add(iFactoryForearmError.createRight(angle));
