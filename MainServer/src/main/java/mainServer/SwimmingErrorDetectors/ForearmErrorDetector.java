@@ -1,7 +1,5 @@
 package mainServer.SwimmingErrorDetectors;
 
-import Domain.SwimmingData.Errors.LeftForearmError;
-import Domain.SwimmingData.Errors.RightForearmError;
 import Domain.SwimmingData.KeyPoint;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingError;
@@ -10,9 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ForearmErrorDetector implements SwimmingErrorDetector{
-    //TODO move to constructor
-    double minAngle = -10;
-    double maxAngle = 45;
+    private double minAngle;
+    private double maxAngle;
+    private IFactoryForearmError iFactoryForearmError;
+
+    public ForearmErrorDetector(IFactoryForearmError iFactoryForearmError, double minAngle, double maxAngle) {
+        this.iFactoryForearmError = iFactoryForearmError;
+        this.minAngle = minAngle;
+        this.maxAngle = maxAngle;
+    }
 
     @Override
     public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
@@ -34,54 +38,40 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
         return angle;
     }
 
-    /**
-     * The function return the key point need for the right side
-     * @return key points
-     */
-    private List<KeyPoint> getRightKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.R_ELBOW);
-        points.add(KeyPoint.R_WRIST);
-        return points;
+    private boolean containsRightSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsRightElbow()
+                && swimmingSkeleton.containsRightWrist();
     }
 
-    /**
-     * The function return the key point need for the left side
-     * @return key points
-     */
-    private List<KeyPoint> getLeftKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.L_ELBOW);
-        points.add(KeyPoint.L_WRIST);
-        return points;
+    private boolean containsLeftSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsLeftElbow()
+                && swimmingSkeleton.containsLeftWrist();
     }
-
+    
     public void detectLeft(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> leftKeys = getLeftKeys();
-        if(skeleton.contatinsKeys(leftKeys)) {
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
+        if(containsLeftSide(skeleton)) {
+            SkeletonPoint elbow = skeleton.getLeftElbow();
+            SkeletonPoint wrist = skeleton.getLeftWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < minAngle) { // range is -10 degrees
-                errors.add(new LeftForearmError(angle));
+                errors.add(iFactoryForearmError.createLeft(angle));
             } else if (angle > 0 && angle > maxAngle) { // range is 45 degrees
-                errors.add(new LeftForearmError(angle));
+                errors.add(iFactoryForearmError.createLeft(angle));
             }
         }
     }
 
     public void detectRight(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> rightKeys = getRightKeys();
-        if(skeleton.contatinsKeys(rightKeys)) {
+        if(containsRightSide(skeleton)) {
             // right forearm: delta_x will get positive value in 45 degrees case
             // delta_x will get negative value in 10 degrees case
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+            SkeletonPoint elbow = skeleton.getRightElbow();
+            SkeletonPoint wrist = skeleton.getRightWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < -maxAngle) { // range is 45 degrees
-                errors.add(new RightForearmError(angle));
+                errors.add(iFactoryForearmError.createRight(angle));
             } else if (angle > 0 && angle > -minAngle) { // range is 10 degrees
-                errors.add(new RightForearmError(angle));
+                errors.add(iFactoryForearmError.createRight(angle));
             }
         }
     }

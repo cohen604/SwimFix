@@ -6,6 +6,8 @@ import DTO.FeedbackVideoStreamer;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
+import Domain.Streaming.VideoHandler;
+import Domain.SwimmingData.Draw;
 import Domain.SwimmingData.SwimmingError;
 import junit.framework.TestCase;
 import org.junit.After;
@@ -45,7 +47,7 @@ public class FeedbackTests  extends TestCase {
     private void setUpFeedback() {
         String path = VIDEO_FOLDER + "/sample2.mp4";
         String type = ".mp4";
-        Video video = new Video(path, type);
+        Video video = new Video(new VideoHandler(new Draw()), path, type);
         //TODO
         TaggedVideo taggedVideo = null;
         try {
@@ -65,7 +67,7 @@ public class FeedbackTests  extends TestCase {
     private void setUFeedbackVideoNotExits() {
         String path = null;
         String type = null;
-        Video video = new Video(path, type);
+        Video video = new Video(new VideoHandler(new Draw()), path, type);
         //TODO
         TaggedVideo taggedVideo = null;
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();

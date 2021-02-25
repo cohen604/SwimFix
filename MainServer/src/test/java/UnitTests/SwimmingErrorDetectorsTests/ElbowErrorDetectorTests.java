@@ -5,7 +5,7 @@ import Domain.SwimmingData.Errors.RightElbowError;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.ElbowErrorDetector;
+import mainServer.SwimmingErrorDetectors.*;
 import org.junit.Before;
 
 import java.util.LinkedList;
@@ -160,7 +160,9 @@ public class ElbowErrorDetectorTests extends TestCase {
 
     @Before
     public void setUp() {
-        this.elbowErrorDetector = new ElbowErrorDetector(90, 175);
+        IFactoryDraw iFactoryDraw = new FactoryDraw();
+        IFactoryElbowError iFactoryElbowError = new FactoryElbowError(iFactoryDraw);
+        this.elbowErrorDetector = new ElbowErrorDetector(iFactoryElbowError,90, 175);
         setUpNoErrorSkeleton();
         setUpSkeletonRightError();
         setUpSkeletonLeftError();

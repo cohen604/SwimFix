@@ -1,7 +1,4 @@
 package mainServer.SwimmingErrorDetectors;
-
-import Domain.SwimmingData.Errors.LeftElbowError;
-import Domain.SwimmingData.Errors.RightElbowError;
 import Domain.SwimmingData.KeyPoint;
 import Domain.SwimmingData.SkeletonPoint;
 import Domain.SwimmingData.SwimmingError;
@@ -15,8 +12,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
 
     private double minAngle; //the minimum angle between wrist to elbow to shoulder
     private double maxAngle; //the maximum angle between wrist to elbow to shoulder
+    private IFactoryElbowError iFactoryElbowError;
 
-    public ElbowErrorDetector(double minAngle, double maxAngle) {
+    public ElbowErrorDetector( IFactoryElbowError iFactoryElbowError, double minAngle, double maxAngle) {
+        this.iFactoryElbowError = iFactoryElbowError;
         this.minAngle = minAngle;
         this.maxAngle = maxAngle;
     }
@@ -73,28 +72,16 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
        return angle >= minAngle && angle <= maxAngle;
     }
 
-    /**
-     * The function return the key point need for the right side
-     * @return key points
-     */
-    private List<KeyPoint> getRightKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.R_SHOULDER);
-        points.add(KeyPoint.R_ELBOW);
-        points.add(KeyPoint.R_WRIST);
-        return points;
+    private boolean containesRightSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsRightShoulder()
+                && swimmingSkeleton.containsRightElbow()
+                && swimmingSkeleton.containsRightWrist();
     }
 
-    /**
-     * The function return the key point need for the left side
-     * @return key points
-     */
-    private List<KeyPoint> getLeftKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.L_SHOULDER);
-        points.add(KeyPoint.L_ELBOW);
-        points.add(KeyPoint.L_WRIST);
-        return points;
+    private boolean containesLeftSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsLeftShoulder()
+                && swimmingSkeleton.containsLeftElbow()
+                    && swimmingSkeleton.containsLeftWrist();
     }
 
     /**
@@ -103,35 +90,33 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @return a list of
      */
     private void addRightError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> rightKeys = getRightKeys();
-        if(skeleton.contatinsKeys(rightKeys)) {
-            SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.R_SHOULDER);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+        if(containesRightSide(skeleton)) {
+            SkeletonPoint shoulder = skeleton.getRightShoulder();
+            SkeletonPoint elbow = skeleton.getRightElbow();
+            SkeletonPoint wrist = skeleton.getRightWrist();
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
             if(expectedX < wrist.getX()) {
                 angle = 360 - angle;
             }
             if(!isValidAngle(angle)) {
-                errors.add(new RightElbowError(angle));
+                errors.add(iFactoryElbowError.createRight(angle));
             }
         }
     }
 
     private void addLeftError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> leftKeys = getLeftKeys();
-        if(skeleton.contatinsKeys(leftKeys)) {
-            SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.L_SHOULDER);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
+        if(containesLeftSide(skeleton)) {
+            SkeletonPoint shoulder = skeleton.getLeftShoulder();
+            SkeletonPoint elbow = skeleton.getLeftElbow();
+            SkeletonPoint wrist = skeleton.getLeftWrist();
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
             if(expectedX > wrist.getX()) {
                 angle = 360 - angle;
             }
             if(!isValidAngle(angle)) {
-                errors.add(new LeftElbowError(angle)) ;
+                errors.add(iFactoryElbowError.createLeft(angle)) ;
             }
         }
     }

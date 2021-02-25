@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.util.*;
 
+// TODO should be a builder class that returns a ISwimmerSkeleton (its better)
 public class SwimmingSkeleton {
 
     private Map<KeyPoint, SkeletonPoint> pointMap;
@@ -56,18 +57,32 @@ public class SwimmingSkeleton {
         return output;
     }
 
-    /**
-     * The function return if the keys exits in the map
-     * @param keys - the keys
-     * @return true if all the keys contains
-     */
-    public boolean contatinsKeys(List<KeyPoint> keys) {
-        for(KeyPoint key: keys) {
-            if(!this.pointMap.containsKey(key)) {
-                return false;
-            }
-        }
-        return true;
+    public boolean containsHead() {
+        return this.pointMap.containsKey(KeyPoint.HEAD);
+    }
+
+    public boolean containsRightShoulder() {
+        return this.pointMap.containsKey(KeyPoint.R_SHOULDER);
+    }
+
+    public boolean containsRightElbow() {
+        return this.pointMap.containsKey(KeyPoint.R_ELBOW);
+    }
+
+    public boolean containsRightWrist() {
+        return this.pointMap.containsKey(KeyPoint.R_WRIST);
+    }
+
+    public boolean containsLeftShoulder() {
+        return this.pointMap.containsKey(KeyPoint.L_SHOULDER);
+    }
+
+    public boolean containsLeftElbow() {
+        return this.pointMap.containsKey(KeyPoint.L_ELBOW);
+    }
+
+    public boolean containsLeftWrist() {
+        return this.pointMap.containsKey(KeyPoint.L_WRIST);
     }
 
     /**
@@ -78,12 +93,31 @@ public class SwimmingSkeleton {
         return new LinkedList<>(this.pointMap.values());
     }
 
-    public Set<KeyPoint> getKeyPoints() {
-        return this.pointMap.keySet();
+    public SkeletonPoint getHead() {
+        return this.pointMap.get(KeyPoint.HEAD);
     }
 
-    public SkeletonPoint getPoint(KeyPoint key) {
-        return this.pointMap.get(key);
+    public SkeletonPoint getRightShoulder() {
+        return this.pointMap.get(KeyPoint.R_SHOULDER);
     }
 
+    public SkeletonPoint getRightElbow() {
+        return this.pointMap.get(KeyPoint.R_ELBOW);
+    }
+
+    public SkeletonPoint getRightWrist() {
+        return this.pointMap.get(KeyPoint.R_WRIST);
+    }
+
+    public SkeletonPoint getLeftShoulder() {
+        return this.pointMap.get(KeyPoint.L_SHOULDER);
+    }
+
+    public SkeletonPoint getLeftElbow() {
+        return this.pointMap.get(KeyPoint.L_ELBOW);
+    }
+
+    public SkeletonPoint getLeftWrist() {
+        return this.pointMap.get(KeyPoint.L_WRIST);
+    }
 }

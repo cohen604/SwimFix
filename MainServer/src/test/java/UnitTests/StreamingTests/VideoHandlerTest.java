@@ -1,9 +1,12 @@
 package UnitTests.StreamingTests;
 
+import Domain.SwimmingData.Draw;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
+import mainServer.SwimmingErrorDetectors.FactoryDraw;
+import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 import org.opencv.core.Mat;
@@ -27,7 +30,7 @@ public class VideoHandlerTest extends TestCase {
 
     @Before
     public void setUp() {
-        this.videoHandler = new VideoHandler();
+        this.videoHandler = new VideoHandler(new Draw());
         this.testVideo = new File(VIDEO_FOLDER + "/sample.mov");
         this.testVideoType = ".mov";
         if(!testVideo.exists()) {

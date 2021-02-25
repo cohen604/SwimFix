@@ -51,7 +51,6 @@ public class SwimmingSkeletonTests extends TestCase {
         setUpSwimmingSkeletonHeadLow();
     }
 
-
     public void testGetLines() {
         List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeleton.getLines();
         assertEquals(6 ,lines.size());
@@ -60,22 +59,15 @@ public class SwimmingSkeletonTests extends TestCase {
     public void testGetLinesWithHeadConfidenceLow() {
         List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeletonNoHead.getLines();
         assertEquals(4 ,lines.size());
-        List<KeyPoint> keys = new LinkedList<>();
-        keys.add(KeyPoint.HEAD);
-        assertFalse(this.swimmingSkeletonNoHead.contatinsKeys(keys));
+        assertFalse(this.swimmingSkeletonNoHead.containsHead());
     }
 
     public void testContainsKey() {
-        List<KeyPoint> keys = new LinkedList<>();
-        keys.add(KeyPoint.HEAD);
-        assertTrue(this.swimmingSkeleton.contatinsKeys(keys));
-        assertFalse(this.swimmingSkeletonNoHead.contatinsKeys(keys));
-
-        List<KeyPoint> keys2 = new LinkedList<>();
-        keys2.add(KeyPoint.R_SHOULDER);
-        keys2.add(KeyPoint.L_SHOULDER);
-        assertTrue(this.swimmingSkeleton.contatinsKeys(keys2));
-        assertTrue(this.swimmingSkeletonNoHead.contatinsKeys(keys2));
+        assertFalse(this.swimmingSkeletonNoHead.containsHead());
+        assertTrue(this.swimmingSkeleton.containsRightShoulder());
+        assertTrue(this.swimmingSkeleton.containsLeftShoulder());
     }
+
+    //TODO add 28 tests for contains Element and getElement
 
 }

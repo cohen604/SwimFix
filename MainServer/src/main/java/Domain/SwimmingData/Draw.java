@@ -6,38 +6,20 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
 import java.util.List;
 
-public abstract class Draw {
+public class Draw implements IDraw {
 
-    /**
-     * The function draw a circle
-     * @param frame
-     * @param skeletonPoint
-     * @param radius
-     */
-    public void drawCircle(Mat frame, SkeletonPoint skeletonPoint, int radius) {
+    public void drawCircle(Mat frame, IPoint skeletonPoint, int radius) {
         Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
         Scalar color = new Scalar(0,255,0);
         int thickness = 3;
         Imgproc.circle(frame, point, radius, color, thickness);
     }
 
-    /**
-     *
-     * @param frame
-     * @param radius
-     * @param angle
-     * @param startAngle
-     * @param endAngle
-     * @param center
-     * @param r
-     * @param g
-     * @param b
-     * @param a
-     */
     public void drawElipce(Mat frame, double radius, double angle, double startAngle,
-                           double endAngle, SkeletonPoint center, double r, double g,
+                           double endAngle, IPoint center, double r, double g,
                            double b, double a) {
         Point centerPoint = new Point(center.getX(), center.getY());
         Size size = new Size(radius, radius);
@@ -47,13 +29,7 @@ public abstract class Draw {
                 scalar, thickness);
     }
 
-    /**
-     * The function draw line
-     * @param frame
-     * @param a
-     * @param b
-     */
-    public void drawLine(Mat frame, SkeletonPoint a, SkeletonPoint b) {
+    public void drawLine(Mat frame, IPoint a, IPoint b) {
         Point pointA = new Point(a.getX(),a.getY());
         Point pointB = new Point(b.getX(),b.getY());
         Scalar color = new Scalar(255,0,0);
@@ -61,18 +37,8 @@ public abstract class Draw {
         Imgproc.line(frame, pointA, pointB, color, thickness);
     }
 
-    /**
-     * The function draw a line
-     * @param frame
-     * @param s1
-     * @param s2
-     * @param r
-     * @param g
-     * @param b
-     * @param a
-     * @param thickness
-     */
-    public void drawLine(Mat frame, SkeletonPoint s1, SkeletonPoint s2, double r, double g, double b,
+
+    public void drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
                          double a, int thickness) {
         Point pointA = new Point(s1.getX(),s1.getY());
         Point pointB = new Point(s2.getX(),s2.getY());
@@ -80,12 +46,6 @@ public abstract class Draw {
         Imgproc.line(frame, pointA, pointB, color, thickness);
     }
 
-    /**
-     * The function draw swimming tag into the frame
-     * @param frame the current frame
-     * @param skeleton the image tag to print
-     * @return the new frame
-     */
     public void drawSwimmer(Mat frame, SwimmingSkeleton skeleton) {
         // points
         int radius = 2;
@@ -98,4 +58,5 @@ public abstract class Draw {
             drawLine(frame, line.getKey(), line.getValue());
         }
     }
+
 }

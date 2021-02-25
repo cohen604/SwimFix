@@ -1,16 +1,17 @@
 package mainServer.SwimmingErrorDetectors;
 
-import Domain.SwimmingData.Errors.LeftPalmCrossHeadError;
-import Domain.SwimmingData.Errors.RightPalmCrossHeadError;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class PalmCrossHeadDetector implements SwimmingErrorDetector {
+
+    private IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError;
+
+    public PalmCrossHeadDetector(IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError) {
+        this.iFactoryPalmCrossHeadError = iFactoryPalmCrossHeadError;
+    }
 
     @Override
     public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
@@ -47,15 +48,14 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      * @param errors - the list of error the function update
      */
     private void detectRightPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
-        List<KeyPoint> rightKeys = getRightKeys();
-        if (skeleton.contatinsKeys(rightKeys)) {
-            SkeletonPoint neck = skeleton.getPoint(KeyPoint.HEAD);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+        if (containsRightSide(skeleton)) {
+            SkeletonPoint neck = skeleton.getHead();
+            SkeletonPoint elbow = skeleton.getRightElbow();
+            SkeletonPoint wrist = skeleton.getRightWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX < neck.getX()) {
                 System.out.println("right palm cross the head");
-                errors.add(new RightPalmCrossHeadError()) ;
+                errors.add(iFactoryPalmCrossHeadError.createRight()) ;
             }
         }
     }
@@ -66,41 +66,28 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
      * @param errors - the list of error the function update
      */
     private void detectLeftPalmCross(SwimmingSkeleton skeleton, List<SwimmingError> errors) {
-        List<KeyPoint> leftKeys = getLeftKeys();
-        if (skeleton.contatinsKeys(leftKeys)) {
-            SkeletonPoint neck = skeleton.getPoint(KeyPoint.HEAD);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
+        if (containsLeftSide(skeleton)) {
+            SkeletonPoint neck = skeleton.getHead();
+            SkeletonPoint elbow = skeleton.getLeftElbow();
+            SkeletonPoint wrist = skeleton.getLeftWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX > neck.getX()) {
                 System.out.println("left palm cross the head");
-                errors.add(new LeftPalmCrossHeadError()) ;
+                errors.add(iFactoryPalmCrossHeadError.createLeft()) ;
             }
         }
     }
 
-    /**
-     * The function return the key point need for the right side
-     * @return key points
-     */
-    private List<KeyPoint> getRightKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.HEAD);
-        points.add(KeyPoint.R_ELBOW);
-        points.add(KeyPoint.R_WRIST);
-        return points;
+    private boolean containsRightSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsHead()
+                && swimmingSkeleton.containsRightElbow()
+                && swimmingSkeleton.containsRightWrist();
     }
 
-    /**
-     * The function return the key point need for the left side
-     * @return key points
-     */
-    private List<KeyPoint> getLeftKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.HEAD);
-        points.add(KeyPoint.L_ELBOW);
-        points.add(KeyPoint.L_WRIST);
-        return points;
+    private boolean containsLeftSide(SwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsHead()
+                && swimmingSkeleton.containsLeftElbow()
+                && swimmingSkeleton.containsLeftWrist();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class FeedbackVideo extends Video {
+public class FeedbackVideo extends Video implements IFeedbackVideo {
 
     private VisualComment visualComment;
     private TextualComment textualComment;
@@ -22,7 +22,7 @@ public class FeedbackVideo extends Video {
     // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private boolean feedbackUpdated;
 
-    public FeedbackVideo(Video video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap) {
+    public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
@@ -108,6 +108,11 @@ public class FeedbackVideo extends Video {
     @Override
     public String getPath() {
         return path;
+    }
+
+    @Override
+    public IVideo getIVideo() {
+        return this;
     }
 
     public boolean isFeedbackUpdated() {
