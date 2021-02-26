@@ -1,5 +1,7 @@
 package Domain.SwimmingData.Points;
 
+import Domain.SwimmingData.SwimmingSkeletonGraph.SkeletonPoint;
+
 public class IPointUtils {
 
     public static double calcDistance(IPoint current, IPoint other) {
@@ -13,4 +15,27 @@ public class IPointUtils {
         double dx = other.getX() - current.getX();
         return dy / dx;
     }
+
+    public static double dotProduct(IPoint current, IPoint other) {
+        return current.getX() * other.getX() + current.getY() * other.getY();
+    }
+
+    public static double getSize(IPoint current) {
+        return Math.sqrt(current.getX() * current.getX() + current.getY() * current.getY());
+    }
+
+    public static IPoint getNormalVec(IPoint current, IPoint other) {
+        double x = other.getX() - current.getX();
+        double y = other.getY() - current.getY();
+        double size = Math.sqrt(x*x + y*y);
+        return new SkeletonPoint( x/size, y/size, -1);
+    }
+
+    public static double getAngleBetween(IPoint current, IPoint other) {
+        double top = dotProduct(current, other);
+        double bottom = getSize(current) * getSize(other);
+        double angleRad = Math.acos(top/bottom);
+        return Math.toDegrees(angleRad);
+    }
+
 }

@@ -18,6 +18,28 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     private IPoint leftWrist;
     private List<Pair<IPoint, IPoint>> edges;
 
+    public SwimmingSkeleton(IPoint head,
+                            IPoint rightShoulder, IPoint rightElbow, IPoint rightWrist,
+                            IPoint leftShoulder, IPoint leftElbow, IPoint leftWrist) {
+        this.head = head;
+        this.rightShoulder = rightShoulder;
+        this.rightElbow = rightElbow;
+        this.rightWrist = rightWrist;
+        this.leftShoulder = leftShoulder;
+        this.leftElbow = leftElbow;
+        this.leftWrist = leftWrist;
+        setUpEdges();
+    }
+
+    private void setUpEdges() {
+        edges = new LinkedList<>();
+        edges.add(new Pair<>(head, rightShoulder));
+        edges.add(new Pair<>(head, leftShoulder));
+        edges.add(new Pair<>(rightShoulder, rightElbow));
+        edges.add(new Pair<>(rightElbow, rightWrist));
+        edges.add(new Pair<>(leftShoulder, leftElbow));
+        edges.add(new Pair<>(leftElbow, leftWrist));
+    }
 
     @Override
     public List<Pair<IPoint, IPoint>> getLines() {
