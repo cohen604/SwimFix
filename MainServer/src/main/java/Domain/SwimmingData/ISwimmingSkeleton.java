@@ -1,5 +1,6 @@
 package Domain.SwimmingData;
 
+import Domain.SwimmingData.Points.IPoint;
 import javafx.util.Pair;
 import java.util.List;
 

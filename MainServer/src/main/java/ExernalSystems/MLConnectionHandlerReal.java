@@ -3,7 +3,7 @@ package ExernalSystems;
 import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpEntity;

@@ -1,7 +1,7 @@
 package mainServer.SwimmingErrorDetectors;
 
-import Domain.SwimmingData.Draw;
-import Domain.SwimmingData.IDraw;
+import Domain.SwimmingData.Drawing.Draw;
+import Domain.SwimmingData.Drawing.IDraw;
 
 public class FactoryDraw implements IFactoryDraw {
 

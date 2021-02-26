@@ -1,5 +1,7 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.Drawing;
 
+import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
 import org.opencv.core.Mat;
 
 public interface IDraw {

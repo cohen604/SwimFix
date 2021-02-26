@@ -1,4 +1,4 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.Points;
 
 public interface IPoint  {
 

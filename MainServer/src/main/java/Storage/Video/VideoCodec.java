@@ -1,10 +1,7 @@
 package Storage.Video;
 
 import Domain.Streaming.*;
-import Domain.SwimmingData.Draw;
-import Domain.SwimmingData.IDraw;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
+import Domain.SwimmingData.Drawing.Draw;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

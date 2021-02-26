@@ -1,5 +1,7 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.SwimmingSkeletonGraph;
 
+import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
 import javafx.util.Pair;
 
 import java.util.*;

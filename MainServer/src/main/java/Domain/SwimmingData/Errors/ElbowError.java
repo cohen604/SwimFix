@@ -1,8 +1,7 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.IDraw;
-import Domain.SwimmingData.IPoint;
-import Domain.SwimmingData.SkeletonPoint;
+import Domain.SwimmingData.Drawing.IDraw;
+import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.SwimmingError;
 import org.opencv.core.Mat;
 

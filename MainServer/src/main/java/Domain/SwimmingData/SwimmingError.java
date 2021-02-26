@@ -1,5 +1,7 @@
 package Domain.SwimmingData;
 
+import Domain.SwimmingData.Drawing.IDraw;
+import Domain.SwimmingData.Points.IPoint;
 import org.opencv.core.Mat;
 
 public abstract class SwimmingError implements IDraw {

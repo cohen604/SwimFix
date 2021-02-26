@@ -1,4 +1,4 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.SwimmingSkeletonGraph;
 
 public enum KeyPoint {
     HEAD(0),

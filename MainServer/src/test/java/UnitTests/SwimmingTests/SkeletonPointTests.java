@@ -1,6 +1,6 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.SkeletonPoint;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SkeletonPoint;
 import junit.framework.TestCase;
 
 public class SkeletonPointTests extends TestCase {

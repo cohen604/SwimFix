@@ -4,7 +4,7 @@ import Domain.SwimmingData.Errors.LeftElbowError;
 import Domain.SwimmingData.Errors.RightElbowError;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import junit.framework.TestCase;
 import mainServer.SwimmingErrorDetectors.*;
 import org.junit.Before;

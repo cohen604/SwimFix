@@ -1,4 +1,6 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.SwimmingSkeletonGraph;
+
+import Domain.SwimmingData.Points.IPoint;
 
 public class SkeletonPoint implements IPoint {
 

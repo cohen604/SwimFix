@@ -1,11 +1,12 @@
 package mainServer.SwimmingErrorDetectors;
 
 import Domain.SwimmingData.*;
+import Domain.SwimmingData.Points.IPoint;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static Domain.SwimmingData.IPointUtils.*;
+import static Domain.SwimmingData.Points.IPointUtils.*;
 
 public class PalmCrossHeadDetector implements SwimmingErrorDetector {
 

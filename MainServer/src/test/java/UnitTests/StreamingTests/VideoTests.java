@@ -3,7 +3,7 @@ package UnitTests.StreamingTests;
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.Video;
 import Domain.Streaming.VideoHandler;
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.Drawing.Draw;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;

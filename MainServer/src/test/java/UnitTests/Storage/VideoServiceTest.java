@@ -2,7 +2,7 @@ package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.*;
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.Drawing.Draw;
 import Storage.Video.VideoDao;
 import junit.framework.TestCase;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;

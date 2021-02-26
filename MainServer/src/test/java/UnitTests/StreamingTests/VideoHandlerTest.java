@@ -1,6 +1,6 @@
 package UnitTests.StreamingTests;
 
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import Domain.Streaming.VideoHandler;

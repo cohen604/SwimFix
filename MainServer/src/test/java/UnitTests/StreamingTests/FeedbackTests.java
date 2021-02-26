@@ -1,13 +1,12 @@
 package UnitTests.StreamingTests;
 
-import DTO.ConvertedVideoDTO;
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
 import Domain.Streaming.VideoHandler;
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.SwimmingError;
 import junit.framework.TestCase;
 import org.junit.After;

@@ -1,11 +1,12 @@
 package mainServer.SwimmingErrorDetectors;
 import Domain.SwimmingData.*;
+import Domain.SwimmingData.Points.IPoint;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static Domain.SwimmingData.IPointUtils.calcDistance;
-import static Domain.SwimmingData.IPointUtils.calcSlope;
+import static Domain.SwimmingData.Points.IPointUtils.calcDistance;
+import static Domain.SwimmingData.Points.IPointUtils.calcSlope;
 
 public class ElbowErrorDetector implements SwimmingErrorDetector {
 
@@ -41,7 +42,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @param wrist
      * @return
      */
-    private double calcElbowAngle(IPoint shoulder,IPoint elbow,IPoint wrist) {
+    private double calcElbowAngle(IPoint shoulder, IPoint elbow, IPoint wrist) {
         double a = calcDistance(shoulder, elbow);
         double b = calcDistance(elbow, wrist);
         double c = calcDistance(shoulder, wrist);

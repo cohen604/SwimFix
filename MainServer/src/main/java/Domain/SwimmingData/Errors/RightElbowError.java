@@ -1,6 +1,8 @@
 package Domain.SwimmingData.Errors;
 
 import Domain.SwimmingData.*;
+import Domain.SwimmingData.Drawing.IDraw;
+import Domain.SwimmingData.Points.IPoint;
 import org.opencv.core.Mat;
 
 public class RightElbowError extends ElbowError {

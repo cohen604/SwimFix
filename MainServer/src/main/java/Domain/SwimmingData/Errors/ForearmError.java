@@ -1,6 +1,6 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.IDraw;
+import Domain.SwimmingData.Drawing.IDraw;
 import Domain.SwimmingData.SwimmingError;
 
 public abstract class ForearmError extends SwimmingError{

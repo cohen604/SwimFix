@@ -1,6 +1,6 @@
 package mainServer.Interpolations;
 
-import Domain.SwimmingData.IPoint;
+import Domain.SwimmingData.Points.IPoint;
 
 import java.util.List;
 

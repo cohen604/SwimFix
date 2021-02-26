@@ -1,5 +1,6 @@
 package Domain.Streaming;
 import Domain.SwimmingData.*;
+import Domain.SwimmingData.Drawing.IDraw;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;

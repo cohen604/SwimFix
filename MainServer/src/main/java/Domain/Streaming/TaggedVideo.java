@@ -1,10 +1,9 @@
 package Domain.Streaming;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import mainServer.SwimFixAPI;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
