@@ -2,11 +2,14 @@ package mainServer.Interpolations;
 
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class SkeletonInterpolation implements ISkeletonInterpolation {
 
+    private Interpolation interpolation;
     private List<IPoint> heads;
     private List<IPoint> rightShoulders;
     private List<IPoint> rightElbows;
@@ -15,7 +18,16 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     private List<IPoint> leftElbows;
     private List<IPoint> leftWrists;
 
-    Interpolation interpolation;
+    public SkeletonInterpolation(Interpolation interpolation) {
+        this.interpolation = interpolation;
+        this.heads = new LinkedList<>();
+        this.rightShoulders = new LinkedList<>();
+        this.rightElbows = new LinkedList<>();
+        this.rightWrists = new LinkedList<>();
+        this.leftShoulders = new LinkedList<>();
+        this.leftElbows = new LinkedList<>();
+        this.leftWrists = new LinkedList<>();
+    }
 
     @Override
     public List<ISwimmingSkeleton> interpolate(List<ISwimmingSkeleton> skeletons) {
@@ -53,6 +65,19 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     }
 
     private List<ISwimmingSkeleton> buildNewSwimmingSkeletons() {
-        return null;
+        List<ISwimmingSkeleton> output = new LinkedList<>();
+        for(int i=0; i<this.heads.size(); i++) {
+            //TODO change to factory
+            output.add(new SwimmingSkeleton(
+                    heads.get(i),
+                    rightShoulders.get(i),
+                    rightElbows.get(i),
+                    rightWrists.get(i),
+                    leftShoulders.get(i),
+                    leftElbows.get(i),
+                    leftWrists.get(i)
+            ));
+        }
+        return output;
     }
 }
