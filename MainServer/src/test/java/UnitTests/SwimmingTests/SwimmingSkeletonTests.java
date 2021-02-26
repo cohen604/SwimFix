@@ -1,6 +1,8 @@
 package UnitTests.SwimmingTests;
 
 import Domain.SwimmingData.*;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
 import javafx.util.Pair;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -67,5 +69,13 @@ public class SwimmingSkeletonTests extends TestCase {
     }
 
     //TODO add 28 tests for contains Element and getElement
+
+    public void testContainsHead() {
+        //Arrange
+
+        //Act
+
+        //Assert
+    }
 
 }

@@ -1,6 +1,6 @@
 package mainServer.Interpolations;
 
-import Domain.SwimmingData.IPoint;
+import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;
 
 import java.util.List;
@@ -46,7 +46,10 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
         heads = interpolation.interpolate(heads);
         rightShoulders = interpolation.interpolate(rightShoulders);
         rightElbows = interpolation.interpolate(rightElbows);
-
+        rightWrists = interpolation.interpolate(rightWrists);
+        leftShoulders = interpolation.interpolate(leftShoulders);
+        leftElbows = interpolation.interpolate(leftElbows);
+        leftWrists = interpolation.interpolate(leftWrists);
     }
 
     private List<ISwimmingSkeleton> buildNewSwimmingSkeletons() {
