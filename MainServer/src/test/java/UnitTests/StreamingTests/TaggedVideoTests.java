@@ -12,6 +12,7 @@ public class TaggedVideoTests extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
 
+
     public void testCreatedTaggedVideoFromJson() {
         try {
             String taggedFile = VIDEO_FOLDER + "/sample2_skeletons.txt";
@@ -19,6 +20,7 @@ public class TaggedVideoTests extends TestCase {
             List<String> lines = readAllLines(file.toPath());
             String json = lines.stream().reduce("",(acc, cur)->acc+cur);
             TaggedVideo taggedVideo = new TaggedVideo(json);
+            assertNotNull(taggedVideo);
             assertEquals(83, taggedVideo.getTags().size());
         } catch (Exception e ) {
             e.printStackTrace();
