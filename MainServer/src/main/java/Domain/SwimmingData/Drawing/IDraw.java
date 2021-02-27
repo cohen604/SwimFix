@@ -1,5 +1,7 @@
-package Domain.SwimmingData;
+package Domain.SwimmingData.Drawing;
 
+import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
 import org.opencv.core.Mat;
 
 public interface IDraw {
@@ -10,7 +12,7 @@ public interface IDraw {
      * @param skeletonPoint
      * @param radius
      */
-    void drawCircle(Mat frame, SkeletonPoint skeletonPoint, int radius);
+    void drawCircle(Mat frame, IPoint skeletonPoint, int radius);
 
     /**
      *
@@ -26,7 +28,7 @@ public interface IDraw {
      * @param a
      */
     void drawElipce(Mat frame, double radius, double angle, double startAngle,
-                           double endAngle, SkeletonPoint center, double r, double g,
+                           double endAngle, IPoint center, double r, double g,
                            double b, double a);
 
     /**
@@ -35,7 +37,7 @@ public interface IDraw {
      * @param a
      * @param b
      */
-    void drawLine(Mat frame, SkeletonPoint a, SkeletonPoint b);
+    void drawLine(Mat frame, IPoint a, IPoint b);
 
     /**
      * The function draw a line
@@ -48,7 +50,7 @@ public interface IDraw {
      * @param a
      * @param thickness
      */
-    void drawLine(Mat frame, SkeletonPoint s1, SkeletonPoint s2, double r, double g, double b,
+    void drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
                          double a, int thickness);
 
     /**
@@ -57,5 +59,6 @@ public interface IDraw {
      * @param skeleton the image tag to print
      * @return the new frame
      */
-    void drawSwimmer(Mat frame, SwimmingSkeleton skeleton);
+    //TODO change the type of swimmingSkeleton to interface when you have it
+    void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton);
 }

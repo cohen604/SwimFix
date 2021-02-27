@@ -1,6 +1,6 @@
 package Domain.Streaming;
 
-import Domain.SwimmingData.IDraw;
+import Domain.SwimmingData.Drawing.IDraw;
 
 public class FactoryVideoHandler implements IFactoryVideoHandler {
 

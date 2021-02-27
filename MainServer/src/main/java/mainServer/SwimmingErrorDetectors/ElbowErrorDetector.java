@@ -1,14 +1,12 @@
 package mainServer.SwimmingErrorDetectors;
-
-import Domain.SwimmingData.Errors.LeftElbowError;
-import Domain.SwimmingData.Errors.RightElbowError;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
+import Domain.SwimmingData.Points.IPoint;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static Domain.SwimmingData.Points.IPointUtils.calcDistance;
+import static Domain.SwimmingData.Points.IPointUtils.calcSlope;
 
 public class ElbowErrorDetector implements SwimmingErrorDetector {
 
@@ -24,7 +22,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
     }
 
     @Override
-    public List<SwimmingError> detect(SwimmingSkeleton skeleton) {
+    public List<SwimmingError> detect(ISwimmingSkeleton skeleton) {
         List<SwimmingError> output = new LinkedList<>();
         addRightError(output, skeleton);
         addLeftError(output, skeleton);
@@ -44,10 +42,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @param wrist
      * @return
      */
-    private double calcElbowAngle(SkeletonPoint shoulder,SkeletonPoint elbow,SkeletonPoint wrist) {
-        double a = shoulder.calcDistance(elbow);
-        double b = elbow.calcDistance(wrist);
-        double c = shoulder.calcDistance(wrist);
+    private double calcElbowAngle(IPoint shoulder, IPoint elbow, IPoint wrist) {
+        double a = calcDistance(shoulder, elbow);
+        double b = calcDistance(elbow, wrist);
+        double c = calcDistance(shoulder, wrist);
         double top = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
         double bottom = 2 * a * b;
         double radAngle = Math.acos(top/bottom);
@@ -61,8 +59,8 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @param yNew - the y value
      * @return the expected x value
      */
-    private double calcExpectedX(SkeletonPoint shoulder, SkeletonPoint elbow, double yNew) {
-        double slope = elbow.calcSlope(shoulder);
+    private double calcExpectedX(IPoint shoulder, IPoint elbow, double yNew) {
+        double slope = calcSlope(elbow,shoulder);
         return (yNew - shoulder.getY()) / slope + shoulder.getX();
     }
 
@@ -75,28 +73,16 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
        return angle >= minAngle && angle <= maxAngle;
     }
 
-    /**
-     * The function return the key point need for the right side
-     * @return key points
-     */
-    private List<KeyPoint> getRightKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.R_SHOULDER);
-        points.add(KeyPoint.R_ELBOW);
-        points.add(KeyPoint.R_WRIST);
-        return points;
+    private boolean containesRightSide(ISwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsRightShoulder()
+                && swimmingSkeleton.containsRightElbow()
+                && swimmingSkeleton.containsRightWrist();
     }
 
-    /**
-     * The function return the key point need for the left side
-     * @return key points
-     */
-    private List<KeyPoint> getLeftKeys() {
-        List<KeyPoint> points = new LinkedList<>();
-        points.add(KeyPoint.L_SHOULDER);
-        points.add(KeyPoint.L_ELBOW);
-        points.add(KeyPoint.L_WRIST);
-        return points;
+    private boolean containesLeftSide(ISwimmingSkeleton swimmingSkeleton) {
+        return swimmingSkeleton.containsLeftShoulder()
+                && swimmingSkeleton.containsLeftElbow()
+                    && swimmingSkeleton.containsLeftWrist();
     }
 
     /**
@@ -104,12 +90,11 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
      * @param skeleton - the skelaton
      * @return a list of
      */
-    private void addRightError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> rightKeys = getRightKeys();
-        if(skeleton.contatinsKeys(rightKeys)) {
-            SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.R_SHOULDER);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+    private void addRightError(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
+        if(containesRightSide(skeleton)) {
+            IPoint shoulder = skeleton.getRightShoulder();
+            IPoint elbow = skeleton.getRightElbow();
+            IPoint wrist = skeleton.getRightWrist();
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
             if(expectedX < wrist.getX()) {
@@ -121,12 +106,11 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
         }
     }
 
-    private void addLeftError(List<SwimmingError> errors, SwimmingSkeleton skeleton) {
-        List<KeyPoint> leftKeys = getLeftKeys();
-        if(skeleton.contatinsKeys(leftKeys)) {
-            SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.L_SHOULDER);
-            SkeletonPoint elbow = skeleton.getPoint(KeyPoint.L_ELBOW);
-            SkeletonPoint wrist = skeleton.getPoint(KeyPoint.L_WRIST);
+    private void addLeftError(List<SwimmingError> errors, ISwimmingSkeleton skeleton) {
+        if(containesLeftSide(skeleton)) {
+            IPoint shoulder = skeleton.getLeftShoulder();
+            IPoint elbow = skeleton.getLeftElbow();
+            IPoint wrist = skeleton.getLeftWrist();
             double angle = calcElbowAngle(shoulder, elbow, wrist);
             double expectedX = calcExpectedX(shoulder,elbow,wrist.getY());
             if(expectedX > wrist.getX()) {

@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
     SwimmingSkeletonTests.class,
-    SkeletonPointTests.class,
+    IPointUtilsTests.class,
 })
 
 public class SwimmingTests {

@@ -1,9 +1,9 @@
 package Domain.Streaming;
 
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import mainServer.SwimFixAPI;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
@@ -11,13 +11,13 @@ import java.util.List;
 
 public class TaggedVideo {
 
-    private List<SwimmingSkeleton> tags;
+    private List<ISwimmingSkeleton> tags;
 
     public TaggedVideo() {
         this.tags = new LinkedList<>();
     }
 
-    public TaggedVideo(List<SwimmingSkeleton> tags) {
+    public TaggedVideo(List<ISwimmingSkeleton> tags) {
         this.tags = tags;
     }
 
@@ -33,17 +33,22 @@ public class TaggedVideo {
         Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
         List<List<Double>> list = gson.fromJson(json, listType);
         for (List<Double> frame: list) {
-            SwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
+            //TODO remove NEW!!!
+            ISwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
             tags.add(skeleton);
         }
     }
 
     // TODO - add tests
-    public boolean addTag(SwimmingSkeleton tag) {
+    public boolean addTag(ISwimmingSkeleton tag) {
         return this.tags.add(tag);
     }
 
-    public List<SwimmingSkeleton> getTags() {
+    public List<ISwimmingSkeleton> getTags() {
         return this.tags;
+    }
+
+    public void setTags(List<ISwimmingSkeleton> tags) {
+        this.tags = tags;
     }
 }

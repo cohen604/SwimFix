@@ -1,12 +1,10 @@
 package UnitTests.StreamingTests;
 
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.Drawing.Draw;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 import org.opencv.core.Mat;
@@ -431,7 +429,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -449,7 +447,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = WRONG_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -465,7 +463,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = "";
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -481,7 +479,7 @@ public class VideoHandlerTest extends TestCase {
             String path = VIDEO_FOLDER + "/sample.mov";
             List<Mat> frames = this.videoHandler.getFrames(path);
             String des = null;
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -496,7 +494,7 @@ public class VideoHandlerTest extends TestCase {
         try {
             List<Mat> frames = new LinkedList<>();
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);
@@ -511,7 +509,7 @@ public class VideoHandlerTest extends TestCase {
         try {
             List<Mat> frames = null;
             String des = VIDEO_FOLDER + "/testGetFeedbackVideo.mp4";
-            List<SwimmingSkeleton> dots = new LinkedList<>();
+            List<ISwimmingSkeleton> dots = new LinkedList<>();
             Map<Integer, List<SwimmingError>> errors = new HashMap<>();
             List<Object> visuaComment = new LinkedList<>();
             File file = this.videoHandler.getFeedBackVideoFile(des, frames, dots, errors, visuaComment);

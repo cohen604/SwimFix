@@ -3,14 +3,13 @@ package mainServer;
 import DTO.*;
 import Domain.Streaming.*;
 import Domain.Swimmer;
-import Domain.SwimmingData.Draw;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
 import Domain.User;
 import ExernalSystems.MLConnectionHandler;
-import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
+import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
 
 
@@ -28,13 +27,16 @@ public class LogicManager {
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
+    private ISkeletonInterpolation iSkelatonInterpolation;
 
     public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
-                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler) {
+                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler,
+                        ISkeletonInterpolation iSkelatonInterpolation) {
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.mlConnectionHandler = mlConnectionHandler;
+        this.iSkelatonInterpolation = iSkelatonInterpolation;
     }
 
     /**
@@ -90,9 +92,11 @@ public class LogicManager {
     private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        List<SwimmingSkeleton> skeletons = taggedVideo.getTags();
+        List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
+        skeletons = iSkelatonInterpolation.interpolate(skeletons);
+        taggedVideo.setTags(skeletons);
         for(int i =0; i<skeletons.size(); i++) {
-            SwimmingSkeleton skeleton = skeletons.get(i);
+            ISwimmingSkeleton skeleton = skeletons.get(i);
             List<SwimmingError> errors = new LinkedList<>();
             for(SwimmingErrorDetector detector: errorDetectors) {
                 List<SwimmingError> detectorErrors = detector.detect(skeleton);

@@ -1,9 +1,8 @@
 package Domain.SwimmingData.Errors;
 
-import Domain.SwimmingData.IDraw;
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
+import Domain.SwimmingData.Drawing.IDraw;
+import Domain.SwimmingData.Points.IPoint;
 import org.opencv.core.Mat;
 
 public class RightElbowError extends ElbowError {
@@ -13,10 +12,10 @@ public class RightElbowError extends ElbowError {
     }
 
     @Override
-    public void draw(Mat frame, SwimmingSkeleton skeleton) {
-        SkeletonPoint shoulder = skeleton.getPoint(KeyPoint.R_SHOULDER);
-        SkeletonPoint elbow = skeleton.getPoint(KeyPoint.R_ELBOW);
-        SkeletonPoint wrist = skeleton.getPoint(KeyPoint.R_WRIST);
+    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint shoulder = skeleton.getRightShoulder();
+        IPoint elbow = skeleton.getRightElbow();
+        IPoint wrist = skeleton.getRightWrist();
         drawShoulderElbowWrist(frame, shoulder, elbow, wrist, 50);
     }
 }

@@ -1,9 +1,8 @@
 package Domain.Streaming;
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeleton;
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
      */
     private void updateFeedbackFile() {
         if(isVideoExists()) {
-            List<SwimmingSkeleton> swimmingSkeletons = null;
+            List<ISwimmingSkeleton> swimmingSkeletons = null;
             if (this.taggedVideo != null) {
                 swimmingSkeletons = this.taggedVideo.getTags();
             }

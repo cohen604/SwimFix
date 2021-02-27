@@ -1,8 +1,8 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.KeyPoint;
-import Domain.SwimmingData.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeleton;
+import Domain.SwimmingData.*;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
 import javafx.util.Pair;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -12,8 +12,8 @@ import java.util.List;
 
 public class SwimmingSkeletonTests extends TestCase {
 
-    private SwimmingSkeleton swimmingSkeleton;
-    private SwimmingSkeleton swimmingSkeletonNoHead;
+    private ISwimmingSkeleton swimmingSkeleton;
+    private ISwimmingSkeleton swimmingSkeletonNoHead;
 
     private void addPointToList(List<Double> list, double x, double y, double confidence) {
         list.add(x);
@@ -51,31 +51,31 @@ public class SwimmingSkeletonTests extends TestCase {
         setUpSwimmingSkeletonHeadLow();
     }
 
-
     public void testGetLines() {
-        List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeleton.getLines();
+        List<Pair<IPoint, IPoint>> lines = this.swimmingSkeleton.getLines();
         assertEquals(6 ,lines.size());
     }
 
     public void testGetLinesWithHeadConfidenceLow() {
-        List<Pair<SkeletonPoint, SkeletonPoint>> lines = this.swimmingSkeletonNoHead.getLines();
+        List<Pair<IPoint, IPoint>> lines = this.swimmingSkeletonNoHead.getLines();
         assertEquals(4 ,lines.size());
-        List<KeyPoint> keys = new LinkedList<>();
-        keys.add(KeyPoint.HEAD);
-        assertFalse(this.swimmingSkeletonNoHead.contatinsKeys(keys));
+        assertFalse(this.swimmingSkeletonNoHead.containsHead());
     }
 
     public void testContainsKey() {
-        List<KeyPoint> keys = new LinkedList<>();
-        keys.add(KeyPoint.HEAD);
-        assertTrue(this.swimmingSkeleton.contatinsKeys(keys));
-        assertFalse(this.swimmingSkeletonNoHead.contatinsKeys(keys));
+        assertFalse(this.swimmingSkeletonNoHead.containsHead());
+        assertTrue(this.swimmingSkeleton.containsRightShoulder());
+        assertTrue(this.swimmingSkeleton.containsLeftShoulder());
+    }
 
-        List<KeyPoint> keys2 = new LinkedList<>();
-        keys2.add(KeyPoint.R_SHOULDER);
-        keys2.add(KeyPoint.L_SHOULDER);
-        assertTrue(this.swimmingSkeleton.contatinsKeys(keys2));
-        assertTrue(this.swimmingSkeletonNoHead.contatinsKeys(keys2));
+    //TODO add 28 tests for contains Element and getElement
+
+    public void testContainsHead() {
+        //Arrange
+
+        //Act
+
+        //Assert
     }
 
 }

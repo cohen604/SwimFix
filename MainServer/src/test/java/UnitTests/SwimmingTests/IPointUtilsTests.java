@@ -1,39 +1,42 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.SkeletonPoint;
+import Domain.SwimmingData.Points.IPoint;
+import Domain.SwimmingData.SwimmingSkeletonGraph.SkeletonPoint;
 import junit.framework.TestCase;
 
-public class SkeletonPointTests extends TestCase {
+import static Domain.SwimmingData.Points.IPointUtils.*;
 
-    private SkeletonPoint a = new SkeletonPoint(2,2, 1);
-    private SkeletonPoint b = new SkeletonPoint(4,4, 1);
+public class IPointUtilsTests extends TestCase {
+
+    private IPoint a = new SkeletonPoint(2,2, 1);
+    private IPoint b = new SkeletonPoint(4,4, 1);
 
     public void testCalcDistance() {
         double expected = Math.sqrt(8);
-        double result = a.calcDistance(b);
+        double result =  calcDistance(a,b);
         assertEquals(expected, result);
     }
 
     public void testCalcSlope() {
         double expected = 1;
-        double result = a.calcSlope(b);
+        double result = calcSlope(a, b);
         assertEquals(expected, result);
     }
 
     public void testDotProduct() {
         double expected = 16;
-        double result = a.dotProduct(b);
+        double result = dotProduct(a, b);
         assertEquals(expected, result);
     }
 
     public void testGetSize() {
         double expected = Math.sqrt(8);
-        double result = a.getSize();
+        double result = getSize(a);
         assertEquals(expected, result);
     }
 
     public void testNormalVec() {
-        SkeletonPoint result = a.getNormalVec(b);
+        IPoint result = getNormalVec(a, b);
         double expectedX = 0.707;
         double expectedY = 0.707;
         double threshold = 0.001;
@@ -45,16 +48,9 @@ public class SkeletonPointTests extends TestCase {
         SkeletonPoint a = new SkeletonPoint(1,1, 1);
         SkeletonPoint b = new SkeletonPoint(1,2, 1);
         double expected = 18.43;
-        double result = a.getAngleBetween(b);
+        double result = getAngleBetween(a,b);
         double threshold = 0.01;
         assertTrue(Math.abs(result - expected) < threshold);
-    }
-
-    public void testIsConfident() {
-        SkeletonPoint a = new SkeletonPoint(1,1, 1);
-        assertTrue(a.isConfident());
-        SkeletonPoint b = new SkeletonPoint(1,1, 0.0001);
-        assertFalse(b.isConfident());
     }
 
 }

@@ -2,7 +2,7 @@ package mainServer.SwimmingErrorDetectors;
 
 import Domain.SwimmingData.Errors.LeftElbowError;
 import Domain.SwimmingData.Errors.RightElbowError;
-import Domain.SwimmingData.IDraw;
+import Domain.SwimmingData.Drawing.IDraw;
 import Domain.SwimmingData.SwimmingError;
 
 public class FactoryElbowError implements IFactoryElbowError {
