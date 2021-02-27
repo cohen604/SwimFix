@@ -18,26 +18,12 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     private IPoint leftWrist;
     private List<Pair<IPoint, IPoint>> edges;
 
+    public SwimmingSkeleton() {
+        this.edges = new LinkedList<>();
+    }
+
     public SwimmingSkeleton(IPoint head) {
         this.head = head;
-        setUpAllEdges();
-    }
-
-    public SwimmingSkeleton(IPoint head, IPoint shoulder, boolean side) {
-        this.head = head;
-        if(side) {
-            this.rightShoulder = shoulder;
-        }
-        else {
-            this.leftShoulder = shoulder;
-        }
-        setUpAllEdges();
-    }
-
-    public SwimmingSkeleton(IPoint head, IPoint rightShoulder, IPoint leftShoulder) {
-        this.head = head;
-        this.rightShoulder = rightShoulder;
-        this.leftShoulder = leftShoulder;
         setUpAllEdges();
     }
 
@@ -51,38 +37,6 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         this.leftShoulder = leftShoulder;
         this.leftElbow = leftElbow;
         this.leftWrist = leftWrist;
-        setUpAllEdges();
-    }
-
-    public SwimmingSkeleton(IPoint head,
-                            IPoint shoulder, IPoint elbow, IPoint wrist, boolean side) {
-        this.head = head;
-        if(side) {
-            this.rightShoulder = shoulder;
-            this.rightElbow = elbow;
-            this.rightWrist = wrist;
-        }
-        else {
-            this.leftShoulder = shoulder;
-            this.leftElbow = elbow;
-            this.leftWrist = wrist;
-        }
-        setUpAllEdges();
-    }
-
-    public SwimmingSkeleton(IPoint head,
-                            IPoint rightShoulder, IPoint leftShoulder, IPoint elbow, IPoint wrist, boolean side) {
-        this.head = head;
-        this.rightShoulder = rightShoulder;
-        this.leftShoulder = leftShoulder;
-        if(side) {
-            this.rightElbow = elbow;
-            this.rightWrist = wrist;
-        }
-        else {
-            this.leftElbow = elbow;
-            this.leftWrist = wrist;
-        }
         setUpAllEdges();
     }
 
@@ -207,5 +161,59 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     @Override
     public IPoint getLeftWrist() {
         return this.leftWrist;
+    }
+
+    public void setHead(IPoint head) {
+        if( head != null) {
+            this.head = head;
+            addEdgeIfNotNull(head, rightShoulder);
+            addEdgeIfNotNull(head, leftShoulder);
+        }
+    }
+
+    public void setRightShoulder(IPoint rightShoulder) {
+        if( rightShoulder != null) {
+            this.rightShoulder = rightShoulder;
+            addEdgeIfNotNull(head, rightShoulder);
+            addEdgeIfNotNull(rightShoulder, rightElbow);
+        }
+    }
+
+    public void setRightElbow(IPoint rightElbow) {
+        if(rightElbow != null) {
+            this.rightElbow = rightElbow;
+            addEdgeIfNotNull(rightShoulder, rightElbow);
+            addEdgeIfNotNull(rightElbow, rightWrist);
+        }
+    }
+
+    public void setRightWrist(IPoint rightWrist) {
+        if(rightWrist != null) {
+            this.rightWrist = rightWrist;
+            addEdgeIfNotNull(rightElbow, rightWrist);
+        }
+    }
+
+    public void setLeftShoulder(IPoint leftShoulder) {
+        if(leftShoulder != null) {
+            this.leftShoulder = leftShoulder;
+            addEdgeIfNotNull(head, leftShoulder);
+            addEdgeIfNotNull(leftShoulder, leftElbow);
+        }
+    }
+
+    public void setLeftElbow(IPoint leftElbow) {
+        if(leftElbow != null) {
+            this.leftElbow = leftElbow;
+            addEdgeIfNotNull(leftShoulder, leftElbow);
+            addEdgeIfNotNull(leftElbow, leftWrist);
+        }
+    }
+
+    public void setLeftWrist(IPoint leftWrist) {
+        if(leftWrist != null) {
+            this.leftWrist = leftWrist;
+            addEdgeIfNotNull(leftElbow, leftWrist);
+        }
     }
 }

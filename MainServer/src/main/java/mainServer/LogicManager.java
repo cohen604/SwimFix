@@ -9,6 +9,7 @@ import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
+import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
 
@@ -27,16 +28,18 @@ public class LogicManager {
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
-    private ISkeletonInterpolation iSkelatonInterpolation;
+    private ISkeletonInterpolation iSkeletonInterpolation;
+    private ISkeletonsCompletion iSkeletonsCompletion;
 
     public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
                         IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler,
-                        ISkeletonInterpolation iSkelatonInterpolation) {
+                        ISkeletonInterpolation iSkeletonInterpolation, ISkeletonsCompletion iSkeletonsCompletion) {
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.mlConnectionHandler = mlConnectionHandler;
-        this.iSkelatonInterpolation = iSkelatonInterpolation;
+        this.iSkeletonInterpolation = iSkeletonInterpolation;
+        this.iSkeletonsCompletion = iSkeletonsCompletion;
     }
 
     /**
@@ -93,7 +96,9 @@ public class LogicManager {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
-        skeletons = iSkelatonInterpolation.interpolate(skeletons);
+        skeletons = iSkeletonsCompletion.complete(skeletons);
+        skeletons = iSkeletonInterpolation.interpolate(skeletons);
+        //skeletons = iSkeletonsCompletion.complete(skeletons);
         taggedVideo.setTags(skeletons);
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);

@@ -4,6 +4,8 @@ import DTO.*;
 import Domain.Streaming.*;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import mainServer.Completions.ISkeletonsCompletion;
+import mainServer.Completions.SkeletonsCompletion;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.Interpolations.LinearInterpolation;
 import mainServer.Interpolations.MedianInterpolation;
@@ -26,8 +28,10 @@ public class SwimFixAPI {
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
               new LinearInterpolation(), new MedianInterpolation());
+      ISkeletonsCompletion completion = new SkeletonsCompletion();
       this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
-              iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation);
+              iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation,
+              completion);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
