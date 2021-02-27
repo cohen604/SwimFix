@@ -84,6 +84,16 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
                         leftWrists.get(i)
                 );
             }
+            else if(origin.hasRightSide() && origin.containsLeftShoulder()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        leftShoulders.get(i),
+                        rightElbows.get(i),
+                        rightWrists.get(i),
+                        true
+                );
+            }
             else if(origin.hasRightSide()) {
                 swimmingSkeleton = new SwimmingSkeleton(
                         heads.get(i),
@@ -93,12 +103,44 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
                         true
                 );
             }
+
+            else if(origin.hasLeftSide() && origin.containsRightShoulder()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        leftShoulders.get(i),
+                        leftElbows.get(i),
+                        leftWrists.get(i),
+                        false
+                );
+            }
             else if(origin.hasLeftSide()) {
                 swimmingSkeleton = new SwimmingSkeleton(
                         heads.get(i),
                         leftShoulders.get(i),
                         leftElbows.get(i),
                         leftWrists.get(i),
+                        false
+                );
+            }
+            else if(origin.containsRightShoulder() && origin.containsLeftShoulder()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        leftShoulders.get(i)
+                );
+            }
+            else if(origin.containsRightShoulder()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        true
+                );
+            }
+            else if(origin.containsLeftShoulder()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        leftShoulders.get(i),
                         false
                 );
             }
