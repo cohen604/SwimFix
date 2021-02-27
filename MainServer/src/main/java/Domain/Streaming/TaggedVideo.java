@@ -47,4 +47,8 @@ public class TaggedVideo {
     public List<ISwimmingSkeleton> getTags() {
         return this.tags;
     }
+
+    public void setTags(List<ISwimmingSkeleton> tags) {
+        this.tags = tags;
+    }
 }

@@ -57,7 +57,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             IPoint wrist = skeleton.getRightWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX < neck.getX()) {
-                System.out.println("right palm cross the head");
+                //System.out.println("right palm cross the head");
                 errors.add(iFactoryPalmCrossHeadError.createRight()) ;
             }
         }
@@ -75,7 +75,7 @@ public class PalmCrossHeadDetector implements SwimmingErrorDetector {
             IPoint wrist = skeleton.getLeftWrist();
             double middlePalmX = calcMiddlePalmX(elbow,wrist);
             if (middlePalmX > neck.getX()) {
-                System.out.println("left palm cross the head");
+                //System.out.println("left palm cross the head");
                 errors.add(iFactoryPalmCrossHeadError.createLeft()) ;
             }
         }

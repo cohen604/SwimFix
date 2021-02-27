@@ -94,6 +94,7 @@ public class LogicManager {
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
         skeletons = iSkelatonInterpolation.interpolate(skeletons);
+        taggedVideo.setTags(skeletons);
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
             List<SwimmingError> errors = new LinkedList<>();
