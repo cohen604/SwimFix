@@ -8,7 +8,7 @@ import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SkeletonsCompletion implements ISkeletonsCompletion {
+public class SkeletonsCompletionBefore implements ISkeletonsCompletion {
 
     @Override
     public List<ISwimmingSkeleton> complete(List<ISwimmingSkeleton> skeletons) {
