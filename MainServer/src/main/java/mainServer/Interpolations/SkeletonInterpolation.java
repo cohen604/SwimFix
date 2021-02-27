@@ -10,6 +10,8 @@ import java.util.List;
 public class SkeletonInterpolation implements ISkeletonInterpolation {
 
     private Interpolation interpolation;
+    private Interpolation interpolationHead;
+
     private List<IPoint> heads;
     private List<IPoint> rightShoulders;
     private List<IPoint> rightElbows;
@@ -18,8 +20,9 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     private List<IPoint> leftElbows;
     private List<IPoint> leftWrists;
 
-    public SkeletonInterpolation(Interpolation interpolation) {
+    public SkeletonInterpolation(Interpolation interpolation, Interpolation interpolationHead) {
         this.interpolation = interpolation;
+        this.interpolationHead = interpolationHead;
         this.heads = new LinkedList<>();
         this.rightShoulders = new LinkedList<>();
         this.rightElbows = new LinkedList<>();
@@ -33,7 +36,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     public List<ISwimmingSkeleton> interpolate(List<ISwimmingSkeleton> skeletons) {
         collectPoints(skeletons);
         runInterpolation();
-        return buildNewSwimmingSkeletons();
+        return buildNewSwimmingSkeletons(skeletons);
     }
 
     /***
@@ -55,7 +58,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     }
 
     private void runInterpolation() {
-        heads = interpolation.interpolate(heads);
+        heads = interpolationHead.interpolate(heads);
         rightShoulders = interpolation.interpolate(rightShoulders);
         rightElbows = interpolation.interpolate(rightElbows);
         rightWrists = interpolation.interpolate(rightWrists);
@@ -64,19 +67,47 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
         leftWrists = interpolation.interpolate(leftWrists);
     }
 
-    private List<ISwimmingSkeleton> buildNewSwimmingSkeletons() {
+    private List<ISwimmingSkeleton> buildNewSwimmingSkeletons(List<ISwimmingSkeleton> origns) {
         List<ISwimmingSkeleton> output = new LinkedList<>();
         for(int i=0; i<this.heads.size(); i++) {
             //TODO change to factory
-            output.add(new SwimmingSkeleton(
-                    heads.get(i),
-                    rightShoulders.get(i),
-                    rightElbows.get(i),
-                    rightWrists.get(i),
-                    leftShoulders.get(i),
-                    leftElbows.get(i),
-                    leftWrists.get(i)
-            ));
+            SwimmingSkeleton swimmingSkeleton = null;
+            ISwimmingSkeleton origin = origns.get(i);
+            if(origin.hasRightSide() && origin.hasLeftSide()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        rightElbows.get(i),
+                        rightWrists.get(i),
+                        leftShoulders.get(i),
+                        leftElbows.get(i),
+                        leftWrists.get(i)
+                );
+            }
+            else if(origin.hasRightSide()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        rightShoulders.get(i),
+                        rightElbows.get(i),
+                        rightWrists.get(i),
+                        true
+                );
+            }
+            else if(origin.hasLeftSide()) {
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i),
+                        leftShoulders.get(i),
+                        leftElbows.get(i),
+                        leftWrists.get(i),
+                        false
+                );
+            }
+            else {
+                // only head
+                swimmingSkeleton = new SwimmingSkeleton(
+                        heads.get(i));
+            }
+            output.add(swimmingSkeleton);
         }
         return output;
     }

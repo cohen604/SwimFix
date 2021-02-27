@@ -6,6 +6,7 @@ import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.Interpolations.LinearInterpolation;
+import mainServer.Interpolations.MedianInterpolation;
 import mainServer.Interpolations.SkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
@@ -23,9 +24,10 @@ public class SwimFixAPI {
       IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
-      ISkeletonInterpolation iSkelatonInterpolation = new SkeletonInterpolation(new LinearInterpolation());
+      ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
+              new LinearInterpolation(), new MedianInterpolation());
       this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
-              iFactoryFeedbackVideo, mlConnectionHandler, iSkelatonInterpolation);
+              iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {

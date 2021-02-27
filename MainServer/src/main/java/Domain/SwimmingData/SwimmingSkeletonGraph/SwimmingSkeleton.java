@@ -87,6 +87,18 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         return this.pointMap.containsKey(KeyPoint.L_WRIST);
     }
 
+    @Override
+    public boolean hasRightSide() {
+        return containsRightShoulder() && containsRightElbow()
+                || containsRightElbow() && containsRightWrist();
+    }
+
+    @Override
+    public boolean hasLeftSide() {
+        return containsLeftShoulder() &&  containsLeftElbow()
+                || containsLeftElbow() && containsLeftWrist();
+    }
+
     /**
      * Getters
      */

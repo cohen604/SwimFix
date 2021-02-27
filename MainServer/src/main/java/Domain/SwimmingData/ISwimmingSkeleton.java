@@ -22,6 +22,10 @@ public interface ISwimmingSkeleton {
 
     boolean containsLeftWrist();
 
+    boolean hasRightSide();
+
+    boolean hasLeftSide();
+
     List<IPoint> getPoints();
 
     IPoint getHead();

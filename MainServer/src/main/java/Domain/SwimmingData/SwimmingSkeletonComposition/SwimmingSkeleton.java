@@ -18,6 +18,11 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     private IPoint leftWrist;
     private List<Pair<IPoint, IPoint>> edges;
 
+    public SwimmingSkeleton(IPoint head) {
+        this.head = head;
+        setUpAllEdges(false, false);
+    }
+
     public SwimmingSkeleton(IPoint head,
                             IPoint rightShoulder, IPoint rightElbow, IPoint rightWrist,
                             IPoint leftShoulder, IPoint leftElbow, IPoint leftWrist) {
@@ -28,15 +33,44 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         this.leftShoulder = leftShoulder;
         this.leftElbow = leftElbow;
         this.leftWrist = leftWrist;
-        setUpEdges();
+        setUpAllEdges(true, true);
     }
 
-    private void setUpEdges() {
+    public SwimmingSkeleton(IPoint head,
+                            IPoint shoulder, IPoint elbow, IPoint wrist, boolean side) {
+        this.head = head;
+        if(side) {
+            this.rightShoulder = shoulder;
+            this.rightElbow = elbow;
+            this.rightWrist = wrist;
+            setUpAllEdges(true, false);
+        }
+        else {
+            this.leftShoulder = shoulder;
+            this.leftElbow = elbow;
+            this.leftWrist = wrist;
+            setUpAllEdges(false, true);
+        }
+    }
+
+    private void setUpAllEdges(boolean right, boolean left) {
         edges = new LinkedList<>();
+        if(right) {
+            setUpRightEdges();
+        }
+        if(left) {
+            setUpLeftEdges();
+        }
+    }
+
+    private void setUpRightEdges() {
         edges.add(new Pair<>(head, rightShoulder));
-        edges.add(new Pair<>(head, leftShoulder));
         edges.add(new Pair<>(rightShoulder, rightElbow));
         edges.add(new Pair<>(rightElbow, rightWrist));
+    }
+
+    private void setUpLeftEdges() {
+        edges.add(new Pair<>(head, leftShoulder));
         edges.add(new Pair<>(leftShoulder, leftElbow));
         edges.add(new Pair<>(leftElbow, leftWrist));
     }
@@ -82,15 +116,34 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     }
 
     @Override
+    public boolean hasRightSide() {
+        return containsRightShoulder() && containsRightElbow()
+                || containsRightElbow() && containsRightWrist();
+    }
+
+    @Override
+    public boolean hasLeftSide() {
+        return containsLeftShoulder() &&  containsLeftElbow()
+                || containsLeftElbow() && containsLeftWrist();
+    }
+
+    private void addPointIfNotNull(List<IPoint> points, IPoint point) {
+        if(point!=null) {
+            points.add(point);
+        }
+    }
+
+    @Override
     public List<IPoint> getPoints() {
         List<IPoint> output = new LinkedList<>();
-        output.add(this.head);
-        output.add(this.rightShoulder);
-        output.add(this.rightElbow);
-        output.add(this.rightWrist);
-        output.add(this.leftShoulder);
-        output.add(this.leftElbow);
-        output.add(this.leftWrist);
+        addPointIfNotNull(output, this.head);
+        addPointIfNotNull(output, this.head);
+        addPointIfNotNull(output, this.rightShoulder);
+        addPointIfNotNull(output, this.rightElbow);
+        addPointIfNotNull(output, this.rightWrist);
+        addPointIfNotNull(output, this.leftShoulder);
+        addPointIfNotNull(output, this.leftElbow);
+        addPointIfNotNull(output, this.leftWrist);
         return output;
     }
 
