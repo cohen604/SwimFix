@@ -28,7 +28,6 @@ public class SwimFixAPI {
               new LinearInterpolation(), new MedianInterpolation());
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
-
       this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
               iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation,
               completionBefore, completionAfter);

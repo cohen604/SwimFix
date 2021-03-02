@@ -10,7 +10,7 @@ public class SkeletonsCompletionAfter implements ISkeletonsCompletion {
     @Override
     public List<ISwimmingSkeleton> complete(List<ISwimmingSkeleton> skeletons) {
         List<ISwimmingSkeleton> output = new LinkedList<>(skeletons);
-        for(int i=0; i<skeletons.size(); i+=2) {
+        for(int i=0; i<skeletons.size(); i++) {
            output.add(i, completeShoulder(skeletons.get(i)));
         }
         return output;
