@@ -1,9 +1,6 @@
 package mainServer.Completions;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,15 +18,46 @@ public class SkeletonsCompletionAfter implements ISkeletonsCompletion {
 
     private ISwimmingSkeleton completeShoulder(ISwimmingSkeleton current) {
         if(current.containsHead()) {
-            if(current.containsRightShoulder() && !current.containsLeftShoulder()) {
+            completeRightShoulderIfNeeded(current);
+            completeLeftShoulderIfNeeded(current);
+        }
+        return current;
+    }
+
+    private boolean rightShoulderAboveHead(ISwimmingSkeleton current) {
+        return current.getHead().getY() > current.getRightShoulder().getY();
+    }
+
+    private ISwimmingSkeleton completeRightShoulderIfNeeded(ISwimmingSkeleton current) {
+        if(current.containsRightShoulder() && !current.containsLeftShoulder()) {
+            if(rightShoulderAboveHead(current)) {
                 //TODO
                 // if shoulder is higher then head then complete with reflection
-                // if shoulder is lower then head then complete with liner line
             }
-            else if(!current.containsRightShoulder() && current.containsLeftShoulder()) {
-
+            else {
+                //TODO
+                // if shoulder is lower then head then complete with liner line
             }
         }
         return current;
     }
+
+    private boolean leftShoulderAboveHead(ISwimmingSkeleton current) {
+        return current.getHead().getY() > current.getLeftShoulder().getY();
+    }
+
+    private ISwimmingSkeleton completeLeftShoulderIfNeeded(ISwimmingSkeleton current) {
+        if (!current.containsRightShoulder() && current.containsLeftShoulder()) {
+            if(leftShoulderAboveHead(current)) {
+                //TODO
+                // if shoulder is higher then head then complete with reflection
+            }
+            else {
+                //TODO
+                // if shoulder is lower then head then complete with liner line
+            }
+        }
+        return current;
+    }
+
 }

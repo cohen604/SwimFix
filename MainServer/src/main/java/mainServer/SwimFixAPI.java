@@ -5,11 +5,9 @@ import Domain.Streaming.*;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import mainServer.Completions.ISkeletonsCompletion;
+import mainServer.Completions.SkeletonsCompletionAfter;
 import mainServer.Completions.SkeletonsCompletionBefore;
-import mainServer.Interpolations.ISkeletonInterpolation;
-import mainServer.Interpolations.LinearInterpolation;
-import mainServer.Interpolations.MedianInterpolation;
-import mainServer.Interpolations.SkeletonInterpolation;
+import mainServer.Interpolations.*;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
 import mainServer.SwimmingErrorDetectors.IFactoryDraw;
@@ -28,10 +26,12 @@ public class SwimFixAPI {
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
               new LinearInterpolation(), new MedianInterpolation());
-      ISkeletonsCompletion completion = new SkeletonsCompletionBefore();
+      ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
+      ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
+
       this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
               iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation,
-              completion);
+              completionBefore, completionAfter);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
