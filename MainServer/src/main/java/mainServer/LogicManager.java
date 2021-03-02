@@ -9,6 +9,7 @@ import Domain.User;
 import ExernalSystems.MLConnectionHandler;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
+import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
 
@@ -27,16 +28,21 @@ public class LogicManager {
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
-    private ISkeletonInterpolation iSkelatonInterpolation;
+    private ISkeletonInterpolation iSkeletonInterpolation;
+    private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
+    private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
 
     public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
                         IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler,
-                        ISkeletonInterpolation iSkelatonInterpolation) {
+                        ISkeletonInterpolation iSkeletonInterpolation,
+                        ISkeletonsCompletion iSkeletonsCompletionBefore, ISkeletonsCompletion iSkeletonsCompletionAfter) {
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.mlConnectionHandler = mlConnectionHandler;
-        this.iSkelatonInterpolation = iSkelatonInterpolation;
+        this.iSkeletonInterpolation = iSkeletonInterpolation;
+        this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBefore;
+        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfter;
     }
 
     /**
@@ -93,7 +99,9 @@ public class LogicManager {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
-        skeletons = iSkelatonInterpolation.interpolate(skeletons);
+        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
+        skeletons = iSkeletonInterpolation.interpolate(skeletons);
+        skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
         taggedVideo.setTags(skeletons);
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);

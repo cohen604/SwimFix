@@ -71,83 +71,23 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
         List<ISwimmingSkeleton> output = new LinkedList<>();
         for(int i=0; i<this.heads.size(); i++) {
             //TODO change to factory
-            SwimmingSkeleton swimmingSkeleton = null;
+            SwimmingSkeleton swimmingSkeleton = new SwimmingSkeleton(heads.get(i));
             ISwimmingSkeleton origin = origns.get(i);
-            if(origin.hasRightSide() && origin.hasLeftSide()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        rightElbows.get(i),
-                        rightWrists.get(i),
-                        leftShoulders.get(i),
-                        leftElbows.get(i),
-                        leftWrists.get(i)
-                );
-            }
-            else if(origin.hasRightSide() && origin.containsLeftShoulder()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        leftShoulders.get(i),
-                        rightElbows.get(i),
-                        rightWrists.get(i),
-                        true
-                );
-            }
-            else if(origin.hasRightSide()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        rightElbows.get(i),
-                        rightWrists.get(i),
-                        true
-                );
-            }
-
-            else if(origin.hasLeftSide() && origin.containsRightShoulder()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        leftShoulders.get(i),
-                        leftElbows.get(i),
-                        leftWrists.get(i),
-                        false
-                );
-            }
-            else if(origin.hasLeftSide()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        leftShoulders.get(i),
-                        leftElbows.get(i),
-                        leftWrists.get(i),
-                        false
-                );
-            }
-            else if(origin.containsRightShoulder() && origin.containsLeftShoulder()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        leftShoulders.get(i)
-                );
+            if(origin.hasRightSide()) {
+                swimmingSkeleton.setRightShoulder(rightShoulders.get(i));
+                swimmingSkeleton.setRightElbow(rightElbows.get(i));
+                swimmingSkeleton.setRightWrist(rightWrists.get(i));
             }
             else if(origin.containsRightShoulder()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        rightShoulders.get(i),
-                        true
-                );
+                swimmingSkeleton.setRightShoulder(rightShoulders.get(i));
+            }
+            if(origin.hasLeftSide()) {
+                swimmingSkeleton.setLeftShoulder(leftShoulders.get(i));
+                swimmingSkeleton.setLeftElbow(leftElbows.get(i));
+                swimmingSkeleton.setLeftWrist(leftWrists.get(i));
             }
             else if(origin.containsLeftShoulder()) {
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i),
-                        leftShoulders.get(i),
-                        false
-                );
-            }
-            else {
-                // only head
-                swimmingSkeleton = new SwimmingSkeleton(
-                        heads.get(i));
+                swimmingSkeleton.setLeftShoulder(leftShoulders.get(i));
             }
             output.add(swimmingSkeleton);
         }
