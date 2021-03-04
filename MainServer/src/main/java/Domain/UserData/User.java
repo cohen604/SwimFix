@@ -21,9 +21,6 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = false;
         _swimmer = new Swimmer();
-        _coach = new Coach();
-        _admin = new Admin();
-        _researcher = new Researcher();
     }
 
     public User(String uid, String email, String name) {

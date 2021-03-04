@@ -29,21 +29,37 @@ public class UserCodec implements Codec<User> {
         String name = bsonReader.readString("name");
         boolean logged = bsonReader.readBoolean("logged");
 
-        Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
-        bsonReader.readName("swimmer");
-        Swimmer swimmer = swimmerCodec.decode(bsonReader, decoderContext);
+        Swimmer swimmer = null;
+        String objectName = null;
+        Coach coach = null;
+        Admin admin = null;
+        Researcher researcher = null;
 
-        Codec<Coach> coachCodec = _codecRegistry.get(Coach.class);
-        bsonReader.readName("coach");
-        Coach coach = coachCodec.decode(bsonReader, decoderContext);
+        objectName = bsonReader.readName();
 
-        Codec<Admin> adminCodec = _codecRegistry.get(Admin.class);
-        bsonReader.readName("admin");
-        Admin admin = adminCodec.decode(bsonReader, decoderContext);
+        if(objectName.equals("swimmer")) {
+            Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
+            swimmer = swimmerCodec.decode(bsonReader, decoderContext);
+            objectName = bsonReader.readName();
+        }
 
-        Codec<Researcher> researcherCodec = _codecRegistry.get(Researcher.class);
-        bsonReader.readName("researcher");
-        Researcher researcher = researcherCodec.decode(bsonReader, decoderContext);
+        if(objectName.equals("coach")) {
+            Codec<Coach> coachCodec = _codecRegistry.get(Coach.class);
+            coach = coachCodec.decode(bsonReader, decoderContext);
+            objectName = bsonReader.readName();
+        }
+
+        if(objectName.equals("admin")) {
+            Codec<Admin> adminCodec = _codecRegistry.get(Admin.class);
+            bsonReader.readName("admin");
+            admin = adminCodec.decode(bsonReader, decoderContext);
+        }
+
+        if(objectName.equals("researcher")) {
+            Codec<Researcher> researcherCodec = _codecRegistry.get(Researcher.class);
+            bsonReader.readName("researcher");
+            researcher = researcherCodec.decode(bsonReader, decoderContext);
+        }
 
         return new User(id, email, name, logged, swimmer, coach, admin, researcher);
     }
@@ -56,21 +72,29 @@ public class UserCodec implements Codec<User> {
         bsonWriter.writeString("name", user.getName());
         bsonWriter.writeBoolean("logged", user.isLogged());
 
-        Codec dateCodec = _codecRegistry.get(Swimmer.class);
-        bsonWriter.writeName("swimmer");
-        encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getSwimmer());
+        if(user.getSwimmer() != null) {
+            Codec dateCodec = _codecRegistry.get(Swimmer.class);
+            bsonWriter.writeName("swimmer");
+            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getSwimmer());
+        }
 
-        dateCodec = _codecRegistry.get(Coach.class);
-        bsonWriter.writeName("coach");
-        encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getCoach());
+        if(user.getCoach() != null) {
+            Codec dateCodec = _codecRegistry.get(Coach.class);
+            bsonWriter.writeName("coach");
+            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getCoach());
+        }
 
-        dateCodec = _codecRegistry.get(Admin.class);
-        bsonWriter.writeName("admin");
-        encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getAdmin());
+        if(user.getAdmin() != null) {
+            Codec dateCodec = _codecRegistry.get(Admin.class);
+            bsonWriter.writeName("admin");
+            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getAdmin());
+        }
 
-        dateCodec = _codecRegistry.get(Researcher.class);
-        bsonWriter.writeName("researcher");
-        encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getResearcher());
+        if(user.getResearcher() != null) {
+            Codec dateCodec = _codecRegistry.get(Researcher.class);
+            bsonWriter.writeName("researcher");
+            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getResearcher());
+        }
 
         bsonWriter.writeEndDocument();
     }
