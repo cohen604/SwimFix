@@ -1,6 +1,6 @@
 package Storage.Swimmer;
 
-import Domain.Swimmer;
+import Domain.UserData.Swimmer;
 import Storage.Dao;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;

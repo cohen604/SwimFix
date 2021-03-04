@@ -1,8 +1,6 @@
 package Storage.User;
-import Domain.Swimmer;
-import Domain.User;
-import Storage.Dao;
-import Storage.Swimmer.SwimmerCodec;
+import Domain.UserData.User;
+import Storage.User.Providers.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -13,23 +11,32 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class UserDao implements Dao<User> {
+public class UserDao implements IUserDao{
 
-    @Override
-    public MongoCollection<User> getCollection() {
+    private MongoCollection<User> getCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new UserCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(
+                                new SwimmerCodec(),
+                                new CoachCodec(),
+                                new AdminCodec(),
+                                new ResearcherCodec()), //here we define the codec
+                        //CodecRegistries.fromProviders( new UserCodecProvider()),
                         getDefaultCodecRegistry());
+
+        CodecRegistry codecRegistryUser =
+                CodecRegistries.fromRegistries(
+                        CodecRegistries.fromCodecs(new UserCodec(codecRegistry)), //here we define the codec
+                        getDefaultCodecRegistry());
+
         MongoClientSettings settings = MongoClientSettings.builder()
-                .codecRegistry(codecRegistry).build();
+                .codecRegistry(codecRegistryUser).build();
+
         // here we define the connection
         MongoClient mongoClient = MongoClients.create(settings);
 

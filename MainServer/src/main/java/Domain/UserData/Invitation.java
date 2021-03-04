@@ -1,4 +1,4 @@
-package Domain;
+package Domain.UserData;
 
 enum Status{
     VIEW, DENY, RECIVED, ACCEPTED

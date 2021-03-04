@@ -1,27 +1,42 @@
-package Storage.Swimmer;
+package Storage.User;
 
 import Domain.UserData.Swimmer;
+import Domain.UserData.User;
 import org.bson.BsonReader;
+import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class SwimmerCodec implements Codec<Swimmer> {
+
+    private final CodecRegistry _codecRegistry;
+
+    public SwimmerCodec() {
+        _codecRegistry = null;
+    }
+
+    public SwimmerCodec(CodecRegistry codecRegistry) {
+        _codecRegistry = codecRegistry;
+    }
 
     @Override
     public Swimmer decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String uid = bsonReader.readString("_id");
-        bsonReader.readEndDocument();
-        //return new Swimmer(uid);
-        return null;
+        String tag = bsonReader.readString("tag");
+        return new Swimmer(tag);
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        //bsonWriter.writeString("_id", swimmer.getUid());
+        bsonWriter.writeString("tag", swimmer.getTag());
         bsonWriter.writeEndDocument();
     }
 

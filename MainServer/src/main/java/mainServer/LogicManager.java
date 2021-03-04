@@ -2,13 +2,10 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.*;
-import Domain.Swimmer;
+import mainServer.Providers.IUserProvider;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.User;
 import ExernalSystems.MLConnectionHandler;
-import Storage.Swimmer.SwimmerDao;
-import Storage.User.UserDao;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
@@ -20,29 +17,32 @@ import java.util.*;
 
 public class LogicManager {
 
-    private MLConnectionHandler mlConnectionHandler;
-    //TODO: hold all the logged users
-    List<User> userList;
-
-    private IFeedbackVideo lastFeedbackVideo;
+    private IUserProvider _userProvider;
+    private IFeedbackVideo lastFeedbackVideo; //TODO delete this
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
     private ISkeletonInterpolation iSkeletonInterpolation;
     private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
     private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
+    private MLConnectionHandler mlConnectionHandler;
 
-    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
-                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler,
+    public LogicManager(IUserProvider _userProvider,
+                        IFactoryErrorDetectors iFactoryErrorDetectors,
+                        IFactoryVideo iFactoryVideo,
+                        IFactoryFeedbackVideo iFactoryFeedbackVideo,
                         ISkeletonInterpolation iSkeletonInterpolation,
-                        ISkeletonsCompletion iSkeletonsCompletionBefore, ISkeletonsCompletion iSkeletonsCompletionAfter) {
+                        ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation,
+                        ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
+                        MLConnectionHandler mlConnectionHandler) {
+        this._userProvider = _userProvider;
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
-        this.mlConnectionHandler = mlConnectionHandler;
         this.iSkeletonInterpolation = iSkeletonInterpolation;
-        this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBefore;
-        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfter;
+        this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBeforeInterpolation;
+        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
+        this.mlConnectionHandler = mlConnectionHandler;
     }
 
     /**
@@ -51,28 +51,8 @@ public class LogicManager {
      * @return true
      */
     public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
-        UserDao userDao = new UserDao();
-        // TODO synchronized(getLocker(user.getUid())){};
-        User user = userDao.find(userDTO.getUid());
-        if(user!=null) {
-            user.login();
-            userDao.update(user);
+        if(_userProvider.login(userDTO)) {
             return new ActionResult<>(Response.SUCCESS, userDTO);
-        }
-        // user not exits
-        user = new User(userDTO);
-        user.login();
-        Swimmer swimmer = new Swimmer(user.getUid());
-        user.addState(swimmer);
-        if(userDao.insert(user)!=null) {
-            SwimmerDao swimmerDao = new SwimmerDao();
-            if(swimmerDao.insert(swimmer)!=null) {
-                return new ActionResult<>(Response.SUCCESS, userDTO);
-            }
-            else {
-                // todo delete user from db
-                // return fail
-            }
         }
         return new ActionResult<>(Response.FAIL,null);
     }

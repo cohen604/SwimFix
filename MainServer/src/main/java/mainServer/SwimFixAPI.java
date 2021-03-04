@@ -4,10 +4,13 @@ import DTO.*;
 import Domain.Streaming.*;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.User.UserDao;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Completions.SkeletonsCompletionAfter;
 import mainServer.Completions.SkeletonsCompletionBefore;
 import mainServer.Interpolations.*;
+import mainServer.Providers.IUserProvider;
+import mainServer.Providers.UserProvider;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
 import mainServer.SwimmingErrorDetectors.IFactoryDraw;
@@ -18,19 +21,22 @@ public class SwimFixAPI {
    private LogicManager logicManager;
 
    public SwimFixAPI() {
-      IFactoryDraw iFactoryDraw = new FactoryDraw();
-      IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
+      IUserProvider userProvider = new UserProvider(new UserDao());
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
-      IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+      IFactoryVideo iFactoryVideo = new FactoryVideo(new FactoryDraw(), new FactoryVideoHandler());
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
-      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
               new LinearInterpolation(), new MedianInterpolation());
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
-      this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
-              iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation,
-              completionBefore, completionAfter);
+
+      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+
+      this.logicManager = new LogicManager(
+              userProvider, iFactoryErrorDetectors, iFactoryVideo, iFactoryFeedbackVideo,
+              iSkeletonInterpolation, completionBefore, completionAfter, mlConnectionHandler);
+
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
