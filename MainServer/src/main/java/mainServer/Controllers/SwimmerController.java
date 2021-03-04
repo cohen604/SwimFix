@@ -35,7 +35,10 @@ public class SwimmerController {
 
     @PostMapping("/swimmer/feedback/link")
     @CrossOrigin(origins = "*")
-    public String viewFeedBack(@RequestBody UserDTO user, @RequestPart(name = "file", required = false) MultipartFile data) {
+    public String viewFeedBack(@RequestPart(name = "uid") String uid,
+                               @RequestPart(name = "email") String email,
+                               @RequestPart(name = "name") String name,
+                               @RequestPart(name = "file", required = false) MultipartFile data) {
         System.out.println("Received Video for Streaming path");
         ConvertedVideoDTO convertedVideo = null;
         try {
@@ -43,7 +46,9 @@ public class SwimmerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.uploadVideoForStreamer(user, convertedVideo);
+        UserDTO userDTO = new UserDTO(uid, email, name);
+        ActionResult<FeedbackVideoStreamer> actionResult =
+                swimFixAPI.uploadVideoForStreamer(userDTO, convertedVideo);
         System.out.println("Streaming link generated, send link");
         return actionResult.toJson();
     }
@@ -60,10 +65,15 @@ public class SwimmerController {
         return actionResult.toJson();
     }
 
-    @GetMapping("/stream/{folder}/{fileName}")
-    public ResponseEntity streamFile(@PathVariable String folder, @PathVariable String fileName) {
-        System.out.println("Received file request for streaming");
-        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.streamFile(folder+"/"+fileName);
+    @GetMapping("/stream/{root}/{email}/{folder}/{fileName}")
+    public ResponseEntity streamFile(@PathVariable String root,
+                                     @PathVariable String email,
+                                     @PathVariable String folder,
+                                     @PathVariable String fileName) {
+        System.out.println("Received file request for streaming ");
+        System.out.println("file name "+ fileName);
+        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.streamFile(
+                root + "\\" + email + "\\" + folder + "\\" + fileName);
         //TODO check here if the action result is ok
         FeedbackVideoDTO videoDTO = actionResult.getValue();
         System.out.println(videoDTO.getBytes().length);

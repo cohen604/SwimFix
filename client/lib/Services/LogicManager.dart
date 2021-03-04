@@ -51,13 +51,16 @@ class LogicManager {
   /// return
   Future<FeedbackVideoStreamer> postVideoForStreaming(Uint8List fileBytes, int length,
       String filePath) async {
-    String path = "/uploadForStream";
+    String path = "/swimmer/feedback/link";
     http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
         'file',
         fileBytes,
         filename: filePath,
     );
-    ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+    //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+    ServerResponse response = await this.connectionHandler.postMultiPartFileWithID(path, multipartFile,
+        this.swimmer.uid, this.swimmer.email, this.swimmer.name);
+
     //TODO check if response is valid
     Map map = response.value as Map;
     print(map);

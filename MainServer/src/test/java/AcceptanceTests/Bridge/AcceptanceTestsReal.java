@@ -17,7 +17,9 @@ public class AcceptanceTestsReal implements AcceptanceTestsBridge {
     @Override
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
         if(this.swimFixAPI != null) {
-            return this.swimFixAPI.uploadVideoForStreamer(convertedVideoDTO);
+            //TODO
+            //return this.swimFixAPI.uploadVideoForStreamer(convertedVideoDTO);
+            return null;
         }
         return null;
     }

@@ -14,6 +14,7 @@ import mainServer.SwimmingErrorDetectors.*;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -50,7 +51,8 @@ public class LogicManager {
 
     private void createClientsDir() {
         try {
-            Files.createDirectory(Paths.get("clients"));
+            Path path = Paths.get("clients");
+            Files.createDirectory(path);
         } catch (Exception e) {
             e.printStackTrace();
         }

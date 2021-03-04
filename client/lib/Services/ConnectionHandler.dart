@@ -70,6 +70,23 @@ class ConnectionHandler {
     }
   }
 
+  /// The function send a post message with a body and a multi part file to the server
+  Future<ServerResponse> postMultiPartFileWithID(String path, http.MultipartFile file,
+      String uid, String email, String name) async {
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('POST', Uri.parse(url));
+    request.files.add(file);
+    request.fields['uid'] = uid;
+    request.fields['email'] = email;
+    request.fields['name'] = name;
+    http.Response response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+      return toServerResponse(response.body);
+    } else {
+      throw Exception('Error: post message send to $path');
+    }
+  }
+
   String getUrl() {
     return this.address + ':' + this.port ;
   }
