@@ -1,6 +1,8 @@
 package Domain.Streaming;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,9 +17,9 @@ public class Video implements IVideo {
     private int width;
     IVideoHandler videoHandler; // The video handler for doing
 
+    //TODO delete this
     public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO) {
         this.videoType = convertedVideoDTO.getVideoType();
-        //TODO generate here a unique string path that recognize the user so we can load later
         this.path = generateFileName() + this.videoType;
         this.videoHandler = videoHandler;
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
@@ -27,6 +29,7 @@ public class Video implements IVideo {
         }
     }
 
+    //TODO delete this
     protected String generateFileName() {
         int number =  id.getAndIncrement();
         return "clientVideos\\videoTmp"+number;
@@ -40,7 +43,8 @@ public class Video implements IVideo {
      */
     public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO, String path) {
         this.videoType = convertedVideoDTO.getVideoType();
-        this.path = path;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        this.path = path + "\\" + LocalDateTime.now().format(formatter) + this.videoType;
         this.videoHandler = videoHandler;
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         if(isVideoExists()) {

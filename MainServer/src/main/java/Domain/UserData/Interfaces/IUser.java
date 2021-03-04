@@ -14,4 +14,8 @@ public interface IUser {
 
     boolean logout();
 
+    String getVideosPath();
+
+    String getFeedbacksPath();
+
 }

@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.*;
+import Domain.UserData.Interfaces.IUser;
 import mainServer.Providers.IUserProvider;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
@@ -13,6 +14,7 @@ import mainServer.SwimmingErrorDetectors.*;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class LogicManager {
@@ -43,6 +45,15 @@ public class LogicManager {
         this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBeforeInterpolation;
         this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
         this.mlConnectionHandler = mlConnectionHandler;
+        createClientsDir();
+    }
+
+    private void createClientsDir() {
+        try {
+            Files.createDirectory(Paths.get("clients"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -75,7 +86,8 @@ public class LogicManager {
      * @param video the video
      * @return the feedback video
      */
-    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
+    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors,
+                                            String feedbackFolderPath) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
@@ -92,7 +104,7 @@ public class LogicManager {
             }
             errorMap.put(i, errors);
         }
-        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap);
+        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath);
         return feedbackVideo;
     }
 
@@ -101,11 +113,12 @@ public class LogicManager {
      * @param convertedVideoDTO the video we got from the client
      * @return the feedback video
      */
+    //TODO delete this
     public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
         IVideo video = iFactoryVideo.create(convertedVideoDTO);
         if(video.isVideoExists()) {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, null);
             FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
             if (feedbackVideoDTO == null) {
                 //TODO return here a action result error!!
@@ -123,22 +136,28 @@ public class LogicManager {
      * @return the streaming path for the feedback video
      * @precondition the feedback video we are generating doesn't exits!
      */
-    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-        IVideo video = iFactoryVideo.create(convertedVideoDTO);
-        if(video.isVideoExists()) {
-            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            List<String> detectorsNames = new LinkedList<>();
-            for (SwimmingErrorDetector detector : errorDetectors) {
-                detectorsNames.add(detector.getTag());
+    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user!=null) {
+            // create video
+            IVideo video = iFactoryVideo.create(convertedVideoDTO, user.getVideosPath());
+            if (video.isVideoExists()) {
+                // decoders step
+                List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+                List<String> detectorsNames = new LinkedList<>();
+                for (SwimmingErrorDetector detector : errorDetectors) {
+                    detectorsNames.add(detector.getTag());
+                }
+                // create feedback
+                IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, user.getFeedbacksPath());
+                //TODO delete this after removing lastFeedbackVideo
+                this.lastFeedbackVideo = feedbackVideo;
+                FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
+                if (feedbackVideoStreamer == null) {
+                    //TODO return here action result error!!
+                }
+                return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
             }
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-            //TODO delete this after removing lastFeedbackVideo
-            this.lastFeedbackVideo = feedbackVideo;
-            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-            if (feedbackVideoStreamer == null) {
-                //TODO return here action result error!!
-            }
-            return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
         }
         //TODO what to return when fail
         return new ActionResult<>(Response.FAIL, null);
@@ -208,7 +227,8 @@ public class LogicManager {
             for(SwimmingErrorDetector detector: errorDetectors) {
                 detectorsNames.add(detector.getTag());
             }
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            //TODO fix folder name
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, "");
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!

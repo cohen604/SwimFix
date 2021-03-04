@@ -11,4 +11,11 @@ public class FactoryFeedbackVideo implements IFactoryFeedbackVideo{
     public IFeedbackVideo create(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap) {
         return new FeedbackVideo(video, taggedVideo, errorMap);
     }
+
+    @Override
+    public IFeedbackVideo create(IVideo video,
+                                 TaggedVideo taggedVideo, Map<Integer,
+                                 List<SwimmingError>> errorMap, String folderName) {
+        return new FeedbackVideo(video, taggedVideo, errorMap, folderName);
+    }
 }

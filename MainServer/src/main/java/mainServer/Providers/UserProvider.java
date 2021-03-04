@@ -37,4 +37,9 @@ public class UserProvider implements IUserProvider {
         }
         return false;
     }
+
+    @Override
+    public IUser getUser(UserDTO userDTO) {
+        return _users.get(userDTO.getUid());
+    }
 }

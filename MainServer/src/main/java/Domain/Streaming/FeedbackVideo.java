@@ -4,6 +4,8 @@ import DTO.FeedbackVideoStreamer;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,21 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         this.visualComment = null;
         this.textualComment = null;
     }
+
+    public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
+                         String folderPath) {
+        super(video);
+        this.taggedVideo = taggedVideo;
+        this.errorMap = errorMap;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        this.path = folderPath + "\\" + LocalDateTime.now().format(formatter) + ".mp4";
+        this.feedbackFile = null;
+        this.feedbackUpdated = false;
+        //TODO
+        this.visualComment = null;
+        this.textualComment = null;
+    }
+
 
     /**
      * The function update the feedback file if video exists

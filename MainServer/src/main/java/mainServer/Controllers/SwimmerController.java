@@ -33,9 +33,9 @@ public class SwimmerController {
         return actionResult.toJson();
     }
 
-    @PostMapping("/uploadForStream")
+    @PostMapping("/swimmer/feedback/link")
     @CrossOrigin(origins = "*")
-    public String viewFeedBack(@RequestPart(name = "file", required = false) MultipartFile data) {
+    public String viewFeedBack(@RequestBody UserDTO user, @RequestPart(name = "file", required = false) MultipartFile data) {
         System.out.println("Received Video for Streaming path");
         ConvertedVideoDTO convertedVideo = null;
         try {
@@ -43,7 +43,7 @@ public class SwimmerController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.uploadVideoForStreamer(convertedVideo);
+        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.uploadVideoForStreamer(user, convertedVideo);
         System.out.println("Streaming link generated, send link");
         return actionResult.toJson();
     }

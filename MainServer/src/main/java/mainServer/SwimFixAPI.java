@@ -47,8 +47,8 @@ public class SwimFixAPI {
       return logicManager.uploadVideoForDownload(convertedVideoDTO);
    }
 
-   public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-      return logicManager.uploadVideoForStreamer(convertedVideoDTO);
+   public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
+      return logicManager.uploadVideoForStreamer(userDTO, convertedVideoDTO);
    }
 
    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
