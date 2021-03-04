@@ -68,8 +68,9 @@ class LogicManager {
   }
 
   Future<FeedbackVideoStreamer> filterFeedback(FeedbackFilters filter) async {
-    String path = "/filterFeedback";
-    ServerResponse response = await this.connectionHandler.postMessage(path, filter.toMap());
+    String path = "/swimmer/feedback/filter";
+    ServerResponse response = await this.connectionHandler.postMessageWithID(path, filter.toMap(),
+        this.swimmer.uid, this.swimmer.email, this.swimmer.name);
     //TODO check if response is valid
     Map map = response.value as Map;
     return FeedbackVideoStreamer.factory(map);

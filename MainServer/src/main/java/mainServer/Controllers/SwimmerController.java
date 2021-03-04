@@ -12,28 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/swimmer")
 public class SwimmerController {
 
     private SwimFixAPI swimFixAPI = SingleServiceAPI.getInstance();
 
-    //TODO delete this
-    @PostMapping("/uploadForDownload")
-    @CrossOrigin(origins = "*")
-    public String uploadVideo(@RequestPart(name = "file", required = false) MultipartFile data) {
-        System.out.println("Received Video for Download feedback");
-        ConvertedVideoDTO convertedVideo = null;
-        try {
-            convertedVideo = new ConvertedVideoDTO(data.getOriginalFilename(), data.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.uploadVideoForDownload(convertedVideo);
-        //TODO check here if the action result is ok
-        System.out.println("Feedback generated, send feedback");
-        return actionResult.toJson();
-    }
-
-    @PostMapping("/swimmer/feedback/link")
+    @PostMapping("/feedback/link")
     @CrossOrigin(origins = "*")
     public String viewFeedBack(@RequestPart(name = "uid") String uid,
                                @RequestPart(name = "email") String email,
@@ -53,10 +37,15 @@ public class SwimmerController {
         return actionResult.toJson();
     }
 
-    @PostMapping("/filterFeedback")
+    @PostMapping("/feedback/filter")
     @CrossOrigin(origins = "*")
-    public String filterFeedback(@RequestBody FeedbackFilterDTO filterDTO) {
+    public String filterFeedback(@RequestPart(name = "uid") String uid,
+                                 @RequestPart(name = "email") String email,
+                                 @RequestPart(name = "name") String name,
+                                 @RequestPart(name = "body") FeedbackFilterDTO filterDTO) {
         System.out.println("Received feedback video Filter DTO");
+        System.out.println(filterDTO);
+        System.out.println(filterDTO.getFilters());
         for(String filter: filterDTO.getFilters()) {
             System.out.println(filter);
         }
@@ -64,24 +53,4 @@ public class SwimmerController {
         System.out.println("Streaming link generated, send link");
         return actionResult.toJson();
     }
-
-    @GetMapping("/stream/{root}/{email}/{folder}/{fileName}")
-    public ResponseEntity streamFile(@PathVariable String root,
-                                     @PathVariable String email,
-                                     @PathVariable String folder,
-                                     @PathVariable String fileName) {
-        System.out.println("Received file request for streaming ");
-        System.out.println("file name "+ fileName);
-        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.streamFile(
-                root + "\\" + email + "\\" + folder + "\\" + fileName);
-        //TODO check here if the action result is ok
-        FeedbackVideoDTO videoDTO = actionResult.getValue();
-        System.out.println(videoDTO.getBytes().length);
-        System.out.println("File opened, send file");
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Accept-Ranges","bytes")
-                .contentType(MediaTypeFactory.getMediaType(videoDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
-                .body(videoDTO.getBytes());
-    }
-
 }
