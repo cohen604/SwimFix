@@ -166,23 +166,6 @@ public class VideoHandler implements IVideoHandler {
     }
 
     /**
-     * The function draw the logo on the frame
-     * @param frame the current frame
-     * @return the new frame with the logo
-     */
-    private Mat drawLogo(Mat frame) {
-        String logo = "SwimFix";
-        double x = frame.width() - 130;
-        double y = 30;
-        org.opencv.core.Point point = new org.opencv.core.Point(x, y);
-        int scale = 1;
-        Scalar color = new Scalar(0,0,0);
-        int thickens = 2;
-        Imgproc.putText(frame, logo, point, Core.FONT_HERSHEY_SIMPLEX, scale, color ,thickens);
-        return frame;
-    }
-
-    /**
      * The function insert a frame list to a given path
      * @param path - path and the name of the file
      * @param frames - the list of frames
@@ -239,7 +222,7 @@ public class VideoHandler implements IVideoHandler {
                 Object visualComment = visualComments.get(i);
                 drawVisualComment(frame, visualComment);
             }
-            drawLogo(frame);
+            drawer.drawLogo(frame);
             frames.set(i, frame);
         }
         return frames;

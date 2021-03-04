@@ -37,5 +37,17 @@ public abstract class SwimmingError implements IDraw {
         drawer.drawSwimmer(frame, skeleton);
     }
 
+    public Mat drawLogo(Mat frame) {
+        return drawer.drawLogo(frame);
+    }
+
+    public Mat drawMessage(Mat frame, String message, double x, double y, int thickness) {
+        return drawer.drawMessage(frame, message, x, y, thickness);
+    }
+
+    public Mat drawArrow(Mat frame, IPoint a, IPoint b) {
+        return drawer.drawArrow(frame, a, b);
+    }
+
     public abstract void draw(Mat frame, ISwimmingSkeleton skeleton);
 }

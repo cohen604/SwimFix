@@ -59,6 +59,11 @@ public interface IDraw {
      * @param skeleton the image tag to print
      * @return the new frame
      */
-    //TODO change the type of swimmingSkeleton to interface when you have it
     void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton);
+
+    Mat drawLogo(Mat frame);
+
+    Mat drawMessage(Mat frame, String message, double x, double y, int thickness);
+
+    Mat drawArrow(Mat frame, IPoint a, IPoint b);
 }

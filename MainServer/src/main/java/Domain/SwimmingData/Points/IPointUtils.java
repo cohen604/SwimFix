@@ -38,4 +38,19 @@ public class IPointUtils {
         return Math.toDegrees(angleRad);
     }
 
+    public static IPoint mulByScalar(IPoint a, double scalar) {
+        return new SkeletonPoint(a.getX() * scalar, a.getY() * scalar, -1);
+    }
+
+    public static IPoint addByScalars(IPoint a, double scalarX, double scalarY) {
+        return new SkeletonPoint(a.getX() + scalarX, a.getY() + scalarY, -1);
+    }
+
+    public static IPoint getMiddlePoint(IPoint a, IPoint b) {
+        double x = (a.getX() + b.getX()) / 2;
+        double y = (a.getY() + b.getY()) / 2;
+        return new SkeletonPoint( x, y, -1);
+    }
+
+
 }

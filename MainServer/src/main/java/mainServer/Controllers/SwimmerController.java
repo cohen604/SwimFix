@@ -1,6 +1,7 @@
 package mainServer.Controllers;
 
 import DTO.*;
+import com.google.gson.Gson;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -42,14 +43,12 @@ public class SwimmerController {
     public String filterFeedback(@RequestPart(name = "uid") String uid,
                                  @RequestPart(name = "email") String email,
                                  @RequestPart(name = "name") String name,
-                                 @RequestPart(name = "body") FeedbackFilterDTO filterDTO) {
+                                 @RequestPart(name = "body") String body) {
         System.out.println("Received feedback video Filter DTO");
-        System.out.println(filterDTO);
-        System.out.println(filterDTO.getFilters());
-        for(String filter: filterDTO.getFilters()) {
-            System.out.println(filter);
-        }
-        ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.filterFeedbackVideo(filterDTO);
+        FeedbackFilterDTO filterDTO = new Gson().fromJson(body, FeedbackFilterDTO.class);
+        UserDTO userDTO = new UserDTO(uid, email, name);
+        ActionResult<FeedbackVideoStreamer> actionResult =
+                swimFixAPI.filterFeedbackVideo(userDTO, filterDTO);
         System.out.println("Streaming link generated, send link");
         return actionResult.toJson();
     }

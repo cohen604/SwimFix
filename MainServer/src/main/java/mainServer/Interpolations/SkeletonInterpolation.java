@@ -69,7 +69,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
 
     private List<ISwimmingSkeleton> buildNewSwimmingSkeletons(List<ISwimmingSkeleton> origns) {
         List<ISwimmingSkeleton> output = new LinkedList<>();
-        for(int i=0; i<this.heads.size(); i++) {
+        for(int i=0; i<origns.size(); i++) {
             //TODO change to factory
             SwimmingSkeleton swimmingSkeleton = new SwimmingSkeleton(heads.get(i));
             ISwimmingSkeleton origin = origns.get(i);

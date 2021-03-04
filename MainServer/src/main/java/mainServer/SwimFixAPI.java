@@ -43,10 +43,6 @@ public class SwimFixAPI {
       return logicManager.login(userDTO);
    }
 
-   public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-      return logicManager.uploadVideoForDownload(convertedVideoDTO);
-   }
-
    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
       return logicManager.uploadVideoForStreamer(userDTO, convertedVideoDTO);
    }
@@ -55,7 +51,7 @@ public class SwimFixAPI {
       return logicManager.streamFile(path);
    }
 
-   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
-      return logicManager.filterFeedbackVideo(filterDTO);
+   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
+      return logicManager.filterFeedbackVideo(userDTO, filterDTO);
    }
 }

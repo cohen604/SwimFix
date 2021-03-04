@@ -111,28 +111,6 @@ public class LogicManager {
     }
 
     /**
-     * The function handle upload video that want to receives a downloading file
-     * @param convertedVideoDTO the video we got from the client
-     * @return the feedback video
-     */
-    //TODO delete this
-    public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-        IVideo video = iFactoryVideo.create(convertedVideoDTO);
-        if(video.isVideoExists()) {
-            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, null);
-            FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
-            if (feedbackVideoDTO == null) {
-                //TODO return here a action result error!!
-            }
-            return new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
-        }
-        //TODO what to return when fail
-        return new ActionResult<>(Response.FAIL, null);
-
-    }
-
-    /**
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
      * @return the streaming path for the feedback video
@@ -216,12 +194,13 @@ public class LogicManager {
 
     /**
      * The function create a new feedback video, filter, and send a new feedback link
+     * @param userDTO - the user info
      * @param filterDTO - the feedback to filter
      * @return new feedbackVideoStreamer
      */
-    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
+    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
         //TODO check if feedback video exits
-        if(this.lastFeedbackVideo!=null){
+        if(this.lastFeedbackVideo!=null) {
             // TODO - feedback video isn't video any more
             IVideo video = this.lastFeedbackVideo.getIVideo();
             List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
