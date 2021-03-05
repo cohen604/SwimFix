@@ -10,9 +10,12 @@ import ExernalSystems.MLConnectionHandler;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,13 +52,33 @@ public class LogicManager {
         createClientsDir();
     }
 
+    /**
+     * create the client directory in the server memory
+     */
     private void createClientsDir() {
         try {
             Path path = Paths.get("clients");
-            Files.createDirectory(path);
+            // create the clients directory if not exist
+            // TODO - check if good
+            if (!Files.isDirectory(path)) {
+                Files.createDirectory(path);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * delete all the files in the given path
+     * @param file = the file to delete
+     * @throws IOException - if fail
+     */
+    void delete(File file) throws IOException {
+        if (file.isDirectory()) {
+            FileUtils.deleteDirectory(file);
+        }
+        if (!file.delete())
+            throw new FileNotFoundException("Failed to delete file: " + file);
     }
 
     /**
