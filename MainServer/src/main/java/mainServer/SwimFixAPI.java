@@ -9,13 +9,12 @@ import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Completions.SkeletonsCompletionAfter;
 import mainServer.Completions.SkeletonsCompletionBefore;
 import mainServer.Interpolations.*;
-import mainServer.Providers.IStreamProvider;
+import mainServer.Providers.IFeedbackProvider;
 import mainServer.Providers.IUserProvider;
-import mainServer.Providers.StreamProvider;
+import mainServer.Providers.FeedbackProvider;
 import mainServer.Providers.UserProvider;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
 
 public class SwimFixAPI {
@@ -24,22 +23,20 @@ public class SwimFixAPI {
 
    public SwimFixAPI() {
       IUserProvider userProvider = new UserProvider(new UserDao());
-      IStreamProvider streamProvider = new StreamProvider();
+      
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
       IFactoryVideo iFactoryVideo = new FactoryVideo(new FactoryDraw(), new FactoryVideoHandler());
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
-
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
               new LinearInterpolation(), new MedianInterpolation());
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
-
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+      IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
+              iSkeletonInterpolation, completionBefore,
+              completionAfter, iFactoryVideo, iFactoryErrorDetectors);
 
-      this.logicManager = new LogicManager(
-              userProvider, streamProvider ,iFactoryErrorDetectors, iFactoryVideo, iFactoryFeedbackVideo,
-              iSkeletonInterpolation, completionBefore, completionAfter, mlConnectionHandler);
-
+      this.logicManager = new LogicManager(userProvider, feedbackProvider);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {

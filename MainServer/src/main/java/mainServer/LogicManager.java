@@ -3,13 +3,8 @@ package mainServer;
 import DTO.*;
 import Domain.Streaming.*;
 import Domain.UserData.Interfaces.IUser;
-import mainServer.Providers.IStreamProvider;
+import mainServer.Providers.IFeedbackProvider;
 import mainServer.Providers.IUserProvider;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingError;
-import ExernalSystems.MLConnectionHandler;
-import mainServer.Completions.ISkeletonsCompletion;
-import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -25,34 +20,14 @@ import java.util.*;
 public class LogicManager {
 
     private IUserProvider _userProvider;
-    private IStreamProvider _streamProvider;
+    private IFeedbackProvider _feedbackProvider;
     private IFeedbackVideo lastFeedbackVideo; //TODO delete this
-    private IFactoryErrorDetectors iFactoryErrorDetectors;
-    private IFactoryVideo iFactoryVideo;
-    private IFactoryFeedbackVideo iFactoryFeedbackVideo;
-    private ISkeletonInterpolation iSkeletonInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
-    private MLConnectionHandler mlConnectionHandler;
 
-    public LogicManager(IUserProvider _userProvider,
-                        IStreamProvider streamProvider,
-                        IFactoryErrorDetectors iFactoryErrorDetectors,
-                        IFactoryVideo iFactoryVideo,
-                        IFactoryFeedbackVideo iFactoryFeedbackVideo,
-                        ISkeletonInterpolation iSkeletonInterpolation,
-                        ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation,
-                        ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
-                        MLConnectionHandler mlConnectionHandler) {
-        this._userProvider = _userProvider;
-        _streamProvider = streamProvider;
-        this.iFactoryErrorDetectors = iFactoryErrorDetectors;
-        this.iFactoryVideo = iFactoryVideo;
-        this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
-        this.iSkeletonInterpolation = iSkeletonInterpolation;
-        this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBeforeInterpolation;
-        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
-        this.mlConnectionHandler = mlConnectionHandler;
+
+    public LogicManager(IUserProvider userProvider,
+                        IFeedbackProvider streamProvider) {
+        _userProvider = userProvider;
+        _feedbackProvider = streamProvider;
         createClientsDir();
     }
 
@@ -97,55 +72,6 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL,null);
     }
 
-    /**
-     * The function return a list of error detectors to check
-     * @return
-     */
-    private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
-        //TODO change this by the selected filters
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-        output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-        output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-        return output;
-    }
-
-    /**
-     * The function generate a feedback video form a swimming video
-     * @param video the video
-     * @return the feedback video
-     */
-    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors,
-                                            String feedbackFolderPath) {
-        TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
-        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
-        skeletons = completeAndInterpolate(skeletons);
-        taggedVideo.setTags(skeletons);
-        for(int i =0; i<skeletons.size(); i++) {
-            ISwimmingSkeleton skeleton = skeletons.get(i);
-            List<SwimmingError> errors = new LinkedList<>();
-            for(SwimmingErrorDetector detector: errorDetectors) {
-                List<SwimmingError> detectorErrors = detector.detect(skeleton);
-                errors.addAll(detectorErrors);
-            }
-            errorMap.put(i, errors);
-        }
-        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath);
-        return feedbackVideo;
-    }
-
-    /**
-     * the function add more points to the swimmer, using interpolation and compilation
-     * @param skeletons - the given skeleton the ML find
-     * @return - new skeleton with more points
-     */
-    private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
-        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
-        skeletons = iSkeletonInterpolation.interpolate(skeletons);
-        skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
-        return skeletons;
-    }
 
     /**
      * The function handle upload video that want a streaming result
@@ -155,25 +81,18 @@ public class LogicManager {
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
         IUser user = _userProvider.getUser(userDTO);
-        if(user!=null) {
+        if(user != null) {
             // create video
-            IVideo video = iFactoryVideo.create(convertedVideoDTO, user.getVideosPath());
-            if (video.isVideoExists()) {
-                // decoders step
-                List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-                List<String> detectorsNames = new LinkedList<>();
-                for (SwimmingErrorDetector detector : errorDetectors) {
-                    detectorsNames.add(detector.getTag());
-                }
-                // create feedback
-                IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, user.getFeedbacksPath());
+            List<String> detectorsNames = new LinkedList<>();
+            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                        convertedVideoDTO,user.getVideosPath(), user.getFeedbacksPath(), detectorsNames);
+            if (feedbackVideo != null) {
                 //TODO delete this after removing lastFeedbackVideo
                 this.lastFeedbackVideo = feedbackVideo;
                 FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-                if (feedbackVideoStreamer == null) {
-                    //TODO return here action result error!!
+                if (feedbackVideoStreamer != null) {
+                    return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
                 }
-                return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
             }
         }
         //TODO what to return when fail
@@ -188,7 +107,7 @@ public class LogicManager {
     public ActionResult<FeedbackVideoDTO> streamFile(String path) {
         //TODO need here to be access check
         try {
-            FeedbackVideoDTO output = _streamProvider.streamFile(path);
+            FeedbackVideoDTO output = _feedbackProvider.streamFeedback(path);
             return new ActionResult<>(Response.SUCCESS, output);
         } catch (Exception e) {
             //TODO return here error
@@ -199,30 +118,7 @@ public class LogicManager {
         return null;
     }
 
-    /**
-     * The function build an error detector list from a given filter
-     * @param filterDTO - filter
-     * @return
-     */
-    private List<SwimmingErrorDetector> buildDetectors(FeedbackFilterDTO filterDTO) {
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        for(String name: filterDTO.getFilters()) {
-            //todo Change this in the future to recive not a list of string but list of errorsTDO
-            //  for now its the same as the getTag function in the detectors
-            switch (name) {
-                case "Elbow":
-                    output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-                    break;
-                case "Forearm":
-                    output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-                    break;
-                case "Palm":
-                    output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-                    break;
-            }
-        }
-        return output;
-    }
+
 
     /**
      * The function create a new feedback video, filter, and send a new feedback link
@@ -231,17 +127,13 @@ public class LogicManager {
      * @return new feedbackVideoStreamer
      */
     public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
-        //TODO check if feedback video exits
-        if(this.lastFeedbackVideo!=null) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user != null && lastFeedbackVideo != null) {
             // TODO - feedback video isn't video any more
             IVideo video = this.lastFeedbackVideo.getIVideo();
-            List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
             List<String> detectorsNames = new LinkedList<>();
-            for(SwimmingErrorDetector detector: errorDetectors) {
-                detectorsNames.add(detector.getTag());
-            }
-            //TODO fix folder name
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors, "");
+            IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(user.getFeedbacksPath(),
+                   filterDTO, video, detectorsNames);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!
