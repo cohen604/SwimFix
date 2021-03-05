@@ -8,10 +8,12 @@ import org.opencv.core.Mat;
 public abstract class ElbowError extends SwimmingError {
 
     private double angle;
+    protected boolean inside; // means if the arrow is to inside or outside
 
-    public ElbowError(IDraw drawer, double angle) {
+    public ElbowError(IDraw drawer, double angle, boolean inside) {
         super(drawer);
         this.angle = angle;
+        this.inside = inside;
     }
 
     public void drawShoulderElbowWrist(Mat frame, IPoint shoulder, IPoint elbow,

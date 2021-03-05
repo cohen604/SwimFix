@@ -97,6 +97,10 @@ public class Draw implements IDraw {
         double blue = 27;
         drawLine(frame, a, b, red, green, blue, 0, 2);
         double size = 10 / IPointUtils.calcDistance(a, b);
+        //System.out.println("Arrow Size "+ size);
+        if(size > 0.5) {
+            size = 0.5;
+        }
         double teta = 30 * Math.PI / 180;
         double x3 = b.getX() + size * ((a.getX() - b.getX()) * Math.cos(teta)
                 + (a.getY() - b.getY()) * Math.sin(teta));

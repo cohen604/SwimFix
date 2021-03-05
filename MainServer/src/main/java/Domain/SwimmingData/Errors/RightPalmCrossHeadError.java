@@ -8,8 +8,8 @@ import org.opencv.core.Mat;
 
 public class RightPalmCrossHeadError extends PalmCrossHeadError{
 
-    public RightPalmCrossHeadError(IDraw drawer) {
-        super(drawer);
+    public RightPalmCrossHeadError(IDraw drawer, boolean inside) {
+        super(drawer, inside);
     }
 
     @Override
@@ -17,9 +17,11 @@ public class RightPalmCrossHeadError extends PalmCrossHeadError{
         IPoint head = skeleton.getHead();
         IPoint wrist = skeleton.getRightWrist();
         drawPalmCrossHead(frame, head, wrist);
-        IPoint startArrow = IPointUtils.addByScalars(wrist, 0, 20);
-        IPoint elbow = skeleton.getRightElbow();
-        IPoint endArrow = IPointUtils.addByScalars(elbow, 0, 20);
-        drawArrow(frame, startArrow, endArrow);
+
+        //double slope = 1 / IPointUtils.calcSlope(wrist, skeleton.getRightElbow());
+        IPoint endArrow = null;
+        double additionX = inside ? -20 : 35;
+        endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
+        drawArrow(frame, wrist, endArrow);
     }
 }

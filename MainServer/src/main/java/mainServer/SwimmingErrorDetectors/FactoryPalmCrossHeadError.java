@@ -14,14 +14,14 @@ public class FactoryPalmCrossHeadError implements IFactoryPalmCrossHeadError {
     }
 
     @Override
-    public SwimmingError createLeft() {
+    public SwimmingError createLeft(boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new LeftPalmCrossHeadError(drawer);
+        return new LeftPalmCrossHeadError(drawer, inside);
     }
 
     @Override
-    public SwimmingError createRight() {
+    public SwimmingError createRight(boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new RightPalmCrossHeadError(drawer);
+        return new RightPalmCrossHeadError(drawer, inside);
     }
 }
