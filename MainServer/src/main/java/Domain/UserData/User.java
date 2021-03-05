@@ -2,16 +2,14 @@ package Domain.UserData;
 
 import DTO.UserDTO;
 import Domain.UserData.Interfaces.IUser;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {
 
     private String uid;
     private String email;
     private String name;
-    private boolean logged;
+    private AtomicBoolean logged;
 
     private PathManager _pathManager;
     private Swimmer _swimmer;
@@ -27,7 +25,7 @@ public class User implements IUser {
         this.uid = userDTO.getUid();
         this.email = userDTO.getEmail();
         this.name = userDTO.getName();
-        this.logged = false;
+        this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
         _pathManager = new PathManager(email);
     }
@@ -36,14 +34,14 @@ public class User implements IUser {
         this.uid = uid;
         this.email = email;
         this.name = name;
-        this.logged = false;
+        this.logged = new AtomicBoolean(false);
     }
 
     public User(String uid, String email, String name, boolean logged) {
         this.uid = uid;
         this.email = email;
         this.name = name;
-        this.logged = logged;
+        this.logged = new AtomicBoolean(logged);
     }
 
     public User(String uid, String email, String name, boolean logged,
@@ -51,7 +49,7 @@ public class User implements IUser {
         this.uid = uid;
         this.email = email;
         this.name = name;
-        this.logged = logged;
+        this.logged = new AtomicBoolean(logged);
         this._swimmer = swimmer;
         this._coach = coach;
         this._admin = admin;
@@ -60,20 +58,12 @@ public class User implements IUser {
 
     @Override
     public boolean login() {
-        if(!logged) {
-            logged = true;
-            return true;
-        }
-        return false;
+        return logged.compareAndSet(false, true);
     }
 
     @Override
     public boolean logout() {
-        if(logged) {
-            logged = false;
-            return true;
-        }
-        return false;
+        return logged.compareAndSet(true, false);
     }
 
     @Override
@@ -93,7 +83,7 @@ public class User implements IUser {
 
     @Override
     public boolean isLogged() {
-        return logged;
+        return logged.get();
     }
 
     @Override
