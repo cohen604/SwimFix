@@ -4,7 +4,7 @@ import Domain.SwimmingData.SwimmingError;
 
 public interface IFactoryPalmCrossHeadError {
 
-    SwimmingError createLeft();
-    SwimmingError createRight();
+    SwimmingError createLeft(boolean inside);
+    SwimmingError createRight(boolean inside);
 
 }

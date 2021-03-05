@@ -8,9 +8,11 @@ import org.opencv.core.Mat;
 
 public abstract class PalmCrossHeadError extends SwimmingError {
 
+    protected boolean inside;
 
-    public PalmCrossHeadError(IDraw drawer) {
+    public PalmCrossHeadError(IDraw drawer, boolean inside) {
         super(drawer);
+        this.inside = inside;
     }
 
     public void drawPalmCrossHead(Mat frame, IPoint head, IPoint wrist) {

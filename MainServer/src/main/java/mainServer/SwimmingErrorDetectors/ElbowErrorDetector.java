@@ -73,6 +73,14 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
        return angle >= minAngle && angle <= maxAngle;
     }
 
+    private boolean isNotValidAngleMin(double angle) {
+        return angle <= minAngle;
+    }
+
+    private boolean isNotValidAngleMax(double angle) {
+        return angle >= maxAngle;
+    }
+
     private boolean containesRightSide(ISwimmingSkeleton swimmingSkeleton) {
         return swimmingSkeleton.containsRightShoulder()
                 && swimmingSkeleton.containsRightElbow()
@@ -100,8 +108,11 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             if(expectedX < wrist.getX()) {
                 angle = 360 - angle;
             }
-            if(!isValidAngle(angle)) {
-                errors.add(iFactoryElbowError.createRight(angle));
+            if(isNotValidAngleMin(angle)) {
+                errors.add(iFactoryElbowError.createRight(angle, false));
+            }
+            else if(isNotValidAngleMax(angle)) {
+                errors.add(iFactoryElbowError.createRight(angle, true));
             }
         }
     }
@@ -116,8 +127,11 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
             if(expectedX > wrist.getX()) {
                 angle = 360 - angle;
             }
-            if(!isValidAngle(angle)) {
-                errors.add(iFactoryElbowError.createLeft(angle)) ;
+            if(isNotValidAngleMin(angle)) {
+                errors.add(iFactoryElbowError.createLeft(angle, false));
+            }
+            else if(isNotValidAngleMax(angle)) {
+                errors.add(iFactoryElbowError.createLeft(angle, true));
             }
         }
     }
