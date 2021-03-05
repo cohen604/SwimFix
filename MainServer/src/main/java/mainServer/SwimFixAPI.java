@@ -9,7 +9,9 @@ import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.Completions.SkeletonsCompletionAfter;
 import mainServer.Completions.SkeletonsCompletionBefore;
 import mainServer.Interpolations.*;
+import mainServer.Providers.IStreamProvider;
 import mainServer.Providers.IUserProvider;
+import mainServer.Providers.StreamProvider;
 import mainServer.Providers.UserProvider;
 import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
@@ -22,6 +24,7 @@ public class SwimFixAPI {
 
    public SwimFixAPI() {
       IUserProvider userProvider = new UserProvider(new UserDao());
+      IStreamProvider streamProvider = new StreamProvider();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
       IFactoryVideo iFactoryVideo = new FactoryVideo(new FactoryDraw(), new FactoryVideoHandler());
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
@@ -34,7 +37,7 @@ public class SwimFixAPI {
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
 
       this.logicManager = new LogicManager(
-              userProvider, iFactoryErrorDetectors, iFactoryVideo, iFactoryFeedbackVideo,
+              userProvider, streamProvider ,iFactoryErrorDetectors, iFactoryVideo, iFactoryFeedbackVideo,
               iSkeletonInterpolation, completionBefore, completionAfter, mlConnectionHandler);
 
    }

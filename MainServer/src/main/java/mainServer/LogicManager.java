@@ -3,6 +3,7 @@ package mainServer;
 import DTO.*;
 import Domain.Streaming.*;
 import Domain.UserData.Interfaces.IUser;
+import mainServer.Providers.IStreamProvider;
 import mainServer.Providers.IUserProvider;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
@@ -24,6 +25,7 @@ import java.util.*;
 public class LogicManager {
 
     private IUserProvider _userProvider;
+    private IStreamProvider _streamProvider;
     private IFeedbackVideo lastFeedbackVideo; //TODO delete this
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private IFactoryVideo iFactoryVideo;
@@ -34,6 +36,7 @@ public class LogicManager {
     private MLConnectionHandler mlConnectionHandler;
 
     public LogicManager(IUserProvider _userProvider,
+                        IStreamProvider streamProvider,
                         IFactoryErrorDetectors iFactoryErrorDetectors,
                         IFactoryVideo iFactoryVideo,
                         IFactoryFeedbackVideo iFactoryFeedbackVideo,
@@ -42,6 +45,7 @@ public class LogicManager {
                         ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
                         MLConnectionHandler mlConnectionHandler) {
         this._userProvider = _userProvider;
+        _streamProvider = streamProvider;
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
@@ -116,9 +120,7 @@ public class LogicManager {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
-        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
-        skeletons = iSkeletonInterpolation.interpolate(skeletons);
-        skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
+        skeletons = completeAndInterpolate(skeletons);
         taggedVideo.setTags(skeletons);
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
@@ -134,10 +136,22 @@ public class LogicManager {
     }
 
     /**
+     * the function add more points to the swimmer, using interpolation and compilation
+     * @param skeletons - the given skeleton the ML find
+     * @return - new skeleton with more points
+     */
+    private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
+        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
+        skeletons = iSkeletonInterpolation.interpolate(skeletons);
+        skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
+        return skeletons;
+    }
+
+    /**
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
      * @return the streaming path for the feedback video
-     * @precondition the feedback video we are generating doesn't exits!
+     * @ pre condition - the feedback video we are generating doesn't exits!
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
         IUser user = _userProvider.getUser(userDTO);
@@ -172,18 +186,13 @@ public class LogicManager {
      * @return the bytes for the file
      */
     public ActionResult<FeedbackVideoDTO> streamFile(String path) {
-        //TODO need to refactor this in the future for a class responsible of our resources
         //TODO need here to be access check
-        File file = new File(path);
-        if(file.exists()) {
-            try {
-                byte[] data = Files.readAllBytes(file.toPath());
-                FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath(), data);
-                return new ActionResult<>(Response.SUCCESS, output);
-            } catch (Exception e) {
-                //TODO return here error
-                System.out.println(e.getMessage());
-            }
+        try {
+            FeedbackVideoDTO output = _streamProvider.streamFile(path);
+            return new ActionResult<>(Response.SUCCESS, output);
+        } catch (Exception e) {
+            //TODO return here error
+            System.out.println(e.getMessage());
         }
         //TODO return error
         //TODO maybe always generate a video if it a error video then return error video ?
