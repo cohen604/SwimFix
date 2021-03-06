@@ -72,7 +72,6 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL,null);
     }
 
-
     /**
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
@@ -118,8 +117,6 @@ public class LogicManager {
         return null;
     }
 
-
-
     /**
      * The function create a new feedback video, filter, and send a new feedback link
      * @param userDTO - the user info
@@ -143,3 +140,4 @@ public class LogicManager {
         return null;
     }
 }
+

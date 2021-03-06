@@ -53,9 +53,9 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
             IPoint wrist = skeleton.getLeftWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < minAngle) { // range is -10 degrees
-                errors.add(iFactoryForearmError.createLeft(angle));
+                errors.add(iFactoryForearmError.createLeft(angle, false));
             } else if (angle > 0 && angle > maxAngle) { // range is 45 degrees
-                errors.add(iFactoryForearmError.createLeft(angle));
+                errors.add(iFactoryForearmError.createLeft(angle, false));
             }
         }
     }
@@ -68,9 +68,9 @@ public class ForearmErrorDetector implements SwimmingErrorDetector{
             IPoint wrist = skeleton.getRightWrist();
             double angle = calcAngle(elbow, wrist);
             if (angle < 0 && angle < -maxAngle) { // range is 45 degrees
-                errors.add(iFactoryForearmError.createRight(angle));
+                errors.add(iFactoryForearmError.createRight(angle, false));
             } else if (angle > 0 && angle > -minAngle) { // range is 10 degrees
-                errors.add(iFactoryForearmError.createRight(angle));
+                errors.add(iFactoryForearmError.createRight(angle, false));
             }
         }
     }
