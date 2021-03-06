@@ -16,6 +16,7 @@ public class Swimmer {
 
     public Swimmer() {
         _tag = "Swimmer";
+        _feedbacks = new ConcurrentHashMap<>();
     }
 
     public Swimmer(String tag) {

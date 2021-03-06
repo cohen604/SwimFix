@@ -14,6 +14,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +46,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
-        for (int i=0; i<data.size(); i++) {
+        for (int i=0; i<data.size() && i < 30; i++) {
             body.add(param + i, data.get(i));
         }
         body.add("len", len);
@@ -54,11 +58,26 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         return res;
     }
 
+    public String postMessage(byte[] data, String url, int len, int height, int width, String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
+        body.add("video", Base64.getEncoder().encode(data));
+        body.add("len", len);
+        body.add("height", height);
+        body.add("width", width);
+        body.add("type", type);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        String res = restTemplate.postForObject(url, requestEntity, String.class);
+        return res;
+    }
+
     public String getURL(String prefix) {
         return "http://"+this.ip + ":" + this.port + prefix;
     }
 
-    @Override
+    /*@Override
     public TaggedVideo getSkeletons(IVideo video) {
         try {
             List<byte[]> frames = video.getVideo();
@@ -67,8 +86,30 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
                 String frame_string = Base64.getEncoder().encodeToString(frame);
                 frames_string.add(frame_string);
             }
+            System.out.println("size "+frames.size());
+            System.out.println("height "+video.getHeight());
+            System.out.println("width " +video.getWidth());
+            System.out.println("frames" +frames);
+            System.out.println(LocalDateTime.now());
             String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
                     video.getHeight(), video.getWidth());
+            return createTaggedVideo(res);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }*/
+
+    @Override
+    public TaggedVideo getSkeletons(IVideo video) {
+        try {
+            int size = video.getVideo().size();
+            byte[] data = Files.readAllBytes(Paths.get(video.getPath()));
+            System.out.println("height "+video.getHeight());
+            System.out.println("width " +video.getWidth());
+            System.out.println(LocalDateTime.now());
+            String res = postMessage(data, getURL("/detect"), size,
+                    video.getHeight(), video.getWidth(), video.getVideoType());
             return createTaggedVideo(res);
         } catch (Exception e){
             System.out.println(e.getMessage());

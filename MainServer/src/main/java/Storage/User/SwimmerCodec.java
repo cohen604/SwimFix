@@ -37,11 +37,12 @@ public class SwimmerCodec implements Codec<Swimmer> {
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeStartArray("feedbacks");
+        bsonWriter.writeString("tag", swimmer.getTag());
+        /*bsonWriter.writeStartArray("feedbacks");
         for (IFeedbackVideo feedbackVideo: swimmer.getFeedbacks()) {
             bsonWriter.writeString(feedbackVideo.getPath(), feedbackVideo.getIVideo().getPath());
         }
-        bsonWriter.writeEndArray();
+        bsonWriter.writeEndArray();*/
         bsonWriter.writeEndDocument();
     }
 
