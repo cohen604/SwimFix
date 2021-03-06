@@ -87,6 +87,7 @@ public class LogicManager {
                     convertedVideoDTO, user.getVideosPath(),
                     user.getFeedbacksPath(), user.getSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
+                _userProvider.addFeedbackToUser(user, feedbackVideo);
                 //TODO delete this after removing lastFeedbackVideo
                 this.lastFeedbackVideo = feedbackVideo;
                 FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
