@@ -20,7 +20,7 @@ public class LeftElbowError extends ElbowError {
         drawShoulderElbowWrist(frame, shoulder, elbow, wrist, -50);
 
         IPoint middle = IPointUtils.getMiddlePoint(elbow, wrist);
-        double slope = 1 / IPointUtils.calcSlope(wrist, elbow);
+        //double slope = 1 / IPointUtils.calcSlope(wrist, elbow);
         double additionX = inside ? 20 : -35;
         IPoint endArrow = IPointUtils.addByScalars(middle, additionX, 0);
         drawArrow(frame, middle, endArrow);

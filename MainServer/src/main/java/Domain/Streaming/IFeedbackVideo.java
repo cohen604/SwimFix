@@ -2,6 +2,7 @@ package Domain.Streaming;
 
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.SwimmingData.ISwimmingSkeleton;
 
 import java.util.List;
 
@@ -45,5 +46,12 @@ public interface IFeedbackVideo {
      * @return the IVideo of feedback
      */
     IVideo getIVideo();
+
+
+    /**
+     * TODO comment
+     * @return
+     */
+    List<ISwimmingSkeleton> getSwimmingSkeletons();
 
 }

@@ -4,6 +4,8 @@ import DTO.ConvertedVideoDTO;
 import Domain.SwimmingData.Drawing.IDraw;
 import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 
+import java.time.LocalDateTime;
+
 public class FactoryVideo implements IFactoryVideo{
 
     private IFactoryDraw iFactoryDraw;
@@ -22,10 +24,10 @@ public class FactoryVideo implements IFactoryVideo{
     }
 
     @Override
-    public IVideo create(ConvertedVideoDTO convertedVideoDTO, String path) {
+    public IVideo create(ConvertedVideoDTO convertedVideoDTO, String path, LocalDateTime localDateTime) {
         IDraw drawer = iFactoryDraw.create();
         IVideoHandler iVideoHandler = iFactoryVideoHandler.create(drawer);
-        return new Video(iVideoHandler, convertedVideoDTO, path);
+        return new Video(iVideoHandler, convertedVideoDTO, path, localDateTime);
     }
 
     @Override

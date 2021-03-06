@@ -18,4 +18,6 @@ public interface IUser {
 
     String getFeedbacksPath();
 
+    String getSkeletonsPath();
+
 }

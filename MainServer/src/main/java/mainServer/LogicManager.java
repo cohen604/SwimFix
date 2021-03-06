@@ -72,7 +72,6 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL,null);
     }
 
-
     /**
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
@@ -85,8 +84,10 @@ public class LogicManager {
             // create video
             List<String> detectorsNames = new LinkedList<>();
             IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
-                        convertedVideoDTO,user.getVideosPath(), user.getFeedbacksPath(), detectorsNames);
+                    convertedVideoDTO, user.getVideosPath(),
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
+                _userProvider.addFeedbackToUser(user, feedbackVideo);
                 //TODO delete this after removing lastFeedbackVideo
                 this.lastFeedbackVideo = feedbackVideo;
                 FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
@@ -118,8 +119,6 @@ public class LogicManager {
         return null;
     }
 
-
-
     /**
      * The function create a new feedback video, filter, and send a new feedback link
      * @param userDTO - the user info
@@ -143,3 +142,4 @@ public class LogicManager {
         return null;
     }
 }
+

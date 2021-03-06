@@ -10,6 +10,7 @@ import org.junit.Before;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class VideoTests extends TestCase {
     public void testCreateNewVideo() {
         try {
             String path = VIDEO_FOLDER + "/test.mov";
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path);
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path, LocalDateTime.now());
             File file = new File(video.getPath());
             assertTrue(file.exists());
             deleteList.add(file);
@@ -56,7 +57,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathEmpty() {
         try {
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "");
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "", LocalDateTime.now());
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -66,7 +67,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathNull() {
         try {
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, null);
+            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, null, LocalDateTime.now());
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -79,7 +80,7 @@ public class VideoTests extends TestCase {
      */
     private void setUpVideo() {
         String path = VIDEO_FOLDER + "/test.mov";
-        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path);
+        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path, LocalDateTime.now());
         File file = new File(path);
         deleteList.add(file);
     }
@@ -88,7 +89,7 @@ public class VideoTests extends TestCase {
      * The function is a setUp for a video
      */
     private void setUpVideoNotExits() {
-        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "");
+        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "", LocalDateTime.now());
     }
 
     public void testGetHeight() {

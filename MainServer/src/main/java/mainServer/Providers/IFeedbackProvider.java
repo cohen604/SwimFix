@@ -7,6 +7,7 @@ import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.IVideo;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IFeedbackProvider {
@@ -28,7 +29,8 @@ public interface IFeedbackProvider {
     IFeedbackVideo getFeedbackVideo(IVideo video,
                                     List<SwimmingErrorDetector> errorDetectors,
                                     String feedbackFolderPath,
-                                    List<String> detectorsNames);
+                                    List<String> detectorsNames,
+                                    LocalDateTime time);
 
     /**
      * TODO - add comments
@@ -40,6 +42,7 @@ public interface IFeedbackProvider {
     IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
                                          String videoPath,
                                          String feedbackPath,
+                                         String skeletonsPath,
                                          List<String> detectorsNames);
 
     /**

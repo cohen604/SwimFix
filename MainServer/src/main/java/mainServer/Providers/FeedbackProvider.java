@@ -6,12 +6,14 @@ import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import ExernalSystems.MLConnectionHandler;
 import mainServer.Completions.ISkeletonsCompletion;
+import mainServer.FileLoaders.ISkeletonsLoader;
 import mainServer.Interpolations.ISkeletonInterpolation;
 import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class FeedbackProvider implements IFeedbackProvider {
     private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
     private IFactoryVideo iFactoryVideo;
     private IFactoryErrorDetectors iFactoryErrorDetectors;
+    private ISkeletonsLoader iSkeletonsLoader;
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
@@ -34,7 +37,8 @@ public class FeedbackProvider implements IFeedbackProvider {
                             ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation,
                             ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
                             IFactoryVideo iFactoryVideo,
-                            IFactoryErrorDetectors iFactoryErrorDetectors) {
+                            IFactoryErrorDetectors iFactoryErrorDetectors,
+                            ISkeletonsLoader iSkeletonsLoader) {
         this.mlConnectionHandler = mlConnectionHandler;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.iSkeletonInterpolation = iSkeletonInterpolation;
@@ -42,6 +46,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
         this.iFactoryVideo = iFactoryVideo;
         this.iFactoryErrorDetectors = iFactoryErrorDetectors;
+        this.iSkeletonsLoader = iSkeletonsLoader;
     }
 
     @Override
@@ -62,7 +67,8 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     @Override
     public IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors,
-                                            String feedbackFolderPath, List<String> detectorsNames) {
+                                           String feedbackFolderPath, List<String> detectorsNames,
+                                           LocalDateTime time) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
@@ -80,20 +86,27 @@ public class FeedbackProvider implements IFeedbackProvider {
             }
             errorMap.put(i, errors);
         }
-        return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath);
+        return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath, time);
     }
 
     @Override
     public IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
                                                 String videoPath,
                                                 String feedbackPath,
+                                                String skeletonsPath,
                                                 List<String> detectorsNames) {
-        IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath);
+        LocalDateTime localDateTime = LocalDateTime.now();
+        IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath, localDateTime);
         if (video.isVideoExists()) {
             // decoders step
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
             // create feedback
-            return getFeedbackVideo(video, errorDetectors, feedbackPath, detectorsNames);
+            IFeedbackVideo feedbackVideo = getFeedbackVideo(
+                    video, errorDetectors, feedbackPath, detectorsNames, localDateTime);
+            if(feedbackVideo != null) {
+                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), skeletonsPath, localDateTime);
+            }
+            return feedbackVideo;
         }
         return null;
     }
@@ -114,8 +127,11 @@ public class FeedbackProvider implements IFeedbackProvider {
                                               FeedbackFilterDTO filterDTO,
                                               IVideo video,
                                               List<String> detectorsNames) {
+        //TODO remove this - need to call filter form the origin skeletons saved
+        // and not create a new feedback that we save in the server file system
+        LocalDateTime localDateTime = LocalDateTime.now();
         List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
-        return getFeedbackVideo(video, errorDetectors, feedbackFolderPath, detectorsNames);
+        return getFeedbackVideo(video, errorDetectors, feedbackFolderPath, detectorsNames, localDateTime);
     }
 
     /**
@@ -168,6 +184,5 @@ public class FeedbackProvider implements IFeedbackProvider {
         skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
         return skeletons;
     }
-
 
 }

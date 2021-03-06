@@ -96,6 +96,11 @@ public class User implements IUser {
         return _pathManager.getFeedbacksPath();
     }
 
+    @Override
+    public String getSkeletonsPath() {
+        return _pathManager.getSkeletonsPath();
+    }
+
     public Swimmer getSwimmer() {
         return _swimmer;
     }
