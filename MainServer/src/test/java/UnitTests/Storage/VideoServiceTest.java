@@ -12,6 +12,7 @@ import org.junit.Before;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class VideoServiceTest extends TestCase {
@@ -32,7 +33,7 @@ public class VideoServiceTest extends TestCase {
             byte[] bytes = Files.readAllBytes(file.toPath());
             ConvertedVideoDTO convertedVideoDTO = new ConvertedVideoDTO("sample.mov", bytes);
             String path = VIDEO_FOLDER + "/test.mov";
-            this.video = new Video(new VideoHandler(new Draw()), convertedVideoDTO, path);
+            this.video = new Video(new VideoHandler(new Draw()), convertedVideoDTO, path, LocalDateTime.now());
         } catch (Exception e) {
             e.printStackTrace();
             fail();

@@ -84,7 +84,8 @@ public class LogicManager {
             // create video
             List<String> detectorsNames = new LinkedList<>();
             IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
-                        convertedVideoDTO,user.getVideosPath(), user.getFeedbacksPath(), detectorsNames);
+                    convertedVideoDTO, user.getVideosPath(),
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
                 //TODO delete this after removing lastFeedbackVideo
                 this.lastFeedbackVideo = feedbackVideo;

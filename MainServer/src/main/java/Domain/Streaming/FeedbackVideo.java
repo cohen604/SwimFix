@@ -23,6 +23,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private boolean feedbackUpdated;
 
+    //TODO delete this after change the tests
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap) {
         super(video);
         this.taggedVideo = taggedVideo;
@@ -37,12 +38,13 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     }
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
-                         String folderPath) {
+                         String folderPath, LocalDateTime time) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-        this.path = folderPath + "\\" + LocalDateTime.now().format(formatter) + ".mp4";
+        //this.path = folderPath + "\\" + LocalDateTime.now().format(formatter) + ".mp4";
+        this.path = folderPath + "\\" + time.format(formatter) + ".mp4";
         this.feedbackFile = null;
         this.feedbackUpdated = false;
         //TODO
@@ -129,6 +131,11 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     @Override
     public IVideo getIVideo() {
         return this;
+    }
+
+    @Override
+    public List<ISwimmingSkeleton> getSwimmingSkeletons() {
+        return this.taggedVideo.getTags();
     }
 
     public boolean isFeedbackUpdated() {

@@ -41,10 +41,14 @@ public class Video implements IVideo {
      * @param convertedVideoDTO - the data
      * @param path - the path of the video
      */
-    public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO, String path) {
+    public Video(IVideoHandler videoHandler,
+                 ConvertedVideoDTO convertedVideoDTO,
+                 String path,
+                 LocalDateTime localDateTime) {
         this.videoType = convertedVideoDTO.getVideoType();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-        this.path = path + "\\" + LocalDateTime.now().format(formatter) + this.videoType;
+        //this.path = path + "\\" + LocalDateTime.now().format(formatter) + this.videoType;
+        this.path = path + "\\" + localDateTime.format(formatter) + this.videoType;
         this.videoHandler = videoHandler;
         this.video =  videoHandler.getFrames(convertedVideoDTO.getBytes(), this.path);
         if(isVideoExists()) {
