@@ -5,6 +5,7 @@ import DTO.FeedbackFilterDTO;
 import DTO.FeedbackVideoDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.IVideo;
+import Domain.UserData.Interfaces.IUser;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
 
 import java.time.LocalDateTime;

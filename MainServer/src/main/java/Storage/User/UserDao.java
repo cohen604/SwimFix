@@ -80,12 +80,18 @@ public class UserDao implements IUserDao{
 
     @Override
     public User update(User value) {
-        MongoCollection<User> collection = getCollection();
-        Document query = new Document("_id", value.getUid());
-        UpdateResult result = collection.replaceOne(query, value);
-        if(result == null) {
-            return null;
+        try {
+            MongoCollection<User> collection = getCollection();
+            Document query = new Document("_id", value.getUid());
+            UpdateResult result = collection.replaceOne(query, value);
+            if (result == null) {
+                return null;
+            }
+            return value;
         }
-        return value;
+        catch (Exception e) {
+            System.out.println((e.getMessage()));
+        }
+        return null;
     }
 }

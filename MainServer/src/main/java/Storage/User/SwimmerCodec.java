@@ -1,5 +1,6 @@
 package Storage.User;
 
+import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Swimmer;
 import Domain.UserData.User;
 import org.bson.BsonReader;
@@ -36,7 +37,11 @@ public class SwimmerCodec implements Codec<Swimmer> {
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("tag", swimmer.getTag());
+        bsonWriter.writeStartArray("feedbacks");
+        for (IFeedbackVideo feedbackVideo: swimmer.getFeedbacks()) {
+            bsonWriter.writeString(feedbackVideo.getPath(), feedbackVideo.getIVideo().getPath());
+        }
+        bsonWriter.writeEndArray();
         bsonWriter.writeEndDocument();
     }
 

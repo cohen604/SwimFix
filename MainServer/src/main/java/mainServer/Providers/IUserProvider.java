@@ -1,6 +1,7 @@
 package mainServer.Providers;
 
 import DTO.UserDTO;
+import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 
 public interface IUserProvider {
@@ -9,5 +10,5 @@ public interface IUserProvider {
 
     IUser getUser(UserDTO userDTO);
 
-
+    boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo);
 }

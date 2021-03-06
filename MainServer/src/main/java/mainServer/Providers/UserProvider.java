@@ -1,6 +1,7 @@
 package mainServer.Providers;
 
 import DTO.UserDTO;
+import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.User.UserDao;
@@ -41,5 +42,20 @@ public class UserProvider implements IUserProvider {
     @Override
     public IUser getUser(UserDTO userDTO) {
         return _users.get(userDTO.getUid());
+    }
+
+    @Override
+    public boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo) {
+        User current = _users.get(user.getUid());
+        if (current != null && current.isLogged()) {
+            current.addFeedback(feedbackVideo);
+            if (_dao.update(current) == null) {
+                current.deleteFeedback(feedbackVideo);
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
     }
 }

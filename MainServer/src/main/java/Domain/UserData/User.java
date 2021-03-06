@@ -1,6 +1,7 @@
 package Domain.UserData;
 
 import DTO.UserDTO;
+import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -117,4 +118,21 @@ public class User implements IUser {
         return _researcher;
     }
 
+    /**
+     * todo - add comments
+     * @param feedbackVideo
+     * @return
+     */
+    public boolean addFeedback(IFeedbackVideo feedbackVideo) {
+        return _swimmer.addFeedback(feedbackVideo);
+    }
+
+    /**
+     * todo - add comments
+     * @param feedbackVideo
+     * @return
+     */
+    public boolean deleteFeedback(IFeedbackVideo feedbackVideo) {
+        return _swimmer.deleteFeedback(feedbackVideo);
+    }
 }

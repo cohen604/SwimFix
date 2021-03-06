@@ -4,6 +4,7 @@ import DTO.*;
 import Domain.Streaming.*;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
+import Domain.UserData.Interfaces.IUser;
 import ExernalSystems.MLConnectionHandler;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.FileLoaders.ISkeletonsLoader;
