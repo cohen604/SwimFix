@@ -23,7 +23,7 @@ public class SwimFixAPI {
 
    public SwimFixAPI() {
       IUserProvider userProvider = new UserProvider(new UserDao());
-      
+
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
       IFactoryVideo iFactoryVideo = new FactoryVideo(new FactoryDraw(), new FactoryVideoHandler());
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
