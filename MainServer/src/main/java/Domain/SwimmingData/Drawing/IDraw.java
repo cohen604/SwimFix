@@ -12,7 +12,7 @@ public interface IDraw {
      * @param skeletonPoint
      * @param radius
      */
-    void drawCircle(Mat frame, IPoint skeletonPoint, int radius);
+    Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius);
 
     /**
      *
@@ -27,7 +27,7 @@ public interface IDraw {
      * @param b
      * @param a
      */
-    void drawElipce(Mat frame, double radius, double angle, double startAngle,
+    Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
                            double endAngle, IPoint center, double r, double g,
                            double b, double a);
 
@@ -37,7 +37,7 @@ public interface IDraw {
      * @param a
      * @param b
      */
-    void drawLine(Mat frame, IPoint a, IPoint b);
+    Mat drawLine(Mat frame, IPoint a, IPoint b);
 
     /**
      * The function draw a line
@@ -50,7 +50,7 @@ public interface IDraw {
      * @param a
      * @param thickness
      */
-    void drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
+    Mat drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
                          double a, int thickness);
 
     /**
@@ -59,7 +59,7 @@ public interface IDraw {
      * @param skeleton the image tag to print
      * @return the new frame
      */
-    void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton);
+    Mat drawSwimmer(Mat frame, ISwimmingSkeleton skeleton);
 
     Mat drawLogo(Mat frame);
 

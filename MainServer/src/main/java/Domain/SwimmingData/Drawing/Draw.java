@@ -12,15 +12,16 @@ import java.util.List;
 public class Draw implements IDraw {
 
     @Override
-    public void drawCircle(Mat frame, IPoint skeletonPoint, int radius) {
+    public Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius) {
         Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
         Scalar color = new Scalar(0,255,0);
         int thickness = 3;
         Imgproc.circle(frame, point, radius, color, thickness);
+        return frame;
     }
 
     @Override
-    public void drawElipce(Mat frame, double radius, double angle, double startAngle,
+    public Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
                            double endAngle, IPoint center, double r, double g,
                            double b, double a) {
         Point centerPoint = new Point(center.getX(), center.getY());
@@ -29,28 +30,31 @@ public class Draw implements IDraw {
         int thickness = -1;
         Imgproc.ellipse(frame, centerPoint, size, angle, startAngle, endAngle,
                 scalar, thickness);
+        return frame;
     }
 
     @Override
-    public void drawLine(Mat frame, IPoint a, IPoint b) {
+    public Mat drawLine(Mat frame, IPoint a, IPoint b) {
         Point pointA = new Point(a.getX(),a.getY());
         Point pointB = new Point(b.getX(),b.getY());
         Scalar color = new Scalar(255,0,0);
         int thickness = 2;
         Imgproc.line(frame, pointA, pointB, color, thickness);
+        return frame;
     }
 
     @Override
-    public void drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
+    public Mat drawLine(Mat frame, IPoint s1, IPoint s2, double r, double g, double b,
                          double a, int thickness) {
         Point pointA = new Point(s1.getX(),s1.getY());
         Point pointB = new Point(s2.getX(),s2.getY());
         Scalar color = new Scalar(b, g, r, a);
         Imgproc.line(frame, pointA, pointB, color, thickness);
+        return frame;
     }
 
     @Override
-    public void drawSwimmer(Mat frame, ISwimmingSkeleton skeleton) {
+    public Mat drawSwimmer(Mat frame, ISwimmingSkeleton skeleton) {
         // points
         int radius = 2;
         List<IPoint> points = skeleton.getPoints();
@@ -61,6 +65,7 @@ public class Draw implements IDraw {
         for(Pair<IPoint , IPoint> line: lines) {
             drawLine(frame, line.getKey(), line.getValue());
         }
+        return frame;
     }
 
     /**
