@@ -11,6 +11,11 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
     private Map<KeyPoint, IPoint> pointMap;
     private List<Pair<KeyPoint, KeyPoint>> edges;
 
+    public SwimmingSkeleton() {
+        pointMap = new HashMap<>();
+        edges = new LinkedList<>();
+    }
+
     // TODO should be a builder class that do this complex building (its better)
     public SwimmingSkeleton(List<Double> frame) {
         this.pointMap = new HashMap<>();

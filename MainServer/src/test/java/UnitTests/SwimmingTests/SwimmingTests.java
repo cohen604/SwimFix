@@ -6,8 +6,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
-    SwimmingSkeletonTests.class,
-    IPointUtilsTests.class,
+        SwimmingSkeletonGraphTests.class,
+        SkeletonPointGraphTests.class,
+        SkeletonPointCompositionTests.class,
+        SwimmingSkeletonCompositionTests.class,
+        IPointUtilsTests.class,
 })
 
 public class SwimmingTests {
