@@ -46,6 +46,15 @@ public class UserDao implements IUserDao{
 
     @Override
     public List<User> getAll() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            List<User> users = new LinkedList<>();
+            collection.find().into(users);
+            return users;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

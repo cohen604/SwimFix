@@ -11,4 +11,7 @@ public interface IUserProvider {
     IUser getUser(UserDTO userDTO);
 
     boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo);
+
+    boolean reload();
+
 }

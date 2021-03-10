@@ -5,7 +5,6 @@ import Domain.Streaming.*;
 import Domain.UserData.Interfaces.IUser;
 import mainServer.Providers.IFeedbackProvider;
 import mainServer.Providers.IUserProvider;
-import mainServer.SwimmingErrorDetectors.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
@@ -29,6 +28,7 @@ public class LogicManager {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
         createClientsDir();
+        _userProvider.reload();
     }
 
     /**
@@ -37,7 +37,6 @@ public class LogicManager {
     private void createClientsDir() {
         try {
             Path path = Paths.get("clients");
-            // create the clients directory if not exist
             // TODO - check if good
             if (!Files.isDirectory(path)) {
                 Files.createDirectory(path);

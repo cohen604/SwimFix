@@ -31,6 +31,7 @@ public class SwimmerCodec implements Codec<Swimmer> {
     public Swimmer decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String tag = bsonReader.readString("tag");
+        bsonReader.readEndDocument();
         return new Swimmer(tag);
     }
 

@@ -24,6 +24,7 @@ public class AdminCodec implements Codec<Admin> {
     public Admin decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String tag = bsonReader.readString("tag");
+        bsonReader.readEndDocument();
         return new Admin(tag);
     }
 

@@ -28,6 +28,8 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
+        _coach = new Coach();
+        _researcher = new Researcher();
         _pathManager = new PathManager(email);
     }
 

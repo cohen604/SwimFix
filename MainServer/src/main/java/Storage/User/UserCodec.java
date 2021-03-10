@@ -39,28 +39,34 @@ public class UserCodec implements Codec<User> {
 
         if(objectName.equals("swimmer")) {
             Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
-            swimmer = swimmerCodec.decode(bsonReader, decoderContext);
-            objectName = bsonReader.readName();
+            swimmer = decoderContext.decodeWithChildContext(swimmerCodec, bsonReader);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("coach")) {
             Codec<Coach> coachCodec = _codecRegistry.get(Coach.class);
-            coach = coachCodec.decode(bsonReader, decoderContext);
-            objectName = bsonReader.readName();
+            coach = decoderContext.decodeWithChildContext(coachCodec, bsonReader);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("admin")) {
             Codec<Admin> adminCodec = _codecRegistry.get(Admin.class);
-            bsonReader.readName("admin");
-            admin = adminCodec.decode(bsonReader, decoderContext);
+            admin= decoderContext.decodeWithChildContext(adminCodec,bsonReader);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("researcher")) {
             Codec<Researcher> researcherCodec = _codecRegistry.get(Researcher.class);
-            bsonReader.readName("researcher");
-            researcher = researcherCodec.decode(bsonReader, decoderContext);
+            researcher = decoderContext.decodeWithChildContext(researcherCodec,bsonReader);
         }
 
+        bsonReader.readEndDocument();
         return new User(id, email, name, logged, swimmer, coach, admin, researcher);
     }
 

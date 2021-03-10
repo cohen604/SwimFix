@@ -24,6 +24,7 @@ public class ResearcherCodec implements Codec<Researcher> {
     public Researcher decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String tag = bsonReader.readString("tag");
+        bsonReader.readEndDocument();
         return new Researcher(tag);
     }
 

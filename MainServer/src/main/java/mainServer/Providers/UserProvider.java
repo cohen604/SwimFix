@@ -4,14 +4,19 @@ import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
+import Storage.User.IUserDao;
 import Storage.User.UserDao;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserProvider implements IUserProvider {
 
+    /**
+     * The hash map key: user uid, the values is the user
+     */
     ConcurrentHashMap<String, User> _users;
-    UserDao _dao;
+    IUserDao _dao;
 
     public UserProvider(UserDao dao) {
         _users = new ConcurrentHashMap<>();
@@ -57,5 +62,21 @@ public class UserProvider implements IUserProvider {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean reload() {
+        _users = new ConcurrentHashMap<>();
+        List<User> users = _dao.getAll();
+        if(users == null) {
+            return false;
+        }
+        for (User user: users) {
+            user.logout();
+            _dao.update(user);
+            // no need to hold them in the cache only need to logout them and update
+            //_users.put(user.getUid(), user);
+        }
+        return true;
     }
 }

@@ -26,6 +26,7 @@ public class CoachCodec implements Codec<Coach> {
     public Coach decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String tag = bsonReader.readString("tag");
+        bsonReader.readEndDocument();
         return new Coach(tag);
     }
 
