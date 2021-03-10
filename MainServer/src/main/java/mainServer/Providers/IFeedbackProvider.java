@@ -30,6 +30,7 @@ public interface IFeedbackProvider {
     IFeedbackVideo getFeedbackVideo(IVideo video,
                                     List<SwimmingErrorDetector> errorDetectors,
                                     String feedbackFolderPath,
+                                    String mlSkeletonsPath,
                                     List<String> detectorsNames,
                                     LocalDateTime time);
 
@@ -43,7 +44,8 @@ public interface IFeedbackProvider {
     IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
                                          String videoPath,
                                          String feedbackPath,
-                                         String skeletonsPath,
+                                         String feedbackSkeletonsPath,
+                                         String mlSkeletonsPath,
                                          List<String> detectorsNames);
 
     /**
@@ -60,6 +62,7 @@ public interface IFeedbackProvider {
      * @return
      */
     IFeedbackVideo filterFeedbackVideo(String feedbackFolderPath,
+                                       String mlSkeletonsPath,
                                        FeedbackFilterDTO filterDTO,
                                        IVideo video,
                                        List<String> detectorsNames);

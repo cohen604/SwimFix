@@ -28,8 +28,6 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
-        _coach = new Coach();
-        _researcher = new Researcher();
         _pathManager = new PathManager(email);
     }
 
@@ -102,6 +100,11 @@ public class User implements IUser {
     @Override
     public String getSkeletonsPath() {
         return _pathManager.getSkeletonsPath();
+    }
+
+    @Override
+    public String getMLSkeletonsPath() {
+        return _pathManager.getMLSkeletonsPath();
     }
 
     public Swimmer getSwimmer() {

@@ -67,14 +67,21 @@ public class FeedbackProvider implements IFeedbackProvider {
     }
 
     @Override
-    public IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors,
-                                           String feedbackFolderPath, List<String> detectorsNames,
+    public IFeedbackVideo getFeedbackVideo(IVideo video,
+                                           List<SwimmingErrorDetector> errorDetectors,
+                                           String feedbackFolderPath,
+                                           String mlSkeletonsPath,
+                                           List<String> detectorsNames,
                                            LocalDateTime time) {
         TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
+        // save the ml skeletons
+        iSkeletonsLoader.save(taggedVideo.getTags(), mlSkeletonsPath, time);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
+        //interpolate for the new skeletons
         skeletons = completeAndInterpolate(skeletons);
         taggedVideo.setTags(skeletons);
+        // error detection
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
             List<SwimmingError> errors = new LinkedList<>();
@@ -87,6 +94,7 @@ public class FeedbackProvider implements IFeedbackProvider {
             }
             errorMap.put(i, errors);
         }
+        // create feedback video
         return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath, time);
     }
 
@@ -94,7 +102,8 @@ public class FeedbackProvider implements IFeedbackProvider {
     public IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
                                                 String videoPath,
                                                 String feedbackPath,
-                                                String skeletonsPath,
+                                                String feedbackSkeletonsPath,
+                                                String mlSkeletonsPath,
                                                 List<String> detectorsNames) {
         LocalDateTime localDateTime = LocalDateTime.now();
         IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath, localDateTime);
@@ -103,9 +112,9 @@ public class FeedbackProvider implements IFeedbackProvider {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
             // create feedback
             IFeedbackVideo feedbackVideo = getFeedbackVideo(
-                    video, errorDetectors, feedbackPath, detectorsNames, localDateTime);
+                    video, errorDetectors, feedbackPath, mlSkeletonsPath, detectorsNames, localDateTime);
             if(feedbackVideo != null) {
-                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), skeletonsPath, localDateTime);
+                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), feedbackSkeletonsPath, localDateTime);
             }
             return feedbackVideo;
         }
@@ -125,6 +134,7 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     @Override
     public IFeedbackVideo filterFeedbackVideo(String feedbackFolderPath,
+                                              String mlSkeletonsPath,
                                               FeedbackFilterDTO filterDTO,
                                               IVideo video,
                                               List<String> detectorsNames) {
@@ -132,7 +142,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         // and not create a new feedback that we save in the server file system
         LocalDateTime localDateTime = LocalDateTime.now();
         List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
-        return getFeedbackVideo(video, errorDetectors, feedbackFolderPath, detectorsNames, localDateTime);
+        return getFeedbackVideo(video, errorDetectors, feedbackFolderPath, mlSkeletonsPath, detectorsNames, localDateTime);
     }
 
     /**

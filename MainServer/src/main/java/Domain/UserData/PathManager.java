@@ -12,7 +12,7 @@ public class PathManager {
     public PathManager(String folderName) {
         _root = "clients";
         _mainFolder = combinePaths(_root, folderName);
-        _folders = new String[]{"videos", "feedbacks", "feddbacksSkeletons"};
+        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
         createDirs();
     }
 
@@ -38,7 +38,11 @@ public class PathManager {
     }
 
     public String getSkeletonsPath() {
-        return combinePaths(_mainFolder, "feddbacksSkeletons");
+        return combinePaths(_mainFolder, "feedbacksSkeletons");
+    }
+
+    public String getMLSkeletonsPath() {
+        return combinePaths(_mainFolder, "mlSkeletons");
     }
 
     private String combinePaths(String prefix, String suffix) {

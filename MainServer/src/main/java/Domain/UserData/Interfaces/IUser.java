@@ -20,4 +20,6 @@ public interface IUser {
 
     String getSkeletonsPath();
 
+    String getMLSkeletonsPath();
+
 }

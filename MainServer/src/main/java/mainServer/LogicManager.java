@@ -84,7 +84,7 @@ public class LogicManager {
             List<String> detectorsNames = new LinkedList<>();
             IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
                     convertedVideoDTO, user.getVideosPath(),
-                    user.getFeedbacksPath(), user.getSkeletonsPath(), detectorsNames);
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
                 _userProvider.addFeedbackToUser(user, feedbackVideo);
                 //TODO delete this after removing lastFeedbackVideo
@@ -130,8 +130,10 @@ public class LogicManager {
             // TODO - feedback video isn't video any more
             IVideo video = this.lastFeedbackVideo.getIVideo();
             List<String> detectorsNames = new LinkedList<>();
-            IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(user.getFeedbacksPath(),
-                   filterDTO, video, detectorsNames);
+            IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(
+                    user.getFeedbacksPath(),
+                    user.getMLSkeletonsPath(),
+                    filterDTO, video, detectorsNames);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!
