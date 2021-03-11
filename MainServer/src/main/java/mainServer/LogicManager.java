@@ -132,6 +132,7 @@ public class LogicManager {
             List<String> detectorsNames = new LinkedList<>();
             IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(
                     user.getFeedbacksPath(),
+                    user.getSkeletonsPath(),
                     user.getMLSkeletonsPath(),
                     filterDTO, video, detectorsNames);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);

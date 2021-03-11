@@ -6,6 +6,7 @@ import Domain.SwimmingData.SwimmingError;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,12 +53,23 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         this.textualComment = null;
     }
 
+    public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, File feedbackFile) {
+        super(video);
+        this.taggedVideo = taggedVideo;
+        this.errorMap = new HashMap<>();
+        this.path = feedbackFile.getPath();
+        this.feedbackFile = feedbackFile;
+        //TODO
+        this.visualComment = null;
+        this.textualComment = null;
+    }
 
     /**
      * The function update the feedback file if video exists
      * @precondition feedback file is Null or feedback is updated, have the original video frames
      * @postcondition generated new feedback file
      */
+    // TODO why we need this? when the feedback updated so we can change the feedback it self of the swimmer
     private void updateFeedbackFile() {
         if(isVideoExists()) {
             List<ISwimmingSkeleton> swimmingSkeletons = null;
@@ -66,6 +78,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
             }
             List<Object> visualComments = null; //TODO
             if (this.feedbackFile == null || this.feedbackUpdated) {
+                //TODO refactor this
                 File file = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
                         errorMap, visualComments);
                 if (file != null) {
@@ -80,6 +93,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
      * The function return a feedback video
      * @return feedback video if the video exists
      */
+    //TODO delete this using this only in test
     public FeedbackVideoDTO generateFeedbackDTO() {
         updateFeedbackFile();
         if(this.feedbackFile == null) {
@@ -105,6 +119,8 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         if(detectors==null) {
             return null;
         }
+        //TODO refactor this only here we really create the feedback and print the feedback when we should create it
+        // when the class created
         updateFeedbackFile();
         if(this.feedbackFile == null) {
             return null;
@@ -136,6 +152,16 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     @Override
     public List<ISwimmingSkeleton> getSwimmingSkeletons() {
         return this.taggedVideo.getTags();
+    }
+
+    @Override
+    public String getMLSkeletonsPath() {
+        return this.taggedVideo.getMlSkeletonsPath();
+    }
+
+    @Override
+    public String getSkeletonsPath() {
+        return this.taggedVideo.getskeletonsPath();
     }
 
     public boolean isFeedbackUpdated() {

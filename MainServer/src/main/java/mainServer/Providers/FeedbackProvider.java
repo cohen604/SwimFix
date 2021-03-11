@@ -4,7 +4,6 @@ import DTO.*;
 import Domain.Streaming.*;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
-import Domain.UserData.Interfaces.IUser;
 import ExernalSystems.MLConnectionHandler;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.FileLoaders.ISkeletonsLoader;
@@ -70,14 +69,16 @@ public class FeedbackProvider implements IFeedbackProvider {
     public IFeedbackVideo getFeedbackVideo(IVideo video,
                                            List<SwimmingErrorDetector> errorDetectors,
                                            String feedbackFolderPath,
+                                           String skeletonsPath,
                                            String mlSkeletonsPath,
                                            List<String> detectorsNames,
                                            LocalDateTime time) {
-        TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
+        List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video);
+        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
         // save the ml skeletons
         iSkeletonsLoader.save(taggedVideo.getTags(), mlSkeletonsPath, time);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
+        skeletons = taggedVideo.getTags();
         //interpolate for the new skeletons
         skeletons = completeAndInterpolate(skeletons);
         taggedVideo.setTags(skeletons);
@@ -94,6 +95,12 @@ public class FeedbackProvider implements IFeedbackProvider {
             }
             errorMap.put(i, errors);
         }
+        // TODO here we do :
+        //  create new video Handler for each thread
+        //  this.video = videoHandler.getFrames(convertedVideoDTO.getBytes();
+        //  File feedbackfile = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
+        //                        errorMap, visualComments);
+        //  and send the feedback file to feedback and remove the videoHandler from video and feedbackVideo
         // create feedback video
         return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath, time);
     }
@@ -112,7 +119,9 @@ public class FeedbackProvider implements IFeedbackProvider {
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
             // create feedback
             IFeedbackVideo feedbackVideo = getFeedbackVideo(
-                    video, errorDetectors, feedbackPath, mlSkeletonsPath, detectorsNames, localDateTime);
+                    video, errorDetectors,
+                    feedbackPath, feedbackSkeletonsPath, mlSkeletonsPath,
+                    detectorsNames, localDateTime);
             if(feedbackVideo != null) {
                 iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), feedbackSkeletonsPath, localDateTime);
             }
@@ -134,6 +143,7 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     @Override
     public IFeedbackVideo filterFeedbackVideo(String feedbackFolderPath,
+                                              String skeletonsPath,
                                               String mlSkeletonsPath,
                                               FeedbackFilterDTO filterDTO,
                                               IVideo video,
@@ -142,7 +152,9 @@ public class FeedbackProvider implements IFeedbackProvider {
         // and not create a new feedback that we save in the server file system
         LocalDateTime localDateTime = LocalDateTime.now();
         List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
-        return getFeedbackVideo(video, errorDetectors, feedbackFolderPath, mlSkeletonsPath, detectorsNames, localDateTime);
+        return getFeedbackVideo(video, errorDetectors,
+                feedbackFolderPath, skeletonsPath, mlSkeletonsPath,
+                detectorsNames, localDateTime);
     }
 
     /**

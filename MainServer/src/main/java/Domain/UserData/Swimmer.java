@@ -12,19 +12,15 @@ public class Swimmer {
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
     private Queue<Invitation> _invetations;
 
-    private String _tag;
-
     public Swimmer() {
-        _tag = "Swimmer";
         _feedbacks = new ConcurrentHashMap<>();
     }
 
-    public Swimmer(String tag) {
-        _tag = tag;
-    }
-
-    public String getTag() {
-        return _tag;
+    public Swimmer(List<IFeedbackVideo> feedbacks) {
+        _feedbacks = new ConcurrentHashMap<>();
+        for (IFeedbackVideo feedbackVideo: feedbacks) {
+            _feedbacks.put(feedbackVideo.getPath(), feedbackVideo);
+        }
     }
 
 

@@ -16,6 +16,13 @@ public class PathManager {
         createDirs();
     }
 
+    public PathManager(String root, String folderName) {
+        _root = root;
+        _mainFolder = combinePaths(_root, folderName);
+        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
+        createDirs();
+    }
+
     private void createDirs() {
         try {
             Files.createDirectory(Paths.get(_mainFolder));

@@ -101,7 +101,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
     }*/
 
     @Override
-    public TaggedVideo getSkeletons(IVideo video) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video) {
         try {
             int size = video.getVideo().size();
             byte[] data = Files.readAllBytes(Paths.get(video.getPath()));
@@ -122,17 +122,16 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
      * @param json - the json from the ML
      * @return - TaggedVidoe
      */
-    private TaggedVideo createTaggedVideo(String json) {
-        TaggedVideo taggedVideo = new TaggedVideo();
+    private List<ISwimmingSkeleton> createTaggedVideo(String json) {
+        List<ISwimmingSkeleton> output = new LinkedList<>();
         Gson gson = new Gson();
         Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
         List<List<Double>> list = gson.fromJson(json, listType);
         for (List<Double> frame: list) {
             //TODO remove NEW!!!
-            ISwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
-            taggedVideo.addTag(skeleton);
+            output.add(new SwimmingSkeleton(frame));
         }
-        return taggedVideo;
+        return output;
     }
 
 }

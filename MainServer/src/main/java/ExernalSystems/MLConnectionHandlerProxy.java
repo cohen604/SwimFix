@@ -2,6 +2,8 @@ package ExernalSystems;
 
 import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
+import Domain.SwimmingData.ISwimmingSkeleton;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,12 +20,12 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     }
 
     @Override
-    public TaggedVideo getSkeletons(IVideo video) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video) {
         if (mlConnectionHandler != null) {
             System.out.println("Send Skeletons to ML " + LocalDateTime.now());
-            TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
+            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video);
             System.out.println("Received Skeletons to ML " + LocalDateTime.now());
-            return taggedVideo;
+            return skeletons;
             //TODO for testing when eyal not avilable sample2
             /*try {
                 String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";

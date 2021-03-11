@@ -9,16 +9,23 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
+//TODO make for this class interface
 public class TaggedVideo {
 
-    private List<ISwimmingSkeleton> tags;
+    private List<ISwimmingSkeleton> _tags;
+    private String _mlSkeletonsPath;
+    private String _skeletonsPath;
 
-    public TaggedVideo() {
-        this.tags = new LinkedList<>();
+    public TaggedVideo(String mlSkeletonsPath, String skeletonsPath) {
+        _tags = new LinkedList<>();
+        _mlSkeletonsPath = mlSkeletonsPath;
+        _skeletonsPath = skeletonsPath;
     }
 
-    public TaggedVideo(List<ISwimmingSkeleton> tags) {
-        this.tags = tags;
+    public TaggedVideo(List<ISwimmingSkeleton> tags, String mlSkeletonsPath, String skeletonsPath) {
+        _tags = tags;
+        _mlSkeletonsPath = mlSkeletonsPath;
+        _skeletonsPath = skeletonsPath;
     }
 
     /**
@@ -28,27 +35,37 @@ public class TaggedVideo {
      */
     // TODO - need o remove and fix the tests about it
     public TaggedVideo(String json) {
-        this.tags = new LinkedList<>();
+        _tags = new LinkedList<>();
         Gson gson = new Gson();
         Type listType = new TypeToken<LinkedList<LinkedList<Double>>>(){}.getType();
         List<List<Double>> list = gson.fromJson(json, listType);
         for (List<Double> frame: list) {
             //TODO remove NEW!!!
             ISwimmingSkeleton skeleton = new SwimmingSkeleton(frame);
-            tags.add(skeleton);
+            _tags.add(skeleton);
         }
     }
 
     // TODO - add tests
     public boolean addTag(ISwimmingSkeleton tag) {
-        return this.tags.add(tag);
+        return _tags.add(tag);
     }
 
-    public List<ISwimmingSkeleton> getTags() {
-        return this.tags;
-    }
 
     public void setTags(List<ISwimmingSkeleton> tags) {
-        this.tags = tags;
+        _tags = tags;
+    }
+
+
+    public List<ISwimmingSkeleton> getTags() {
+        return _tags;
+    }
+
+    public String getMlSkeletonsPath() {
+        return _mlSkeletonsPath;
+    }
+
+    public String getskeletonsPath() {
+        return _skeletonsPath;
     }
 }

@@ -54,4 +54,9 @@ public interface IFeedbackVideo {
      */
     List<ISwimmingSkeleton> getSwimmingSkeletons();
 
+
+    String getMLSkeletonsPath();
+
+    String getSkeletonsPath();
+
 }

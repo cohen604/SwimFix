@@ -1,6 +1,7 @@
 package ExternalSystemTests;
 
 import Domain.Streaming.*;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerReal;
 import junit.framework.TestCase;
@@ -8,6 +9,8 @@ import mainServer.SwimmingErrorDetectors.FactoryDraw;
 import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
+
+import java.util.List;
 
 
 public class MLConnectionHandlerTest extends TestCase {
@@ -37,8 +40,8 @@ public class MLConnectionHandlerTest extends TestCase {
     }
 
     public void testGetSkeletons() {
-        TaggedVideo taggedVideo = this.mlConnectionHandler.getSkeletons(this.video);
-        if(taggedVideo == null) {
+        List<ISwimmingSkeleton> swimmingSkeletons = this.mlConnectionHandler.getSkeletons(this.video);
+        if(swimmingSkeletons == null) {
             fail();
         }
         //TODO

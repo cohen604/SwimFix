@@ -1,5 +1,6 @@
 package Storage.User;
 
+import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Swimmer;
 import Domain.UserData.User;
@@ -30,20 +31,39 @@ public class SwimmerCodec implements Codec<Swimmer> {
     @Override
     public Swimmer decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String tag = bsonReader.readString("tag");
+        List<IFeedbackVideo> feedbacks = new LinkedList<>();
+        bsonReader.readStartArray();
+        while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+            bsonReader.readStartDocument();
+            String feedbackPath = bsonReader.readString("path");
+            String videoPath = bsonReader.readString("video path");
+            String skeletonsPath = bsonReader.readString("skeletons path");
+            String mlSkeletonsPath = bsonReader.readString("ml skeletons path");
+            //TODO need to change this new to something else
+            FeedbackVideo feedbackVideo = new FeedbackVideo();
+            feedbacks.add(feedbackVideo);
+            bsonReader.readEndDocument();
+        }
+        bsonReader.readEndArray();
         bsonReader.readEndDocument();
-        return new Swimmer(tag);
+        return new Swimmer();
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("tag", swimmer.getTag());
-        /*bsonWriter.writeStartArray("feedbacks");
+
+        bsonWriter.writeStartArray("feedbacks");
         for (IFeedbackVideo feedbackVideo: swimmer.getFeedbacks()) {
+            bsonWriter.writeStartDocument();
+            bsonWriter.writeString("path", feedbackVideo.getPath());
+            bsonWriter.writeString("video path", feedbackVideo.getIVideo().getPath());
+            bsonWriter.writeString("skeletons path", feedbackVideo.getSkeletonsPath());
+            bsonWriter.writeString("ml skeletons path", feedbackVideo.getMLSkeletonsPath());
             bsonWriter.writeString(feedbackVideo.getPath(), feedbackVideo.getIVideo().getPath());
+            bsonWriter.writeEndDocument();
         }
-        bsonWriter.writeEndArray();*/
+        bsonWriter.writeEndArray();
         bsonWriter.writeEndDocument();
     }
 

@@ -15,7 +15,7 @@ public class Video implements IVideo {
     protected List<Mat> video; // The original frames of the video
     private int height;
     private int width;
-    IVideoHandler videoHandler; // The video handler for doing
+    IVideoHandler videoHandler; //TODO refactor this need to abstract this class from video
 
     //TODO delete this
     public Video(IVideoHandler videoHandler, ConvertedVideoDTO convertedVideoDTO) {
