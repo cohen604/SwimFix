@@ -99,6 +99,15 @@ public class LinearInterpolation implements Interpolation {
     }
 
     private void compute(List<IPoint> points, int startIndex, int lastIndex, IPoint first, IPoint second,
+                         int firstIndex, int secondIndex) {
+        for(int i=startIndex; i<lastIndex; i++) {
+            double xPoint = findY(i, firstIndex, secondIndex, first.getX(), second.getX());
+            double yPoint = findY(i, firstIndex, secondIndex, first.getY(), second.getY());
+            points.set(i, new SkeletonPoint(xPoint, yPoint));
+        }
+    }
+
+    private void compute(List<IPoint> points, int startIndex, int lastIndex, IPoint first, IPoint second,
                          int firstIndex, int secondIndex, double threshold) {
         for(int i=startIndex; i<lastIndex; i++) {
             double xPoint = findY(i, firstIndex, secondIndex, first.getX(), second.getX());
@@ -121,6 +130,7 @@ public class LinearInterpolation implements Interpolation {
      * @param index - the index of the prev points
      * @return - the average of the prev points
      */
+    //TODO talk to niv but if there isn't points??
     private IPoint averagePrev (List<IPoint> points, int index) {
         double xAverage = 0;
         double yAverage = 0;
@@ -150,14 +160,17 @@ public class LinearInterpolation implements Interpolation {
 
     private void computePoints(List<IPoint> points, IPoint first, IPoint second,
                                          int firstIndex, int secondIndex) {
-        compute(points, firstIndex +1, secondIndex, first, second, firstIndex, secondIndex, 50);
+        compute(points, firstIndex +1, secondIndex, first, second, firstIndex, secondIndex);
+        //compute(points, firstIndex +1, secondIndex, first, second, firstIndex, secondIndex, 50);
     }
 
     private void computePointsAfter(List<IPoint> points, IPoint first, IPoint second,
                                         int firstIndex, int secondIndex,
                                         int missedPointsAfter) {
         compute(points, secondIndex +1, secondIndex + missedPointsAfter + 1,
-                first, second, firstIndex, secondIndex, 50);
+                first, second, firstIndex, secondIndex);
+        //compute(points, secondIndex +1, secondIndex + missedPointsAfter + 1,
+        //        first, second, firstIndex, secondIndex, 50);
     }
 
 }

@@ -29,13 +29,13 @@ public class SkeletonsLoader implements ISkeletonsLoader {
             try {
                 fileWriter = new FileWriter(file);
                 // write
-                String headers = "head x, head y, " +
-                        "right shoulder x, right shoulder y," +
-                        "right elbow x, right elbow y," +
-                        "right wrist x, right wrist y," +
-                        "left shoulder x, left shoulder y," +
-                        "left elbow x, left elbow y," +
-                        "left wrist x, left wrist y";
+                String headers = "head_x,head_y," +
+                        "right_shoulder_x,right shoulder y," +
+                        "right_elbow_x,right_elbow_y," +
+                        "right_wrist_x,right_wrist_y," +
+                        "left_shoulder_x,left_shoulder_y," +
+                        "left_elbow_x,left_elbow_y," +
+                        "left_wrist_x,left_wrist_y";
                 fileWriter.append(headers);
                 fileWriter.append('\n');
                 // head right s,e,w left s,e,w
@@ -112,46 +112,46 @@ public class SkeletonsLoader implements ISkeletonsLoader {
             if(!elements[i].isEmpty() && !elements[i].replaceAll(" ","").isEmpty()) {
                 double value = Double.valueOf(elements[i]);
                 switch (headers.get(i)) {
-                    case "head x":
+                    case "head_x":
                         values.headX = value;
                         break;
-                    case "head y":
+                    case "head_y":
                         values.headY = value;
                         break;
-                    case "right shoulder x":
+                    case "right_shoulder_x":
                         values.rShoulderX = value;
                         break;
-                    case "right shoulder y":
+                    case "right_shoulder_y":
                         values.rShoulderY = value;
                         break;
-                    case "right elbow x":
+                    case "right_elbow_x":
                         values.rElbowX = value;
                         break;
-                    case "right elbow y":
+                    case "right_elbow_y":
                         values.rElbowY = value;
                         break;
-                    case "right wrist x":
+                    case "right_wrist_x":
                         values.rWristX = value;
                         break;
-                    case "right wrist y":
+                    case "right_wrist_y":
                         values.rWristY = value;
                         break;
-                    case "left shoulder x":
+                    case "left_shoulder_x":
                         values.lShoulderX = value;
                         break;
-                    case "left shoulder y":
+                    case "left_shoulder_y":
                         values.lShoulderY = value;
                         break;
-                    case "left elbow x":
+                    case "left_elbow_x":
                         values.lElbowX = value;
                         break;
-                    case "left elbow y":
+                    case "left_elbow_y":
                         values.lElbowY = value;
                         break;
-                    case "left wrist x":
+                    case "left_wrist_x":
                         values.lWristX = value;
                         break;
-                    case "left wrist y":
+                    case "left_wrist_y":
                         values.lWristY = value;
                         break;
                 }

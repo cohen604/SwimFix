@@ -92,9 +92,9 @@ public class FeedbackProvider implements IFeedbackProvider {
         int width = frames.get(0).width();
 
         List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
-        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsFolderPath);
-        // save the ml skeletons
         String mlSkeletonsPath = generateName(mlSkeletonsFolderPath, ".csv", time);
+        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
+        // save the ml skeletons
         iSkeletonsLoader.save(taggedVideo.getTags(), mlSkeletonsPath);
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         skeletons = taggedVideo.getTags();

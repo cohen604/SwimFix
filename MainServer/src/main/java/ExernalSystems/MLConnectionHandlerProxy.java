@@ -3,6 +3,7 @@ package ExernalSystems;
 import Domain.Streaming.IVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.SwimmingData.ISwimmingSkeleton;
+import DomainLogic.FileLoaders.SkeletonsLoader;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -23,21 +24,14 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
         if (mlConnectionHandler != null) {
-            System.out.println("Send Skeletons to ML " + LocalDateTime.now());
-            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
-            System.out.println("Received Skeletons to ML " + LocalDateTime.now());
-            return skeletons;
-            //TODO for testing when eyal not avilable sample2
-            /*try {
-                String path = "./src/test/java/TestingVideos/sample2_skeletons.txt";
-                File file = new File(path);
-                List<String> lines = readAllLines(file.toPath());
-                String json = lines.stream().reduce("",(acc, cur)->acc+cur);
-                return new TaggedVideo(json);
-            } catch (Exception e ) {
-                e.printStackTrace();
-                return null;
-            }*/
+            //System.out.println("Send Skeletons to ML " + LocalDateTime.now());
+            //List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
+            //System.out.println("Received Skeletons to ML " + LocalDateTime.now());
+            //return skeletons;
+            //TODO for testing when ml server down load skeleton from local testing videos from csv
+            String path = "./src/test/java/TestingVideos/test@gmail.com/mlSkeletons/2021-03-12-17-36-11.csv";
+            SkeletonsLoader skeletonsLoader = new SkeletonsLoader();
+            return skeletonsLoader.read(path);
         }
         return null;
     }
