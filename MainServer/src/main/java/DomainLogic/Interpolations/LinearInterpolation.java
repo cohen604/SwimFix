@@ -99,13 +99,43 @@ public class LinearInterpolation implements Interpolation {
     }
 
     private void compute(List<IPoint> points, int startIndex, int lastIndex, IPoint first, IPoint second,
-                         int firstIndex, int secondIndex) {
+                         int firstIndex, int secondIndex, double threshold) {
         for(int i=startIndex; i<lastIndex; i++) {
             double xPoint = findY(i, firstIndex, secondIndex, first.getX(), second.getX());
             double yPoint = findY(i, firstIndex, secondIndex, first.getY(), second.getY());
-            //TODO change to factory
-            points.set(i, new SkeletonPoint(xPoint, yPoint));
+            // check that a new point is not too far away from the previous points
+            IPoint averagePrev = averagePrev(points, i);
+            if (Math.abs(averagePrev.getX() - xPoint) < threshold &&
+                    Math.abs(averagePrev.getY() - yPoint) < threshold) {
+                points.set(i, new SkeletonPoint(xPoint, yPoint));
+            }
+            else {
+                points.set(i, averagePrev);
+            }
         }
+    }
+
+    /**
+     * calculate the average of the 5 prev points
+     * @param points - the list of the points
+     * @param index - the index of the prev points
+     * @return - the average of the prev points
+     */
+    private IPoint averagePrev (List<IPoint> points, int index) {
+        double xAverage = 0;
+        double yAverage = 0;
+        int total = 0;
+        for (int i = 1; i <= 5; i++){
+            if (index - i > 0) {
+                IPoint iPoint = points.get(index - i);
+                if (iPoint != null) {
+                    xAverage += iPoint.getX();
+                    yAverage += iPoint.getY();
+                    total += 1;
+                }
+            }
+        }
+        return new SkeletonPoint(xAverage / total,yAverage / total);
     }
 
     private void computePointsBefore(List<IPoint> points, IPoint first, IPoint second,
@@ -120,14 +150,14 @@ public class LinearInterpolation implements Interpolation {
 
     private void computePoints(List<IPoint> points, IPoint first, IPoint second,
                                          int firstIndex, int secondIndex) {
-        compute(points, firstIndex +1, secondIndex, first, second, firstIndex, secondIndex);
+        compute(points, firstIndex +1, secondIndex, first, second, firstIndex, secondIndex, 50);
     }
 
     private void computePointsAfter(List<IPoint> points, IPoint first, IPoint second,
                                         int firstIndex, int secondIndex,
                                         int missedPointsAfter) {
         compute(points, secondIndex +1, secondIndex + missedPointsAfter + 1,
-                first, second, firstIndex, secondIndex);
+                first, second, firstIndex, secondIndex, 50);
     }
 
 }

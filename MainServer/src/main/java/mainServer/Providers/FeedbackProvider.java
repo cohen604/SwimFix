@@ -243,8 +243,7 @@ public class FeedbackProvider implements IFeedbackProvider {
      */
     private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
         skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
-        // TODO problem with interpolation
-        //skeletons = iSkeletonInterpolation.interpolate(skeletons);
+        skeletons = iSkeletonInterpolation.interpolate(skeletons);
         //skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
         return skeletons;
     }
