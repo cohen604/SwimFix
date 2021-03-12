@@ -5,19 +5,19 @@ import Domain.Streaming.*;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.User.UserDao;
-import mainServer.Completions.ISkeletonsCompletion;
-import mainServer.Completions.SkeletonsCompletionAfter;
-import mainServer.Completions.SkeletonsCompletionBefore;
-import mainServer.FileLoaders.ISkeletonsLoader;
-import mainServer.FileLoaders.SkeletonsLoader;
-import mainServer.Interpolations.*;
+import DomainLogic.Completions.ISkeletonsCompletion;
+import DomainLogic.Completions.SkeletonsCompletionAfter;
+import DomainLogic.Completions.SkeletonsCompletionBefore;
+import DomainLogic.FileLoaders.ISkeletonsLoader;
+import DomainLogic.FileLoaders.SkeletonsLoader;
+import DomainLogic.Interpolations.*;
 import mainServer.Providers.IFeedbackProvider;
 import mainServer.Providers.IUserProvider;
 import mainServer.Providers.FeedbackProvider;
 import mainServer.Providers.UserProvider;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
-import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
+import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
+import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 
 public class SwimFixAPI {
 

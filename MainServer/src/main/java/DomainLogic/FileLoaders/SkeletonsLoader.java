@@ -1,4 +1,4 @@
-package mainServer.FileLoaders;
+package DomainLogic.FileLoaders;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.Points.IPoint;

@@ -1,10 +1,7 @@
 package Domain.Streaming;
 
 import DTO.ConvertedVideoDTO;
-import Domain.SwimmingData.Drawing.IDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
-
-import java.time.LocalDateTime;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 
 public class FactoryVideo implements IFactoryVideo{
 

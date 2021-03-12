@@ -37,9 +37,9 @@ public class SwimmerCodec implements Codec<Swimmer> {
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             bsonReader.readStartDocument();
             String feedbackPath = bsonReader.readString("path");
-            String videoPath = bsonReader.readString("video path");
-            String skeletonsPath = bsonReader.readString("skeletons path");
-            String mlSkeletonsPath = bsonReader.readString("ml skeletons path");
+            String videoPath = bsonReader.readString("video_path");
+            String skeletonsPath = bsonReader.readString("skeletons_path");
+            String mlSkeletonsPath = bsonReader.readString("ml_skeletons_path");
             //TODO need to change this new to something else
             //FeedbackVideo feedbackVideo = new FeedbackVideo();
             //feedbacks.add(feedbackVideo);
@@ -57,14 +57,16 @@ public class SwimmerCodec implements Codec<Swimmer> {
         bsonWriter.writeStartArray("feedbacks");
         for (IFeedbackVideo feedbackVideo: swimmer.getFeedbacks()) {
             bsonWriter.writeStartDocument();
+
             bsonWriter.writeString("path", feedbackVideo.getPath());
-            bsonWriter.writeString("video path", feedbackVideo.getIVideo().getPath());
-            bsonWriter.writeString("skeletons path", feedbackVideo.getSkeletonsPath());
-            bsonWriter.writeString("ml skeletons path", feedbackVideo.getMLSkeletonsPath());
-            bsonWriter.writeString(feedbackVideo.getPath(), feedbackVideo.getIVideo().getPath());
+            bsonWriter.writeString("video_path", feedbackVideo.getIVideo().getPath());
+            bsonWriter.writeString("skeletons_path", feedbackVideo.getSkeletonsPath());
+            bsonWriter.writeString("ml_skeletons_path", feedbackVideo.getMLSkeletonsPath());
             bsonWriter.writeName("errors");
             bsonWriter.writeStartDocument();
+
             bsonWriter.writeEndDocument();
+
             bsonWriter.writeEndDocument();
         }
         bsonWriter.writeEndArray();

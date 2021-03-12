@@ -1,4 +1,4 @@
-package mainServer.Interpolations;
+package DomainLogic.Interpolations;
 
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;

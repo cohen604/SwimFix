@@ -1,4 +1,4 @@
-package mainServer.Interpolations;
+package DomainLogic.Interpolations;
 
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
@@ -6,7 +6,7 @@ import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MedianInterpolation implements Interpolation {
+public class LinearInterpolation implements Interpolation {
 
     private int _firstIndex;
     private IPoint _first;
@@ -17,7 +17,7 @@ public class MedianInterpolation implements Interpolation {
     private int _prevFirstIndex;
     private IPoint _prevFirst;
 
-    public MedianInterpolation() {
+    public LinearInterpolation() {
         beforeInterpolate();
     }
 
@@ -93,15 +93,16 @@ public class MedianInterpolation implements Interpolation {
         _missedPointsAfterFirst = 0;
     }
 
-    private double calcMedian(double m0, double m1) {
-        return (m0 + m1) / 2;
+    private double findY(double x, double x0, double x1, double y0, double y1) {
+        // liner equation
+        return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
     }
 
     private void compute(List<IPoint> points, int startIndex, int lastIndex, IPoint first, IPoint second,
                          int firstIndex, int secondIndex) {
         for(int i=startIndex; i<lastIndex; i++) {
-            double xPoint = calcMedian(first.getX(), second.getX());
-            double yPoint = calcMedian(first.getY(), second.getY());
+            double xPoint = findY(i, firstIndex, secondIndex, first.getX(), second.getX());
+            double yPoint = findY(i, firstIndex, secondIndex, first.getY(), second.getY());
             //TODO change to factory
             points.set(i, new SkeletonPoint(xPoint, yPoint));
         }
@@ -110,8 +111,11 @@ public class MedianInterpolation implements Interpolation {
     private void computePointsBefore(List<IPoint> points, IPoint first, IPoint second,
                                int firstIndex, int secondIndex,
                                int missedPointsBeforeFirst) {
-        compute(points, firstIndex - missedPointsBeforeFirst, firstIndex,
-                first, second, firstIndex, secondIndex);
+        /*compute(points, firstIndex - missedPointsBeforeFirst, firstIndex,
+                first, second, firstIndex, secondIndex);*/
+        for(int i=firstIndex - missedPointsBeforeFirst; i<firstIndex; i++) {
+            points.set(i, first);
+        }
     }
 
     private void computePoints(List<IPoint> points, IPoint first, IPoint second,

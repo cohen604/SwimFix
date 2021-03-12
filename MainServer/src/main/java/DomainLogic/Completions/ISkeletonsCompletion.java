@@ -1,4 +1,4 @@
-package mainServer.Completions;
+package DomainLogic.Completions;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
 

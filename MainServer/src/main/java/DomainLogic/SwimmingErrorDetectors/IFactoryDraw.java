@@ -1,4 +1,4 @@
-package mainServer.SwimmingErrorDetectors;
+package DomainLogic.SwimmingErrorDetectors;
 
 import Domain.SwimmingData.Drawing.IDraw;
 

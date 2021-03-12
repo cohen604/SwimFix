@@ -1,4 +1,4 @@
-package mainServer.SwimmingErrorDetectors;
+package DomainLogic.SwimmingErrorDetectors;
 
 import Domain.SwimmingData.Errors.LeftPalmCrossHeadError;
 import Domain.SwimmingData.Errors.RightPalmCrossHeadError;

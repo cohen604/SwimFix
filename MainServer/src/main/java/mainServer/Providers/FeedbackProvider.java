@@ -6,12 +6,12 @@ import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import ExernalSystems.MLConnectionHandler;
-import mainServer.Completions.ISkeletonsCompletion;
-import mainServer.FileLoaders.ISkeletonsLoader;
-import mainServer.Interpolations.ISkeletonInterpolation;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
-import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
+import DomainLogic.Completions.ISkeletonsCompletion;
+import DomainLogic.FileLoaders.ISkeletonsLoader;
+import DomainLogic.Interpolations.ISkeletonInterpolation;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
+import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
 import org.opencv.core.Mat;
 
 import java.io.File;

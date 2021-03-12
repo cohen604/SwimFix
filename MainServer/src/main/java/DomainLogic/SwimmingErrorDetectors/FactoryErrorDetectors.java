@@ -1,6 +1,4 @@
-package mainServer.SwimmingErrorDetectors;
-
-import Domain.SwimmingData.Errors.PalmCrossHeadError;
+package DomainLogic.SwimmingErrorDetectors;
 
 public class FactoryErrorDetectors implements IFactoryErrorDetectors {
 

@@ -2,17 +2,15 @@ package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.*;
-import Domain.SwimmingData.Drawing.Draw;
 import Storage.Video.VideoDao;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class VideoServiceTest extends TestCase {
