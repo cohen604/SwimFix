@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.*;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.User.UserDao;
@@ -27,7 +28,7 @@ public class SwimFixAPI {
       IUserProvider userProvider = new UserProvider(new UserDao());
 
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
-      IFactoryVideo iFactoryVideo = new FactoryVideo(new FactoryDraw(), new FactoryVideoHandler());
+      IFactoryVideo iFactoryVideo = new FactoryVideo();
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
               new LinearInterpolation(), new MedianInterpolation());
@@ -35,9 +36,13 @@ public class SwimFixAPI {
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
       ISkeletonsLoader skeletonsLoader = new SkeletonsLoader();
+      IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
+      IFactoryDraw iFactoryDraw = new FactoryDraw();
+
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
               iSkeletonInterpolation, completionBefore,
-              completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoader);
+              completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoader,
+              iFactoryVideoHandler, iFactoryDraw);
 
       this.logicManager = new LogicManager(userProvider, feedbackProvider);
    }

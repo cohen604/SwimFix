@@ -28,9 +28,7 @@ public class MLConnectionHandlerTest extends TestCase {
             //TODO mock the ivideo
             this.videoHandler = new VideoHandler(new Draw());
             this.mlConnectionHandler = new MLConnectionHandlerReal("84.109.116.61", "5000");
-            IFactoryDraw iFactoryDraw = new FactoryDraw();
-            IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
-            IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw,iFactoryVideoHandler);
+            IFactoryVideo iFactoryVideo = new FactoryVideo();
             this.video = iFactoryVideo.create("./src/test/java/TestingVideos/sample.mov",".mov");
         } catch (Exception e) {
             System.out.println(e.getMessage());

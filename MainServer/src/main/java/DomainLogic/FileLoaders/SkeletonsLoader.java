@@ -20,12 +20,11 @@ public class SkeletonsLoader implements ISkeletonsLoader {
 
 
     @Override
-    public boolean save(List<ISwimmingSkeleton> swimmingSkeletons, String folderPath, LocalDateTime time) {
+    public boolean save(List<ISwimmingSkeleton> swimmingSkeletons, String path) {
         try {
             // create file
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-            String name =  folderPath + "\\" + time.format(formatter) + ".csv";
-            File file = new File(name);
+            File file = new File(path);
             FileWriter fileWriter = null;
             try {
                 fileWriter = new FileWriter(file);
@@ -110,22 +109,52 @@ public class SkeletonsLoader implements ISkeletonsLoader {
         SkeletonValues values = new SkeletonValues();
         String[] elements = line.split(",");
         for(int i=0; i<elements.length; i++) {
-            double value = Double.valueOf(elements[i]);
-            switch (headers.get(i)) {
-                case "head x": values.headX = value; break;
-                case "head y": values.headY = value; break;
-                case "right shoulder x": values.rShoulderX = value; break;
-                case "right shoulder y": values.rShoulderY = value; break;
-                case "right elbow x": values.rElbowX = value; break;
-                case "right elbow y": values.rElbowY = value; break;
-                case"right wrist x": values.rWristX = value; break;
-                case"right wrist y": values.rWristY = value; break;
-                case"left shoulder x": values.lShoulderX = value; break;
-                case "left shoulder y": values.lShoulderY = value; break;
-                case "left elbow x": values.lElbowX = value; break;
-                case"left elbow y": values.lElbowY = value; break;
-                case"left wrist x": values.lWristX = value; break;
-                case"left wrist y": values.lWristY = value; break;
+            if(!elements[i].isEmpty() && !elements[i].replaceAll(" ","").isEmpty()) {
+                double value = Double.valueOf(elements[i]);
+                switch (headers.get(i)) {
+                    case "head x":
+                        values.headX = value;
+                        break;
+                    case "head y":
+                        values.headY = value;
+                        break;
+                    case "right shoulder x":
+                        values.rShoulderX = value;
+                        break;
+                    case "right shoulder y":
+                        values.rShoulderY = value;
+                        break;
+                    case "right elbow x":
+                        values.rElbowX = value;
+                        break;
+                    case "right elbow y":
+                        values.rElbowY = value;
+                        break;
+                    case "right wrist x":
+                        values.rWristX = value;
+                        break;
+                    case "right wrist y":
+                        values.rWristY = value;
+                        break;
+                    case "left shoulder x":
+                        values.lShoulderX = value;
+                        break;
+                    case "left shoulder y":
+                        values.lShoulderY = value;
+                        break;
+                    case "left elbow x":
+                        values.lElbowX = value;
+                        break;
+                    case "left elbow y":
+                        values.lElbowY = value;
+                        break;
+                    case "left wrist x":
+                        values.lWristX = value;
+                        break;
+                    case "left wrist y":
+                        values.lWristY = value;
+                        break;
+                }
             }
         }
         return createSkeleton(values);

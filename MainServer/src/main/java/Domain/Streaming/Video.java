@@ -39,8 +39,8 @@ public class Video implements IVideo {
      */
     public Video(String path) {
         this.path = path;
-        String[] dots = path.split(".");
-        this.videoType = "." + dots[dots.length -1];
+        int dotIndex = path.lastIndexOf(".");
+        this.videoType = path.substring(dotIndex);
     }
 
     /***

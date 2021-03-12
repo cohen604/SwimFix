@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ISkeletonsLoader {
 
-    boolean save(List<ISwimmingSkeleton> swimmingSkeletons, String folderPath, LocalDateTime time);
+    boolean save(List<ISwimmingSkeleton> swimmingSkeletons, String path);
 
     List<ISwimmingSkeleton> read(String path);
 

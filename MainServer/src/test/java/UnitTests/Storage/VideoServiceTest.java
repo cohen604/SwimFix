@@ -23,9 +23,7 @@ public class VideoServiceTest extends TestCase {
     @Before
     public void setUp() {
         try {
-            IFactoryDraw iFactoryDraw = new FactoryDraw();
-            IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
-            IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+            IFactoryVideo iFactoryVideo = new FactoryVideo();
             this.videoService = new VideoDao(iFactoryVideo);
             File file = new File(VIDEO_FOLDER + "/sample.mov");
             byte[] bytes = Files.readAllBytes(file.toPath());

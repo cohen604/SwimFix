@@ -5,13 +5,6 @@ import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 
 public class FactoryVideo implements IFactoryVideo{
 
-    private IFactoryDraw iFactoryDraw;
-    private IFactoryVideoHandler iFactoryVideoHandler;
-
-    public FactoryVideo(IFactoryDraw iFactoryDraw, IFactoryVideoHandler iFactoryVideoHandler) {
-        this.iFactoryDraw = iFactoryDraw;
-        this.iFactoryVideoHandler = iFactoryVideoHandler;
-    }
 
     @Override
     public IVideo create(ConvertedVideoDTO convertedVideoDTO, String path) {
