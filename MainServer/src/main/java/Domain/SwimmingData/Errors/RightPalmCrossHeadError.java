@@ -9,7 +9,7 @@ import org.opencv.core.Mat;
 public class RightPalmCrossHeadError extends PalmCrossHeadError{
 
     public RightPalmCrossHeadError(IDraw drawer, boolean inside) {
-        super(drawer, inside);
+        super(drawer, inside, "Right Palm Error");
     }
 
     @Override

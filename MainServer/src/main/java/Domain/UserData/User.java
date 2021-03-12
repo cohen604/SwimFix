@@ -3,6 +3,9 @@ package Domain.UserData;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {
@@ -28,7 +31,7 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
-        _pathManager = new PathManager(email);
+        _pathManager = new PathManager(email, true);
     }
 
     public User(String uid, String email, String name) {
@@ -36,6 +39,7 @@ public class User implements IUser {
         this.email = email;
         this.name = name;
         this.logged = new AtomicBoolean(false);
+        _pathManager = new PathManager(email, false);
     }
 
     public User(String uid, String email, String name, boolean logged) {
@@ -43,6 +47,7 @@ public class User implements IUser {
         this.email = email;
         this.name = name;
         this.logged = new AtomicBoolean(logged);
+        _pathManager = new PathManager(email, false);
     }
 
     public User(String uid, String email, String name, boolean logged,
@@ -55,6 +60,7 @@ public class User implements IUser {
         this._coach = coach;
         this._admin = admin;
         this._researcher = researcher;
+        _pathManager = new PathManager(email, false);
     }
 
     @Override
@@ -105,6 +111,11 @@ public class User implements IUser {
     @Override
     public String getMLSkeletonsPath() {
         return _pathManager.getMLSkeletonsPath();
+    }
+
+    @Override
+    public Collection<IFeedbackVideo> getFeedbacks() {
+        return _swimmer.getFeedbacks();
     }
 
     public Swimmer getSwimmer() {

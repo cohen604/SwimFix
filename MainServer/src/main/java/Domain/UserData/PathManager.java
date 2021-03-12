@@ -9,18 +9,22 @@ public class PathManager {
     private String _mainFolder;
     private String[] _folders;
 
-    public PathManager(String folderName) {
+    public PathManager(String folderName, boolean build) {
         _root = "clients";
         _mainFolder = combinePaths(_root, folderName);
         _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
-        createDirs();
+        if(build) {
+            createDirs();
+        }
     }
 
-    public PathManager(String root, String folderName) {
+    public PathManager(String root, String folderName, boolean build) {
         _root = root;
         _mainFolder = combinePaths(_root, folderName);
         _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
-        createDirs();
+        if(build) {
+            createDirs();
+        }
     }
 
     private void createDirs() {

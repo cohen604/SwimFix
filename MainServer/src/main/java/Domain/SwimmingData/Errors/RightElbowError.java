@@ -9,7 +9,7 @@ import org.opencv.core.Mat;
 public class RightElbowError extends ElbowError {
 
     public RightElbowError(IDraw drawer, double angle, boolean inside) {
-        super(drawer, angle, inside);
+        super(drawer, angle, inside, "Right Elbow Error");
     }
 
     @Override

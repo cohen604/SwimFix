@@ -9,7 +9,7 @@ import org.opencv.core.Mat;
 public class RightForearmError extends ForearmError{
 
     public RightForearmError(IDraw drawer, double angle, boolean inside) {
-        super(drawer, angle, inside);
+        super(drawer, angle, inside, "Right Forearm Error");
     }
 
     @Override

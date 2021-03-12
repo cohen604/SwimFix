@@ -1,5 +1,8 @@
 package Domain.UserData.Interfaces;
 
+import Domain.Streaming.IFeedbackVideo;
+import java.util.Collection;
+
 public interface IUser {
 
     String getUid();
@@ -21,5 +24,7 @@ public interface IUser {
     String getSkeletonsPath();
 
     String getMLSkeletonsPath();
+
+    Collection<IFeedbackVideo> getFeedbacks();
 
 }

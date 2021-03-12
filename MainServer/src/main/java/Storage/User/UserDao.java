@@ -1,5 +1,6 @@
 package Storage.User;
 import Domain.UserData.User;
+import Storage.SwimmingErrors.*;
 import Storage.User.Providers.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -19,13 +20,23 @@ import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCode
 public class UserDao implements IUserDao{
 
     private MongoCollection<User> getCollection() {
+        CodecRegistry swimmerCodecRegistry = CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(
+                new LeftElbowErrorCodec(),
+                new LeftForearmErrorCodec(),
+                new LeftPalmCrossHeadErrorCodec(),
+                new RightElbowErrorCodec(),
+                new RightForearmErrorCodec(),
+                new RightPalmCrossHeadErrorCodec()
+        ));
+
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
-                                new SwimmerCodec(),
+                                new SwimmerCodec(swimmerCodecRegistry),
                                 new CoachCodec(),
                                 new AdminCodec(),
-                                new ResearcherCodec()), //here we define the codec
+                                new ResearcherCodec()
+                               ), //here we define the codec
                         //CodecRegistries.fromProviders( new UserCodecProvider()),
                         getDefaultCodecRegistry());
 
@@ -99,7 +110,7 @@ public class UserDao implements IUserDao{
             return value;
         }
         catch (Exception e) {
-            System.out.println((e.getMessage()));
+            e.printStackTrace();
         }
         return null;
     }

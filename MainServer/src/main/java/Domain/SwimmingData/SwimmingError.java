@@ -7,9 +7,11 @@ import org.opencv.core.Mat;
 public abstract class SwimmingError implements IDraw {
 
     private IDraw drawer;
+    private String tag;
 
-    public SwimmingError(IDraw drawer) {
+    public SwimmingError(IDraw drawer, String tag) {
         this.drawer = drawer;
+        this.tag = tag;
     }
 
     @Override
@@ -57,4 +59,8 @@ public abstract class SwimmingError implements IDraw {
     }
 
     public abstract void draw(Mat frame, ISwimmingSkeleton skeleton);
+
+    public String getTag() {
+        return this.tag;
+    }
 }

@@ -1,10 +1,11 @@
 package Domain.Streaming;
 
-import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
 import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.SwimmingError;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface represent a contract how feedback video need to behave in our system
@@ -41,7 +42,6 @@ public interface IFeedbackVideo {
      */
     IVideo getIVideo();
 
-
     /**
      * TODO comment
      * @return
@@ -51,5 +51,7 @@ public interface IFeedbackVideo {
     String getMLSkeletonsPath();
 
     String getSkeletonsPath();
+
+    Map<Integer, List<SwimmingError>> getSwimmingErrors();
 
 }

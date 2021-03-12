@@ -2,6 +2,7 @@ package Domain.Streaming;
 import DTO.ConvertedVideoDTO;
 import org.opencv.core.Mat;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.*;
@@ -29,6 +30,17 @@ public class Video implements IVideo {
                  String path) {
         this.videoType = convertedVideoDTO.getVideoType();
         this.path = path;
+    }
+
+    /**
+     * constructor
+     * @param path the path of the video
+     * @precondition path must have char .
+     */
+    public Video(String path) {
+        this.path = path;
+        String[] dots = path.split(".");
+        this.videoType = "." + dots[dots.length -1];
     }
 
     /***

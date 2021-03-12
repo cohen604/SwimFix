@@ -9,7 +9,7 @@ public class LeftPalmCrossHeadError extends PalmCrossHeadError {
 
 
     public LeftPalmCrossHeadError(IDraw drawer, boolean inside) {
-        super(drawer, inside);
+        super(drawer, inside, "Left Palm Error");
     }
 
     @Override

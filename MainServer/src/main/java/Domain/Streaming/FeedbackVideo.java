@@ -102,6 +102,11 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     }
 
     @Override
+    public Map<Integer, List<SwimmingError>> getSwimmingErrors() {
+        return this.errorMap;
+    }
+
+    @Override
     public boolean isFeedbackUpdated() {
         return feedbackUpdated;
     }

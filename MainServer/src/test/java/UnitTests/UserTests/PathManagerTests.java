@@ -34,7 +34,7 @@ public class PathManagerTests  extends TestCase {
             e.printStackTrace();
             fail();
         }
-        _pathManager = new PathManager(ROOT_PATH, FOLDER_PATH);
+        _pathManager = new PathManager(ROOT_PATH, FOLDER_PATH, true);
     }
 
     @AfterClass

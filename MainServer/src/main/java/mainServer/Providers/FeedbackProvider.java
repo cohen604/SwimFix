@@ -108,7 +108,9 @@ public class FeedbackProvider implements IFeedbackProvider {
                 List<SwimmingError> detectorErrors = detector.detect(skeleton);
                 errors.addAll(detectorErrors);
             }
-            errorMap.put(i, errors);
+            if(!errors.isEmpty()) {
+                errorMap.put(i, errors);
+            }
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
