@@ -6,9 +6,7 @@ import java.time.LocalDateTime;
 
 public interface IFactoryVideo {
 
-    IVideo create(ConvertedVideoDTO convertedVideoDTO);
-
-    IVideo create(ConvertedVideoDTO convertedVideoDTO, String path, LocalDateTime localDateTime);
+    IVideo create(ConvertedVideoDTO convertedVideoDTO, String path);
 
     IVideo create(String path, String videoType);
 }

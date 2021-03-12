@@ -19,11 +19,12 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
         mlConnectionHandler = new MLConnectionHandlerReal("84.109.116.61", "5050");
     }
 
+
     @Override
-    public List<ISwimmingSkeleton> getSkeletons(IVideo video) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
         if (mlConnectionHandler != null) {
             System.out.println("Send Skeletons to ML " + LocalDateTime.now());
-            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video);
+            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
             System.out.println("Received Skeletons to ML " + LocalDateTime.now());
             return skeletons;
             //TODO for testing when eyal not avilable sample2
@@ -40,4 +41,5 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
         }
         return null;
     }
+
 }

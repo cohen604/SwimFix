@@ -8,18 +8,11 @@ import java.util.Map;
 
 public class FactoryFeedbackVideo implements IFactoryFeedbackVideo{
 
-    //TODO delete this
-    @Override
-    public IFeedbackVideo create(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap) {
-        return new FeedbackVideo(video, taggedVideo, errorMap);
-    }
 
     @Override
     public IFeedbackVideo create(IVideo video,
-                                 TaggedVideo taggedVideo, Map<Integer,
-                                 List<SwimmingError>> errorMap,
-                                 String folderName,
-                                 LocalDateTime time) {
-        return new FeedbackVideo(video, taggedVideo, errorMap, folderName, time);
+                                 TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
+                                 String path) {
+        return new FeedbackVideo(video, taggedVideo, errorMap, path);
     }
 }

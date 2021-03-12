@@ -32,6 +32,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         this.port = port;
     }
 
+    //TODO delete this
     public String postMessage(String data, String url, String param) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -42,6 +43,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         return restTemplate.postForObject(url, requestEntity, String.class);
     }
 
+    //TODO delete this
     public String postMessage(List<String> data, String url, String param, int len, int height, int width) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -77,39 +79,15 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         return "http://"+this.ip + ":" + this.port + prefix;
     }
 
-    /*@Override
-    public TaggedVideo getSkeletons(IVideo video) {
-        try {
-            List<byte[]> frames = video.getVideo();
-            List<String> frames_string = new LinkedList<>();
-            for (byte[] frame : frames) {
-                String frame_string = Base64.getEncoder().encodeToString(frame);
-                frames_string.add(frame_string);
-            }
-            System.out.println("size "+frames.size());
-            System.out.println("height "+video.getHeight());
-            System.out.println("width " +video.getWidth());
-            System.out.println("frames" +frames);
-            System.out.println(LocalDateTime.now());
-            String res = postMessage(frames_string, getURL("/detect"), "video", frames.size(),
-                    video.getHeight(), video.getWidth());
-            return createTaggedVideo(res);
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }*/
-
     @Override
-    public List<ISwimmingSkeleton> getSkeletons(IVideo video) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
         try {
-            int size = video.getVideo().size();
             byte[] data = Files.readAllBytes(Paths.get(video.getPath()));
-            System.out.println("height "+video.getHeight());
-            System.out.println("width " +video.getWidth());
+            System.out.println("height "+height);
+            System.out.println("width " +width);
             System.out.println(LocalDateTime.now());
             String res = postMessage(data, getURL("/detect"), size,
-                    video.getHeight(), video.getWidth(), video.getVideoType());
+                    height, width, video.getVideoType());
             return createTaggedVideo(res);
         } catch (Exception e){
             System.out.println(e.getMessage());

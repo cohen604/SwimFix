@@ -12,12 +12,6 @@ import java.util.List;
 public interface IFeedbackVideo {
 
     /**
-     * The function generated feedbackTDO
-     * @return the feedbackTDO generated
-     */
-    FeedbackVideoDTO generateFeedbackDTO();
-
-    /**
      * The function generate a feedback view link with the given detectors filters
      * @param detectors - the names of the detectors in the system
      * @return the link to view the feedback
@@ -53,7 +47,6 @@ public interface IFeedbackVideo {
      * @return
      */
     List<ISwimmingSkeleton> getSwimmingSkeletons();
-
 
     String getMLSkeletonsPath();
 

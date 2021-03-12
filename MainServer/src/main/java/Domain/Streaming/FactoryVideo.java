@@ -17,24 +17,15 @@ public class FactoryVideo implements IFactoryVideo{
     }
 
     @Override
-    public IVideo create(ConvertedVideoDTO convertedVideoDTO) {
-        IDraw drawer = iFactoryDraw.create();
-        IVideoHandler iVideoHandler = iFactoryVideoHandler.create(drawer);
-        return new Video(iVideoHandler, convertedVideoDTO);
-    }
-
-    @Override
-    public IVideo create(ConvertedVideoDTO convertedVideoDTO, String path, LocalDateTime localDateTime) {
-        IDraw drawer = iFactoryDraw.create();
-        IVideoHandler iVideoHandler = iFactoryVideoHandler.create(drawer);
-        return new Video(iVideoHandler, convertedVideoDTO, path, localDateTime);
+    public IVideo create(ConvertedVideoDTO convertedVideoDTO, String path) {
+        //IDraw drawer = iFactoryDraw.create();
+        //IVideoHandler iVideoHandler = iFactoryVideoHandler.create(drawer);
+        return new Video(convertedVideoDTO, path);
     }
 
     @Override
     public IVideo create(String path, String videoType) {
-        IDraw drawer = iFactoryDraw.create();
-        IVideoHandler iVideoHandler = iFactoryVideoHandler.create(drawer);
-        return new Video(iVideoHandler, path, videoType);
+        return new Video(path, videoType);
     }
 
 }

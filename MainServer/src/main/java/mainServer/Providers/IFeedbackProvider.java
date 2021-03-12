@@ -38,15 +38,15 @@ public interface IFeedbackProvider {
     /**
      * TODO - add comments
      * @param convertedVideoDTO
-     * @param videoPath
-     * @param feedbackPath
+     * @param videoFolderPath
+     * @param feedbackFolderPath
      * @return
      */
     IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
-                                         String videoPath,
-                                         String feedbackPath,
-                                         String feedbackSkeletonsPath,
-                                         String mlSkeletonsPath,
+                                         String videoFolderPath,
+                                         String feedbackFolderPath,
+                                         String feedbackSkeletonsFolderPath,
+                                         String mlSkeletonsFolderPath,
                                          List<String> detectorsNames);
 
     /**

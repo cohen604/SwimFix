@@ -22,7 +22,7 @@ public class VideoCodec implements Codec<Video> {
         String path = bsonReader.readString("_id");
         String type = bsonReader.readString("type");
         bsonReader.readEndDocument();
-        return new Video(new VideoHandler(new Draw()), path, type);
+        return new Video(path, type);
     }
 
     @Override

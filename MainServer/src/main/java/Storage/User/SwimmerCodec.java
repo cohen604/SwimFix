@@ -2,6 +2,7 @@ package Storage.User;
 
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.SwimmingData.SwimmingError;
 import Domain.UserData.Swimmer;
 import Domain.UserData.User;
 import org.bson.BsonReader;
@@ -40,8 +41,8 @@ public class SwimmerCodec implements Codec<Swimmer> {
             String skeletonsPath = bsonReader.readString("skeletons path");
             String mlSkeletonsPath = bsonReader.readString("ml skeletons path");
             //TODO need to change this new to something else
-            FeedbackVideo feedbackVideo = new FeedbackVideo();
-            feedbacks.add(feedbackVideo);
+            //FeedbackVideo feedbackVideo = new FeedbackVideo();
+            //feedbacks.add(feedbackVideo);
             bsonReader.readEndDocument();
         }
         bsonReader.readEndArray();
@@ -61,6 +62,9 @@ public class SwimmerCodec implements Codec<Swimmer> {
             bsonWriter.writeString("skeletons path", feedbackVideo.getSkeletonsPath());
             bsonWriter.writeString("ml skeletons path", feedbackVideo.getMLSkeletonsPath());
             bsonWriter.writeString(feedbackVideo.getPath(), feedbackVideo.getIVideo().getPath());
+            bsonWriter.writeName("errors");
+            bsonWriter.writeStartDocument();
+            bsonWriter.writeEndDocument();
             bsonWriter.writeEndDocument();
         }
         bsonWriter.writeEndArray();

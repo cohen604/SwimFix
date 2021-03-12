@@ -33,7 +33,7 @@ public class VideoServiceTest extends TestCase {
             byte[] bytes = Files.readAllBytes(file.toPath());
             ConvertedVideoDTO convertedVideoDTO = new ConvertedVideoDTO("sample.mov", bytes);
             String path = VIDEO_FOLDER + "/test.mov";
-            this.video = new Video(new VideoHandler(new Draw()), convertedVideoDTO, path, LocalDateTime.now());
+            this.video = new Video(convertedVideoDTO, path);
         } catch (Exception e) {
             e.printStackTrace();
             fail();

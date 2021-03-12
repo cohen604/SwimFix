@@ -2,18 +2,22 @@ package mainServer.Providers;
 
 import DTO.*;
 import Domain.Streaming.*;
+import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import ExernalSystems.MLConnectionHandler;
 import mainServer.Completions.ISkeletonsCompletion;
 import mainServer.FileLoaders.ISkeletonsLoader;
 import mainServer.Interpolations.ISkeletonInterpolation;
+import mainServer.SwimmingErrorDetectors.IFactoryDraw;
 import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import mainServer.SwimmingErrorDetectors.SwimmingErrorDetector;
+import org.opencv.core.Mat;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +34,8 @@ public class FeedbackProvider implements IFeedbackProvider {
     private IFactoryVideo iFactoryVideo;
     private IFactoryErrorDetectors iFactoryErrorDetectors;
     private ISkeletonsLoader iSkeletonsLoader;
+    private IFactoryVideoHandler iFactoryVideoHandler;
+    private IFactoryDraw iFactoryDraw;
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
@@ -73,7 +79,16 @@ public class FeedbackProvider implements IFeedbackProvider {
                                            String mlSkeletonsPath,
                                            List<String> detectorsNames,
                                            LocalDateTime time) {
-        List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video);
+
+        //TODO get factories
+        IVideoHandler  videoHandler = new VideoHandler(new Draw());
+
+        List<Mat> frames = videoHandler.getFrames(video.getPath());
+        int size = frames.size();
+        int height = frames.get(0).height();
+        int width = frames.get(0).width();
+
+        List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
         TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
         // save the ml skeletons
         iSkeletonsLoader.save(taggedVideo.getTags(), mlSkeletonsPath, time);
@@ -95,35 +110,44 @@ public class FeedbackProvider implements IFeedbackProvider {
             }
             errorMap.put(i, errors);
         }
-        // TODO here we do :
-        //  create new video Handler for each thread
-        //  this.video = videoHandler.getFrames(convertedVideoDTO.getBytes();
-        //  File feedbackfile = this.videoHandler.getFeedBackVideoFile(this.path, this.video, swimmingSkeletons,
-        //                        errorMap, visualComments);
-        //  and send the feedback file to feedback and remove the videoHandler from video and feedbackVideo
-        // create feedback video
-        return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackFolderPath, time);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        String feedbackPath = feedbackFolderPath + "\\" + time.format(formatter) + ".mp4";
+
+        File feedbackFile = videoHandler.getFeedBackVideoFile(feedbackPath, video.getPath(), skeletons,
+                                errorMap, null);
+        if(feedbackFile.exists()) {
+            return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackPath);
+        }
+        return null;
     }
 
     @Override
     public IFeedbackVideo generateFeedbackVideo(ConvertedVideoDTO convertedVideoDTO,
-                                                String videoPath,
-                                                String feedbackPath,
-                                                String feedbackSkeletonsPath,
-                                                String mlSkeletonsPath,
+                                                String videoFolderPath,
+                                                String feedbackFolderPath,
+                                                String feedbackSkeletonsFolderPath,
+                                                String mlSkeletonsFolderPath,
                                                 List<String> detectorsNames) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath, localDateTime);
+        //TODO get factories
+        IVideoHandler videoHandler = new VideoHandler(new Draw());
+        // create IVideo
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+        String videoPath = videoFolderPath + "\\" + localDateTime.format(formatter) + convertedVideoDTO.getVideoType();
+        videoHandler.createAndGetFrames(convertedVideoDTO.getBytes(), videoPath);
+        IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath);
+
         if (video.isVideoExists()) {
             // decoders step
             List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
             // create feedback
             IFeedbackVideo feedbackVideo = getFeedbackVideo(
                     video, errorDetectors,
-                    feedbackPath, feedbackSkeletonsPath, mlSkeletonsPath,
+                    feedbackFolderPath, feedbackSkeletonsFolderPath, mlSkeletonsFolderPath,
                     detectorsNames, localDateTime);
             if(feedbackVideo != null) {
-                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), feedbackSkeletonsPath, localDateTime);
+                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), feedbackSkeletonsFolderPath, localDateTime);
             }
             return feedbackVideo;
         }

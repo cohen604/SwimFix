@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public interface MLConnectionHandler {
-    List<ISwimmingSkeleton> getSkeletons(IVideo video);
+
+    List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width);
 
 }

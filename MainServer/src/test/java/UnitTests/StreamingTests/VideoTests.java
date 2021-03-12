@@ -18,9 +18,8 @@ public class VideoTests extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
     private ConvertedVideoDTO convertedVideoDTO;
-    private List<File> deleteList;
     private Video video;
-
+    private List<File> deleteList;
     @Before
     public void setUp() {
         try {
@@ -44,10 +43,8 @@ public class VideoTests extends TestCase {
     public void testCreateNewVideo() {
         try {
             String path = VIDEO_FOLDER + "/test.mov";
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path, LocalDateTime.now());
-            File file = new File(video.getPath());
-            assertTrue(file.exists());
-            deleteList.add(file);
+            Video video = new Video(this.convertedVideoDTO, path);
+            assertNotNull(video);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             fail();
@@ -57,7 +54,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathEmpty() {
         try {
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "", LocalDateTime.now());
+            Video video = new Video(this.convertedVideoDTO, "");
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -67,7 +64,7 @@ public class VideoTests extends TestCase {
 
     public void testIsVideoExitsVideoPathNull() {
         try {
-            Video video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, null, LocalDateTime.now());
+            Video video = new Video(this.convertedVideoDTO, null);
             assertFalse(video.isVideoExists());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -80,7 +77,7 @@ public class VideoTests extends TestCase {
      */
     private void setUpVideo() {
         String path = VIDEO_FOLDER + "/test.mov";
-        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, path, LocalDateTime.now());
+        this.video = new Video(this.convertedVideoDTO, path);
         File file = new File(path);
         deleteList.add(file);
     }
@@ -89,30 +86,7 @@ public class VideoTests extends TestCase {
      * The function is a setUp for a video
      */
     private void setUpVideoNotExits() {
-        this.video = new Video(new VideoHandler(new Draw()), this.convertedVideoDTO, "", LocalDateTime.now());
-    }
-
-    public void testGetHeight() {
-        setUpVideo();
-        int h = video.getHeight();
-        assertEquals(480, h);
-    }
-
-    public void testGetHeightVideoNotExits() {
-        setUpVideoNotExits();
-        int h = video.getHeight();
-        assertEquals(-1, h);
-    }
-
-    public void testGetWidth() {
-        setUpVideo();
-        int w = video.getWidth();
-        assertEquals(640, w);
-    }
-    public void testGetWidthVideoNotExits() {
-        setUpVideoNotExits();
-        int w = video.getWidth();
-        assertEquals(-1, w);
+        this.video = new Video(this.convertedVideoDTO, "");
     }
 
     public void testGetPath() {
@@ -140,17 +114,5 @@ public class VideoTests extends TestCase {
         setUpVideoNotExits();
         String type = video.getVideoType();
         assertNull(type);
-    }
-
-    public void testGetVideoListBytes() {
-        setUpVideo();
-        List<byte[]> bytes = video.getVideo();
-        assertNotNull(bytes);
-    }
-
-    public void testGetVideoListBytesVideoNotExits() {
-        setUpVideoNotExits();
-        List<byte[]> bytes = video.getVideo();
-        assertNull(bytes);
     }
 }
