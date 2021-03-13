@@ -15,19 +15,14 @@ class GoogleAuth extends Authentication {
   Future<User> signIn() async{
     try {
       await Firebase.initializeApp();
-      print('-2');
       final GoogleSignInAccount account = await this.googleSignIn.signIn();
-      print('-1');
       final GoogleSignInAuthentication authentication = await account.authentication;
-      print('0');
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authentication.accessToken,
           idToken: authentication.idToken);
-      print('1');
       final UserCredential userCredential = await this.auth.signInWithCredential(credential);
-      print('2');
       final User user = userCredential.user;
-      print(user);
+      //print(user);
       return user;
     }
     catch (e) {

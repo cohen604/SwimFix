@@ -10,10 +10,7 @@ import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'TitleButton.dart';
-import '../VideoPreviewScreen.dart';
 
 class VideoUploader extends StatefulWidget {
 

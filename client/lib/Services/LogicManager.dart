@@ -37,12 +37,17 @@ class LogicManager {
 
   Future<bool> login(Swimmer swimmer) async{
     String path = "/login";
-    print('swiimr json ${swimmer.toJson()}');
-    ServerResponse response = await connectionHandler.postMessage(path, swimmer.toJson());
-    if(response!=null && response.isSuccess()) {
-      Map map = response.value as Map;
-      this.swimmer = swimmer;
-      return true;
+    //print('swiimr json ${swimmer.toJson()}');
+    try {
+      ServerResponse response = await connectionHandler.postMessage(
+          path, swimmer.toJson());
+      if (response != null && response.isSuccess()) {
+        Map map = response.value as Map;
+        this.swimmer = swimmer;
+        return true;
+      }
+    } catch(e) {
+      print('error in login ${e.toString()}');
     }
     return false;
   }
