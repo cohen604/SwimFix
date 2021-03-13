@@ -1,4 +1,6 @@
+import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/CameraScreen.dart';
 import 'package:client/Screens/LoginScreen.dart';
 import 'package:client/Screens/UploadScreen.dart';
 import 'package:client/Screens/VideosScreen.dart';
@@ -9,8 +11,7 @@ import 'Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'Domain/Swimer.dart';
 import 'Screens/VideoPreviewScreen.dart';
 
-
-//if running from web:localhost add to project arguments --web-host 5000
+/// if running from web:localhost add to project arguments --web-host 5000
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -45,6 +46,10 @@ class MyApp extends StatelessWidget {
             futureVideos: args.futureVideos,
           );
         },
+        '/camera': (context) {
+          CameraScreenArguments args = ModalRoute.of(context).settings.arguments; /// necessary?
+          return new CameraScreen(args);
+        }
       },
       debugShowCheckedModeBanner: false,
     );
