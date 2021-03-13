@@ -81,7 +81,7 @@ class LogicManager {
     return file.absolute.path;
   }
 
-  //TODO need to delete this
+  //Note: Don't use it
   Future<FeedbackVideoStreamer> postListImagesForStreaming(List <Uint8List> imagesBytes, String type,
       String fileName) async {
     String path = "/uploadListForStream";
@@ -117,7 +117,8 @@ class LogicManager {
 
   Future<FeedbackVideoStreamer> filterFeedback(FeedbackFilters filter) async {
     String path = "/swimmer/feedback/filter";
-    ServerResponse response = await this.connectionHandler.postMessage(path, filter.toMap());
+    ServerResponse response = await this.connectionHandler.postMessageWithID(path, filter.toMap(),
+        this.swimmer.uid, this.swimmer.email, this.swimmer.name);
     //TODO check if response is valid
     Map map = response.value as Map;
     return FeedbackVideoStreamer.factory(map);
