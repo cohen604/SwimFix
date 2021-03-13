@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Services/LogicManager.dart';
+import 'package:client/Services/VideoRepresantations/VideoWithoutFeedback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,7 +14,7 @@ import 'Screen.dart';
 class VideosScreen extends Screen {
 
   List<FeedbackVideoStreamer> videos;
-  List<File> futureVideos;
+  List<VideoWithoutFeedback> futureVideos;
   VideosScreen({this.videos, this.futureVideos, Key key}) : super(key: key);
 
   @override
@@ -23,16 +24,20 @@ class VideosScreen extends Screen {
 
 class _VideosScreenState extends State<VideosScreen> {
 
+  LogicManager _logicManager;
+
   List<FeedbackVideoStreamer> have;
   // each key is mapped to his future location in the have list
   Map<int, Future<FeedbackVideoStreamer>> futureHave;
   // each key is mapped to his key in the have list
-  Map<int, File> need;
+  Map<int, VideoWithoutFeedback> need;
   // each element in the list is the location in the complete have list
   List<int> requsts;
 
+
   @override
   void initState() {
+    _logicManager = LogicManager.getInstance();
     print("Start Init Video Screen");
     super.initState();
     // create the have map
@@ -43,8 +48,8 @@ class _VideosScreenState extends State<VideosScreen> {
     this.need = Map();
     int index = this.have.length;
     // for(File file in logicManger.getListNeed()) {
-    for(File file in this.widget.futureVideos) {
-      this.need[index] = file;
+    for(VideoWithoutFeedback videoWithNoFeedback in this.widget.futureVideos) {
+      this.need[index] = videoWithNoFeedback;
       index++;
     }
     // create the request map
@@ -88,8 +93,8 @@ class _VideosScreenState extends State<VideosScreen> {
     }
     // get the next File for streamer
     if(selectedIndex != -1 && this.need[selectedIndex] != null) {
-      File selectedFile = this.need[selectedIndex];
-      Future<FeedbackVideoStreamer> futureLink = getFeedbackStreamer(selectedFile);
+      VideoWithoutFeedback nextVideo = this.need[selectedIndex];
+      Future<FeedbackVideoStreamer> futureLink = nextVideo.getFeedbackVideo(_logicManager);
       this.futureHave[selectedIndex] = futureLink;
       //this.have.insert(selectedIndex, link);
       this.need.remove(selectedIndex);

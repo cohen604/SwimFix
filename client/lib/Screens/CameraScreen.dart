@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'dart:isolate';
-
 import 'package:camera/camera.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
@@ -73,7 +72,6 @@ class _CameraScreenState extends State<CameraScreen> {
         if (!mounted) {
           return;
         }
-        setState(() {
         setState(() {
           _cameraStateAvailable = true;
         });

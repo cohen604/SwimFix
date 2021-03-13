@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:client/Services/VideoRepresantations/VideoWithoutFeedback.dart';
+
 import '../FeedBackVideoStreamer.dart';
 
 class VideoScreenArguments {
 
   List<FeedbackVideoStreamer> videos;
-  List<File> futureVideos;
+  List<VideoWithoutFeedback> futureVideos;
 
   VideoScreenArguments(this.videos, this.futureVideos){
     if(this.videos == null){
