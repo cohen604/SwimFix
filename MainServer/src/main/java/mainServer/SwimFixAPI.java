@@ -31,7 +31,7 @@ public class SwimFixAPI {
       IFactoryVideo iFactoryVideo = new FactoryVideo();
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
-              new LinearInterpolation(), new MedianInterpolation());
+              new LinearInterpolation(), new LinearInterpolation());
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();

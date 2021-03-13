@@ -1,6 +1,9 @@
 package DomainLogic.Completions;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.Points.IPoint;
+import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,44 +21,48 @@ public class SkeletonsCompletionAfter implements ISkeletonsCompletion {
 
     private ISwimmingSkeleton completeShoulder(ISwimmingSkeleton current) {
         if(current.containsHead()) {
-            completeRightShoulderIfNeeded(current);
-            completeLeftShoulderIfNeeded(current);
+            ISwimmingSkeleton skeleton = completeLeftShoulderBasedOnHeadRightShoulder(current);
+            return completeRightShoulderBasedOnHeadLeftShoulder(skeleton);
         }
         return current;
     }
 
-    private boolean rightShoulderAboveHead(ISwimmingSkeleton current) {
-        return current.getHead().getY() > current.getRightShoulder().getY();
+    private double calcY(double x, double x0, double y0, double slope) {
+        // liner equation
+        return y0 + (x - x0) * slope;
     }
 
-    private ISwimmingSkeleton completeRightShoulderIfNeeded(ISwimmingSkeleton current) {
+    private double caclSlope(double x0, double y0, double x1, double y1) {
+        return (y1 - y0) / (x1 - x0);
+    }
+
+    private ISwimmingSkeleton completeLeftShoulderBasedOnHeadRightShoulder(ISwimmingSkeleton current) {
         if(current.containsRightShoulder() && !current.containsLeftShoulder()) {
-            if(rightShoulderAboveHead(current)) {
-                //TODO
-                // if shoulder is higher then head then complete with reflection
-            }
-            else {
-                //TODO
-                // if shoulder is lower then head then complete with liner line
-            }
+            IPoint rightShoulder = current.getRightShoulder();
+            IPoint head = current.getHead();
+            double dx = rightShoulder.getX() - head.getX();
+            double x = head.getX() - dx;
+            double slop = caclSlope(head.getX(), head.getY(), rightShoulder.getX(), rightShoulder.getY());
+            double y = calcY(x, head.getX(), head.getY(), -slop);
+            SwimmingSkeleton swimmingSkeleton = new SwimmingSkeleton(current);
+            swimmingSkeleton.setLeftShoulder(new SkeletonPoint(x, y));
+            return swimmingSkeleton;
         }
         return current;
     }
 
-    private boolean leftShoulderAboveHead(ISwimmingSkeleton current) {
-        return current.getHead().getY() > current.getLeftShoulder().getY();
-    }
 
-    private ISwimmingSkeleton completeLeftShoulderIfNeeded(ISwimmingSkeleton current) {
+    private ISwimmingSkeleton completeRightShoulderBasedOnHeadLeftShoulder(ISwimmingSkeleton current) {
         if (!current.containsRightShoulder() && current.containsLeftShoulder()) {
-            if(leftShoulderAboveHead(current)) {
-                //TODO
-                // if shoulder is higher then head then complete with reflection
-            }
-            else {
-                //TODO
-                // if shoulder is lower then head then complete with liner line
-            }
+            IPoint leftShoulder = current.getLeftShoulder();
+            IPoint head = current.getHead();
+            double dx = head.getX() - leftShoulder .getX();
+            double x = head.getX() + dx;
+            double slop = caclSlope(head.getX(), head.getY(), leftShoulder.getX(), leftShoulder.getY());
+            double y = calcY(x, head.getX(), head.getY(), -slop);
+            SwimmingSkeleton swimmingSkeleton = new SwimmingSkeleton(current);
+            swimmingSkeleton.setRightShoulder(new SkeletonPoint(x, y));
+            return swimmingSkeleton;
         }
         return current;
     }
