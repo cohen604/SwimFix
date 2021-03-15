@@ -1,3 +1,4 @@
+import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Domain/Swimer.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -31,7 +32,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
         this.setState(() {
-          Navigator.pushNamed(context, "/welcome");
+          WelcomeScreenArguments args = new WelcomeScreenArguments(swimmer);
+          Navigator.pushNamed(context, "/welcome",  arguments: args);
         });
       }
       else {

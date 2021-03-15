@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/login',
+      initialRoute: '/welcome',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),

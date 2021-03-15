@@ -18,6 +18,10 @@ class WebColors {
     return Color.fromRGBO(219, 241, 255, 1.0);
   }
   
+  Color getBackgroundForI4() {
+    return Color.fromRGBO(214, 255, 238, 1.0);
+  }
+  
   Color getBackgroundPopUp() {
     return Color.fromRGBO(194, 215, 228, 1.0);
   }

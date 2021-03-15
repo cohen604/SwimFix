@@ -11,8 +11,8 @@ class MenuBar extends StatefulWidget {
 class _MenuBarState extends State<MenuBar> {
 
   WebColors _webColors = new WebColors();
-  List<bool> _onHover = List.generate(4, (index) => false);
-  List<bool> _selected = List.generate(4, (index) => false);
+  List<bool> _onHover = List.generate(5, (index) => false);
+  List<bool> _selected = List.generate(5, (index) => false);
 
   Widget buildOption(BuildContext context, String optionName, int index) {
     return Flexible(
@@ -27,7 +27,7 @@ class _MenuBarState extends State<MenuBar> {
           child: Center(
             child: Text(optionName,
                 style: TextStyle(
-                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                  fontSize: 18 * MediaQuery.of(context).textScaleFactor,
                   color: _onHover[index] ? Colors.black : Colors.white,
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.none
@@ -44,10 +44,17 @@ class _MenuBarState extends State<MenuBar> {
     return Scaffold(
       body: Row(
       children: [
+          Flexible(
+            flex: 7,
+            child: Container(
+              color: _webColors.getBackgroundForI1(),
+            ),
+          ),
           buildOption(context, "Swimmer", 0),
           buildOption(context, "Coach", 1),
           buildOption(context, "Admin", 2),
           buildOption(context, "Researcher", 3),
+          buildOption(context, "Logout", 4),
         ],
         //scrollDirection: Axis.horizontal,
       ),

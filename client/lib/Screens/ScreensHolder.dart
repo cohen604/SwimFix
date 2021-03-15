@@ -27,13 +27,16 @@ class ScreenHolder {
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
-    Swimmer swimmer = new Swimmer("uid", "email", "name");
     if(kIsWeb) {
       ///web
-      return new WebWelcomeScreen(swimmer: swimmer);
+      /// TODO delete this if
+      if(args == null) {
+        args = new WelcomeScreenArguments(new Swimmer("uid", "email", "name"));
+      }
+      return new WebWelcomeScreen(arguments: args);
     }
     ///mobile
-    return new WelcomeScreen(swimmer: swimmer);
+    return new WelcomeScreen(swimmer: args.swimmer);
   }
 
   Widget getUploadScreen() {

@@ -1,4 +1,7 @@
+import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Domain/Swimer.dart';
+import 'package:client/Web/Components/CardButton.dart';
+import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,8 +9,8 @@ import 'package:flutter/material.dart';
 
 class WebWelcomeScreen extends StatefulWidget {
 
-  Swimmer swimmer;
-  WebWelcomeScreen({Key key, this.swimmer}) : super(key: key);
+  WelcomeScreenArguments arguments;
+  WebWelcomeScreen({Key key, this.arguments}) : super(key: key);
 
   @override
   _WebWelcomeScreenState createState() => _WebWelcomeScreenState();
@@ -33,11 +36,10 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
             ),
           ),
         ),
-        padding: EdgeInsets.only(left:10.0),
         child: Center(
           child: Text( "Swim Analytics",
               style: TextStyle(
-              fontSize: 30 * MediaQuery.of(context).textScaleFactor,
+              fontSize: 26 * MediaQuery.of(context).textScaleFactor,
               color:Colors.white,
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.italic,
@@ -84,7 +86,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   }
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
-      return Text('Welcome ${this.widget.swimmer.name}',
+      return Text('Welcome ${this.widget.arguments.swimmer.name}',
         style: TextStyle(
             fontSize: 32 * MediaQuery.of(context).textScaleFactor,
             color: Colors.black,
@@ -97,36 +99,31 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget buildMainButton(BuildContext context, int flex, String title) {
     return Flexible(
       flex: flex,
-      fit: FlexFit.tight,
-      child: FittedBox(
-        fit: BoxFit.contain,
-        child: Container(
-          color: Colors.green,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Text(title,
-              style: TextStyle(
-                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none
-              ),
-            ),
-          )
+      fit: FlexFit.loose,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 1.5,
+        padding: EdgeInsets.only(left: 20.0, right: 20.0),
+        child: CardButton(
+          title: title,
+          background: _webColors.getBackgroundForI2(),
+          buttonBackground: _webColors.getBackgroundForI4(),
         ),
       ),
     );
   }
 
   Widget buildMainButtons(BuildContext context, int flex) {
-    return Row(
-        children: [
-          buildMainButton(context, 1, "Swimmer"),
-          buildMainButton(context, 1, "Coach"),
-          buildMainButton(context, 1, "Admin"),
-          buildMainButton(context, 1, "Researcher"),
-        ],
+    return Container(
+      margin: EdgeInsets.only(top: 20.0),
+      child: Row(
+          children: [
+            buildMainButton(context, 1, "Swimmer"),
+            buildMainButton(context, 1, "Coach"),
+            buildMainButton(context, 1, "Admin"),
+            buildMainButton(context, 1, "Researcher"),
+          ],
+      ),
     );
   }
 
@@ -156,7 +153,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
           child: Column(
             children: [
               buildTopSide(context, 1),
-              buildBottomSide(context, 9)
+              buildBottomSide(context, 10)
             ],
           ),
         ),
