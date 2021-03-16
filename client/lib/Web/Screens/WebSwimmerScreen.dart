@@ -6,19 +6,18 @@ import 'package:client/Web/Components/MenuBar.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
-class WebWelcomeScreen extends StatefulWidget {
+class WebSwimmerScreen extends StatefulWidget {
 
   WelcomeScreenArguments arguments;
-  WebWelcomeScreen({Key key, this.arguments}) : super(key: key);
+  WebSwimmerScreen({Key key, this.arguments}) : super(key: key);
 
   @override
-  _WebWelcomeScreenState createState() => _WebWelcomeScreenState();
+  _WebSwimmerScreenState createState() => _WebSwimmerScreenState();
 }
 
 
-class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
+class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
   WebColors _webColors = new WebColors();
 
@@ -41,7 +40,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       );
   }
 
-  Widget buildMainButton(BuildContext context, int flex, String title, Function onClick) {
+  Widget buildMainButton(BuildContext context, int flex, String title) {
     return Flexible(
       flex: flex,
       fit: FlexFit.loose,
@@ -53,30 +52,22 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
           title: title,
           background: _webColors.getBackgroundForI2(),
           buttonBackground: _webColors.getBackgroundForI4(),
-          onClick: onClick,
         ),
       ),
     );
-  }
-
-  void onClickSwimmer() {
-    this.setState(() {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/swimmer",);
-      });
-    });
   }
 
   Widget buildMainButtons(BuildContext context, int flex) {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
       child: Row(
-          children: [
-            buildMainButton(context, 1, "Swimmer", onClickSwimmer),
-            buildMainButton(context, 1, "Coach", null),
-            buildMainButton(context, 1, "Admin", null),
-            buildMainButton(context, 1, "Researcher", null),
-          ],
+        children: [
+          buildMainButton(context, 1, "Upload Video"),
+          buildMainButton(context, 1, "View feedbacks history"),
+          buildMainButton(context, 1, "Open a team"),
+          buildMainButton(context, 1, "Team invitations"),
+          buildMainButton(context, 1, "Teams"),
+        ],
       ),
     );
   }

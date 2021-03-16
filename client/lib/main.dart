@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/welcome',
+      initialRoute: '/login',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getWelcomeScreen(args);
         },
-        '/upload': (context) => new UploadScreen(),
+        '/swimmer': (context) => _screenHolder.getSwimmerScreen(),
+        '/upload': (context) => _screenHolder.getUploadScreen(),
         '/videoPreview': (context) {
           FeedbackVideoStreamer streamer = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getVideoPreviewScreen(streamer);

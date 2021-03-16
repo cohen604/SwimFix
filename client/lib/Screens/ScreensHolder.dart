@@ -4,6 +4,7 @@ import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Domain/Swimer.dart';
 import 'package:client/Web/Screens/WebLoginScreen.dart';
+import 'package:client/Web/Screens/WebSwimmerScreen.dart';
 import 'package:client/Web/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -70,6 +71,14 @@ class ScreenHolder {
     }
     ///mobile
     return new CameraScreen(args);
+  }
+
+  Widget getSwimmerScreen() {
+    if(kIsWeb) {
+      var args = new WelcomeScreenArguments(new Swimmer("uid", "email", "name"));
+      return new WebSwimmerScreen(arguments: args,);
+    }
+    return null;
   }
 
 }

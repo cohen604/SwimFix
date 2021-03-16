@@ -39,25 +39,81 @@ class _MenuBarState extends State<MenuBar> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-      children: [
-          Flexible(
-            flex: 7,
-            child: Container(
-              color: _webColors.getBackgroundForI1(),
+  Widget buildLinks(BuildContext context, int flex) {
+    return Flexible(
+      flex: flex,
+      fit: FlexFit.tight,
+      child: Scaffold(
+        body: Row(
+        children: [
+            Flexible(
+              flex: 7,
+              child: Container(
+                color: _webColors.getBackgroundForI1(),
+              ),
+            ),
+            buildOption(context, "Swimmer", 0),
+            buildOption(context, "Coach", 1),
+            buildOption(context, "Admin", 2),
+            buildOption(context, "Researcher", 3),
+            buildOption(context, "Logout", 4),
+          ],
+          //scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
+  }
+
+  Widget buildLogo(BuildContext context, int flex) {
+    return Flexible(
+      flex: flex,
+      fit: FlexFit.tight,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          border: Border(
+            right: BorderSide(
+              color: Colors.white,
+              width: 2.0,
             ),
           ),
-          buildOption(context, "Swimmer", 0),
-          buildOption(context, "Coach", 1),
-          buildOption(context, "Admin", 2),
-          buildOption(context, "Researcher", 3),
-          buildOption(context, "Logout", 4),
-        ],
-        //scrollDirection: Axis.horizontal,
+        ),
+        child: Center(
+          child: Text( "Swim Analytics",
+              style: TextStyle(
+                  fontSize: 26 * MediaQuery.of(context).textScaleFactor,
+                  color:Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  decoration: TextDecoration.none
+              )
+          ),
+        ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 2.0,
+          ),
+        ),
+        color: _webColors.getBackgroundForI1(),
+      ),
+      child: Row(
+        children: [
+          buildLogo(context, 1),
+          buildLinks(context, 4)
+        ],
+      )
     );
   }
 }
