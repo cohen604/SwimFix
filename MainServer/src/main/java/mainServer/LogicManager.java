@@ -61,12 +61,24 @@ public class LogicManager {
 
     /**
      * The function handle login of swimmers to the system
-     * @param userDTO the simmers information
+     * @param userDTO the swimmer information
      * @return true
      */
-    public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
+    public ActionResult<UserDTO> login(UserDTO userDTO) {
         if(_userProvider.login(userDTO)) {
             return new ActionResult<>(Response.SUCCESS, userDTO);
+        }
+        return new ActionResult<>(Response.FAIL,null);
+    }
+
+    /***
+     * The function handle logout of swimmers from the system
+     * @param user the swimmer information
+     * @return
+     */
+    public ActionResult<Boolean> logout(UserDTO user) {
+        if(_userProvider.logout(user)) {
+            return new ActionResult<>(Response.SUCCESS, true);
         }
         return new ActionResult<>(Response.FAIL,null);
     }
@@ -143,5 +155,6 @@ public class LogicManager {
         }
         return null;
     }
+
 }
 

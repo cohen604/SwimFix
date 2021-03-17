@@ -53,7 +53,7 @@ class _CircleButtonState extends State<CircleButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: this.widget.onClick != null ? this.widget.onClick()
+      onTap: this.widget.onClick != null ? ()=> this.widget.onClick()
           : buildFutureDialogSupport(context),
       child: Container(
         margin: EdgeInsets.all(5.0),

@@ -7,7 +7,6 @@ import 'package:client/Web/WebColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:client/Screens/Screen.dart';
 
 class WebLoginScreen extends Screen {

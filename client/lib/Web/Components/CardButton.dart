@@ -105,7 +105,7 @@ class _CardButtonState extends State<CardButton> {
                 child: CircleButton(
                   background: this.widget.buttonBackground,
                   title: '>',
-                  //onClick: this.widget.onClick,
+                  onClick:  this.widget.onClick,
                 ),
               ),
             ),

@@ -1,7 +1,6 @@
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/Components/CardButton.dart';
-import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,13 +19,37 @@ class WebWelcomeScreen extends StatefulWidget {
 
 class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
 
+  LogicManager _logicManger = LogicManager.getInstance();
   WebColors _webColors = new WebColors();
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: MenuBar(),
+      child: MenuBar(onlogout: onLogout,),
+    );
+  }
+
+  void onLogout() {
+    _logicManger.logout(this.widget.arguments.swimmer).then(
+      (value) {
+        if(value) {
+          this.setState(() {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(context, '/login');
+            });
+          });
+        }
+        else {
+          showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+              content: Text('Cant Logout, Please Try again later',
+                textAlign: TextAlign.center,),
+            )
+          );
+        }
+      }
     );
   }
 
@@ -59,12 +82,14 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     );
   }
 
-  void onClickSwimmer() {
-    this.setState(() {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/swimmer",);
+  Function onClick(String path) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, path);
+        });
       });
-    });
+    };
   }
 
   Widget buildMainButtons(BuildContext context, int flex) {
@@ -72,7 +97,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       margin: EdgeInsets.only(top: 20.0),
       child: Row(
           children: [
-            buildMainButton(context, 1, "Swimmer", onClickSwimmer),
+            buildMainButton(context, 1, "Swimmer", onClick('/swimmer')),
             buildMainButton(context, 1, "Coach", null),
             buildMainButton(context, 1, "Admin", null),
             buildMainButton(context, 1, "Researcher", null),

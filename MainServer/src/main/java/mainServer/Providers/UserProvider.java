@@ -45,6 +45,17 @@ public class UserProvider implements IUserProvider {
     }
 
     @Override
+    public boolean logout(UserDTO userDTO) {
+        User user = _users.get(userDTO.getUid());
+        if(user != null) {
+            if(user.logout()){
+                return _dao.update(user) != null;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public IUser getUser(UserDTO userDTO) {
         return _users.get(userDTO.getUid());
     }

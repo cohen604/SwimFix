@@ -51,6 +51,11 @@ public class SwimFixAPI {
       return logicManager.login(userDTO);
    }
 
+
+   public ActionResult<Boolean> logout(UserDTO user) {
+      return  this.logicManager.logout(user);
+   }
+
    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
       return logicManager.uploadVideoForStreamer(userDTO, convertedVideoDTO);
    }
@@ -62,4 +67,5 @@ public class SwimFixAPI {
    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
       return logicManager.filterFeedbackVideo(userDTO, filterDTO);
    }
+
 }

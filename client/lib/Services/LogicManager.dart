@@ -20,6 +20,7 @@ class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
+  // TODO refactor this
   Swimmer swimmer;
   MlHandler mlHandler;
 
@@ -37,7 +38,6 @@ class LogicManager {
 
   Future<bool> login(Swimmer swimmer) async{
     String path = "/login";
-    //print('swiimr json ${swimmer.toJson()}');
     try {
       ServerResponse response = await connectionHandler.postMessage(
           path, swimmer.toJson());
@@ -45,6 +45,20 @@ class LogicManager {
         Map map = response.value as Map;
         this.swimmer = swimmer;
         return true;
+      }
+    } catch(e) {
+      print('error in login ${e.toString()}');
+    }
+    return false;
+  }
+
+  Future<bool> logout(Swimmer swimmer) async {
+    String path = '/logout';
+    try {
+      ServerResponse response = await connectionHandler.postMessage(
+          path, swimmer.toJson());
+      if (response != null && response.isSuccess() && response.value) {
+          return true;
       }
     } catch(e) {
       print('error in login ${e.toString()}');
