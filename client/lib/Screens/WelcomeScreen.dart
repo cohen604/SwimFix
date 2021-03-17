@@ -1,4 +1,4 @@
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';

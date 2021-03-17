@@ -116,6 +116,16 @@ class _CardButtonState extends State<CardButton> {
 
   @override
   Widget build(BuildContext context) {
+    if(this.widget.icon == null) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+        ),
+        child: buildBottomSide(context, 1),
+      );
+    }
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
@@ -130,7 +140,6 @@ class _CardButtonState extends State<CardButton> {
             buildBottomSide(context, 2),
           ],
         ),
-      // ),
     );
   }
 }

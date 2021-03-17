@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class WebColors {
 
   /// I1 means important section rate 1
@@ -21,7 +23,19 @@ class WebColors {
   Color getBackgroundForI4() {
     return Color.fromRGBO(214, 255, 238, 1.0);
   }
-  
+
+  Color getBackgroundForI5() {
+    return Color.fromRGBO(245, 247, 249, 1.0);
+  }
+
+  Color getBackgroundForI6() {
+    return Color.fromRGBO(248, 249, 250, 1.0);
+  }
+
+  Color getBackgroundForI7() {
+    return Colors.white;
+  }
+
   Color getBackgroundPopUp() {
     return Color.fromRGBO(194, 215, 228, 1.0);
   }

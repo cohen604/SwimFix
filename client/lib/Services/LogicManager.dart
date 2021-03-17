@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:client/Domain/FeedbackFilters.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/Authentication.dart';
 import 'package:client/Services/CameraHandler.dart';
 import 'package:client/Services/GoogleAuth.dart';
@@ -20,9 +20,10 @@ class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
+  MlHandler mlHandler;
+
   // TODO refactor this
   Swimmer swimmer;
-  MlHandler mlHandler;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();

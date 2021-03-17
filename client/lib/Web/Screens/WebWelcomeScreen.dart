@@ -128,7 +128,6 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-          color: Colors.red,
           child: Column(
             children: [
               buildTopSide(context, 1),

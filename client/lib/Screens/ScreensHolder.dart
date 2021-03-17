@@ -1,9 +1,12 @@
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Web/Screens/WebLoginScreen.dart';
+import 'package:client/Web/Screens/WebResearcherScreen.dart';
 import 'package:client/Web/Screens/WebSwimmerScreen.dart';
 import 'package:client/Web/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,12 +76,25 @@ class ScreenHolder {
     return new CameraScreen(args);
   }
 
-  Widget getSwimmerScreen() {
+  Widget getSwimmerScreen(SwimmerScreenArguments args) {
+    /// TODO delete this if
+    if(args == null) {
+      args = new SwimmerScreenArguments(new Swimmer("uid", "email", "name"));
+    }
     if(kIsWeb) {
-      var args = new WelcomeScreenArguments(new Swimmer("uid", "email", "name"));
       return new WebSwimmerScreen(arguments: args,);
     }
     return null;
   }
 
+  Widget getResearcherScreen(ResearcherScreenArguments args) {
+    /// TODO delete this if
+    if(args == null) {
+      args = new ResearcherScreenArguments(new Swimmer("uid", "email", "name"));
+    }
+    if(kIsWeb) {
+      return new WebResearcherScreen(args: args);
+    }
+    return null;
+    }
 }

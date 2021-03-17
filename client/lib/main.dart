@@ -1,5 +1,7 @@
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Screens/CameraScreen.dart';
 import 'package:client/Screens/LoginScreen.dart';
@@ -9,7 +11,7 @@ import 'package:client/Screens/WelcomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Domain/ScreenArguments/VideoScreenArguments.dart';
-import 'Domain/Swimer.dart';
+import 'Domain/Swimmer.dart';
 import 'Screens/ScreensHolder.dart';
 import 'Screens/VideoPreviewScreen.dart';
 
@@ -29,18 +31,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/login',
+      initialRoute: '/researcher',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
       routes: {
-        '/login': (context) => _screenHolder.getLoginScreen(),
+        '/login': (context) {
+          return _screenHolder.getLoginScreen();
+        },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getWelcomeScreen(args);
         },
         '/swimmer': (context) {
-          return _screenHolder.getSwimmerScreen();
+          SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerScreen(args);
+        },
+        '/researcher': (context) {
+          ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getResearcherScreen(args);
         },
         '/upload': (context) {
           return _screenHolder.getUploadScreen();
@@ -54,7 +63,7 @@ class MyApp extends StatelessWidget {
           return _screenHolder.getVideosScreen(args);
         },
         '/camera': (context) {
-          CameraScreenArguments args = ModalRoute.of(context).settings.arguments; /// necessary?
+          CameraScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getCameraScreen(args);
         }
       },

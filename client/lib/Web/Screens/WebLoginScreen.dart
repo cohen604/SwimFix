@@ -1,5 +1,5 @@
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/Components/MessagePopUp.dart';

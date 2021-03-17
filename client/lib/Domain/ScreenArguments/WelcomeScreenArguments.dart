@@ -1,4 +1,4 @@
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 
 class WelcomeScreenArguments {
 

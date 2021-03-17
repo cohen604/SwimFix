@@ -1,5 +1,6 @@
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimer.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Web/Components/CardButton.dart';
 import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class WebSwimmerScreen extends StatefulWidget {
 
-  WelcomeScreenArguments arguments;
+  SwimmerScreenArguments arguments;
   WebSwimmerScreen({Key key, this.arguments}) : super(key: key);
 
   @override
