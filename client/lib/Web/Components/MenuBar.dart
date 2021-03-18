@@ -40,7 +40,7 @@ class _MenuBarState extends State<MenuBar> {
             onClick :
             buildFutureDialogSupport(context),
           child: Container(
-            color: _onHover[index] ? _webColors.getBackgroundForI2() : _webColors.getBackgroundForI1(),
+            color: _onHover[index] ? _webColors.getBackgroundForI3() : _webColors.getBackgroundForI1(),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Center(
@@ -91,14 +91,6 @@ class _MenuBarState extends State<MenuBar> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          border: Border(
-            right: BorderSide(
-              color: Colors.white,
-              width: 2.0,
-            ),
-          ),
-        ),
         child: Center(
           child: Text( "Swim Analytics",
               style: TextStyle(

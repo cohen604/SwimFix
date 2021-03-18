@@ -107,7 +107,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         child: Container(
           margin: EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
           width:  MediaQuery.of(context).size.width,
-          color: _webColors.getBackgroundForI3(),
+          color: _webColors.getBackgroundForI4(),
           child: Text("Here will be a video about swim analytics.",
               style: TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor, color:Colors.black)),
         )
@@ -139,7 +139,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(topRight: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0)),
-          color: _webColors.getBackgroundForI2(),
+          color: _webColors.getBackgroundForI3(),
         ),
         padding: EdgeInsets.all(10.0),
         child: Column(

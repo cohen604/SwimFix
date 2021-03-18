@@ -30,14 +30,11 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   WebColors _webColors = new WebColors();
   ResearcherStep _step = ResearcherStep.Upload_Video;
 
-  bool _hasVideo;
+  bool _hasVideo = false;
   File _video;
 
-  bool _hasCsv;
-  Uint8List _csvFileBytes;
-  int _csvFileLength;
-  String _csvFilePath;
-
+  bool _hasLabels = false;
+  File _labels;
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
@@ -80,16 +77,28 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     };
   }
 
-  void uploadVideoWeb() async {
+  void uploadFile(String fileType, Function updateFile) {
     InputElement uploadInput = FileUploadInputElement();
     uploadInput.multiple = false;
     uploadInput.draggable = true;
-    uploadInput.accept = 'video/*';
+    uploadInput.accept = fileType;
     uploadInput.click();
     document.body.append(uploadInput);
     uploadInput.onChange.listen((e) {
-      var files = uploadInput.files;
-      _video = files[0];
+      updateFile(uploadInput.files[0]);
+    });
+    uploadInput.remove();
+  }
+
+  void uploadVideoWeb() {
+    uploadFile('video/*',
+        (File file) {
+          this.setState(() {
+            _video = file;
+            _hasVideo = true;
+          });
+        }
+    );
       // var filePath = file.name;
       // final reader = new FileReader();
       // reader.readAsDataUrl(file.slice(0, file.size, file.type));
@@ -103,8 +112,49 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       //     print('File size: ' + file.size.toString());
       //   });
       // });
-    });
-    uploadInput.remove();
+    // });
+    // uploadInput.remove();
+  }
+
+  void uploadLabelsWeb() {
+    uploadFile('.csv',
+            (File file) {
+          this.setState(() {
+            _labels = file;
+            _hasLabels = true;
+          });
+        }
+    );
+  }
+
+  void removeSelectedVideo() {
+    if(_hasVideo) {
+      this.setState(() {
+        _hasVideo = false;
+        _video = null;
+      });
+    }
+  }
+
+  void nextState() {
+    if(_step == ResearcherStep.Upload_Video) {
+      this.setState(() {
+        _step = ResearcherStep.Upload_Csv;
+      });
+    }
+    else if(_step == ResearcherStep.Upload_Csv) {
+      this.setState(() {
+        _step = ResearcherStep.Submit;
+      });
+    }
+    else if(_step == ResearcherStep.Submit) {
+      this.setState(() {
+        _step = ResearcherStep.View;
+      });
+    }
+    else if(_step == ResearcherStep.View)  {
+
+    }
   }
 
   Widget buildUploadVideoButton(BuildContext context, int flex) {
@@ -116,8 +166,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         child: NumberButton(
           number: 1,
           title: 'Upload Video',
-          background: _webColors.getBackgroundForI6(),
-          selected: this._step == ResearcherStep.Upload_Video,
+          background: _webColors.getBackgroundForI7(),
+          selected: this._step.index >= ResearcherStep.Upload_Video.index,
           selectedColor: _webColors.getBackgroundForI1(),
           onClick: null,
           fontSize: 21,
@@ -136,8 +186,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         child: NumberButton(
           number: 2,
           title: 'Upload Labels',
-          background: _webColors.getBackgroundForI6(),
-          selected: this._step == ResearcherStep.Upload_Csv,
+          background: _webColors.getBackgroundForI7(),
+          selected: this._step.index >= ResearcherStep.Upload_Csv.index,
           selectedColor: _webColors.getBackgroundForI1(),
           onClick: null,
           fontSize: 21,
@@ -156,8 +206,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         child: NumberButton(
           number: 3,
           title: 'Get Report',
-          background: _webColors.getBackgroundForI6(),
-          selected: this._step == ResearcherStep.Submit,
+          background: _webColors.getBackgroundForI7(),
+          selected: this._step.index >= ResearcherStep.Submit.index,
           selectedColor: _webColors.getBackgroundForI1(),
           onClick: null,
           fontSize: 21,
@@ -176,8 +226,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         child: NumberButton(
             number: 4,
             title: 'View',
-            background: _webColors.getBackgroundForI7(),
-            selected: this._step == ResearcherStep.View,
+            background: _webColors.getBackgroundForI8(),
+            selected: this._step.index >= ResearcherStep.View.index,
             selectedColor: _webColors.getBackgroundForI1(),
             onClick: null,
             fontSize: 21,
@@ -197,89 +247,266 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildTitle(BuildContext context, int flex, String title) {
-    return Flexible(
-      flex: flex,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text(title,
-            style: TextStyle(
-                fontSize: 32 * MediaQuery.of(context).textScaleFactor,
-                color: Colors.black87,
-                fontWeight: FontWeight.normal,
-                decoration: TextDecoration.none
-            )
+  Widget buildTitle(BuildContext context, String title,
+      {int fontSize = 32, bool createFlex = true, int flex = 1}) {
+    Widget child = Align(
+      alignment: Alignment.topLeft,
+      child: Text(title,
+        style: TextStyle(
+          fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black87,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
+        )
+      )
+    );
+    if(createFlex) {
+      return Flexible(
+          flex: flex,
+          child: child
+      );
+    }
+    return child;
+  }
+
+  Widget buildDescription(BuildContext context, String description,
+      {int fontSize = 24, bool createFlex = true, int flex = 1}) {
+    Widget child = Align(
+      alignment: Alignment.topLeft,
+      child: Text(description,
+          style: TextStyle(
+              fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
+              color: Colors.black54,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none
+          )
+      ),
+    );
+    if(createFlex) {
+      return Flexible(
+        flex:flex,
+        child: child,
+      );
+    }
+    return child;
+  }
+
+  Widget buildTextButton(BuildContext context, String title, Function onPress,
+      {int fontSize = 22}) {
+    return TextButton(
+      onPressed: onPress,
+      style: ButtonStyle(
+        foregroundColor: MaterialStateColor.resolveWith((states) => _webColors.getBackgroundForI1()),
+      ),
+      child: Text(title,
+        style: TextStyle(
+          fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
         ),
       ),
     );
   }
 
-  Widget buildDescription(BuildContext context, int flex, String description) {
-    return Flexible(
-      flex: flex,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Text(description,
+  Widget buildElevatedButton(BuildContext context, String title, Function onPress) {
+    return ElevatedButton(
+      onPressed: onPress,
+      style: ButtonStyle(
+          backgroundColor: MaterialStateColor.resolveWith((states) => _webColors.getBackgroundForI2()),
+      ),
+      child: Container(
+        width: 100,
+        height: 40,
+        child: Center(
+          child: Text(title,
             style: TextStyle(
-                fontSize: 24 * MediaQuery.of(context).textScaleFactor,
-                color: Colors.black54,
-                fontWeight: FontWeight.normal,
+                fontSize: 18 * MediaQuery.of(context).textScaleFactor,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
                 decoration: TextDecoration.none
-            )
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  Widget buildDivider() {
+    return Divider(
+      color: Colors.grey,
+      thickness: 1,
+      height: 10,
+      indent: 1,
+      endIndent: 1,
+    );
+  }
+
+  Widget buildSelectedFile(BuildContext context, File file,
+    {int flex = 1, bool createFlex = true}) {
+    Widget child = Container(
+      padding: EdgeInsets.all(10.0),
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              buildTitle(context, file.name,
+                fontSize: 23,
+                createFlex: false,
+              ),
+              buildDivider(),
+              buildDescription(context, 'Size: ${file.size}',
+                  fontSize: 21,
+                  createFlex: false),
+              buildDescription(context, 'Created : ${file.lastModifiedDate}',
+                  fontSize: 19,
+                  createFlex: false),
+            ],
+          ),
+        ),
+      ),
+    );
+    if(createFlex) {
+      return Flexible(
+          flex: flex,
+          fit: FlexFit.tight,
+          child: child
+      );
+    }
+    return child;
   }
 
   Widget buildUploadVideo(BuildContext context) {
     return Column(
       children: [
-        Flexible(
-          flex: 1,
-          child: Container(
-              margin: EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  buildTitle(context, 1, 'Upload Video'),
-                  buildDescription(context, 1, 'Select a swimming video in any format'),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: OutlineButton(
-                      child: Text('Select'),
-                      hoverColor: _webColors.getBackgroundForI3(),
-                    ),
-                  )
-                ],
-              )
+        Container(
+          margin: EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              buildTitle(context, 'Upload Video', createFlex: false),
+              SizedBox(height: 5.0,),
+              buildDescription(context, 'Please select a swimming video in any video format.\nMake sure the video is not corrupted.',
+                  createFlex: false),
+              SizedBox(height: 5.0,),
+              Align(
+                alignment: Alignment.topLeft,
+                child: buildTextButton(context, 'Select', uploadVideoWeb),
+              ),
+            ],
+          )
+        ),
+        _hasVideo ? buildSelectedFile(context, _video, createFlex: false) : Container(),
+        _hasVideo ? Container(
+          margin: EdgeInsets.only(right: 10.0, left:10.0),
+          child: Row(
+              children: [
+                Flexible(child: Container()),
+                buildTextButton(context, 'Remove',
+                  removeSelectedVideo,
+                    fontSize: 20),
+                SizedBox(width: 10,),
+                buildElevatedButton(context, 'Next', nextState),
+              ],
+            ),
+          )
+            : Flexible( flex: 2, child: Container(),)
+      ],
+    );
+  }
+
+  Widget buildSecondStep(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+            margin: EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                buildTitle(context, 'Upload Labels', createFlex: false),
+                SizedBox(height: 5.0,),
+                buildDescription(context, 'Please select a Csv file that contains the labels of the swimming video.'
+                    '\nMake sure the csv structure:'
+                    '\nHead(x,y), Right Shoulder(x,y), Right Elbow(x,y), Right Wrist(x,y),'
+                    'Left Shoulder(x,y), Left Elbow(x,y), Left Wrist(x,y)',
+                    createFlex: false),
+                SizedBox(height: 5.0,),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: buildTextButton(context, 'Select', uploadLabelsWeb),
+                ),
+              ],
+            )
+        ),
+        _hasLabels ? buildSelectedFile(context, _labels, createFlex: false) : Container(),
+        _hasLabels ? Container(
+          margin: EdgeInsets.only(right: 10.0, left:10.0),
+          child: Row(
+            children: [
+              Flexible(child: Container()),
+              buildTextButton(context, 'Remove',
+                  removeSelectedVideo,
+                  fontSize: 20),
+              SizedBox(width: 10,),
+              buildElevatedButton(context, 'Next', nextState),
+            ],
+          ),
+        )
+            : Flexible( flex: 2, child: Container(),)
+      ],
+    );
+  }
+
+  Widget buildThirdStep(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+            margin: EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                buildTitle(context, 'Submit Data', createFlex: false),
+                SizedBox(height: 5.0,),
+                buildDescription(context, 'Verify that the selected files are correct',
+                    createFlex: false),
+                SizedBox(height: 5.0,),
+              ],
+            )
+        ),
+        Container(
+          padding: EdgeInsets.only(top:5.0, right: 20.0 ,left: 20.0),
+          child: Row(
+            children: [
+              buildDescription(context, 'Video'),
+              buildDescription(context, 'Labels')
+            ],
           ),
         ),
-        Flexible(
-          flex: 3,
-          child: Container(
-            child: OutlineButton(
-              child: Text('Test'),
-            ),
+        Row(
+          children: [
+            buildSelectedFile(context, _video),
+            buildSelectedFile(context, _labels),
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 10.0, left:10.0),
+          child: Row(
+            children: [
+              Flexible(child: Container()),
+              buildElevatedButton(context, 'Next', nextState),
+            ],
           ),
         )
       ],
     );
   }
 
-  Widget buildSecondStep(BuildContext context) {
-    return Text('2');
-  }
-
-  Widget buildThridStep(BuildContext context) {
-    return Text('3');
-  }
-
   Widget buildFourthStep(BuildContext context) {
-    return Text('4');
+    return Center(
+      child: LinearProgressIndicator(),
+    );
   }
 
   Widget buildStepsMap(BuildContext context) {
     return Container(
-      color: _webColors.getBackgroundForI6(),
+      color: _webColors.getBackgroundForI7(),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -306,7 +533,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       child = buildSecondStep(context);
     }
     else if(_step == ResearcherStep.Submit) {
-      child = buildThridStep(context);
+      child = buildThirdStep(context);
     }
     else if(_step == ResearcherStep.View)  {
       child = buildFourthStep(context);
@@ -317,7 +544,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: _webColors.getBackgroundForI6(),
+            color: _webColors.getBackgroundForI7(),
             child: child
         )
     );
@@ -327,15 +554,18 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     return Flexible(
         flex: flex,
         fit: FlexFit.tight,
-        child: Row(
-          children: [
-            Flexible(
-              flex: 1,
-              fit: FlexFit.tight,
-              child: buildStepsMap(context)
-            ),
-            buildCuttentStep(context, 4),
-          ],
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: buildStepsMap(context)
+              ),
+              buildCuttentStep(context, 4),
+            ],
+          ),
         )
     );
   }

@@ -13,26 +13,30 @@ class WebColors {
   }
 
   Color getBackgroundForI2() {
+      return Color.fromRGBO(26, 115, 232, 1.0);
+  }
+
+  Color getBackgroundForI3() {
     return Color.fromRGBO(179, 225, 253, 1.0);
   }
   
-  Color getBackgroundForI3() {
+  Color getBackgroundForI4() {
     return Color.fromRGBO(219, 241, 255, 1.0);
   }
   
-  Color getBackgroundForI4() {
+  Color getBackgroundForI5() {
     return Color.fromRGBO(214, 255, 238, 1.0);
   }
 
-  Color getBackgroundForI5() {
+  Color getBackgroundForI6() {
     return Color.fromRGBO(245, 247, 249, 1.0);
   }
 
-  Color getBackgroundForI6() {
+  Color getBackgroundForI7() {
     return Color.fromRGBO(248, 249, 250, 1.0);
   }
 
-  Color getBackgroundForI7() {
+  Color getBackgroundForI8() {
     return Colors.white;
   }
 
