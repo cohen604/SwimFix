@@ -129,14 +129,12 @@ public class VideoHandler implements IVideoHandler {
      * @param desPath - the destination path to insert the video frames
      * @return the list of frames
      */
-    public List<Mat> createAndGetFrames(byte[] video, String desPath) {
+    @Override
+    public boolean createAndGetFrames(byte[] video, String desPath) {
         if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
-            return null;
+            return false;
         }
-        if(saveFramesBytes(video, desPath)) {
-            return getFrames(desPath);
-        }
-        return null;
+        return saveFramesBytes(video, desPath);
     }
 
     /**

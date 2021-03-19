@@ -137,23 +137,23 @@ public class FeedbackProvider implements IFeedbackProvider {
         IVideoHandler  videoHandler = iFactoryVideoHandler.create(iFactoryDraw.create());
         // create IVideo
         String videoPath = generateName(videoFolderPath, convertedVideoDTO.getVideoType(), localDateTime);
-        videoHandler.createAndGetFrames(convertedVideoDTO.getBytes(), videoPath);
-        IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath);
-
-        if (video.isVideoExists()) {
-            // decoders step
-            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            // create the skeleton path
-            String skeletonsPath = generateName(feedbackSkeletonsFolderPath, ".csv", localDateTime);
-            // create feedback
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(
-                    video, errorDetectors,
-                    feedbackFolderPath, skeletonsPath, mlSkeletonsFolderPath,
-                    detectorsNames, localDateTime);
-            if(feedbackVideo != null) {
-                iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), skeletonsPath);
+        if(videoHandler.createAndGetFrames(convertedVideoDTO.getBytes(), videoPath)) {
+            IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath);
+            if (video.isVideoExists()) {
+                // decoders step
+                List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+                // create the skeleton path
+                String skeletonsPath = generateName(feedbackSkeletonsFolderPath, ".csv", localDateTime);
+                // create feedback
+                IFeedbackVideo feedbackVideo = getFeedbackVideo(
+                        video, errorDetectors,
+                        feedbackFolderPath, skeletonsPath, mlSkeletonsFolderPath,
+                        detectorsNames, localDateTime);
+                if (feedbackVideo != null) {
+                    iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), skeletonsPath);
+                }
+                return feedbackVideo;
             }
-            return feedbackVideo;
         }
         return null;
     }

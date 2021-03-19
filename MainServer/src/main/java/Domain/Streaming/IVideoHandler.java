@@ -48,7 +48,7 @@ public interface IVideoHandler {
      * @param desPath - the destination path
      * @return the list of frames
      */
-    List<Mat> createAndGetFrames(byte[] video, String desPath);
+    boolean createAndGetFrames(byte[] video, String desPath);
 
     /**
      * The function convert list of frames to list of bytes
