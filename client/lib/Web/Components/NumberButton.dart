@@ -28,7 +28,7 @@ class _NumberButtonState extends State<NumberButton> {
       fit: FlexFit.tight,
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.only(top:8.0, bottom: 12, right: 12, left: 12),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: this.widget.selected ?
