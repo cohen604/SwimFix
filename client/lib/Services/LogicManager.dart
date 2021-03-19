@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:client/Domain/FeedbackFilters.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Domain/FileDonwloaded.dart';
 import 'package:client/Domain/ResearcherReport.dart';
 import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/Authentication.dart';
@@ -176,6 +177,12 @@ class LogicManager {
 
   bool predictValidFrameBlue(CameraImage img) {
     return mlHandler.predictValidFrameBlue(img);
+  }
+
+  Future<FileDownloaded> getFileForDownload(String uid, String email, String name, String fileLink) async {
+    String path = "/researcher/$fileLink";
+    return await this.connectionHandler.downloadFile(
+      path, uid, email, name);
   }
 
 }

@@ -2,13 +2,19 @@ package DTO;
 
 public class ResearcherReportDTO {
 
-    private String _videolink;
-    private String _csvLink;
-    private String _pdfLink;
+    private String videoLink;
+    private String csvLink;
+    private String pdfLink;
 
     public ResearcherReportDTO(String videolink, String csvLink, String pdfLink) {
-        this._videolink = videolink;
-        this._csvLink = csvLink;
-        this._pdfLink = pdfLink;
+        if(videolink != null) {
+            this.videoLink = videolink.replace('\\', '/');
+        }
+        if(csvLink != null) {
+            this.csvLink = csvLink.replace('\\','/');
+        }
+        if(pdfLink != null) {
+            this.pdfLink = pdfLink.replace('\\','/');
+        }
     }
 }

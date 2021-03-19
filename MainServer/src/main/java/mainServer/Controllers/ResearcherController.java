@@ -4,10 +4,16 @@ import DTO.*;
 import com.google.gson.Gson;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/researcher")
@@ -37,11 +43,37 @@ public class ResearcherController {
                     videoDTO,
                     fileDTO
             );
-            System.out.println("Sending the researcher report");
+            System.out.println("Sending the researcher report "+result.toJson());
             return result.toJson();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/{root}/{email}/{folder}/{fileName}")
+    public ResponseEntity getFile(
+            @PathVariable String root,
+            @PathVariable String email,
+            @PathVariable String folder,
+            @PathVariable String fileName) {
+        System.out.println("Received file request for download ");
+        String path = root + "\\" + email + "\\" + folder + "\\" + fileName;
+        File file = new File(path);
+        if (file.exists()) {
+            try {
+                byte[] data = Files.readAllBytes(file.toPath());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .header("Content-Disposition","attachment; filename=\"" + file.getName() + "\"")
+                        .contentType(MediaTypeFactory.getMediaType(file.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                        .body(data);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 }

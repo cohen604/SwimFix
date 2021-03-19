@@ -1,6 +1,8 @@
 package mainServer.Providers;
 
+import DTO.FileDTO;
+
 public interface IStatisticsProvider {
 
-    String getStatistics();
+    String getStatistics(FileDTO rawSkeletonFileDTO, String skeletonsPath);
 }

@@ -1,3 +1,6 @@
+import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/WebColors.dart';
@@ -39,7 +42,8 @@ class _MenuBarState extends State<MenuBar> {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/welcome');
+          Navigator.pushNamed(context, '/welcome',
+            arguments: new WelcomeScreenArguments(this.widget.swimmer));
         });
       });
     };
@@ -75,7 +79,8 @@ class _MenuBarState extends State<MenuBar> {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/swimmer');
+          Navigator.pushNamed(context, '/swimmer',
+              arguments: new SwimmerScreenArguments(this.widget.swimmer));
         });
       });
     };
@@ -85,7 +90,8 @@ class _MenuBarState extends State<MenuBar> {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/researcher');
+          Navigator.pushNamed(context, '/researcher',
+              arguments: new ResearcherScreenArguments(this.widget.swimmer));
         });
       });
     };

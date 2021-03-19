@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Domain/FileDonwloaded.dart';
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -117,10 +118,10 @@ class ConnectionHandler {
     request.fields['uid'] = uid;
     request.fields['email'] = email;
     request.fields['name'] = name;
-    print('reques $request');
+    print('request $request');
     http.Response response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200) {
-      print('response $response');
+      print('server response ${toServerResponse(response.body)}');
       return toServerResponse(response.body);
     } else {
       throw Exception('Error: post message send to $path');
@@ -133,6 +134,26 @@ class ConnectionHandler {
 
   String getStreamUrl(){
     return getUrl() + "/stream";
+  }
+
+  Future<FileDownloaded> downloadFile(String path, String uid, String email, String name) async {
+    // print('get file from $path');
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('GET', Uri.parse(url));
+    print('request $request');
+    Map<String,String> headers = {
+      'Accept' : '*',
+      'Access-Control-Allow-Origin': "*",
+    };
+    http.Response response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      String headerValue = response.headers['content-type'];
+      int start = headerValue.indexOf("/");
+      String fileName = 'file.${headerValue.substring(start + 1)}';
+      print(fileName);
+      return new FileDownloaded(fileName, response.bodyBytes);
+    }
+    throw Exception('Error: get message send to $path');
   }
 
 

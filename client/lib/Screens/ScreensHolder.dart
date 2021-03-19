@@ -33,10 +33,6 @@ class ScreenHolder {
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
     if(kIsWeb) {
       ///web
-      /// TODO delete this if
-      if(args == null) {
-        args = new WelcomeScreenArguments(new Swimmer("uid", "email", "name"));
-      }
       return new WebWelcomeScreen(arguments: args);
     }
     ///mobile
@@ -77,10 +73,6 @@ class ScreenHolder {
   }
 
   Widget getSwimmerScreen(SwimmerScreenArguments args) {
-    /// TODO delete this if
-    if(args == null) {
-      args = new SwimmerScreenArguments(new Swimmer("uid", "email", "name"));
-    }
     if(kIsWeb) {
       return new WebSwimmerScreen(arguments: args,);
     }
@@ -88,11 +80,10 @@ class ScreenHolder {
   }
 
   Widget getResearcherScreen(ResearcherScreenArguments args) {
-    /// TODO delete this if
-    if(args == null) {
-      args = new ResearcherScreenArguments(new Swimmer("uid", "email", "name"));
-    }
     if(kIsWeb) {
+      if(args == null) {
+        args = new ResearcherScreenArguments(new Swimmer("uid", "email", "name"));
+      }
       return new WebResearcherScreen(args: args);
     }
     return null;

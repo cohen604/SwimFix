@@ -1,3 +1,5 @@
+import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/Components/CardButton.dart';
@@ -64,11 +66,11 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     );
   }
 
-  Function onClick(String path) {
+  Function onClick(String path, {Object arguments}) {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, path);
+          Navigator.pushNamed(context, path, arguments: arguments);
         });
       });
     };
@@ -80,14 +82,16 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       child: Row(
           children: [
             buildMainButton(context, 1, "Swimmer",
-                onClick('/swimmer'),
+                onClick('/swimmer',
+                    arguments: new SwimmerScreenArguments(this.widget.arguments.swimmer)),
                 'images/swimmer_image.png'),
             buildMainButton(context, 1, "Coach",
                 null, 'images/coach_image.png'),
             buildMainButton(context, 1, "Admin",
                 null,  'images/admin_image.png'),
             buildMainButton(context, 1, "Researcher",
-                onClick('/researcher'),
+                onClick('/researcher',
+                    arguments: new ResearcherScreenArguments(this.widget.arguments.swimmer)),
                 'images/researcher_image.png'),
           ],
       ),

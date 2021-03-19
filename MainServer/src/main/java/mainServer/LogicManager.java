@@ -169,14 +169,14 @@ public class LogicManager {
      */
     public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
         IUser user = _userProvider.getUser(userDTO);
-        if(user != null && user.isResearcher()) {
+        if(user != null && user.isLogged() && user.isResearcher()) {
             // create video
             List<String> detectorsNames = new LinkedList<>();
             IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
                     videoDTO, user.getVideosPath(),
                     user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
-                String pdfPath = _satisticProvider.getStatistics();
+                String pdfPath = _satisticProvider.getStatistics(fileDTO, feedbackVideo.getMLSkeletonsPath());
                 ResearcherReportDTO reportDTO = new ResearcherReportDTO(
                         feedbackVideo.getPath(),
                         feedbackVideo.getSkeletonsPath(),

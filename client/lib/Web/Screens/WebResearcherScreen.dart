@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
+import 'package:client/Domain/FileDonwloaded.dart';
+import 'package:client/Domain/ResearcherReport.dart';
 import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/Components/CardButton.dart';
 import 'package:client/Web/Components/CircleButton.dart';
@@ -39,6 +42,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   File _labels;
 
   bool _hasResults = false;
+  ResearcherReport _report;
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
@@ -157,6 +161,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             if(result!=null) {
               this.setState(() {
                 _hasResults = true;
+                _report = result;
                 nextState();
               });
             }
@@ -576,8 +581,73 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
+  void onFileClick(String fileLink) {
+    Swimmer swimmer = this.widget.args.swimmer;
+    _logicManager.getFileForDownload(
+        swimmer.uid,
+        swimmer.email,
+        swimmer.name,
+      fileLink,
+    ).then(
+            (FileDownloaded fileDownloaded) {
+          String content = base64Encode(fileDownloaded.bytes);
+          AnchorElement(
+              href: "data:application/octet-stream;charset=utf-16le;base64,$content")
+            ..setAttribute("download", fileDownloaded.fileName)
+            ..click();
+        }
+    );
+  }
+
+  void onFeedbackClick() {
+    // _report = new ResearcherReport(
+    //     "clients/avrahamcalev2@gmail.com/feedbacks/2021-03-19-17-03-00.mp4",
+    //     "clients/avrahamcalev2@gmail.com/mlSkeletons/2021-03-19-17-03-00.csv",
+    //     "link 3");
+    if(_report.videoLink!=null) {
+      onFileClick(_report.videoLink);
+    }
+  }
+
+  void onCsvClick() {
+    if(_report.csvLink!=null) {
+      onFileClick(_report.csvLink);
+    }
+  }
+
+  void onPdfClick() {
+    if(_report.pdfLink!=null) {
+      onFileClick(_report.pdfLink);
+    }
+  }
+
   Widget buildViewStep(BuildContext context) {
-      return Text('View Results');
+    return Container(
+      margin: EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          buildTitle(context, 'View report', createFlex: false),
+          SizedBox(height: 10.0,),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: EdgeInsets.only(left:10),
+              child: buildTextButton(context, 'Feedback', onFeedbackClick),
+            ),
+          ),
+          SizedBox(height: 5.0,),
+          Align(
+              alignment: Alignment.topLeft,
+              child: buildTextButton(context, 'Csv', onCsvClick)
+          ),
+          SizedBox(height: 5.0,),
+          Align(
+              alignment: Alignment.topLeft,
+              child: buildTextButton(context, 'Pdf', onPdfClick)
+          ),
+        ],
+      )
+    );
   }
 
   Widget buildErrorStep(BuildContext context) {

@@ -26,7 +26,9 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: MenuBar(),
+      child: MenuBar(
+        swimmer: this.widget.arguments.swimmer,
+      ),
     );
   }
 
