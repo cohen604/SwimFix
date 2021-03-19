@@ -105,12 +105,18 @@ class ConnectionHandler {
   }
 
   /// The function send a post message with a multi part file  and meta data about it to the server
-  Future<ServerResponse> postMultiPartFiles(String path, http.MultipartFile meta, http.MultipartFile file) async {
+  Future<ServerResponse> postMultiPartFiles(String path,
+      http.MultipartFile firstFile,
+      http.MultipartFile secondFile,
+      String uid, String email, String name) async {
     print('post to server 2 multipart files');
     String url = getUrl() + path;
     var request = new http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(meta);
-    request.files.add(file);
+    request.files.add(firstFile);
+    request.files.add(secondFile);
+    request.fields['uid'] = uid;
+    request.fields['email'] = email;
+    request.fields['name'] = name;
     print('reques $request');
     http.Response response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200) {

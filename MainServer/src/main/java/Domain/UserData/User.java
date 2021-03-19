@@ -5,7 +5,6 @@ import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {
@@ -31,6 +30,7 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
+        _researcher = new Researcher();
         _pathManager = new PathManager(email, true);
     }
 
@@ -94,6 +94,11 @@ public class User implements IUser {
     }
 
     @Override
+    public boolean isResearcher() {
+        return _researcher != null;
+    }
+
+    @Override
     public String getVideosPath() {
         return _pathManager.getVideosPath();
     }
@@ -111,6 +116,11 @@ public class User implements IUser {
     @Override
     public String getMLSkeletonsPath() {
         return _pathManager.getMLSkeletonsPath();
+    }
+
+    @Override
+    public String getReportsPath() {
+        return _pathManager.getReportsPath();
     }
 
     @Override

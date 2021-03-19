@@ -12,7 +12,7 @@ public class PathManager {
     public PathManager(String folderName, boolean build) {
         _root = "clients";
         _mainFolder = combinePaths(_root, folderName);
-        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
+        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons", "reports"};
         if(build) {
             createDirs();
         }
@@ -21,7 +21,7 @@ public class PathManager {
     public PathManager(String root, String folderName, boolean build) {
         _root = root;
         _mainFolder = combinePaths(_root, folderName);
-        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons"};
+        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons", "reports"};
         if(build) {
             createDirs();
         }
@@ -54,6 +54,10 @@ public class PathManager {
 
     public String getMLSkeletonsPath() {
         return combinePaths(_mainFolder, "mlSkeletons");
+    }
+
+    public String getReportsPath() {
+        return combinePaths(_mainFolder, "reports");
     }
 
     private String combinePaths(String prefix, String suffix) {

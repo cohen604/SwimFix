@@ -68,4 +68,8 @@ public class SwimFixAPI {
       return logicManager.filterFeedbackVideo(userDTO, filterDTO);
    }
 
+   public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
+      return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
+   
+   }
 }

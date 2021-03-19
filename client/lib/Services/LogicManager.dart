@@ -63,7 +63,7 @@ class LogicManager {
           return true;
       }
     } catch(e) {
-      print('error in login ${e.toString()}');
+      print('error in logout ${e.toString()}');
     }
     return false;
   }
@@ -90,7 +90,8 @@ class LogicManager {
   }
 
   Future<ResearcherReport> postVideoAndCsvForAnalyze(
-      String videoPath, videoBytes, String labelPath, labelsBytes) async {
+      String videoPath, videoBytes, String labelPath, labelsBytes,
+      Swimmer swimmer) async {
     String path = "/researcher/report";
     http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
       'video', videoBytes, filename: videoPath,
@@ -98,11 +99,17 @@ class LogicManager {
     http.MultipartFile multipartLabels = http.MultipartFile.fromBytes(
       'labels', labelsBytes, filename: labelPath,
     );
-    // ServerResponse response = await this.connectionHandler.postMultiPartFiles(path, meta, images);
-    // if(response.value != null) {
-    //   Map mapResponse = response.value as Map;
-    //   return ResearcherReport.factory(mapResponse);
-    // }
+    try {
+      ServerResponse response = await this.connectionHandler.postMultiPartFiles(path,
+          multipartVideo, multipartLabels, swimmer.uid, swimmer.email, swimmer.name);
+      if (response.value != null) {
+        Map mapResponse = response.value as Map;
+        return ResearcherReport.factory(mapResponse);
+      }
+    }
+   catch(e) {
+     print('error in $path with ${e.toString()}');
+   }
     return null;
   }
 
@@ -118,7 +125,6 @@ class LogicManager {
     return file.absolute.path;
   }
 
-  // TODO delete this
   // Note: Don't use it
   Future<FeedbackVideoStreamer> postListImagesForStreaming(List <Uint8List> imagesBytes, String type,
       String fileName) async {
@@ -145,7 +151,8 @@ class LogicManager {
     );
     print('end preprocessing list of images bytes ${DateTime.now()}');
     print('send to server ${DateTime.now()}');
-    ServerResponse response = await this.connectionHandler.postMultiPartFiles(path, meta, images);
+    ServerResponse response = await this.connectionHandler.postMultiPartFiles(
+        path, meta, images, swimmer.uid, swimmer.email, swimmer.name,);
     //TODO check if response is valid
     Map mapResponse = response.value as Map;
     print(mapResponse);

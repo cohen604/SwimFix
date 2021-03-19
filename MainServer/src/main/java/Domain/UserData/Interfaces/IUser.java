@@ -13,6 +13,8 @@ public interface IUser {
 
     boolean isLogged();
 
+    boolean isResearcher();
+
     boolean login();
 
     boolean logout();
@@ -24,6 +26,8 @@ public interface IUser {
     String getSkeletonsPath();
 
     String getMLSkeletonsPath();
+
+    String getReportsPath();
 
     Collection<IFeedbackVideo> getFeedbacks();
 

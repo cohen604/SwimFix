@@ -24,18 +24,19 @@ public class SwimmerController {
                                @RequestPart(name = "email") String email,
                                @RequestPart(name = "name") String name,
                                @RequestPart(name = "file", required = false) MultipartFile data) {
-        System.out.println("Received Video for Streaming path");
-        ConvertedVideoDTO convertedVideo = null;
         try {
-            convertedVideo = new ConvertedVideoDTO(data.getOriginalFilename(), data.getBytes());
+            System.out.println("Received Video for Streaming path");
+            ConvertedVideoDTO convertedVideo = new ConvertedVideoDTO(data.getOriginalFilename(), data.getBytes());
+            UserDTO userDTO = new UserDTO(uid, email, name);
+            ActionResult<FeedbackVideoStreamer> actionResult = swimFixAPI.uploadVideoForStreamer(
+                    userDTO,
+                    convertedVideo);
+            System.out.println("Streaming link generated, send link");
+            return actionResult.toJson();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        UserDTO userDTO = new UserDTO(uid, email, name);
-        ActionResult<FeedbackVideoStreamer> actionResult =
-                swimFixAPI.uploadVideoForStreamer(userDTO, convertedVideo);
-        System.out.println("Streaming link generated, send link");
-        return actionResult.toJson();
+        return null;
     }
 
     @PostMapping("/feedback/filter")
@@ -44,12 +45,17 @@ public class SwimmerController {
                                  @RequestPart(name = "email") String email,
                                  @RequestPart(name = "name") String name,
                                  @RequestPart(name = "body") String body) {
-        System.out.println("Received feedback video Filter DTO");
-        FeedbackFilterDTO filterDTO = new Gson().fromJson(body, FeedbackFilterDTO.class);
-        UserDTO userDTO = new UserDTO(uid, email, name);
-        ActionResult<FeedbackVideoStreamer> actionResult =
-                swimFixAPI.filterFeedbackVideo(userDTO, filterDTO);
-        System.out.println("Streaming link generated, send link");
-        return actionResult.toJson();
+        try {
+            System.out.println("Received feedback video Filter DTO");
+            FeedbackFilterDTO filterDTO = new Gson().fromJson(body, FeedbackFilterDTO.class);
+            UserDTO userDTO = new UserDTO(uid, email, name);
+            ActionResult<FeedbackVideoStreamer> actionResult =
+                    swimFixAPI.filterFeedbackVideo(userDTO, filterDTO);
+            System.out.println("Streaming link generated, send link");
+            return actionResult.toJson();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -151,7 +151,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             _video.name,
             videoBytes,
             _labels.name,
-            labelsBytes)
+            labelsBytes,
+            this.widget.args.swimmer)
           .then( (result) {
             if(result!=null) {
               this.setState(() {

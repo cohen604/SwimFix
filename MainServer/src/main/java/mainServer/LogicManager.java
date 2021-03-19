@@ -4,6 +4,7 @@ import DTO.*;
 import Domain.Streaming.*;
 import Domain.UserData.Interfaces.IUser;
 import mainServer.Providers.IFeedbackProvider;
+import mainServer.Providers.IStatisticsProvider;
 import mainServer.Providers.IUserProvider;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -20,13 +21,16 @@ public class LogicManager {
 
     private IUserProvider _userProvider;
     private IFeedbackProvider _feedbackProvider;
+    private IStatisticsProvider _satisticProvider;
     private IFeedbackVideo lastFeedbackVideo; //TODO delete this
 
 
     public LogicManager(IUserProvider userProvider,
-                        IFeedbackProvider streamProvider) {
+                        IFeedbackProvider streamProvider,
+                        IStatisticsProvider statisticsProvider) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
+        _satisticProvider = statisticsProvider;
         createClientsDir();
         _userProvider.reload();
     }
@@ -156,5 +160,31 @@ public class LogicManager {
         return null;
     }
 
+    /**
+     * The function return a researcher report from the given video and labels
+     * @param userDTO - the user information
+     * @param videoDTO - the video to created the analyze
+     * @param fileDTO - the labels file
+     * @return
+     */
+    public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user != null && user.isResearcher()) {
+            // create video
+            List<String> detectorsNames = new LinkedList<>();
+            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                    videoDTO, user.getVideosPath(),
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
+            if (feedbackVideo != null) {
+                String pdfPath = _satisticProvider.getStatistics();
+                ResearcherReportDTO reportDTO = new ResearcherReportDTO(
+                        feedbackVideo.getPath(),
+                        feedbackVideo.getSkeletonsPath(),
+                        pdfPath);
+                return new ActionResult<>(Response.SUCCESS, reportDTO);
+            }
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 
