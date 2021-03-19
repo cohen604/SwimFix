@@ -136,6 +136,15 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     }
   }
 
+  void removeSelectedLabels() {
+    if(_hasLabels) {
+      this.setState(() {
+        _hasLabels = false;
+        _labels = null;
+      });
+    }
+  }
+
   void nextState() {
     if(_step == ResearcherStep.Upload_Video) {
       this.setState(() {
@@ -461,7 +470,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             children: [
               Flexible(child: Container()),
               buildTextButton(context, 'Remove',
-                  removeSelectedVideo,
+                  removeSelectedLabels,
                   fontSize: 20),
               SizedBox(width: 10,),
               buildElevatedButton(context, 'Next', nextState),
