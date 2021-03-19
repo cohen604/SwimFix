@@ -451,10 +451,22 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
                 buildTitle(context, 'Upload Labels', createFlex: false),
                 SizedBox(height: 5.0,),
                 buildDescription(context, 'Please select a Csv file that contains the labels of the swimming video.'
-                    '\nMake sure the csv structure:'
-                    '\nHead(x,y), Right Shoulder(x,y), Right Elbow(x,y), Right Wrist(x,y),'
-                    'Left Shoulder(x,y), Left Elbow(x,y), Left Wrist(x,y)',
+                  '\nMake sure the csv contains the (x, y) values of:',
+                  createFlex: false,
+                  fontSize: 20,),
+                buildDescription(context, 'Head, Right Shoulder, Right Elbow, Right Wrist,'
+                    ' Left Shoulder, Left Elbow, Left Wrist.'
+                    '\nExample for Csv:',
+                    fontSize: 20,
                     createFlex: false),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'images/csv_example.png',
+                    height: 140.0,
+                    fit: BoxFit.contain,
+                  ),
+                ),
                 SizedBox(height: 5.0,),
                 Align(
                   alignment: Alignment.topLeft,
