@@ -157,6 +157,12 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     }
   }
 
+  void uploadVideoFunctionButton() {
+    this.setState(() {
+      _step = ResearcherStep.Upload_Video;
+    });
+  }
+
   Widget buildUploadVideoButton(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
@@ -167,9 +173,10 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           number: 1,
           title: 'Upload Video',
           background: _webColors.getBackgroundForI7(),
-          selected: this._step.index >= ResearcherStep.Upload_Video.index,
+          selected: _step.index >= ResearcherStep.Upload_Video.index,
           selectedColor: _webColors.getBackgroundForI1(),
-          onClick: null,
+          onClick: _step.index >= ResearcherStep.Upload_Video.index?
+            uploadVideoFunctionButton: null,
           fontSize: 21,
           flex: 1
         ),
@@ -177,7 +184,13 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildUploadCSVButton(BuildContext context, int flex) {
+  void uploadLabelsFunctionButton() {
+    this.setState(() {
+      _step = ResearcherStep.Upload_Csv;
+    });
+  }
+
+  Widget buildUploadLabelsButton(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
@@ -187,14 +200,21 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           number: 2,
           title: 'Upload Labels',
           background: _webColors.getBackgroundForI7(),
-          selected: this._step.index >= ResearcherStep.Upload_Csv.index,
+          selected: _step.index >= ResearcherStep.Upload_Csv.index,
           selectedColor: _webColors.getBackgroundForI1(),
-          onClick: null,
+          onClick: _step.index >= ResearcherStep.Upload_Csv.index ?
+            uploadLabelsFunctionButton : null,
           fontSize: 21,
           flex: 1
         ),
       ),
     );
+  }
+
+  void getReportFunctionButton() {
+    this.setState(() {
+        _step = ResearcherStep.Submit;
+      });
   }
 
   Widget buildGetReportButton(BuildContext context, int flex) {
@@ -207,14 +227,21 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           number: 3,
           title: 'Get Report',
           background: _webColors.getBackgroundForI7(),
-          selected: this._step.index >= ResearcherStep.Submit.index,
+          selected: _step.index >= ResearcherStep.Submit.index,
           selectedColor: _webColors.getBackgroundForI1(),
-          onClick: null,
+          onClick: _step.index >= ResearcherStep.Submit.index?
+              getReportFunctionButton : null,
           fontSize: 21,
           flex: 1
         ),
       ),
     );
+  }
+
+  void viewFunctionButton() {
+    this.setState(() {
+        _step = ResearcherStep.View;
+      });
   }
 
   Widget buildViewResultsButton(BuildContext context, int flex) {
@@ -227,23 +254,14 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             number: 4,
             title: 'View',
             background: _webColors.getBackgroundForI8(),
-            selected: this._step.index >= ResearcherStep.View.index,
+            selected: _step.index >= ResearcherStep.View.index,
             selectedColor: _webColors.getBackgroundForI1(),
-            onClick: null,
+            onClick: _step.index >= ResearcherStep.View.index?
+              viewFunctionButton : null,
             fontSize: 21,
             flex: 1
         ),
       ),
-    );
-  }
-
-  Widget buildShowResults(BuildContext context, int flex) {
-    return Flexible(
-        flex: flex,
-        fit: FlexFit.tight,
-        child: Container(
-
-        )
     );
   }
 
@@ -376,7 +394,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     return child;
   }
 
-  Widget buildUploadVideo(BuildContext context) {
+  Widget buildVideoStep(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -414,7 +432,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildSecondStep(BuildContext context) {
+  Widget buildLabelsStep(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -455,7 +473,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildThirdStep(BuildContext context) {
+  Widget buildSubmitStep(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -498,9 +516,12 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildFourthStep(BuildContext context) {
-    return Center(
-      child: LinearProgressIndicator(),
+  Widget buildViewStep(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: Center(
+        child: LinearProgressIndicator(),
+      ),
     );
   }
 
@@ -512,7 +533,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       child: Column(
         children: [
           buildUploadVideoButton(context, 1),
-          buildUploadCSVButton(context, 1),
+          buildUploadLabelsButton(context, 1),
           buildGetReportButton(context, 1),
           buildViewResultsButton(context, 1),
           Flexible(
@@ -524,19 +545,19 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildCuttentStep(BuildContext context, int flex) {
+  Widget buildCurrentStep(BuildContext context, int flex) {
     Widget child;
     if(_step == ResearcherStep.Upload_Video) {
-      child = buildUploadVideo(context);
+      child = buildVideoStep(context);
     }
     else if(_step == ResearcherStep.Upload_Csv) {
-      child = buildSecondStep(context);
+      child = buildLabelsStep(context);
     }
     else if(_step == ResearcherStep.Submit) {
-      child = buildThirdStep(context);
+      child = buildSubmitStep(context);
     }
     else if(_step == ResearcherStep.View)  {
-      child = buildFourthStep(context);
+      child = buildViewStep(context);
     }
     return  Flexible(
         flex: flex,
@@ -563,7 +584,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
                 fit: FlexFit.tight,
                 child: buildStepsMap(context)
               ),
-              buildCuttentStep(context, 4),
+              buildCurrentStep(context, 4),
             ],
           ),
         )

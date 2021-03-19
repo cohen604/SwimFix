@@ -77,6 +77,13 @@ class _NumberButtonState extends State<NumberButton> {
 
   @override
   Widget build(BuildContext context) {
+    Widget child = Row(
+      children: [
+        buildNumber(context, 1),
+        buildTitle(context, 3)
+      ],
+    );
+
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
@@ -93,12 +100,10 @@ class _NumberButtonState extends State<NumberButton> {
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: Row(
-        children: [
-          buildNumber(context, 1),
-          buildTitle(context, 3)
-        ],
-      ),
+      child: OutlinedButton(
+        onPressed: this.widget.onClick,
+        child: child
+      )
     );
   }
 }
