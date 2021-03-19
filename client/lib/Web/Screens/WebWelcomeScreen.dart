@@ -26,30 +26,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: MenuBar(onlogout: onLogout,),
-    );
-  }
-
-  void onLogout() {
-    _logicManger.logout(this.widget.arguments.swimmer).then(
-      (value) {
-        if(value) {
-          this.setState(() {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, '/login');
-            });
-          });
-        }
-        else {
-          showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-              content: Text('Cant Logout, Please Try again later',
-                textAlign: TextAlign.center,),
-            )
-          );
-        }
-      }
+      child: MenuBar(swimmer: this.widget.arguments.swimmer,),
     );
   }
 
@@ -64,19 +41,24 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       );
   }
 
-  Widget buildMainButton(BuildContext context, int flex, String title, Function onClick) {
+  Widget buildMainButton(BuildContext context,
+      int flex,
+      String title,
+      Function onClick,
+      String image) {
     return Flexible(
       flex: flex,
       fit: FlexFit.loose,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 1.5,
+        height: MediaQuery.of(context).size.height / 1.3,
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
         child: CardButton(
           title: title,
           background: _webColors.getBackgroundForI3(),
-          buttonBackground: _webColors.getBackgroundForI5(),
+          buttonBackground: _webColors.getBackgroundForI1(),
           onClick: onClick,
+          image: image,
         ),
       ),
     );
@@ -97,10 +79,16 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       margin: EdgeInsets.only(top: 20.0),
       child: Row(
           children: [
-            buildMainButton(context, 1, "Swimmer", onClick('/swimmer')),
-            buildMainButton(context, 1, "Coach", null),
-            buildMainButton(context, 1, "Admin", null),
-            buildMainButton(context, 1, "Researcher", null),
+            buildMainButton(context, 1, "Swimmer",
+                onClick('/swimmer'),
+                'images/swimmer_image.png'),
+            buildMainButton(context, 1, "Coach",
+                null, 'images/coach_image.png'),
+            buildMainButton(context, 1, "Admin",
+                null,  'images/admin_image.png'),
+            buildMainButton(context, 1, "Researcher",
+                onClick('/researcher'),
+                'images/researcher_image.png'),
           ],
       ),
     );

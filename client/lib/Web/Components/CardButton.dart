@@ -7,12 +7,12 @@ class CardButton extends StatefulWidget {
   String title;
   Color background;
   Color buttonBackground;
-  Icon icon;
+  String image;
   Function onClick;
   Function onHover;
 
   CardButton({this.title, this.background, this.buttonBackground,
-    this.icon, this.onClick, this.onHover}) : super();
+    this.image, this.onClick, this.onHover}) : super();
 
   @override
   _CardButtonState createState() => _CardButtonState();
@@ -40,6 +40,10 @@ class _CardButtonState extends State<CardButton> {
         color: this.widget.background,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
+        child: Image.asset(
+          this.widget.image,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }
@@ -102,12 +106,35 @@ class _CardButtonState extends State<CardButton> {
               flex: 1,
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: CircleButton(
-                  background: this.widget.buttonBackground,
-                  title: '>',
-                  onClick:  this.widget.onClick,
+                child: Container(
+                  padding: EdgeInsets.only(right:5.0, bottom: 7.0),
+                  child: ElevatedButton(
+                    onPressed: this.widget.onClick,
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateColor.resolveWith(
+                              (states) => Colors.white),
+                      backgroundColor:  MaterialStateColor.resolveWith(
+                              (states) => this.widget.buttonBackground),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.only(right:2.0, left:2.0),
+                      child: Text('More',
+                        style: TextStyle(
+                            fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
+              //   CircleButton(
+              //     background: this.widget.buttonBackground,
+              //     title: '>',
+              //     onClick:  this.widget.onClick,
+              //   ),
+              // ),
             ),
           ],
         ),
@@ -116,7 +143,7 @@ class _CardButtonState extends State<CardButton> {
 
   @override
   Widget build(BuildContext context) {
-    if(this.widget.icon == null) {
+    if(this.widget.image == null) {
       return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

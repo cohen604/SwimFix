@@ -52,7 +52,8 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         child: CardButton(
           title: title,
           background: _webColors.getBackgroundForI3(),
-          buttonBackground: _webColors.getBackgroundForI5(),
+          buttonBackground: _webColors.getBackgroundForI1(),
+          image: 'images/swimmer_image.png',
         ),
       ),
     );
@@ -95,14 +96,15 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-          color: Colors.red,
-          child: Column(
-            children: [
-              buildTopSide(context, 1),
-              buildBottomSide(context, 10)
-            ],
-          ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            buildTopSide(context, 1),
+            buildBottomSide(context, 10)
+          ],
         ),
+      ),
     );
   }
 }

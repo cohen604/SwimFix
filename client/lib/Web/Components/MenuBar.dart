@@ -1,18 +1,25 @@
+import 'package:client/Domain/Swimmer.dart';
+import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class MenuBar extends StatefulWidget {
 
-  Function onlogout;
+  Swimmer swimmer;
 
-  MenuBar({this.onlogout});
+  MenuBar({this.swimmer});
 
   @override
   _MenuBarState createState() => _MenuBarState();
 }
 
 class _MenuBarState extends State<MenuBar> {
+
+  LogicManager _logicManager = LogicManager.getInstance();
+  Function onCoach;
+  Function onAdmin;
 
   WebColors _webColors = new WebColors();
   List<bool> _onHover = List.generate(5, (index) => false);
@@ -26,6 +33,62 @@ class _MenuBarState extends State<MenuBar> {
             textAlign: TextAlign.center,),
         )
     );
+  }
+
+  Function onLogo(BuildContext context) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/welcome');
+        });
+      });
+    };
+  }
+
+  Function onLogout(BuildContext context) {
+    return () {
+      _logicManager.logout(this.widget.swimmer).then(
+              (value) {
+            if (value) {
+              this.setState(() {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushNamed(context, '/login');
+                });
+              });
+            }
+            else {
+              showDialog(
+                context: context,
+                builder: (_) =>
+                  AlertDialog(
+                    content: Text('Cant Logout, Please Try again later',
+                      textAlign: TextAlign.center,),
+                  )
+              );
+            }
+          }
+      );
+    };
+  }
+
+  Function onSwimmer(BuildContext context) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/swimmer');
+        });
+      });
+    };
+  }
+
+  Function onResearcher(BuildContext context) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/researcher');
+        });
+      });
+    };
   }
 
   Widget buildOption(BuildContext context, String optionName, int index,
@@ -72,11 +135,11 @@ class _MenuBarState extends State<MenuBar> {
                 color: _webColors.getBackgroundForI1(),
               ),
             ),
-            buildOption(context, "Swimmer", 0, null),
-            buildOption(context, "Coach", 1, null),
-            buildOption(context, "Admin", 2, null),
-            buildOption(context, "Researcher", 3, null),
-            buildOption(context, "Logout", 4, this.widget.onlogout),
+            buildOption(context, "Swimmer", 0, onSwimmer(context)),
+            buildOption(context, "Coach", 1, onCoach),
+            buildOption(context, "Admin", 2, onAdmin),
+            buildOption(context, "Researcher", 3, onResearcher(context)),
+            buildOption(context, "Logout", 4, onLogout(context)),
           ],
           //scrollDirection: Axis.horizontal,
         ),
@@ -92,14 +155,17 @@ class _MenuBarState extends State<MenuBar> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Center(
-          child: Text( "Swim Analytics",
-              style: TextStyle(
-                  fontSize: 26 * MediaQuery.of(context).textScaleFactor,
-                  color:Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  decoration: TextDecoration.none
-              )
+          child: TextButton(
+            onPressed: onLogo(context),
+            child: Text( "Swim Analytics",
+                style: TextStyle(
+                    fontSize: 26 * MediaQuery.of(context).textScaleFactor,
+                    color:Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    decoration: TextDecoration.none
+                )
+            ),
           ),
         ),
       ),

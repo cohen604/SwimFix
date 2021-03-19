@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/researcher',
+      initialRoute: '/login',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
           ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getResearcherScreen(args);
         },
+        //TODO all screen below here need to be changed
         '/upload': (context) {
           return _screenHolder.getUploadScreen();
         },

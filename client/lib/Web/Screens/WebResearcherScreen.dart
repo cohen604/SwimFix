@@ -40,7 +40,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: MenuBar(onlogout: onLogout,),
+      child: MenuBar(swimmer: this.widget.args.swimmer,),
     );
   }
 
@@ -616,7 +616,6 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.only(top: 20.0),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(

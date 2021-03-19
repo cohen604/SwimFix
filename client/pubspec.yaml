@@ -63,6 +63,10 @@ flutter:
   assets:
     - assets/
     - assets/images/csv_example.png
+    - assets/images/swimmer_image.png
+    - assets/images/coach_image.png
+    - assets/images/admin_image.png
+    - assets/images/researcher_image.png
 
   # assets:
   #   - images/a_dot_burr.jpeg
