@@ -55,7 +55,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
         child: CardButton(
           title: title,
-          background: _webColors.getBackgroundForI3(),
+          background: _webColors.getBackgroundForI4(),
           buttonBackground: _webColors.getBackgroundForI1(),
           onClick: onClick,
           image: image,
@@ -102,7 +102,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
           padding: EdgeInsets.only(top:10.0, bottom: 10.0),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: _webColors.getBackgroundForI4(),
+          color: _webColors.getBackgroundForI6(),
           child: Column(
             children: [
               buildWelcomeTitle(context, 1),
@@ -116,13 +116,13 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-          child: Column(
-            children: [
-              buildTopSide(context, 1),
-              buildBottomSide(context, 10)
-            ],
-          ),
+        child: Column(
+          children: [
+            buildTopSide(context, 1),
+            buildBottomSide(context, 10)
+          ],
         ),
+      ),
     );
   }
 }

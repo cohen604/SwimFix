@@ -129,12 +129,6 @@ class _CardButtonState extends State<CardButton> {
                   ),
                 ),
               ),
-              //   CircleButton(
-              //     background: this.widget.buttonBackground,
-              //     title: '>',
-              //     onClick:  this.widget.onClick,
-              //   ),
-              // ),
             ),
           ],
         ),
@@ -156,6 +150,7 @@ class _CardButtonState extends State<CardButton> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
+        color: this.widget.background,
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,

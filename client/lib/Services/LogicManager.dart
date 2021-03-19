@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:client/Domain/FeedbackFilters.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Domain/ResearcherReport.dart';
 import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/Authentication.dart';
 import 'package:client/Services/CameraHandler.dart';
@@ -43,7 +44,7 @@ class LogicManager {
       ServerResponse response = await connectionHandler.postMessage(
           path, swimmer.toJson());
       if (response != null && response.isSuccess()) {
-        Map map = response.value as Map;
+        // Map map = response.value as Map;
         this.swimmer = swimmer;
         return true;
       }
@@ -83,13 +84,29 @@ class LogicManager {
     //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
     ServerResponse response = await this.connectionHandler.postMultiPartFileWithID(path, multipartFile,
         this.swimmer.uid, this.swimmer.email, this.swimmer.name);
-
     //TODO check if response is valid
     Map map = response.value as Map;
-    print(map);
     return FeedbackVideoStreamer.factory(map);
   }
 
+  Future<ResearcherReport> postVideoAndCsvForAnalyze(
+      String videoPath, videoBytes, String labelPath, labelsBytes) async {
+    String path = "/researcher/report";
+    http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
+      'video', videoBytes, filename: videoPath,
+    );
+    http.MultipartFile multipartLabels = http.MultipartFile.fromBytes(
+      'labels', labelsBytes, filename: labelPath,
+    );
+    // ServerResponse response = await this.connectionHandler.postMultiPartFiles(path, meta, images);
+    // if(response.value != null) {
+    //   Map mapResponse = response.value as Map;
+    //   return ResearcherReport.factory(mapResponse);
+    // }
+    return null;
+  }
+
+  // TODO delete this
   Future<String> combineListElements(List <Uint8List> imagesBytes) async {
     Directory appDocDirectory = await getTemporaryDirectory();
     File file = new File(appDocDirectory.path + '/CombinedBytes');
@@ -101,7 +118,8 @@ class LogicManager {
     return file.absolute.path;
   }
 
-  //Note: Don't use it
+  // TODO delete this
+  // Note: Don't use it
   Future<FeedbackVideoStreamer> postListImagesForStreaming(List <Uint8List> imagesBytes, String type,
       String fileName) async {
     String path = "/uploadListForStream";

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
 import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
@@ -5,6 +6,7 @@ import 'package:client/Services/LogicManager.dart';
 import 'package:client/Web/Components/CardButton.dart';
 import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
+import 'package:client/Web/Components/MessagePopUp.dart';
 import 'package:client/Web/Components/NumberButton.dart';
 import 'package:client/Web/Components/TextButton.dart';
 import 'package:client/Web/WebColors.dart';
@@ -26,7 +28,7 @@ class WebResearcherScreen extends Screen {
 
 class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
-  LogicManager _logicManger = LogicManager.getInstance();
+  LogicManager _logicManager = LogicManager.getInstance();
   WebColors _webColors = new WebColors();
   ResearcherStep _step = ResearcherStep.Upload_Video;
 
@@ -35,6 +37,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   bool _hasLabels = false;
   File _labels;
+
+  bool _hasResults = false;
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
@@ -45,7 +49,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   }
 
   void onLogout() {
-    _logicManger.logout(this.widget.args.swimmer).then(
+    _logicManager.logout(this.widget.args.swimmer).then(
             (value) {
           if(value) {
             this.setState(() {
@@ -85,6 +89,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     uploadInput.click();
     document.body.append(uploadInput);
     uploadInput.onChange.listen((e) {
+      //var bytes = Base64Decoder().convert(uploadInput.result.toString().split(",").last)
       updateFile(uploadInput.files[0]);
     });
     uploadInput.remove();
@@ -99,26 +104,11 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           });
         }
     );
-      // var filePath = file.name;
-      // final reader = new FileReader();
-      // reader.readAsDataUrl(file.slice(0, file.size, file.type));
-      // reader.onLoadEnd.listen((e) {
-      //   var bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
-      //   setState(() {
-      //     _videoFileBytes = bytes;
-      //     _videoFileLength = this.fileBytes.length;
-      //     this.filePath = filePath;
-      //     print('File path: ' + filePath);
-      //     print('File size: ' + file.size.toString());
-      //   });
-      // });
-    // });
-    // uploadInput.remove();
   }
 
   void uploadLabelsWeb() {
     uploadFile('.csv',
-            (File file) {
+      (File file) {
           this.setState(() {
             _labels = file;
             _hasLabels = true;
@@ -145,6 +135,42 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     }
   }
 
+  void readFile(File file, Function callback) {
+    final reader = new FileReader();
+    reader.readAsDataUrl(_video.slice(0, _video.size, _video.type));
+    reader.onLoadEnd.listen((e) {
+      var bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
+      callback(bytes);
+    });
+  }
+
+  void postVideoAndCsv() {
+    readFile(_video, (videoBytes) {
+      readFile(_labels, (labelsBytes) {
+        _logicManager.postVideoAndCsvForAnalyze(
+            _video.name,
+            videoBytes,
+            _labels.name,
+            labelsBytes)
+          .then( (result) {
+            if(result!=null) {
+              this.setState(() {
+                _hasResults = true;
+                nextState();
+              });
+            }
+            else {
+              this.setState(() {
+                _step = ResearcherStep.Error;
+              });
+            }
+          }
+        );
+      });
+    });
+    // _logicManager.postVideoAndCsvForAnalyze()
+  }
+
   void nextState() {
     if(_step == ResearcherStep.Upload_Video) {
       this.setState(() {
@@ -157,12 +183,15 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       });
     }
     else if(_step == ResearcherStep.Submit) {
+      postVideoAndCsv();
+      this.setState(() {
+        _step = ResearcherStep.WaitingResults;
+      });
+    }
+    else if(_step == ResearcherStep.WaitingResults)  {
       this.setState(() {
         _step = ResearcherStep.View;
       });
-    }
-    else if(_step == ResearcherStep.View)  {
-
     }
   }
 
@@ -249,7 +278,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   void viewFunctionButton() {
     this.setState(() {
-        _step = ResearcherStep.View;
+        _step = ResearcherStep.WaitingResults;
       });
   }
 
@@ -263,9 +292,9 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             number: 4,
             title: 'View',
             background: _webColors.getBackgroundForI8(),
-            selected: _step.index >= ResearcherStep.View.index,
+            selected: _step.index >= ResearcherStep.WaitingResults.index,
             selectedColor: _webColors.getBackgroundForI1(),
-            onClick: _step.index >= ResearcherStep.View.index?
+            onClick: _step.index >= ResearcherStep.WaitingResults.index?
               viewFunctionButton : null,
             fontSize: 21,
             flex: 1
@@ -537,12 +566,33 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildViewStep(BuildContext context) {
+  Widget buildWaitingResultStep(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Center(
         child: LinearProgressIndicator(),
       ),
+    );
+  }
+
+  Widget buildViewStep(BuildContext context) {
+      return Text('View Results');
+  }
+
+  Widget buildErrorStep(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          buildTitle(context, 'Error', createFlex: false),
+          SizedBox(height: 5.0,),
+          buildDescription(context, 'Something is broken.\n'
+              'Maybe the uploaded files aren\'t correct or the servers are down.\n'
+              'For more information contact swimAnalytics@gmail.com',
+            createFlex: false,
+            fontSize: 20,),
+        ],
+      )
     );
   }
 
@@ -577,8 +627,14 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     else if(_step == ResearcherStep.Submit) {
       child = buildSubmitStep(context);
     }
-    else if(_step == ResearcherStep.View)  {
+    else if(_step == ResearcherStep.WaitingResults)  {
+      child = buildWaitingResultStep(context);
+    }
+    else if(_step == ResearcherStep.View) {
       child = buildViewStep(context);
+    }
+    else if(_step == ResearcherStep.Error) {
+      child = buildErrorStep(context);
     }
     return  Flexible(
         flex: flex,
@@ -633,6 +689,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 enum ResearcherStep {
   Upload_Video,
   Upload_Csv,
+  Error,
   Submit,
+  WaitingResults,
   View,
 }

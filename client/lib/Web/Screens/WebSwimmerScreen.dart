@@ -51,7 +51,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
         child: CardButton(
           title: title,
-          background: _webColors.getBackgroundForI3(),
+          background: _webColors.getBackgroundForI4(),
           buttonBackground: _webColors.getBackgroundForI1(),
           image: 'images/swimmer_image.png',
         ),
@@ -82,7 +82,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
           padding: EdgeInsets.only(top:10.0, bottom: 10.0),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: _webColors.getBackgroundForI4(),
+          color: _webColors.getBackgroundForI6(),
           child: Column(
             children: [
               buildWelcomeTitle(context, 1),
