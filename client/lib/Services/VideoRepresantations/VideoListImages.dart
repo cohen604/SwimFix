@@ -31,7 +31,12 @@ class VideoListImages extends VideoWithoutFeedback {
       data.add(tmp);
     }
     print('After process pool with ${_bytes.length} frames ${DateTime.now()}');
-    return await logicManager.postListImagesForStreaming(data, _type, _name);
+    return await logicManager.postListImagesForStreaming(
+        data,
+        _type,
+        _name,
+        null //TODO change this null need to be swimmer
+    );
   }
 
 
@@ -91,7 +96,12 @@ class VideoListImages extends VideoWithoutFeedback {
       data.add(tmp);
     }
     print('After process pool with ${_bytes.length} frames ${DateTime.now()}');
-    return await logicManager.postListImagesForStreaming(data, _type, _name);
+    return await logicManager.postListImagesForStreaming(
+        data,
+        _type,
+        _name,
+        null //TODO change this null need to be swimmer
+    );
   }
   Future<File> saveFile(List<int> png) async {
     String path = 'testDir';

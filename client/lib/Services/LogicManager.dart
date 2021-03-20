@@ -24,9 +24,6 @@ class LogicManager {
   ConnectionHandler connectionHandler;
   MlHandler mlHandler;
 
-  // TODO refactor this
-  Swimmer swimmer;
-
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
     this.mlHandler = new MlHandler();
@@ -46,7 +43,6 @@ class LogicManager {
           path, swimmer.toJson());
       if (response != null && response.isSuccess()) {
         // Map map = response.value as Map;
-        this.swimmer = swimmer;
         return true;
       }
     } catch(e) {
@@ -74,8 +70,11 @@ class LogicManager {
   /// length -
   /// filePath -
   /// return
-  Future<FeedbackVideoStreamer> postVideoForStreaming(Uint8List fileBytes, int length,
-      String filePath) async {
+  Future<FeedbackVideoStreamer> postVideoForStreaming(
+      Uint8List fileBytes,
+      int length,
+      String filePath,
+      Swimmer swimmer) async {
     try {
       String path = "/swimmer/feedback/link";
       http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
@@ -86,7 +85,7 @@ class LogicManager {
       //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
       ServerResponse response = await this.connectionHandler
           .postMultiPartFileWithID(path, multipartFile,
-          this.swimmer.uid, this.swimmer.email, this.swimmer.name);
+          swimmer.uid, swimmer.email, swimmer.name);
       //TODO check if response is valid
       Map map = response.value as Map;
       return FeedbackVideoStreamer.factory(map);
@@ -134,8 +133,11 @@ class LogicManager {
   }
 
   // Note: Don't use it
-  Future<FeedbackVideoStreamer> postListImagesForStreaming(List <Uint8List> imagesBytes, String type,
-      String fileName) async {
+  Future<FeedbackVideoStreamer> postListImagesForStreaming(
+      List <Uint8List> imagesBytes,
+      String type,
+      String fileName,
+      Swimmer swimmer) async {
     String path = "/uploadListForStream";
     // combine all the list of images bytes to one image list
     // create the multi part file images
@@ -168,10 +170,12 @@ class LogicManager {
   }
 
 
-  Future<FeedbackVideoStreamer> filterFeedback(FeedbackFilters filter) async {
+  Future<FeedbackVideoStreamer> filterFeedback(
+      FeedbackFilters filter,
+      Swimmer swimmer) async {
     String path = "/swimmer/feedback/filter";
     ServerResponse response = await this.connectionHandler.postMessageWithID(path, filter.toMap(),
-        this.swimmer.uid, this.swimmer.email, this.swimmer.name);
+        swimmer.uid, swimmer.email, swimmer.name);
     //TODO check if response is valid
     Map map = response.value as Map;
     return FeedbackVideoStreamer.factory(map);

@@ -75,7 +75,7 @@ class _VideosScreenState extends State<VideosScreen> {
     int length = file.lengthSync();
     String filePath = file.path;
     Future<FeedbackVideoStreamer> feedbackVideoStreamer = lm.postVideoForStreaming(
-        fileBytes, length, filePath
+        fileBytes, length, filePath, null //TODO change this null need to be swimmer
     );
     return feedbackVideoStreamer;
   }

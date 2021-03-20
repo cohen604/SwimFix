@@ -121,8 +121,11 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
 
   void postVideo() {
     readFile(_video, (Uint8List videoBytes) {
-      _logicManager.postVideoForStreaming(videoBytes,
-          videoBytes.length, _video.name).then((value) {
+      _logicManager.postVideoForStreaming(
+          videoBytes,
+          videoBytes.length,
+          _video.name,
+          this.widget.args.swimmer).then((value) {
             if(value != null) {
               this.setState(() {
                 _feedbackLink = value;

@@ -105,8 +105,12 @@ class _VideoUploaderState extends State<VideoUploader> {
     this.setState(() {
       this.clickUpload = true;
       LogicManager logicManager = LogicManager.getInstance();
-      feedbackVideoStreamer = logicManager.postVideoForStreaming(fileBytes,
-          fileLength, filePath);
+      feedbackVideoStreamer = logicManager.postVideoForStreaming(
+        fileBytes,
+        fileLength,
+        filePath,
+        null //TODO change this null need to be swimmer
+      );
     });
   }
 
