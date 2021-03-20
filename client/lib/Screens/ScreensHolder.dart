@@ -55,6 +55,13 @@ class ScreenHolder {
 
   Widget getResearcherScreen(ResearcherScreenArguments args) {
     if(kIsWeb) {
+      //TODO delete this
+      if(args == null) {
+        String uid = "MZogz1uG95TCkIhDCoAiyYg9QnH2";
+        String email = "avrahamcalev2@gmail.com";
+        String name = "אברהם כלב";
+        args = new ResearcherScreenArguments(new Swimmer(uid, email, name));
+      }
       return new WebResearcherScreen(args: args);
     }
     return null;

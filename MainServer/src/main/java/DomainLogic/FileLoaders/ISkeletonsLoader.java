@@ -11,4 +11,6 @@ public interface ISkeletonsLoader {
 
     List<ISwimmingSkeleton> read(String path);
 
+    List<ISwimmingSkeleton> read(byte[] bytes);
+
 }

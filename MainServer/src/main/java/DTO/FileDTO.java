@@ -9,4 +9,8 @@ public class FileDTO {
         this._name = name;
         this._bytes = bytes;
     }
+
+    public byte[] getBytes() {
+        return _bytes;
+    }
 }

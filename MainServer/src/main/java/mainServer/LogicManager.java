@@ -176,7 +176,10 @@ public class LogicManager {
                     videoDTO, user.getVideosPath(),
                     user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
-                String pdfPath = _satisticProvider.getStatistics(fileDTO, feedbackVideo.getMLSkeletonsPath());
+                String pdfPath = _satisticProvider.getStatistics(
+                        fileDTO,
+                        feedbackVideo.getMLSkeletonsPath(),
+                        user.getReportsPath());
                 ResearcherReportDTO reportDTO = new ResearcherReportDTO(
                         feedbackVideo.getPath(),
                         feedbackVideo.getSkeletonsPath(),

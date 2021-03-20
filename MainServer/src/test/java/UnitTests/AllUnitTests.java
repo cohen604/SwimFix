@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
+
         StreamingTests.class,
         SwimmingErrorDetectorsTests.class,
         SwimmingTests.class,

@@ -30,7 +30,7 @@ public class SkeletonsLoader implements ISkeletonsLoader {
                 fileWriter = new FileWriter(file);
                 // write
                 String headers = "head_x,head_y," +
-                        "right_shoulder_x,right shoulder y," +
+                        "right_shoulder_x,right_shoulder_y," +
                         "right_elbow_x,right_elbow_y," +
                         "right_wrist_x,right_wrist_y," +
                         "left_shoulder_x,left_shoulder_y," +
@@ -94,6 +94,21 @@ public class SkeletonsLoader implements ISkeletonsLoader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<ISwimmingSkeleton> read(byte[] bytes) {
+        String allLines = new String(bytes);
+        String[] lines = allLines.split("\\r?\\n");
+        List<ISwimmingSkeleton> skeletons = null;
+        if(lines.length > 0) {
+            skeletons = new LinkedList<>();
+            HashMap<Integer, String> headers = readHeaders(lines[0]);
+            for(int i=1; i<lines.length; i++) {
+                skeletons.add(readSkeleton(lines[i], headers));
+            }
+        }
+        return skeletons;
     }
 
     private HashMap<Integer, String> readHeaders(String line) {
