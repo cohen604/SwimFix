@@ -96,6 +96,10 @@ class LogicManager {
     return null;
   }
 
+  String getStreamUrl() {
+    return connectionHandler.getStreamUrl();
+  }
+
   Future<ResearcherReport> postVideoAndCsvForAnalyze(
       String videoPath, videoBytes, String labelPath, labelsBytes,
       Swimmer swimmer) async {

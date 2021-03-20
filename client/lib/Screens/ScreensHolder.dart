@@ -64,7 +64,10 @@ class ScreenHolder {
     if(kIsWeb) {
       //TODO delete this
       if(args == null) {
-        args = new UploadScreenArguments(new Swimmer("uid", "email", "name"));
+        String uid = "MZogz1uG95TCkIhDCoAiyYg9QnH2";
+        String email = "avrahamcalev2@gmail.com";
+        String name = "אברהם כלב";
+        args = new UploadScreenArguments(new Swimmer(uid, email, name));
       }
       return new WebUploadScreen(args: args,);
     }

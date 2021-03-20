@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
-import 'package:client/Domain/FileDonwloaded.dart';
-import 'package:client/Domain/ResearcherReport.dart';
-import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/Components/ImageCardButton.dart';
-import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
-import 'package:client/Web/Components/MessagePopUp.dart';
 import 'package:client/Web/Components/NumberButton.dart';
-import 'package:client/Web/Components/TextButton.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -42,6 +36,16 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
 
   bool _hasFeedback = false;
   FeedbackVideoStreamer _feedbackLink;
+  VideoPlayerController _controller;
+  ChewieController _chewieController;
+
+  @override
+  void dispose() {
+    super.dispose();
+    if(_controller!=null) {
+      _controller.dispose();
+    }
+  }
 
   void onLogout() {
     _logicManager.logout(this.widget.args.swimmer).then(
@@ -119,17 +123,41 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
     });
   }
 
+  Future<bool> setController() async {
+    String url = _logicManager.getStreamUrl() + _feedbackLink.getPath();
+    _controller = VideoPlayerController.network(url);
+    await _controller.initialize();
+    _controller.play();
+
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      // aspectRatio: 16 / 9,
+      autoPlay: true,
+      looping: false,
+      //note: this muse be false cause chewiew having problem in full screen
+      allowFullScreen: false,
+      fullScreenByDefault: false,
+      allowMuting: false,
+    );
+    //DO NOT DELETE THIS!!
+    // setState(() {});
+    return true;
+  }
+
   void postVideo() {
     readFile(_video, (Uint8List videoBytes) {
       _logicManager.postVideoForStreaming(
           videoBytes,
           videoBytes.length,
           _video.name,
-          this.widget.args.swimmer).then((value) {
-            if(value != null) {
-              this.setState(() {
-                _feedbackLink = value;
-                _step = UploadStep.View;
+          this.widget.args.swimmer).then((feedbackLink) {
+            if(feedbackLink != null) {
+              _feedbackLink = feedbackLink;
+              setController().then((bool value) {
+                this.setState(() {
+                  _hasFeedback = true;
+                  _step = UploadStep.View;
+                });
               });
             }
             else {
@@ -386,8 +414,15 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
   }
 
   Widget buildViewStep(BuildContext context) {
-    return Container(
-      child: Text('View Feedback'),
+    return Material(
+      child: SingleChildScrollView(
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Chewie(
+            controller: _chewieController,
+          ),
+        ),
+      ),
     );
   }
 
