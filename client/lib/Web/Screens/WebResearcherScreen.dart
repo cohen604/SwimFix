@@ -6,7 +6,7 @@ import 'package:client/Domain/ResearcherReport.dart';
 import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
 import 'package:client/Domain/Swimmer.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/Components/CardButton.dart';
+import 'package:client/Web/Components/ImageCardButton.dart';
 import 'package:client/Web/Components/CircleButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
 import 'package:client/Web/Components/MessagePopUp.dart';

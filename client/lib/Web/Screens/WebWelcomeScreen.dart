@@ -2,7 +2,7 @@ import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/Components/CardButton.dart';
+import 'package:client/Web/Components/ImageCardButton.dart';
 import 'package:client/Web/Components/MenuBar.dart';
 import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,7 +55,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 1.3,
         padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        child: CardButton(
+        child: ImageCardButton(
           title: title,
           background: _webColors.getBackgroundForI4(),
           buttonBackground: _webColors.getBackgroundForI1(),

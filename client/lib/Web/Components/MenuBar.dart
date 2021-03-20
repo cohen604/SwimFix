@@ -182,7 +182,7 @@ class _MenuBarState extends State<MenuBar> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      height: 85,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(

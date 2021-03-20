@@ -2,7 +2,7 @@ import 'package:client/Web/Components/CircleButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CardButton extends StatefulWidget {
+class ImageCardButton extends StatefulWidget {
 
   String title;
   Color background;
@@ -11,26 +11,14 @@ class CardButton extends StatefulWidget {
   Function onClick;
   Function onHover;
 
-  CardButton({this.title, this.background, this.buttonBackground,
+  ImageCardButton({this.title, this.background, this.buttonBackground,
     this.image, this.onClick, this.onHover}) : super();
 
   @override
-  _CardButtonState createState() => _CardButtonState();
+  _ImageCardButtonState createState() => _ImageCardButtonState();
 }
 
-class _CardButtonState extends State<CardButton> {
-
-  Widget buildWithOutIcon(BuildContext context) {
-      return Text( this.widget.title,
-          style: TextStyle(
-              fontSize: 24 * MediaQuery.of(context).textScaleFactor,
-              color:Colors.black,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              decoration: TextDecoration.none
-          )
-      );
-  }
+class _ImageCardButtonState extends State<ImageCardButton> {
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
@@ -95,10 +83,7 @@ class _CardButtonState extends State<CardButton> {
   }
 
   Widget buildBottomSide(BuildContext context, int flex) {
-      return Flexible(
-        flex: flex,
-        fit: FlexFit.tight,
-        child: Column(
+      return Column(
           children: [
             buildTitle(context, 1),
             buildExplanation(context, 1),
@@ -131,22 +116,11 @@ class _CardButtonState extends State<CardButton> {
               ),
             ),
           ],
-        ),
       );
   }
 
   @override
   Widget build(BuildContext context) {
-    if(this.widget.image == null) {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-        ),
-        child: buildBottomSide(context, 1),
-      );
-    }
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
@@ -154,12 +128,14 @@ class _CardButtonState extends State<CardButton> {
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      // child: Card(
-      //   shadowColor: Colors.black12,
         child: Column(
           children: [
             buildTopSide(context, 5),
-            buildBottomSide(context, 2),
+            Flexible(
+              flex: 2,
+              fit: FlexFit.tight,
+              child: buildBottomSide(context, 2),
+            ),
           ],
         ),
     );
