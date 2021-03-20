@@ -44,14 +44,6 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   bool _hasResults = false;
   ResearcherReport _report;
 
-  Widget buildTopSide(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
-      child: MenuBar(swimmer: this.widget.args.swimmer,),
-    );
-  }
-
   void onLogout() {
     _logicManager.logout(this.widget.args.swimmer).then(
             (value) {
@@ -719,23 +711,19 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildBottomSide(BuildContext context, int flex) {
-    return Flexible(
-        flex: flex,
-        fit: FlexFit.tight,
-        child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: buildStepsMap(context)
-              ),
-              buildCurrentStep(context, 4),
-            ],
+  Widget buildBottomSide(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        children: [
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: buildStepsMap(context)
           ),
-        )
+          buildCurrentStep(context, 4),
+        ],
+      ),
     );
   }
 
@@ -747,8 +735,10 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            buildTopSide(context, 1),
-            buildBottomSide(context, 10)
+            MenuBar(swimmer: this.widget.args.swimmer,),
+            Flexible(
+                child: buildBottomSide(context)
+            ),
           ],
         ),
       ),

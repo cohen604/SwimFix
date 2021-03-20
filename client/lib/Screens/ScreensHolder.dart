@@ -84,6 +84,9 @@ class ScreenHolder {
 
   Widget getResearcherScreen(ResearcherScreenArguments args) {
     if(kIsWeb) {
+      if(args == null) {
+        args = new ResearcherScreenArguments(new Swimmer("uid", "email", "name"));
+      }
       return new WebResearcherScreen(args: args);
     }
     return null;
