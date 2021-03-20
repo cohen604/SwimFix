@@ -19,7 +19,12 @@ class VideoFile extends VideoWithoutFeedback {
     Uint8List bytes = _file.readAsBytesSync();
     int length = bytes.length;
     String filePath = _file.path;
-    return logicManager.postVideoForStreaming(bytes, length, filePath);
+    return logicManager.postVideoForStreaming(
+        bytes,
+        length,
+        filePath,
+        null //TODO change this null need to be a swimmer
+    );
   }
 
 
