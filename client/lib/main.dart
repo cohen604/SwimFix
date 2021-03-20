@@ -2,6 +2,7 @@ import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
 import 'package:client/Screens/CameraScreen.dart';
 import 'package:client/Screens/LoginScreen.dart';
@@ -51,11 +52,11 @@ class MyApp extends StatelessWidget {
           ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getResearcherScreen(args);
         },
-
-        //TODO all screen below here need to be changed
         '/upload': (context) {
-          return _screenHolder.getUploadScreen();
+          UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getUploadScreen(args);
         },
+        //TODO all screen below here need to be changed
         '/videoPreview': (context) {
           FeedbackVideoStreamer streamer = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getVideoPreviewScreen(streamer);

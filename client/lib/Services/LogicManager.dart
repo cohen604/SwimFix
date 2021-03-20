@@ -76,18 +76,25 @@ class LogicManager {
   /// return
   Future<FeedbackVideoStreamer> postVideoForStreaming(Uint8List fileBytes, int length,
       String filePath) async {
-    String path = "/swimmer/feedback/link";
-    http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+    try {
+      String path = "/swimmer/feedback/link";
+      http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
         'file',
         fileBytes,
         filename: filePath,
-    );
-    //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
-    ServerResponse response = await this.connectionHandler.postMultiPartFileWithID(path, multipartFile,
-        this.swimmer.uid, this.swimmer.email, this.swimmer.name);
-    //TODO check if response is valid
-    Map map = response.value as Map;
-    return FeedbackVideoStreamer.factory(map);
+      );
+      //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
+      ServerResponse response = await this.connectionHandler
+          .postMultiPartFileWithID(path, multipartFile,
+          this.swimmer.uid, this.swimmer.email, this.swimmer.name);
+      //TODO check if response is valid
+      Map map = response.value as Map;
+      return FeedbackVideoStreamer.factory(map);
+    }
+    catch(e) {
+      print('error in post video for stream ${e.toString()}');
+    }
+    return null;
   }
 
   Future<ResearcherReport> postVideoAndCsvForAnalyze(
