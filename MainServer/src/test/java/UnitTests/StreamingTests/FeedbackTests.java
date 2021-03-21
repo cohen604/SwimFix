@@ -46,7 +46,7 @@ public class FeedbackTests  extends TestCase {
     private void setUpFeedback() {
         String path = VIDEO_FOLDER + "/sample2.mp4";
         String type = ".mp4";
-        Video video = new Video(new VideoHandler(new Draw()), path, type);
+        Video video = new Video(path, type);
         //TODO
         TaggedVideo taggedVideo = null;
         try {
@@ -60,55 +60,21 @@ public class FeedbackTests  extends TestCase {
             fail();
         }
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
-        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap);
+        this.feedbackVideo = new FeedbackVideo(video, taggedVideo, errorsMap, path);
     }
 
     private void setUFeedbackVideoNotExits() {
         String path = null;
         String type = null;
-        Video video = new Video(new VideoHandler(new Draw()), path, type);
+        Video video = new Video(path, type);
         //TODO
         TaggedVideo taggedVideo = null;
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
-        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap);
+        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap, path);
     }
 
     private void setUpGeneratedFeedback() {
         setUpFeedback();
-        this.feedbackVideo.generateFeedbackDTO();
-    }
-
-    public void testGenerateFeedbackDTO() {
-        setUpFeedback();
-        FeedbackVideoDTO feedbackVideoDTO = this.feedbackVideo.generateFeedbackDTO();
-        assertNotNull(feedbackVideoDTO);
-        assertEquals(this.feedbackVideo.getPath(), feedbackVideoDTO.getPath());
-    }
-
-    public void testGenerateFeedbackDTOVideoNotExists() {
-        setUFeedbackVideoNotExits();
-        FeedbackVideoDTO feedbackVideoDTO = this.feedbackVideo.generateFeedbackDTO();
-        assertNull(feedbackVideoDTO);
-    }
-
-    public void testGenerateFeedbackDTOTwice() {
-        setUpGeneratedFeedback();
-        FeedbackVideoDTO feedbackVideoDTO = this.feedbackVideo.generateFeedbackDTO();
-        assertNotNull(feedbackVideoDTO);
-        assertEquals(this.feedbackVideo.getPath(), feedbackVideoDTO.getPath());
-    }
-
-    public void testGenerateFeedbackDTOVideoUpdated() {
-        setUpGeneratedFeedback();
-        this.feedbackVideo.updateVideo();
-        FeedbackVideoDTO feedbackVideoDTO = this.feedbackVideo.generateFeedbackDTO();
-        assertNotNull(feedbackVideoDTO);
-        assertEquals(this.feedbackVideo.getPath(), feedbackVideoDTO.getPath());
-        assertFalse(this.feedbackVideo.isFeedbackUpdated());
-    }
-
-    public void testGeneratedFeedbackDTOVideoHandlerStub() {
-        //TODO
     }
 
     public void testGeneratedFeedbackStreamer() {
@@ -156,7 +122,5 @@ public class FeedbackTests  extends TestCase {
         FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(null);
         assertNull(streamer);
     }
-
-
 
 }

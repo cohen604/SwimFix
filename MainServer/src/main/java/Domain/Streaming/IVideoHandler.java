@@ -48,7 +48,7 @@ public interface IVideoHandler {
      * @param desPath - the destination path
      * @return the list of frames
      */
-    List<Mat> getFrames(byte[] video, String desPath);
+    boolean createAndGetFrames(byte[] video, String desPath);
 
     /**
      * The function convert list of frames to list of bytes
@@ -67,14 +67,14 @@ public interface IVideoHandler {
 
     /**
      * The function creates a feedback video for a video from given data
-     * @param desPath - the path to save too
-     * @param frames - the frames of the feedback
-     * @param dots - the skeletons
+     * @param desPath - the path to save the feedback
+     * @param videoPath - the path of the video
+     * @param points - the skeletons
      * @param errors - the errors
      * @param visualComments - the comments for the video
      * @return the file of the feedback
      */
-    File getFeedBackVideoFile(String desPath, List<Mat> frames, List<ISwimmingSkeleton> dots,
+    File getFeedBackVideoFile(String desPath, String videoPath, List<ISwimmingSkeleton> points,
                               Map<Integer, List<SwimmingError>> errors,
                               List<Object> visualComments);
 

@@ -2,11 +2,10 @@ package UnitTests.Storage;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.*;
-import Domain.SwimmingData.Drawing.Draw;
 import Storage.Video.VideoDao;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 
@@ -24,15 +23,13 @@ public class VideoServiceTest extends TestCase {
     @Before
     public void setUp() {
         try {
-            IFactoryDraw iFactoryDraw = new FactoryDraw();
-            IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
-            IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+            IFactoryVideo iFactoryVideo = new FactoryVideo();
             this.videoService = new VideoDao(iFactoryVideo);
             File file = new File(VIDEO_FOLDER + "/sample.mov");
             byte[] bytes = Files.readAllBytes(file.toPath());
             ConvertedVideoDTO convertedVideoDTO = new ConvertedVideoDTO("sample.mov", bytes);
             String path = VIDEO_FOLDER + "/test.mov";
-            this.video = new Video(new VideoHandler(new Draw()), convertedVideoDTO, path);
+            this.video = new Video(convertedVideoDTO, path);
         } catch (Exception e) {
             e.printStackTrace();
             fail();

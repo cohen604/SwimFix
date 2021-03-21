@@ -1,8 +1,7 @@
 package Storage.User;
-import Domain.Swimmer;
-import Domain.User;
-import Storage.Dao;
-import Storage.Swimmer.SwimmerCodec;
+import Domain.UserData.User;
+import Storage.SwimmingErrors.*;
+import Storage.User.Providers.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -13,23 +12,42 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class UserDao implements Dao<User> {
+public class UserDao implements IUserDao{
 
-    @Override
-    public MongoCollection<User> getCollection() {
+    private MongoCollection<User> getCollection() {
+        CodecRegistry swimmerCodecRegistry = CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(
+                new LeftElbowErrorCodec(),
+                new LeftForearmErrorCodec(),
+                new LeftPalmCrossHeadErrorCodec(),
+                new RightElbowErrorCodec(),
+                new RightForearmErrorCodec(),
+                new RightPalmCrossHeadErrorCodec()
+        ));
+
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new UserCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(
+                                new SwimmerCodec(swimmerCodecRegistry),
+                                new CoachCodec(),
+                                new AdminCodec(),
+                                new ResearcherCodec()
+                               ), //here we define the codec
+                        //CodecRegistries.fromProviders( new UserCodecProvider()),
                         getDefaultCodecRegistry());
+
+        CodecRegistry codecRegistryUser =
+                CodecRegistries.fromRegistries(
+                        CodecRegistries.fromCodecs(new UserCodec(codecRegistry)), //here we define the codec
+                        getDefaultCodecRegistry());
+
         MongoClientSettings settings = MongoClientSettings.builder()
-                .codecRegistry(codecRegistry).build();
+                .codecRegistry(codecRegistryUser).build();
+
         // here we define the connection
         MongoClient mongoClient = MongoClients.create(settings);
 
@@ -39,6 +57,15 @@ public class UserDao implements Dao<User> {
 
     @Override
     public List<User> getAll() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            List<User> users = new LinkedList<>();
+            collection.find().into(users);
+            return users;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -73,12 +100,18 @@ public class UserDao implements Dao<User> {
 
     @Override
     public User update(User value) {
-        MongoCollection<User> collection = getCollection();
-        Document query = new Document("_id", value.getUid());
-        UpdateResult result = collection.replaceOne(query, value);
-        if(result == null) {
-            return null;
+        try {
+            MongoCollection<User> collection = getCollection();
+            Document query = new Document("_id", value.getUid());
+            UpdateResult result = collection.replaceOne(query, value);
+            if (result == null) {
+                return null;
+            }
+            return value;
         }
-        return value;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

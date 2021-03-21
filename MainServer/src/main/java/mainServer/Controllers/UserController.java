@@ -22,4 +22,14 @@ public class UserController {
         System.out.println("Send Login response");
         return actionResult.toJson();
     }
+
+    @PostMapping(value = "/logout")
+    @CrossOrigin(origins = "*")
+    public String logoutSwimmer(@RequestBody UserDTO user) {
+        System.out.println("Received logout request from "+user.getEmail());
+        ActionResult<Boolean> actionResult = swimFixAPI.logout(user);
+        System.out.println("Send Logout response");
+        return actionResult.toJson();
+    }
+
 }

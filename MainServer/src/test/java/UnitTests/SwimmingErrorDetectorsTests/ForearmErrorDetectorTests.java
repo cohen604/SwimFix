@@ -6,7 +6,7 @@ import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import junit.framework.TestCase;
-import mainServer.SwimmingErrorDetectors.*;
+import DomainLogic.SwimmingErrorDetectors.*;
 import org.junit.Before;
 
 import java.util.LinkedList;

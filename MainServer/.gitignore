@@ -1,4 +1,5 @@
 HELP.md
+clients/
 clientVideos/
 target/
 !.mvn/wrapper/maven-wrapper.jar

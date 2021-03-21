@@ -1,20 +1,16 @@
 package Domain.Streaming;
 
-import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingData.SwimmingError;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface represent a contract how feedback video need to behave in our system
  */
 public interface IFeedbackVideo {
-
-    /**
-     * The function generated feedbackTDO
-     * @return the feedbackTDO generated
-     */
-    FeedbackVideoDTO generateFeedbackDTO();
 
     /**
      * The function generate a feedback view link with the given detectors filters
@@ -45,5 +41,17 @@ public interface IFeedbackVideo {
      * @return the IVideo of feedback
      */
     IVideo getIVideo();
+
+    /**
+     * TODO comment
+     * @return
+     */
+    List<ISwimmingSkeleton> getSwimmingSkeletons();
+
+    String getMLSkeletonsPath();
+
+    String getSkeletonsPath();
+
+    Map<Integer, List<SwimmingError>> getSwimmingErrors();
 
 }

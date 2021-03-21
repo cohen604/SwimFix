@@ -109,7 +109,10 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
         }
       }
       FeedbackFilters filter = new FeedbackFilters(path, output);
-      LogicManager.getInstance().filterFeedback(filter).then((link) {
+      LogicManager.getInstance().filterFeedback(
+          filter
+          , null //TODO change this null need to be swimmer
+      ).then((link) {
         Navigator.pushNamed(context, "/videoPreview",
             arguments: link);
       });
@@ -119,7 +122,10 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   void clickReset() {
     String path = this.widget.feedbackVideoStreamer.path;
     FeedbackFilters filter = new FeedbackFilters(path, maxErrors);
-    LogicManager.getInstance().filterFeedback(filter).then((link) {
+    LogicManager.getInstance().filterFeedback(
+        filter,
+        null //TODO change this null need to be swimmer
+    ).then((link) {
       Navigator.pushNamed(context, "/videoPreview",
           arguments: link);
     });

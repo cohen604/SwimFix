@@ -38,6 +38,11 @@ dependencies:
   firebase_core: ^0.5.0
   google_sign_in: ^4.5.0
   firebase_auth: ^0.18.4+1
+  tflite: ^1.1.1 #TODO delete this
+  camera: ^0.7.0+2
+  image: ^2.1.19
+  synchronized: ^2.2.0+2
+  path_provider: ^1.6.27
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +62,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/images/csv_example.png
+    - assets/images/swimmer_image.png
+    - assets/images/coach_image.png
+    - assets/images/admin_image.png
+    - assets/images/researcher_image.png
+
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

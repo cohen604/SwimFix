@@ -2,54 +2,73 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.*;
+import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
-import mainServer.Completions.ISkeletonsCompletion;
-import mainServer.Completions.SkeletonsCompletionAfter;
-import mainServer.Completions.SkeletonsCompletionBefore;
-import mainServer.Interpolations.*;
-import mainServer.SwimmingErrorDetectors.FactoryDraw;
-import mainServer.SwimmingErrorDetectors.FactoryErrorDetectors;
-import mainServer.SwimmingErrorDetectors.IFactoryDraw;
-import mainServer.SwimmingErrorDetectors.IFactoryErrorDetectors;
+import Storage.User.UserDao;
+import DomainLogic.Completions.ISkeletonsCompletion;
+import DomainLogic.Completions.SkeletonsCompletionAfter;
+import DomainLogic.Completions.SkeletonsCompletionBefore;
+import DomainLogic.FileLoaders.ISkeletonsLoader;
+import DomainLogic.FileLoaders.SkeletonsLoader;
+import DomainLogic.Interpolations.*;
+import mainServer.Providers.*;
+import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
+import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
+import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 
 public class SwimFixAPI {
 
    private LogicManager logicManager;
 
    public SwimFixAPI() {
-      IFactoryDraw iFactoryDraw = new FactoryDraw();
-      IFactoryVideoHandler iFactoryVideoHandler = new FactoryVideoHandler();
+      IUserProvider userProvider = new UserProvider(new UserDao());
+
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
-      IFactoryVideo iFactoryVideo = new FactoryVideo(iFactoryDraw, iFactoryVideoHandler);
+      IFactoryVideo iFactoryVideo = new FactoryVideo();
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
-      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
       ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
-              new LinearInterpolation(), new MedianInterpolation());
+              new LinearInterpolation(), new LinearInterpolation());
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
-      this.logicManager = new LogicManager(iFactoryErrorDetectors, iFactoryVideo,
-              iFactoryFeedbackVideo, mlConnectionHandler, iSkeletonInterpolation,
-              completionBefore, completionAfter);
+      MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
+      ISkeletonsLoader skeletonsLoader = new SkeletonsLoader();
+      IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
+      IFactoryDraw iFactoryDraw = new FactoryDraw();
+
+      IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
+              iSkeletonInterpolation, completionBefore,
+              completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoader,
+              iFactoryVideoHandler, iFactoryDraw);
+
+      IStatisticsProvider statisticsProvider = new StatisticsProvider();
+
+      this.logicManager = new LogicManager(userProvider, feedbackProvider, statisticsProvider);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
       return logicManager.login(userDTO);
    }
 
-   public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-      return logicManager.uploadVideoForDownload(convertedVideoDTO);
+
+   public ActionResult<Boolean> logout(UserDTO user) {
+      return  this.logicManager.logout(user);
    }
 
-   public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-      return logicManager.uploadVideoForStreamer(convertedVideoDTO);
+   public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
+      return logicManager.uploadVideoForStreamer(userDTO, convertedVideoDTO);
    }
 
    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
       return logicManager.streamFile(path);
    }
 
-   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
-      return logicManager.filterFeedbackVideo(filterDTO);
+   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
+      return logicManager.filterFeedbackVideo(userDTO, filterDTO);
+   }
+
+   public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
+      return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
+   
    }
 }

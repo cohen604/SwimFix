@@ -10,6 +10,12 @@ public class IPointUtils {
         return Math.sqrt(dx + dy);
     }
 
+    public static double calcDistance(double x0, double x1, double y0, double y1) {
+        double dx = Math.pow(x0 - x1, 2);
+        double dy = Math.pow(y0 - y1, 2);
+        return Math.sqrt(dx + dy);
+    }
+
     public static double calcSlope(IPoint current, IPoint other) {
         double dy = other.getY() - current.getY();
         double dx = other.getX() - current.getX();
@@ -37,5 +43,45 @@ public class IPointUtils {
         double angleRad = Math.acos(top/bottom);
         return Math.toDegrees(angleRad);
     }
+
+    public static IPoint mulByScalar(IPoint a, double scalar) {
+        return new SkeletonPoint(a.getX() * scalar, a.getY() * scalar, -1);
+    }
+
+    public static IPoint addByScalars(IPoint a, double scalarX, double scalarY) {
+        return new SkeletonPoint(a.getX() + scalarX, a.getY() + scalarY, -1);
+    }
+
+    public static IPoint getMiddlePoint(IPoint a, IPoint b) {
+        double x = (a.getX() + b.getX()) / 2;
+        double y = (a.getY() + b.getY()) / 2;
+        return new SkeletonPoint( x, y, -1);
+    }
+
+    public static IPoint calcPointOnLinearLineLowerThenDistance(double slop, IPoint point, double y) {
+        double distance = -1;
+        double x = -1;
+        double thresholdDistance = 30;
+        do {
+            x = (point.getY() - y) / slop + point.getX();
+            distance = calcDistance(point.getX(), x, point.getY(), y);
+            if(distance > thresholdDistance) {
+                if( y < point.getY()) {
+                    y ++;
+                }
+                else if(y > point.getY()){
+                    y --;
+                }
+            }
+        }
+        while (distance > thresholdDistance);
+        return new SkeletonPoint(x, y, -1);
+    }
+
+    public static IPoint calcPointOnLinearForGivenX(double slope, IPoint point, double x) {
+        double y = point.getY() + slope * (x - point.getX());
+        return new SkeletonPoint(x, y,-1);
+    }
+
 
 }

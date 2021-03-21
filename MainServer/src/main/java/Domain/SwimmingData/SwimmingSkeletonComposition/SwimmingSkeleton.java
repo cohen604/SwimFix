@@ -40,6 +40,17 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         setUpAllEdges();
     }
 
+    public SwimmingSkeleton(ISwimmingSkeleton other) {
+        this.head = other.getHead();
+        this.rightShoulder = other.getRightShoulder();
+        this.rightElbow = other.getRightElbow();
+        this.rightWrist = other.getRightWrist();
+        this.leftShoulder = other.getLeftShoulder();
+        this.leftElbow = other.getLeftElbow();
+        this.leftWrist = other.getLeftWrist();
+        setUpAllEdges();
+    }
+
     private void setUpAllEdges() {
         edges = new LinkedList<>();
         addEdgeIfNotNull(head, rightShoulder);

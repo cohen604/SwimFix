@@ -13,13 +13,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-//TODO this class need be a synchronize methods ?
+/***
+ * Class Note: must create for each thread a new instance
+ * otherwise synchronize will slow the system
+ */
 public class VideoHandler implements IVideoHandler {
 
     private IDraw drawer;
 
     /**
-     * constractor
+     * constructor
      */
     public VideoHandler(IDraw drawer) {
         this.drawer = drawer;
@@ -126,14 +129,12 @@ public class VideoHandler implements IVideoHandler {
      * @param desPath - the destination path to insert the video frames
      * @return the list of frames
      */
-    public List<Mat> getFrames(byte[] video, String desPath) {
+    @Override
+    public boolean createAndGetFrames(byte[] video, String desPath) {
         if(video == null || video.length == 0 || desPath == null || desPath.isEmpty()) {
-            return null;
+            return false;
         }
-        if(saveFramesBytes(video, desPath)) {
-            return getFrames(desPath);
-        }
-        return null;
+        return saveFramesBytes(video, desPath);
     }
 
     /**
@@ -163,23 +164,6 @@ public class VideoHandler implements IVideoHandler {
      */
     private void drawVisualComment(Mat frame, Object visualComment) {
         //TODO
-    }
-
-    /**
-     * The function draw the logo on the frame
-     * @param frame the current frame
-     * @return the new frame with the logo
-     */
-    private Mat drawLogo(Mat frame) {
-        String logo = "SwimFix";
-        double x = frame.width() - 130;
-        double y = 30;
-        org.opencv.core.Point point = new org.opencv.core.Point(x, y);
-        int scale = 1;
-        Scalar color = new Scalar(0,0,0);
-        int thickens = 2;
-        Imgproc.putText(frame, logo, point, Core.FONT_HERSHEY_SIMPLEX, scale, color ,thickens);
-        return frame;
     }
 
     /**
@@ -239,7 +223,7 @@ public class VideoHandler implements IVideoHandler {
                 Object visualComment = visualComments.get(i);
                 drawVisualComment(frame, visualComment);
             }
-            drawLogo(frame);
+            drawer.drawLogo(frame);
             frames.set(i, frame);
         }
         return frames;
@@ -247,23 +231,24 @@ public class VideoHandler implements IVideoHandler {
 
     /**
      * The function get the feedback video file
-     * @param desPath - the destination path to insert the feedback file into
-     * @param frames - the video data
-     * @param dots - the tags of the swimmer
+     * @param feedbackPath - the feedback path to save the new frames
+     * @param videoPath - the video path data
+     * @param points - the tags of the swimmer
      * @param errors - the list of errors
      * @param visualComments - the list of visual comments
      * @return the feedback file
      * @precondition all lists must be the insert of the same video frames
      * @postcondition insert the newest feedback generated in the des path
      */
-    public File getFeedBackVideoFile(String desPath, List<Mat> frames, List<ISwimmingSkeleton> dots,
+    public File getFeedBackVideoFile(String feedbackPath, String videoPath, List<ISwimmingSkeleton> points,
                                      Map<Integer, List<SwimmingError>> errors,
                                      List<Object> visualComments) {
-        if(frames == null) {
+        if(feedbackPath == null || videoPath == null || videoPath.isEmpty() || feedbackPath.isEmpty()) {
             return null;
         }
-        frames = generatedFeedbackVideo(frames, dots, errors, visualComments);
-        return saveFrames(desPath, frames);
+        List<Mat> frames = getFrames(videoPath);
+        frames = generatedFeedbackVideo(frames, points, errors, visualComments);
+        return saveFrames(feedbackPath, frames);
     }
 
 }

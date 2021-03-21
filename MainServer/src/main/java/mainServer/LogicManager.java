@@ -2,163 +2,114 @@ package mainServer;
 
 import DTO.*;
 import Domain.Streaming.*;
-import Domain.Swimmer;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingError;
-import Domain.User;
-import ExernalSystems.MLConnectionHandler;
-import Storage.Swimmer.SwimmerDao;
-import Storage.User.UserDao;
-import mainServer.Completions.ISkeletonsCompletion;
-import mainServer.Interpolations.ISkeletonInterpolation;
-import mainServer.SwimmingErrorDetectors.*;
+import Domain.UserData.Interfaces.IUser;
+import mainServer.Providers.IFeedbackProvider;
+import mainServer.Providers.IStatisticsProvider;
+import mainServer.Providers.IUserProvider;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class LogicManager {
 
-    private MLConnectionHandler mlConnectionHandler;
-    //TODO: hold all the logged users
-    List<User> userList;
+    private IUserProvider _userProvider;
+    private IFeedbackProvider _feedbackProvider;
+    private IStatisticsProvider _satisticProvider;
+    private IFeedbackVideo lastFeedbackVideo; //TODO delete this
 
-    private IFeedbackVideo lastFeedbackVideo;
-    private IFactoryErrorDetectors iFactoryErrorDetectors;
-    private IFactoryVideo iFactoryVideo;
-    private IFactoryFeedbackVideo iFactoryFeedbackVideo;
-    private ISkeletonInterpolation iSkeletonInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
 
-    public LogicManager(IFactoryErrorDetectors iFactoryErrorDetectors, IFactoryVideo iFactoryVideo,
-                        IFactoryFeedbackVideo iFactoryFeedbackVideo, MLConnectionHandler mlConnectionHandler,
-                        ISkeletonInterpolation iSkeletonInterpolation,
-                        ISkeletonsCompletion iSkeletonsCompletionBefore, ISkeletonsCompletion iSkeletonsCompletionAfter) {
-        this.iFactoryErrorDetectors = iFactoryErrorDetectors;
-        this.iFactoryVideo = iFactoryVideo;
-        this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
-        this.mlConnectionHandler = mlConnectionHandler;
-        this.iSkeletonInterpolation = iSkeletonInterpolation;
-        this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBefore;
-        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfter;
+    public LogicManager(IUserProvider userProvider,
+                        IFeedbackProvider streamProvider,
+                        IStatisticsProvider statisticsProvider) {
+        _userProvider = userProvider;
+        _feedbackProvider = streamProvider;
+        _satisticProvider = statisticsProvider;
+        createClientsDir();
+        _userProvider.reload();
+    }
+
+    /**
+     * create the client directory in the server memory
+     */
+    private void createClientsDir() {
+        try {
+            Path path = Paths.get("clients");
+            // TODO - check if good
+            if (!Files.isDirectory(path)) {
+                Files.createDirectory(path);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * delete all the files in the given path
+     * @param file = the file to delete
+     * @throws IOException - if fail
+     */
+    void delete(File file) throws IOException {
+        if (file.isDirectory()) {
+            FileUtils.deleteDirectory(file);
+        }
+        if (!file.delete())
+            throw new FileNotFoundException("Failed to delete file: " + file);
     }
 
     /**
      * The function handle login of swimmers to the system
-     * @param userDTO the simmers information
+     * @param userDTO the swimmer information
      * @return true
      */
-    public synchronized ActionResult<UserDTO> login(UserDTO userDTO) {
-        UserDao userDao = new UserDao();
-        // TODO synchronized(getLocker(user.getUid())){};
-        User user = userDao.find(userDTO.getUid());
-        if(user!=null) {
-            user.login();
-            userDao.update(user);
+    public ActionResult<UserDTO> login(UserDTO userDTO) {
+        if(_userProvider.login(userDTO)) {
             return new ActionResult<>(Response.SUCCESS, userDTO);
-        }
-        // user not exits
-        user = new User(userDTO);
-        user.login();
-        Swimmer swimmer = new Swimmer(user.getUid());
-        user.addState(swimmer);
-        if(userDao.insert(user)!=null) {
-            SwimmerDao swimmerDao = new SwimmerDao();
-            if(swimmerDao.insert(swimmer)!=null) {
-                return new ActionResult<>(Response.SUCCESS, userDTO);
-            }
-            else {
-                // todo delete user from db
-                // return fail
-            }
         }
         return new ActionResult<>(Response.FAIL,null);
     }
 
-    /**
-     * The function return a list of error detectors to check
+    /***
+     * The function handle logout of swimmers from the system
+     * @param user the swimmer information
      * @return
      */
-    private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
-        //TODO change this by the selected filters
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-        output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-        output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-        return output;
-    }
-
-    /**
-     * The function generate a feedback video form a swimming video
-     * @param video the video
-     * @return the feedback video
-     */
-    private IFeedbackVideo getFeedbackVideo(IVideo video, List<SwimmingErrorDetector> errorDetectors) {
-        TaggedVideo taggedVideo = mlConnectionHandler.getSkeletons(video);
-        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        List<ISwimmingSkeleton> skeletons = taggedVideo.getTags();
-        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
-        skeletons = iSkeletonInterpolation.interpolate(skeletons);
-        skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
-        taggedVideo.setTags(skeletons);
-        for(int i =0; i<skeletons.size(); i++) {
-            ISwimmingSkeleton skeleton = skeletons.get(i);
-            List<SwimmingError> errors = new LinkedList<>();
-            for(SwimmingErrorDetector detector: errorDetectors) {
-                List<SwimmingError> detectorErrors = detector.detect(skeleton);
-                errors.addAll(detectorErrors);
-            }
-            errorMap.put(i, errors);
+    public ActionResult<Boolean> logout(UserDTO user) {
+        if(_userProvider.logout(user)) {
+            return new ActionResult<>(Response.SUCCESS, true);
         }
-        IFeedbackVideo feedbackVideo = iFactoryFeedbackVideo.create(video, taggedVideo, errorMap);
-        return feedbackVideo;
-    }
-
-    /**
-     * The function handle upload video that want to receives a downloading file
-     * @param convertedVideoDTO the video we got from the client
-     * @return the feedback video
-     */
-    public ActionResult<FeedbackVideoDTO> uploadVideoForDownload(ConvertedVideoDTO convertedVideoDTO) {
-        IVideo video = iFactoryVideo.create(convertedVideoDTO);
-        if(video.isVideoExists()) {
-            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-            FeedbackVideoDTO feedbackVideoDTO = feedbackVideo.generateFeedbackDTO();
-            if (feedbackVideoDTO == null) {
-                //TODO return here a action result error!!
-            }
-            return new ActionResult<>(Response.SUCCESS, feedbackVideoDTO);
-        }
-        //TODO what to return when fail
-        return new ActionResult<>(Response.FAIL, null);
-
+        return new ActionResult<>(Response.FAIL,null);
     }
 
     /**
      * The function handle upload video that want a streaming result
      * @param convertedVideoDTO the video we want to view
      * @return the streaming path for the feedback video
-     * @precondition the feedback video we are generating doesn't exits!
+     * @ pre condition - the feedback video we are generating doesn't exits!
      */
-    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
-        IVideo video = iFactoryVideo.create(convertedVideoDTO);
-        if(video.isVideoExists()) {
-            List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
+    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user != null) {
+            // create video
             List<String> detectorsNames = new LinkedList<>();
-            for (SwimmingErrorDetector detector : errorDetectors) {
-                detectorsNames.add(detector.getTag());
+            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                    convertedVideoDTO, user.getVideosPath(),
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
+            if (feedbackVideo != null) {
+                _userProvider.addFeedbackToUser(user, feedbackVideo);
+                //TODO delete this after removing lastFeedbackVideo
+                this.lastFeedbackVideo = feedbackVideo;
+                FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
+                if (feedbackVideoStreamer != null) {
+                    return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+                }
             }
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
-            //TODO delete this after removing lastFeedbackVideo
-            this.lastFeedbackVideo = feedbackVideo;
-            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-            if (feedbackVideoStreamer == null) {
-                //TODO return here action result error!!
-            }
-            return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
         }
         //TODO what to return when fail
         return new ActionResult<>(Response.FAIL, null);
@@ -170,18 +121,13 @@ public class LogicManager {
      * @return the bytes for the file
      */
     public ActionResult<FeedbackVideoDTO> streamFile(String path) {
-        //TODO need to refactor this in the future for a class responsible of our resources
         //TODO need here to be access check
-        File file = new File(path);
-        if(file.exists()) {
-            try {
-                byte[] data = Files.readAllBytes(file.toPath());
-                FeedbackVideoDTO output = new FeedbackVideoDTO(file.getPath(), data);
-                return new ActionResult<>(Response.SUCCESS, output);
-            } catch (Exception e) {
-                //TODO return here error
-                System.out.println(e.getMessage());
-            }
+        try {
+            FeedbackVideoDTO output = _feedbackProvider.streamFeedback(path);
+            return new ActionResult<>(Response.SUCCESS, output);
+        } catch (Exception e) {
+            //TODO return here error
+            System.out.println(e.getMessage());
         }
         //TODO return error
         //TODO maybe always generate a video if it a error video then return error video ?
@@ -189,46 +135,22 @@ public class LogicManager {
     }
 
     /**
-     * The function build an error detector list from a given filter
-     * @param filterDTO - filter
-     * @return
-     */
-    private List<SwimmingErrorDetector> buildDetectors(FeedbackFilterDTO filterDTO) {
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        for(String name: filterDTO.getFilters()) {
-            //todo Change this in the future to recive not a list of string but list of errorsTDO
-            //  for now its the same as the getTag function in the detectors
-            switch (name) {
-                case "Elbow":
-                    output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-                    break;
-                case "Forearm":
-                    output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-                    break;
-                case "Palm":
-                    output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-                    break;
-            }
-        }
-        return output;
-    }
-
-    /**
      * The function create a new feedback video, filter, and send a new feedback link
+     * @param userDTO - the user info
      * @param filterDTO - the feedback to filter
      * @return new feedbackVideoStreamer
      */
-    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(FeedbackFilterDTO filterDTO) {
-        //TODO check if feedback video exits
-        if(this.lastFeedbackVideo!=null){
+    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user != null && lastFeedbackVideo != null) {
             // TODO - feedback video isn't video any more
             IVideo video = this.lastFeedbackVideo.getIVideo();
-            List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
             List<String> detectorsNames = new LinkedList<>();
-            for(SwimmingErrorDetector detector: errorDetectors) {
-                detectorsNames.add(detector.getTag());
-            }
-            IFeedbackVideo feedbackVideo = getFeedbackVideo(video, errorDetectors);
+            IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(
+                    user.getFeedbacksPath(),
+                    user.getSkeletonsPath(),
+                    user.getMLSkeletonsPath(),
+                    filterDTO, video, detectorsNames);
             FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
             if(feedbackVideoStreamer == null) {
                 //TODO return here action result error!!
@@ -237,4 +159,35 @@ public class LogicManager {
         }
         return null;
     }
+
+    /**
+     * The function return a researcher report from the given video and labels
+     * @param userDTO - the user information
+     * @param videoDTO - the video to created the analyze
+     * @param fileDTO - the labels file
+     * @return
+     */
+    public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        if(user != null && user.isLogged() && user.isResearcher()) {
+            // create video
+            List<String> detectorsNames = new LinkedList<>();
+            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                    videoDTO, user.getVideosPath(),
+                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
+            if (feedbackVideo != null) {
+                String pdfPath = _satisticProvider.getStatistics(
+                        fileDTO,
+                        feedbackVideo.getMLSkeletonsPath(),
+                        user.getReportsPath());
+                ResearcherReportDTO reportDTO = new ResearcherReportDTO(
+                        feedbackVideo.getPath(),
+                        feedbackVideo.getSkeletonsPath(),
+                        pdfPath);
+                return new ActionResult<>(Response.SUCCESS, reportDTO);
+            }
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
+

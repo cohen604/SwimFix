@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -9,10 +10,7 @@ import 'dart:typed_data';
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'TitleButton.dart';
-import '../VideoPreviewScreen.dart';
 
 class VideoUploader extends StatefulWidget {
 
@@ -29,7 +27,6 @@ class _VideoUploaderState extends State<VideoUploader> {
   String filePath;
   bool clickUpload = false;
   Future<FeedbackVideoStreamer> feedbackVideoStreamer;
-  List<File> filesWithNoFeedBack;
 
   void initVars() {
     this.fileBytes = null;
@@ -37,7 +34,6 @@ class _VideoUploaderState extends State<VideoUploader> {
     this.filePath = null;
     this.clickUpload = false;
     this.feedbackVideoStreamer = null;
-    this.filesWithNoFeedBack = null;
   }
 
   void uploadFileWeb() async {
@@ -83,24 +79,10 @@ class _VideoUploaderState extends State<VideoUploader> {
   }
 
   void uploadVideoMobileCamera() async {
-    var picker = ImagePicker();
-    PickedFile pickedFile = await picker.getVideo(source: ImageSource.camera); //.mov
-    LogicManager logicManager = LogicManager.getInstance();
-    logicManager.cutVideoList(pickedFile.path).then((files) {
-      File file = files.first;
-      if(file != null) {
-        files.removeAt(0);
-        this.filesWithNoFeedBack = files;
-        var fileBytes = file.readAsBytesSync();
-        var fileLength = file.lengthSync();
-        var filePath = file.path;
-        getFeedback(fileBytes, fileLength, filePath);
-      }
-      else {
-        print("To late to be null!!");
-      }
-    }
-    );
+    var args = new CameraScreenArguments();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, "/camera", arguments: args);
+    });
   }
 
   /// The function call upload video of mobile or web
@@ -123,8 +105,12 @@ class _VideoUploaderState extends State<VideoUploader> {
     this.setState(() {
       this.clickUpload = true;
       LogicManager logicManager = LogicManager.getInstance();
-      feedbackVideoStreamer = logicManager.postVideoForStreaming(fileBytes,
-          fileLength, filePath);
+      feedbackVideoStreamer = logicManager.postVideoForStreaming(
+        fileBytes,
+        fileLength,
+        filePath,
+        null //TODO change this null need to be swimmer
+      );
     });
   }
 
@@ -168,7 +154,7 @@ class _VideoUploaderState extends State<VideoUploader> {
           if (snapshot.hasData) {
             var args = new VideoScreenArguments(
                 [snapshot.data],
-                this.filesWithNoFeedBack);
+                null);
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Navigator.pushNamed(context, "/videos", arguments: args);
             });
@@ -248,3 +234,4 @@ class _VideoUploaderState extends State<VideoUploader> {
     return buildMobile(context);
   }
 }
+

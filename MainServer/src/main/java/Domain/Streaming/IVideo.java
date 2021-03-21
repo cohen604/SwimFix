@@ -16,24 +16,6 @@ public interface IVideo {
      */
     boolean isVideoExists();
 
-    /***
-     * The function return the video bytes
-     * @return list of bytes of the video
-     */
-    List<byte[]> getVideo();
-
-    /**
-     * The function return the height of the frame in the video
-     * @return the height of the frame in the video
-     */
-    int getHeight();
-
-    /**
-     * The function return the width of the frame in the video
-     * @return the width of the frame in the video
-     */
-    int getWidth();
-
     /**
      * The function return the path of the video
      * @return the path of the video
@@ -45,17 +27,5 @@ public interface IVideo {
      * @return the type of the video
      */
     String getVideoType();
-
-    /**
-     * The function return the frames of the video in mat format
-     * @return the video frames as Mat list
-     */
-    List<Mat> getVideoFrames();
-
-    /**
-     * The function return the IVideoHandler of the video
-     * @return the IVideoHandler
-     */
-    IVideoHandler getIVideoHandler();
 
 }

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:client/Domain/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/FeedbackVideo.dart';
+import 'package:client/Domain/FileDonwloaded.dart';
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -70,12 +71,89 @@ class ConnectionHandler {
     }
   }
 
+  /// The function send a post message with a body and a multi part file to the server
+  Future<ServerResponse> postMultiPartFileWithID(String path, http.MultipartFile file,
+      String uid, String email, String name) async {
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('POST', Uri.parse(url));
+    request.files.add(file);
+    request.fields['uid'] = uid;
+    request.fields['email'] = email;
+    request.fields['name'] = name;
+    http.Response response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+      return toServerResponse(response.body);
+    } else {
+      throw Exception('Error: post message send to $path');
+    }
+  }
+
+  /// The function send a post message with a body and a multi part file to the server
+  Future<ServerResponse> postMessageWithID(String path, Map<String, dynamic> message,
+      String uid, String email, String name) async {
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['body'] = json.encode(message);
+    request.fields['uid'] = uid;
+    request.fields['email'] = email;
+    request.fields['name'] = name;
+    http.Response response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+      return toServerResponse(response.body);
+    } else {
+      throw Exception('Error: post message send to $path');
+    }
+  }
+
+  /// The function send a post message with a multi part file  and meta data about it to the server
+  Future<ServerResponse> postMultiPartFiles(String path,
+      http.MultipartFile firstFile,
+      http.MultipartFile secondFile,
+      String uid, String email, String name) async {
+    print('post to server 2 multipart files');
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('POST', Uri.parse(url));
+    request.files.add(firstFile);
+    request.files.add(secondFile);
+    request.fields['uid'] = uid;
+    request.fields['email'] = email;
+    request.fields['name'] = name;
+    print('request $request');
+    http.Response response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200) {
+      print('server response ${toServerResponse(response.body)}');
+      return toServerResponse(response.body);
+    } else {
+      throw Exception('Error: post message send to $path');
+    }
+  }
+
   String getUrl() {
     return this.address + ':' + this.port ;
   }
 
   String getStreamUrl(){
     return getUrl() + "/stream";
+  }
+
+  Future<FileDownloaded> downloadFile(String path, String uid, String email, String name) async {
+    // print('get file from $path');
+    String url = getUrl() + path;
+    var request = new http.MultipartRequest('GET', Uri.parse(url));
+    print('request $request');
+    Map<String,String> headers = {
+      'Accept' : '*',
+      'Access-Control-Allow-Origin': "*",
+    };
+    http.Response response = await http.get(Uri.parse(url), headers: headers);
+    if (response.statusCode == 200) {
+      String headerValue = response.headers['content-type'];
+      int start = headerValue.indexOf("/");
+      String fileName = 'file.${headerValue.substring(start + 1)}';
+      print(fileName);
+      return new FileDownloaded(fileName, response.bodyBytes);
+    }
+    throw Exception('Error: get message send to $path');
   }
 
 

@@ -1,4 +1,10 @@
+import 'package:client/Domain/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
+import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
 import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/CameraScreen.dart';
 import 'package:client/Screens/LoginScreen.dart';
 import 'package:client/Screens/UploadScreen.dart';
 import 'package:client/Screens/VideosScreen.dart';
@@ -6,11 +12,11 @@ import 'package:client/Screens/WelcomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Domain/ScreenArguments/VideoScreenArguments.dart';
-import 'Domain/Swimer.dart';
+import 'Domain/Swimmer.dart';
+import 'Screens/ScreensHolder.dart';
 import 'Screens/VideoPreviewScreen.dart';
 
-
-//if running from web:localhost add to project arguments --web-host 5000
+/// if running from web:localhost add to project arguments --web-host 5000
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -18,6 +24,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
+  ScreenHolder _screenHolder = new ScreenHolder();
 
   // This widget is the root of your application.
   @override
@@ -29,22 +37,38 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
       routes: {
-        '/login': (context) => new LoginScreen(),
+        '/login': (context) {
+          return _screenHolder.getLoginScreen();
+        },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
-          Swimmer swimmer = new Swimmer("uid", "email", "name");
-          return new WelcomeScreen(swimmer: swimmer);
+          return _screenHolder.getWelcomeScreen(args);
         },
-        '/upload': (context) => new UploadScreen(),
-        '/videoPreview': (context) => new VideoPreviewScreen(
-          feedbackVideoStreamer: ModalRoute.of(context).settings.arguments,),
+        '/swimmer': (context) {
+          SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerScreen(args);
+        },
+        '/researcher': (context) {
+          ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getResearcherScreen(args);
+        },
+        '/upload': (context) {
+          UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getUploadScreen(args);
+        },
+        //TODO all screen below here need to be changed
+        '/videoPreview': (context) {
+          FeedbackVideoStreamer streamer = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getVideoPreviewScreen(streamer);
+        },
         '/videos': (context) {
           VideoScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return new VideosScreen(
-            videos: args.videos,
-            futureVideos: args.futureVideos,
-          );
+          return _screenHolder.getVideosScreen(args);
         },
+        '/camera': (context) {
+          CameraScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getCameraScreen(args);
+        }
       },
       debugShowCheckedModeBanner: false,
     );

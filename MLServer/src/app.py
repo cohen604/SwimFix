@@ -1,20 +1,36 @@
-import os
+from datetime import datetime
 import io
-import pickle
 import json
+import os
+import pickle
+import pdb
 from typing import List, Tuple, Dict
+
+import base64
+import cv2
+from flask import Flask, request, send_file, jsonify
+import numpy as np
+from tqdm import tqdm
 
 from model import get_model
 from utils import get_frame
-
-import base64
-import numpy as np
-from flask import Flask, request, send_file, jsonify
 
 app = Flask(__name__)
 
 model = None
 cfg = None
+
+def load_video(path: str) -> np.ndarray:
+
+    frames = []
+    vidcap = cv2.VideoCapture(path)
+    success, image = vidcap.read()
+    frames.append(image)
+    while success:
+        success, image = vidcap.read()
+        frames.append(image)
+    
+    return np.array(frames[:-1])
 
 def get_predictions(frames: np.ndarray) -> np.ndarray:
     
@@ -34,7 +50,7 @@ def get_predictions(frames: np.ndarray) -> np.ndarray:
 
     """
     preds = []
-    for i, frame in enumerate(frames):
+    for i, frame in tqdm(enumerate(frames), desc='predicting'):
         outputs = model(frame)
         try:
             keypoints = outputs['instances'].get_fields()['pred_keypoints'].cpu().numpy()[0]
@@ -46,19 +62,18 @@ def get_predictions(frames: np.ndarray) -> np.ndarray:
 
 @app.route('/detect', methods=['GET', 'POST'])
 def detect():
-
-    len_ = int(request.form['len'])
-    height = int(request.form['height'])
-    width = int(request.form['width'])
-    frames = []
+    date = datetime.now()
+    str_date = str(date)
+    print(f'detection request accepted {str(date)}')
     
-    for i in range(len_):
-        frame = get_frame(request.form[f'video{i}'], height, width)
-        frames.append(frame)
-
-    frames = np.array(frames)
+    video_bytes = base64.b64decode(request.form['video'])
+    with open(f"{str_date}{request.form['type']}", 'wb') as f:
+        f.write(video_bytes) 
+    
+    frames = load_video(f"{str_date}{request.form['type']}")
+    
     predictions = get_predictions(frames)
-
+    print(f'returning request took: {str(datetime.now() - date)}')
     return jsonify(predictions)
     
 @app.route('/')
@@ -69,4 +84,4 @@ if __name__ == "__main__":
 
     model, cfg = get_model(trained=True, load_path="model_final.pth")
 
-    app.run(host='192.168.1.46', port='5000', debug=True)
+    app.run(host='192.168.1.12', port='5050', debug=True)

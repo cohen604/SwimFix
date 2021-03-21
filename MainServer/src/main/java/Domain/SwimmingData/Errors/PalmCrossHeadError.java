@@ -8,9 +8,11 @@ import org.opencv.core.Mat;
 
 public abstract class PalmCrossHeadError extends SwimmingError {
 
+    protected boolean inside;
 
-    public PalmCrossHeadError(IDraw drawer) {
-        super(drawer);
+    public PalmCrossHeadError(IDraw drawer, boolean inside, String tag) {
+        super(drawer, tag);
+        this.inside = inside;
     }
 
     public void drawPalmCrossHead(Mat frame, IPoint head, IPoint wrist) {
@@ -18,6 +20,10 @@ public abstract class PalmCrossHeadError extends SwimmingError {
         int thickness = 3;
         SkeletonPoint verticalHead = new SkeletonPoint(head.getX(),wrist.getY() + 25, -1);
         drawLine(frame, head, verticalHead, r, g, b, a, thickness);
+    }
+
+    public boolean getInside() {
+        return this.inside;
     }
 
 }
