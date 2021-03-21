@@ -85,7 +85,6 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     uploadInput.click();
     document.body.append(uploadInput);
     uploadInput.onChange.listen((e) {
-      //var bytes = Base64Decoder().convert(uploadInput.result.toString().split(",").last)
       updateFile(uploadInput.files[0]);
     });
     uploadInput.remove();
@@ -133,9 +132,12 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   void readFile(File file, Function callback) {
     final reader = new FileReader();
-    reader.readAsDataUrl(_video.slice(0, _video.size, _video.type));
+    reader.readAsDataUrl(file.slice(0, file.size, file.type));
     reader.onLoadEnd.listen((e) {
-      var bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
+      var bytes = reader.result;
+      // print('before');
+      // print(bytes.toString());
+      bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
       callback(bytes);
     });
   }
@@ -580,8 +582,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         swimmer.email,
         swimmer.name,
       fileLink,
-    ).then(
-            (FileDownloaded fileDownloaded) {
+    ).then((FileDownloaded fileDownloaded) {
           String content = base64Encode(fileDownloaded.bytes);
           AnchorElement(
               href: "data:application/octet-stream;charset=utf-16le;base64,$content")
