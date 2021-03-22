@@ -2,7 +2,6 @@ package mainServer.Providers;
 
 import DTO.*;
 import Domain.Streaming.*;
-import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import ExernalSystems.MLConnectionHandler;
@@ -12,6 +11,7 @@ import DomainLogic.Interpolations.ISkeletonInterpolation;
 import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
+import mainServer.Providers.Interfaces.IFeedbackProvider;
 import org.opencv.core.Mat;
 
 import java.io.File;

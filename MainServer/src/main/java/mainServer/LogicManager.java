@@ -1,11 +1,15 @@
 package mainServer;
 
 import DTO.*;
+import Domain.StatisticsData.IStatistic;
 import Domain.Streaming.*;
+import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
-import mainServer.Providers.IFeedbackProvider;
-import mainServer.Providers.IStatisticsProvider;
-import mainServer.Providers.IUserProvider;
+import DomainLogic.FileLoaders.ISkeletonsLoader;
+import mainServer.Providers.Interfaces.IFeedbackProvider;
+import mainServer.Providers.Interfaces.IReportProvider;
+import mainServer.Providers.Interfaces.IStatisticProvider;
+import mainServer.Providers.Interfaces.IUserProvider;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
@@ -21,16 +25,23 @@ public class LogicManager {
 
     private IUserProvider _userProvider;
     private IFeedbackProvider _feedbackProvider;
-    private IStatisticsProvider _satisticProvider;
+    private ISkeletonsLoader _skeletonLoader;
+    private IStatisticProvider _statisticProvider;
+    private IReportProvider _reportProvider;
+
     private IFeedbackVideo lastFeedbackVideo; //TODO delete this
 
 
     public LogicManager(IUserProvider userProvider,
                         IFeedbackProvider streamProvider,
-                        IStatisticsProvider statisticsProvider) {
+                        ISkeletonsLoader skeletonLoader,
+                        IStatisticProvider statisticProvider,
+                        IReportProvider reportProvider) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
-        _satisticProvider = statisticsProvider;
+        _skeletonLoader = skeletonLoader;
+        _statisticProvider = statisticProvider;
+        _reportProvider = reportProvider;
         createClientsDir();
         _userProvider.reload();
     }
@@ -176,10 +187,15 @@ public class LogicManager {
                     videoDTO, user.getVideosPath(),
                     user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
-                String pdfPath = _satisticProvider.getStatistics(
-                        fileDTO,
-                        feedbackVideo.getMLSkeletonsPath(),
-                        user.getReportsPath());
+                // add a graph to the file
+                List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
+                List<ISwimmingSkeleton> current = feedbackVideo.getSwimmingSkeletons();
+                IStatistic statistic = _statisticProvider.analyze(raw, current);
+                String pdfPath = _reportProvider.generateReport(
+                        raw,
+                        current,
+                        user.getReportsPath(),
+                        statistic);
                 ResearcherReportDTO reportDTO = new ResearcherReportDTO(
                         feedbackVideo.getPath(),
                         feedbackVideo.getSkeletonsPath(),
