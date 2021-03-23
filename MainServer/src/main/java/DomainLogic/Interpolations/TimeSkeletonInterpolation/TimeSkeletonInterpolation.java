@@ -2,12 +2,13 @@ package DomainLogic.Interpolations.TimeSkeletonInterpolation;
 
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.Points.IPoint;
+import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import DomainLogic.Interpolations.ISkeletonInterpolation;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class TimePeriodSkeletonInterpolation implements ISkeletonInterpolation {
+public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
 
     private static int PERIOD_TIME_FRAME_THRESHOLD = 6;
 
@@ -27,13 +28,13 @@ public class TimePeriodSkeletonInterpolation implements ISkeletonInterpolation {
     private Places leftElbow;
     private Places leftWrist;
 
-    public TimePeriodSkeletonInterpolation(List<IPoint> heads,
-                                   List<IPoint> rightShoulders,
-                                   List<IPoint> rightElbows,
-                                   List<IPoint> rightWrists,
-                                   List<IPoint> leftShoulders,
-                                   List<IPoint> leftElbows,
-                                   List<IPoint> leftWrists) {
+    public TimeSkeletonInterpolation(List<IPoint> heads,
+                                     List<IPoint> rightShoulders,
+                                     List<IPoint> rightElbows,
+                                     List<IPoint> rightWrists,
+                                     List<IPoint> leftShoulders,
+                                     List<IPoint> leftElbows,
+                                     List<IPoint> leftWrists) {
         this.heads = heads;
         this.rightShoulders = rightShoulders;
         this.rightElbows = rightElbows;
@@ -59,7 +60,35 @@ public class TimePeriodSkeletonInterpolation implements ISkeletonInterpolation {
         initialize();
         for(int i=0; i< skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
-            interpolate(skeleton, i, rightShoulder, new RightShoulderCompleteUpdater());
+            interpolate(skeleton, i, rightShoulder, new RightShoulderUpdater());
+            interpolate(skeleton, i, rightElbow, new RightElbowUpdater());
+            interpolate(skeleton, i, rightWrist, new RightWristUpdater());
+            interpolate(skeleton, i, leftShoulder, new LeftShoulderUpdater());
+            interpolate(skeleton, i, leftElbow, new LeftElbowUpdater());
+            interpolate(skeleton, i, leftWrist, new LeftWristUpdater());
+        }
+        for(Integer key: this.skeletonsToComplete.keySet()) {
+            SwimmingSkeleton skeleton = new SwimmingSkeleton(skeletons.get(key));
+            Complete complete = this.skeletonsToComplete.get(key);
+            if(complete.isRightShoulder()) {
+                skeleton.setRightShoulder(rightShoulders.get(key));
+            }
+            if(complete.isRightElbow()) {
+                skeleton.setRightElbow(rightElbows.get(key));
+            }
+            if(complete.isRightWrist()) {
+                skeleton.setRightWrist(rightWrists.get(key));
+            }
+            if(complete.isLeftShoulder()) {
+                skeleton.setLeftShoulder(leftShoulders.get(key));
+            }
+            if(complete.isLeftElbow()) {
+                skeleton.setLeftElbow((leftElbows.get(key)));
+            }
+            if(complete.isLeftWrist()) {
+                skeleton.setLeftWrist(leftWrists.get(key));
+            }
+            skeletons.set(key, skeleton);
         }
         return skeletons;
     }

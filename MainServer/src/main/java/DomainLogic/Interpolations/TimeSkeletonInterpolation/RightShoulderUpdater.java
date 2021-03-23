@@ -1,9 +1,9 @@
 package DomainLogic.Interpolations.TimeSkeletonInterpolation;
 
-public class RightShoulderCompleteUpdater implements ICompleteUpdater{
+public class RightShoulderUpdater implements ICompleteUpdater{
     @Override
     public Complete update(Complete complete) {
-        complete.setRightShoulder(false);
+        complete.setRightShoulder(true);
         return complete;
     }
 }

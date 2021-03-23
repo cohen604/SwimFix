@@ -3,7 +3,7 @@ package DomainLogic.Interpolations;
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
-import DomainLogic.Interpolations.TimeSkeletonInterpolation.TimePeriodSkeletonInterpolation;
+import DomainLogic.Interpolations.TimeSkeletonInterpolation.TimeSkeletonInterpolation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     }
 
     private List<ISwimmingSkeleton> timeInterpolation(List<ISwimmingSkeleton> skeletons) {
-        TimePeriodSkeletonInterpolation periodInterpolation = new TimePeriodSkeletonInterpolation(
+        TimeSkeletonInterpolation periodInterpolation = new TimeSkeletonInterpolation(
                 this.heads,
                 this.rightShoulders,
                 this.rightElbows,
