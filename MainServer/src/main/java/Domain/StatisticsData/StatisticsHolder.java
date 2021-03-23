@@ -226,7 +226,7 @@ class Ratio {
     private int _expectedCount;
     private int _actualCount;
 
-    public Ratio() {
+    Ratio() {
         _expectedCount = 0;
         _actualCount = 0;
     }
