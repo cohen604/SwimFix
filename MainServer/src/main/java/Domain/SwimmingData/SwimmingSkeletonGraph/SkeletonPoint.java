@@ -4,7 +4,7 @@ import Domain.SwimmingData.Points.IPoint;
 
 public class SkeletonPoint implements IPoint {
 
-    private final static double THRESHOLD =  0.05;
+    private final static double THRESHOLD =  0.035;
 
     private double x;
     private double y;
