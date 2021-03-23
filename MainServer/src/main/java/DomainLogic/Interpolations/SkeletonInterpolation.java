@@ -3,6 +3,7 @@ package DomainLogic.Interpolations;
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import DomainLogic.Interpolations.TimeSkeletonInterpolation.TimePeriodSkeletonInterpolation;
 
 import java.util.LinkedList;
 import java.util.List;
