@@ -98,7 +98,6 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
 
     private List<ISwimmingSkeleton> timeInterpolation(List<ISwimmingSkeleton> skeletons) {
         TimeSkeletonInterpolation periodInterpolation = new TimeSkeletonInterpolation(
-                this.heads,
                 this.rightShoulders,
                 this.rightElbows,
                 this.rightWrists,

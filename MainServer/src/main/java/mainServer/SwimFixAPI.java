@@ -36,8 +36,7 @@ public class SwimFixAPI {
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
       IFactoryVideo iFactoryVideo = new FactoryVideo();
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
-      ISkeletonInterpolation iSkeletonInterpolation = new SkeletonInterpolation(
-              new LinearInterpolation(), new LinearInterpolation());
+      IFactorySkeletonInterpolation iFactorySkeletonInterpolation = new FactorySkeletonInterpolation();
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
       ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
@@ -45,7 +44,7 @@ public class SwimFixAPI {
       IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
       IFactoryDraw iFactoryDraw = new FactoryDraw();
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
-              iSkeletonInterpolation, completionBefore,
+              iFactorySkeletonInterpolation, completionBefore,
               completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoaderFeedback,
               iFactoryVideoHandler, iFactoryDraw);
 

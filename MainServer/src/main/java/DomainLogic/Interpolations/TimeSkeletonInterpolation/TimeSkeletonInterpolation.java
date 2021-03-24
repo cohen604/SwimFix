@@ -12,7 +12,6 @@ public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
 
     private static int PERIOD_TIME_FRAME_THRESHOLD = 6;
 
-    private List<IPoint> heads;
     private List<IPoint> rightShoulders;
     private List<IPoint> rightElbows;
     private List<IPoint> rightWrists;
@@ -28,14 +27,12 @@ public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
     private Places leftElbow;
     private Places leftWrist;
 
-    public TimeSkeletonInterpolation(List<IPoint> heads,
-                                     List<IPoint> rightShoulders,
+    public TimeSkeletonInterpolation(List<IPoint> rightShoulders,
                                      List<IPoint> rightElbows,
                                      List<IPoint> rightWrists,
                                      List<IPoint> leftShoulders,
                                      List<IPoint> leftElbows,
                                      List<IPoint> leftWrists) {
-        this.heads = heads;
         this.rightShoulders = rightShoulders;
         this.rightElbows = rightElbows;
         this.rightWrists = rightWrists;
