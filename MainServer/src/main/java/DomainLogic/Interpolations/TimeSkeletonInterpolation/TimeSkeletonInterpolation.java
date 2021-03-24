@@ -4,6 +4,7 @@ import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import DomainLogic.Interpolations.ISkeletonInterpolation;
+import DomainLogic.SkeletonFilters.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,13 +58,37 @@ public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
         initialize();
         for(int i=0; i< skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
-            interpolate(skeleton, i, rightShoulder, new RightShoulderUpdater());
-            interpolate(skeleton, i, rightElbow, new RightElbowUpdater());
-            interpolate(skeleton, i, rightWrist, new RightWristUpdater());
-            interpolate(skeleton, i, leftShoulder, new LeftShoulderUpdater());
-            interpolate(skeleton, i, leftElbow, new LeftElbowUpdater());
-            interpolate(skeleton, i, leftWrist, new LeftWristUpdater());
+            interpolate(skeleton, i,
+                    new RightShoulderFilter(),
+                    rightShoulder,
+                    new RightShoulderUpdater());
+            interpolate(skeleton, i,
+                    new RightElbowFilter(),
+                    rightElbow,
+                    new RightElbowUpdater());
+            interpolate(skeleton, i,
+                    new RightWristFilter(),
+                    rightWrist,
+                    new RightWristUpdater());
+            interpolate(skeleton, i,
+                    new LeftShoulderFilter(),
+                    leftShoulder,
+                    new LeftShoulderUpdater());
+            interpolate(skeleton, i,
+                    new LeftElbowFilter(),
+                    leftElbow,
+                    new LeftElbowUpdater());
+            interpolate(skeleton, i,
+                    new LeftWristFilter(),
+                    leftWrist,
+                    new LeftWristUpdater());
         }
+
+        return complete(skeletons);
+    }
+
+    private List<ISwimmingSkeleton> complete(List<ISwimmingSkeleton> skeletons) {
+//        System.out.println(skeletonsToComplete.keySet());
         for(Integer key: this.skeletonsToComplete.keySet()) {
             SwimmingSkeleton skeleton = new SwimmingSkeleton(skeletons.get(key));
             Complete complete = this.skeletonsToComplete.get(key);
@@ -92,20 +117,22 @@ public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
 
     private void interpolate(ISwimmingSkeleton skeleton,
                              int index,
+                             ISkeletonFilter skeletonFilter,
                              Places places,
                              ICompleteUpdater updater) {
-        if(skeleton.containsRightShoulder() && places.start == -1) {
+        if(skeletonFilter.check(skeleton) && places.start == -1) {
             places.start = index;
         }
-        else if(!skeleton.containsRightShoulder()
+        else if(!skeletonFilter.check(skeleton)
                 && places.start != -1
                 && places.end == -1) {
             places.end = index;
         }
-        else if(skeleton.containsRightShoulder() && places.end != -1) {
+        else if(skeletonFilter.check(skeleton) && places.end != -1) {
             if(index - places.end < PERIOD_TIME_FRAME_THRESHOLD) {
+//                System.out.println("completing between " + places.end +" to "+ index);
                 for(int j = places.end; j<index; j++) {
-                    Complete complete = addComplete(index);
+                    Complete complete = addComplete(j);
                     updater.update(complete);
                 }
             }
@@ -121,6 +148,7 @@ public class TimeSkeletonInterpolation implements ISkeletonInterpolation {
         return this.skeletonsToComplete.get(index);
     }
 }
+
 
 
 

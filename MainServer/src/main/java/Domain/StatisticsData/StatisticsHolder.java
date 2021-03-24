@@ -48,7 +48,6 @@ public class StatisticsHolder implements IStatistic {
             tryAddLeftShoulderToStatistic(r,c);
             tryAddLeftElbowToStatistic(r,c);
             tryAddLeftWristToStatistic(r,c);
-
         }
     }
 

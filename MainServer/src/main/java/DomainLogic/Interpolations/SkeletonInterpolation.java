@@ -97,6 +97,7 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     }
 
     private List<ISwimmingSkeleton> timeInterpolation(List<ISwimmingSkeleton> skeletons) {
+        //TODO need to be factory
         TimeSkeletonInterpolation periodInterpolation = new TimeSkeletonInterpolation(
                 this.rightShoulders,
                 this.rightElbows,
