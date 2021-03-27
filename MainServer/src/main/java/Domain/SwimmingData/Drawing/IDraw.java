@@ -14,6 +14,25 @@ public interface IDraw {
      */
     Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius);
 
+    /***
+     * The function draw circle
+     * @param frame
+     * @param skeletonPoint
+     * @param thickness
+     * @param radius
+     * @param red
+     * @param green
+     * @param blue
+     * @return
+     */
+    Mat drawCircle(Mat frame,
+                   IPoint skeletonPoint,
+                   int radius,
+                   int thickness,
+                   double red,
+                   double green ,
+                   double blue);
+
     /**
      *
      * @param frame
