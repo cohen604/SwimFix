@@ -243,7 +243,7 @@ public class FeedbackProvider implements IFeedbackProvider {
      * @return - new skeleton with more points
      */
     private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
-        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
+        //skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
         ISkeletonInterpolation interpolation = this.iFactorySkeletonInterpolation.factory();
         skeletons = interpolation.interpolate(skeletons);
         //skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);

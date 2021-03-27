@@ -109,12 +109,14 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
 
     @Override
     public boolean hasRightSide() {
+//        return containsRightShoulder() || containsRightElbow() || containsRightWrist();
         return containsRightShoulder() && containsRightElbow()
                 || containsRightElbow() && containsRightWrist();
     }
 
     @Override
     public boolean hasLeftSide() {
+//        return containsLeftShoulder() ||  containsLeftElbow() || containsLeftWrist();
         return containsLeftShoulder() &&  containsLeftElbow()
                 || containsLeftElbow() && containsLeftWrist();
     }
