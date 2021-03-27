@@ -2,9 +2,9 @@ package mainServer.Providers;
 
 import DTO.*;
 import Domain.Streaming.*;
-import Domain.SwimmingData.Drawing.Draw;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
+import DomainLogic.Interpolations.IFactorySkeletonInterpolation;
 import ExernalSystems.MLConnectionHandler;
 import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
@@ -12,6 +12,7 @@ import DomainLogic.Interpolations.ISkeletonInterpolation;
 import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
+import mainServer.Providers.Interfaces.IFeedbackProvider;
 import org.opencv.core.Mat;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     private MLConnectionHandler mlConnectionHandler;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
-    private ISkeletonInterpolation iSkeletonInterpolation;
+    private IFactorySkeletonInterpolation iFactorySkeletonInterpolation;
     private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
     private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
     private IFactoryVideo iFactoryVideo;
@@ -39,7 +40,7 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
-                            ISkeletonInterpolation iSkeletonInterpolation,
+                            IFactorySkeletonInterpolation iFactorySkeletonInterpolation,
                             ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation,
                             ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
                             IFactoryVideo iFactoryVideo,
@@ -49,7 +50,7 @@ public class FeedbackProvider implements IFeedbackProvider {
                             IFactoryDraw iFactoryDraw) {
         this.mlConnectionHandler = mlConnectionHandler;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
-        this.iSkeletonInterpolation = iSkeletonInterpolation;
+        this.iFactorySkeletonInterpolation = iFactorySkeletonInterpolation;
         this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBeforeInterpolation;
         this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
         this.iFactoryVideo = iFactoryVideo;
@@ -243,7 +244,8 @@ public class FeedbackProvider implements IFeedbackProvider {
      */
     private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
         skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
-        skeletons = iSkeletonInterpolation.interpolate(skeletons);
+        ISkeletonInterpolation interpolation = this.iFactorySkeletonInterpolation.factory();
+        skeletons = interpolation.interpolate(skeletons);
         //skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
         return skeletons;
     }

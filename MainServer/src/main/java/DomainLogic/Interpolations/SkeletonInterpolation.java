@@ -3,6 +3,7 @@ package DomainLogic.Interpolations;
 import Domain.SwimmingData.Points.IPoint;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import DomainLogic.Interpolations.TimeSkeletonInterpolation.TimeSkeletonInterpolation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +37,8 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
     public List<ISwimmingSkeleton> interpolate(List<ISwimmingSkeleton> skeletons) {
         collectPoints(skeletons);
         runInterpolation();
-        return buildNewSwimmingSkeletons(skeletons);
+        List<ISwimmingSkeleton> output = buildNewSwimmingSkeletons(skeletons);
+        return timeInterpolation(output);
     }
 
     /***
@@ -92,5 +94,18 @@ public class SkeletonInterpolation implements ISkeletonInterpolation {
             output.add(swimmingSkeleton);
         }
         return output;
+    }
+
+    private List<ISwimmingSkeleton> timeInterpolation(List<ISwimmingSkeleton> skeletons) {
+        //TODO need to be factory
+        TimeSkeletonInterpolation periodInterpolation = new TimeSkeletonInterpolation(
+                this.rightShoulders,
+                this.rightElbows,
+                this.rightWrists,
+                this.leftShoulders,
+                this.leftElbows,
+                this.leftWrists
+        );
+        return periodInterpolation.interpolate(skeletons);
     }
 }

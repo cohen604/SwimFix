@@ -1,4 +1,4 @@
-package mainServer.Providers;
+package mainServer.Providers.Interfaces;
 
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;

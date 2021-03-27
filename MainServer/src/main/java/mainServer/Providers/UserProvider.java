@@ -6,6 +6,7 @@ import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.User.IUserDao;
 import Storage.User.UserDao;
+import mainServer.Providers.Interfaces.IUserProvider;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

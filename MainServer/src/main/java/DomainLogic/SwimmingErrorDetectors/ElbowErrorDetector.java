@@ -35,7 +35,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
     }
 
     /**
-     * The functoion calc the angle between the shoulder, elbow, wrist
+     * The functoion analyze the angle between the shoulder, elbow, wrist
      * Computes angle using law of cosines
      * @param shoulder
      * @param elbow
@@ -53,7 +53,7 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
     }
 
     /**
-     * The function calc the expected x from y with the linear equation from shoulder to elbow
+     * The function analyze the expected x from y with the linear equation from shoulder to elbow
      * @param shoulder - skeleton point
      * @param elbow - skeleton point
      * @param yNew - the y value
