@@ -9,4 +9,7 @@ public interface IPeriodTimeProvider {
 
     ISwimmingPeriodTime analyzeTimes(List<ISwimmingSkeleton> skeletons);
 
+    List<ISwimmingSkeleton> correctSkeletons(List<ISwimmingSkeleton> skeletons,
+                                             ISwimmingPeriodTime periodTime);
+
 }

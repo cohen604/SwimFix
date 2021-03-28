@@ -1,5 +1,7 @@
 package mainServer.Providers;
 
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
+import Domain.PeriodTimeData.PeriodTime;
 import Domain.StatisticsData.IStatistic;
 import DomainLogic.PdfDrawing.IGraphDrawer;
 import Domain.SwimmingData.ISwimmingSkeleton;
@@ -12,6 +14,7 @@ import DomainLogic.SkeletonsValueFilters.LeftElbowFilters.*;
 import DomainLogic.SkeletonsValueFilters.LeftWristFilters.*;
 import DomainLogic.SkeletonsValueFilters.ISkeletonValueFilter;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import mainServer.Providers.Interfaces.IReportProvider;
 
@@ -39,7 +42,8 @@ public class ReportProvider implements IReportProvider {
             List<ISwimmingSkeleton> raw,
             List<ISwimmingSkeleton> current,
             String pdfFolderPath,
-            IStatistic statistic) {
+            IStatistic statistic,
+            ISwimmingPeriodTime periodTime) {
 
         try {
             LocalDateTime time = LocalDateTime.now();
@@ -52,26 +56,14 @@ public class ReportProvider implements IReportProvider {
             document.open();
             // write meta on the file
             addMeta(document);
-
-            addHeadGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addRightShoulderGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addRightElbowGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addRightWristGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addLeftShoulderGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addLeftElbowGraphs(pdfWriter, raw, current, statistic);
-
-            document.newPage();
-            addLeftWristGraphs(pdfWriter, raw, current, statistic);
+            addTimePeriod(document, periodTime);
+            addHeadGraphs(document, pdfWriter, raw, current, statistic);
+            addRightShoulderGraphs(document, pdfWriter, raw, current, statistic);
+            addRightElbowGraphs(document, pdfWriter, raw, current, statistic);
+            addRightWristGraphs(document, pdfWriter, raw, current, statistic);
+            addLeftShoulderGraphs(document, pdfWriter, raw, current, statistic);
+            addLeftElbowGraphs(document, pdfWriter, raw, current, statistic);
+            addLeftWristGraphs(document, pdfWriter, raw, current, statistic);
 
             document.close();
             return pdfName;
@@ -89,10 +81,59 @@ public class ReportProvider implements IReportProvider {
         document.addCreationDate();
     }
 
-    private void addHeadGraphs(PdfWriter pdfWriter,
+    private void addTimePeriod(Document document,
+                               ISwimmingPeriodTime periodTime) throws DocumentException {
+        document.newPage();
+        String text = "Time Period Summary";
+        Paragraph paragraph = new Paragraph(text);
+        List<PeriodTime> rights = periodTime.getRightTimes();
+        List<PeriodTime> lefts = periodTime.getLeftTimes();
+        PdfPTable table = new PdfPTable(4);
+        table.addCell("Category");
+        table.addCell("Start frame");
+        table.addCell("End frame");
+        table.addCell("Length");
+        int indexR = 0;
+        int indexL = 0;
+        while(indexR < rights.size() && indexL < lefts.size()) {
+            PeriodTime rp = rights.get(indexR);
+            PeriodTime lp = lefts.get(indexL);
+            if(rp.getStart() < lp.getStart()) {
+                addRowToTable(table, "right", rp.getStart(), rp.getEnd(), rp.getTimeLength());
+                indexR++;
+            }
+            else {
+                addRowToTable(table, "left", lp.getStart(), lp.getEnd(), lp.getTimeLength());
+                indexL++;
+            }
+        }
+        while(indexR < rights.size()) {
+            PeriodTime rp = rights.get(indexR);
+            addRowToTable(table, "right", rp.getStart(), rp.getEnd(), rp.getTimeLength());
+            indexR++;
+        }
+        while(indexL < lefts.size()) {
+            PeriodTime lp = lefts.get(indexL);
+            addRowToTable(table, "left", lp.getStart(), lp.getEnd(), lp.getTimeLength());
+            indexL++;
+        }
+        paragraph.add(table);
+        document.add(paragraph);
+    }
+
+    private void addRowToTable(PdfPTable table, String name, int start, int end, int length) {
+        table.addCell(name);
+        table.addCell(String.valueOf(start));
+        table.addCell(String.valueOf(end));
+        table.addCell(String.valueOf(length));
+    }
+
+    private void addHeadGraphs(Document document,
+                               PdfWriter pdfWriter,
                                List<ISwimmingSkeleton> raw,
                                List<ISwimmingSkeleton> current,
                                IStatistic statistic) {
+        document.newPage();
         String subject = "Head";
         ISkeletonValueFilter xFilter = new XHeadFilter();
         ISkeletonValueFilter yFilter = new YHeadFilter();
@@ -102,10 +143,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getHeadActual());
     }
 
-    private void addRightShoulderGraphs(PdfWriter pdfWriter,
+    private void addRightShoulderGraphs(Document document,
+                                        PdfWriter pdfWriter,
                                         List<ISwimmingSkeleton> raw,
                                         List<ISwimmingSkeleton> current,
                                         IStatistic statistic) {
+        document.newPage();
         String subject = "Right shoulder";
         ISkeletonValueFilter xFilter = new XRightShoulderFilter();
         ISkeletonValueFilter yFilter = new YRightShoulderFilter();
@@ -115,10 +158,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getRightShoulderActual());
     }
 
-    private void addRightElbowGraphs(PdfWriter pdfWriter,
+    private void addRightElbowGraphs(Document document,
+                                     PdfWriter pdfWriter,
                                      List<ISwimmingSkeleton> raw,
                                      List<ISwimmingSkeleton> current,
                                      IStatistic statistic) {
+        document.newPage();
         String subject = "Right elbow";
         ISkeletonValueFilter xFilter = new XRightElbowFilter();
         ISkeletonValueFilter yFilter = new YRightElbowFilter();
@@ -128,10 +173,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getRightElbowActual());
     }
 
-    private void addRightWristGraphs(PdfWriter pdfWriter,
+    private void addRightWristGraphs(Document document,
+                                     PdfWriter pdfWriter,
                                      List<ISwimmingSkeleton> raw,
                                      List<ISwimmingSkeleton> current,
                                      IStatistic statistic) {
+        document.newPage();
         String subject = "Right wrist";
         ISkeletonValueFilter xFilter = new XRightWristFilter();
         ISkeletonValueFilter yFilter = new YRightWristFilter();
@@ -141,10 +188,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getRightWristActual());
     }
 
-    private void addLeftShoulderGraphs(PdfWriter pdfWriter,
+    private void addLeftShoulderGraphs(Document document,
+                                       PdfWriter pdfWriter,
                                        List<ISwimmingSkeleton> raw,
                                        List<ISwimmingSkeleton> current,
                                        IStatistic statistic) {
+        document.newPage();
         String subject = "Left shoulder";
         ISkeletonValueFilter xFilter = new XLeftShoulderFilter();
         ISkeletonValueFilter yFilter = new YLeftShoulderFilter();
@@ -154,10 +203,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getLeftShoulderActual());
     }
 
-    private void addLeftElbowGraphs(PdfWriter pdfWriter,
+    private void addLeftElbowGraphs(Document document,
+                                    PdfWriter pdfWriter,
                                     List<ISwimmingSkeleton> raw,
                                     List<ISwimmingSkeleton> current,
                                     IStatistic statistic) {
+        document.newPage();
         String subject = "Left elbow";
         ISkeletonValueFilter xFilter = new XLeftElbowFilter();
         ISkeletonValueFilter yFilter = new YLeftElbowFilter();
@@ -167,10 +218,12 @@ public class ReportProvider implements IReportProvider {
                 statistic.getLeftElbowActual());
     }
 
-    private void addLeftWristGraphs(PdfWriter pdfWriter,
+    private void addLeftWristGraphs(Document document,
+                                    PdfWriter pdfWriter,
                                     List<ISwimmingSkeleton> raw,
                                     List<ISwimmingSkeleton> current,
                                     IStatistic statistic) {
+        document.newPage();
         String subject = "Left wrist";
         ISkeletonValueFilter xFilter = new XLeftWristFilter();
         ISkeletonValueFilter yFilter = new YLeftWristFilter();

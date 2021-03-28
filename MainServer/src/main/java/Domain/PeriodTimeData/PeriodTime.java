@@ -17,4 +17,8 @@ public class PeriodTime {
     public int getEnd() {
         return end;
     }
+
+    public int getTimeLength() {
+        return end - start;
+    }
 }

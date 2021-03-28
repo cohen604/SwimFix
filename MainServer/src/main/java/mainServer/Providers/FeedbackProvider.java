@@ -103,10 +103,11 @@ public class FeedbackProvider implements IFeedbackProvider {
         iSkeletonsLoader.save(skeletons, mlSkeletonsPath);
         // interpolate for the new skeletons
         skeletons = completeAndInterpolate(skeletons);
-        // tagged video
-        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
         //time period
         ISwimmingPeriodTime periodTime = periodTimeProvider.analyzeTimes(skeletons);
+        skeletons = periodTimeProvider.correctSkeletons(skeletons, periodTime);
+        // tagged video
+        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
         // error detection
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         for(int i =0; i<skeletons.size(); i++) {

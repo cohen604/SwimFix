@@ -1,7 +1,6 @@
 package Domain.Streaming;
 import DTO.FeedbackVideoStreamer;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
-import Domain.PeriodTimeData.PeriodTime;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import java.io.File;
