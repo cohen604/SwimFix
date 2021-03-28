@@ -1,6 +1,7 @@
 package Domain.Streaming;
 import DTO.FeedbackVideoStreamer;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
+import Domain.PeriodTimeData.PeriodTime;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import java.io.File;
@@ -16,15 +17,16 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     private boolean feedbackUpdated; // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private VisualComment visualComment;
     private TextualComment textualComment;
-    private ISwimmingPeriodTime periodTime; //TODO
+    private ISwimmingPeriodTime periodTime;
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
-                         String path) {
+                         String path, ISwimmingPeriodTime periodTime) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
         this.path = path;
         this.feedbackUpdated = false;
+        this.periodTime = periodTime;
         //TODO
         this.visualComment = null;
         this.textualComment = null;
@@ -98,6 +100,12 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     public Map<Integer, List<SwimmingError>> getSwimmingErrors() {
         return this.errorMap;
     }
+
+    @Override
+    public ISwimmingPeriodTime getSwimmingPeriodTime() {
+        return this.periodTime;
+    }
+
 
     @Override
     public boolean isFeedbackUpdated() {
