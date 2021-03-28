@@ -2,6 +2,8 @@ package UnitTests.StreamingTests;
 
 import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.PeriodTimeData.PeriodTime;
+import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
@@ -60,7 +62,8 @@ public class FeedbackTests  extends TestCase {
             fail();
         }
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
-        this.feedbackVideo = new FeedbackVideo(video, taggedVideo, errorsMap, path);
+        SwimmingPeriodTime swimmingPeriodTime = new SwimmingPeriodTime(new LinkedList<>(), new LinkedList<>());
+        this.feedbackVideo = new FeedbackVideo(video, taggedVideo, errorsMap, path, swimmingPeriodTime);
     }
 
     private void setUFeedbackVideoNotExits() {
@@ -70,7 +73,8 @@ public class FeedbackTests  extends TestCase {
         //TODO
         TaggedVideo taggedVideo = null;
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
-        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap, path);
+        SwimmingPeriodTime swimmingPeriodTime = new SwimmingPeriodTime(new LinkedList<>(), new LinkedList<>());
+        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap, path, swimmingPeriodTime);
     }
 
     private void setUpGeneratedFeedback() {

@@ -123,10 +123,12 @@ public class SwimmerCodec implements Codec<Swimmer> {
     }
 
     private ISwimmingPeriodTime decodePeriodTime(BsonReader bsonReader, DecoderContext decoderContext) {
+        bsonReader.readStartDocument();
         String name = bsonReader.readName();
         List<PeriodTime> rights = decodeTimes(bsonReader, decoderContext);
         name = bsonReader.readName();
         List<PeriodTime> lefts = decodeTimes(bsonReader, decoderContext);
+        bsonReader.readEndDocument();
         return new SwimmingPeriodTime(rights, lefts);
     }
 
