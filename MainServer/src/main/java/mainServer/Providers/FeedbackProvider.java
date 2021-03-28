@@ -13,6 +13,7 @@ import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
+import mainServer.Providers.Interfaces.IPeriodTimeProvider;
 import org.opencv.core.Mat;
 
 import java.io.File;
@@ -37,6 +38,7 @@ public class FeedbackProvider implements IFeedbackProvider {
     private ISkeletonsLoader iSkeletonsLoader;
     private IFactoryVideoHandler iFactoryVideoHandler;
     private IFactoryDraw iFactoryDraw;
+    private IPeriodTimeProvider periodTimeProvider;
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,

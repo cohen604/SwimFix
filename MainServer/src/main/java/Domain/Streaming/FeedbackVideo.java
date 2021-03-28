@@ -1,29 +1,22 @@
 package Domain.Streaming;
-import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class FeedbackVideo extends Video implements IFeedbackVideo {
 
+    private Map<Integer, List<SwimmingError>> errorMap;
+    private TaggedVideo taggedVideo; // swimming skeletons
+    private String path; // The feedback video path to insert into
+    private boolean feedbackUpdated; // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private VisualComment visualComment;
     private TextualComment textualComment;
-    private Map<Integer, List<SwimmingError>> errorMap;
-    private TaggedVideo taggedVideo;
-    // The feedback video path to insert into
-    private String path;
-    // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
-    private boolean feedbackUpdated;
+    private ISwimmingPeriodTime periodTime; //TODO
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
                          String path) {
