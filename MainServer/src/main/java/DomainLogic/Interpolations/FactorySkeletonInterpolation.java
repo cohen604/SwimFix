@@ -7,8 +7,8 @@ public class FactorySkeletonInterpolation implements IFactorySkeletonInterpolati
         Interpolation head = new LinearInterpolation();
         Interpolation linear = new LinearInterpolation();
         Interpolation spline = new SplineInterpolation();
-        Interpolation interExter = new InterExter(spline, linear);
-        return new SkeletonInterpolation(interExter, head);
+        //Interpolation interExter = new InterExter(spline, linear);
+        return new SkeletonInterpolation(spline, head);
     }
 
 }
