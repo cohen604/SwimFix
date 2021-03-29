@@ -23,16 +23,15 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
 
     @Override
     public ISwimmingPeriodTime analyzeTimes(List<ISwimmingSkeleton> skeletons) {
-        List<PeriodTime> lefts = analyze(skeletons, new LeftFilter());
         List<PeriodTime> rights = analyze(skeletons, new RightFilter());
+        List<PeriodTime> lefts = analyze(skeletons, new LeftFilter());
         return factorySwimmingPeriodTime.factory(rights, lefts);
     }
 
     @Override
     public List<ISwimmingSkeleton> correctSkeletons(List<ISwimmingSkeleton> skeletons, ISwimmingPeriodTime times) {
-        int tresholdPeriod = 5;
+        int tresholdPeriod = 6;
         List<PeriodTime> rights = times.getRightTimes();
-        List<Integer> deleteRight = new LinkedList<>();
         for(int j =0; j<rights.size(); j++) {
             PeriodTime period = rights.get(j);
             if(period.getTimeLength() < tresholdPeriod) {
@@ -42,13 +41,12 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
                     newSkeleton.removeRightElbow();
                     newSkeleton.removeRightWrist();
                     skeletons.set(i, newSkeleton);
+                    System.out.println("correct skeleton by time period right "+ i);
                 }
-                deleteRight.add(j);
             }
         }
 
         List<PeriodTime> lefts = times.getLeftTimes();
-        List<Integer> deleteLeft = new LinkedList<>();
         for(int j =0; j<lefts.size(); j++) {
             PeriodTime period = lefts.get(j);
             if(period.getTimeLength() < tresholdPeriod) {
@@ -58,21 +56,10 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
                     newSkeleton.removeLeftElbow();
                     newSkeleton.removeLeftWrist();
                     skeletons.set(i, newSkeleton);
+                    System.out.println("correct skeleton by time left right "+ i);
                 }
-                deleteLeft.add(j);
             }
         }
-        int removed = 0;
-        for(Integer i: deleteRight) {
-            rights.remove(i - removed);
-            removed++;
-        }
-        removed = 0;
-        for(Integer i: deleteLeft) {
-            lefts.remove(i - removed);
-            removed++;
-        }
-
         return skeletons;
     }
 
@@ -88,6 +75,9 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
                 output.add(new PeriodTime(start, i));
                 start = -1;
             }
+        }
+        if(start!=-1) {
+            output.add(new PeriodTime(start, skeletons.size()));
         }
         return output;
     }

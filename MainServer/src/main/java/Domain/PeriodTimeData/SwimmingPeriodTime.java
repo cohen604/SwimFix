@@ -7,9 +7,9 @@ public class SwimmingPeriodTime implements ISwimmingPeriodTime {
     private List<PeriodTime> rights;
     private List<PeriodTime> lefts;
 
-    public SwimmingPeriodTime(List<PeriodTime> rigths, List<PeriodTime> lefts) {
+    public SwimmingPeriodTime(List<PeriodTime> rights, List<PeriodTime> lefts) {
+        this.rights = rights;
         this.lefts = lefts;
-        this.rights = rigths;
     }
 
     @Override
