@@ -7,8 +7,8 @@ public class YRightWristFilter implements ISkeletonValueFilter {
 
     @Override
     public double filter(ISwimmingSkeleton skeleton) {
-        if(skeleton.containsRightShoulder()) {
-            return skeleton.getRightShoulder().getY();
+        if(skeleton.containsRightWrist()) {
+            return skeleton.getRightWrist().getY();
         }
         return 0;
     }
