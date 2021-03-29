@@ -29,7 +29,7 @@ public class PdfDrawer implements IGraphDrawer{
         canvas.beginText();
         y = drawText(canvas, subject, x, y, 18);
         y = drawText(canvas, "Number of frames: " + raw.size(), x, y, 14);
-        y = drawText(canvas, "Percent: " + ratio*100, x, y, 14);
+        y = drawText(canvas, "Percent: " + ratio, x, y, 14);
         y = drawText(canvas, "Expected: " + expectedCount + " , Actual: "+actualCount, x, y, 14);
         y = drawText(canvas, "Expected", x, y, 14, BaseColor.RED);
         y = drawText(canvas, "Predict", x, y, 14, BaseColor.BLUE);

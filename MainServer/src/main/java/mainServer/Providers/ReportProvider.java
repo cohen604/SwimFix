@@ -56,7 +56,7 @@ public class ReportProvider implements IReportProvider {
             document.open();
             // write meta on the file
             addMeta(document);
-            addTimePeriod(document, periodTime);
+            addSummary(document, statistic, periodTime);
             addHeadGraphs(document, pdfWriter, raw, current, statistic);
             addRightShoulderGraphs(document, pdfWriter, raw, current, statistic);
             addRightElbowGraphs(document, pdfWriter, raw, current, statistic);
@@ -81,18 +81,63 @@ public class ReportProvider implements IReportProvider {
         document.addCreationDate();
     }
 
+    private void addSummary(Document document,
+                            IStatistic statistic,
+                            ISwimmingPeriodTime periodTime) throws DocumentException {
+        document.newPage();
+        Paragraph paragraph = new Paragraph();
+        paragraph.setFont(new Font(Font.FontFamily.HELVETICA,24));
+        paragraph.add("Report Summary");
+        paragraph.add("\n");
+        document.add(paragraph);
+        addPercentSummary(document, statistic);
+        addTimePeriod(document, periodTime);
+    }
+
+    private void addPercentSummary(Document document,
+                                   IStatistic statistic) throws DocumentException {
+        PdfPTable table = new PdfPTable( 4);
+        addRowToPdfTable(table, "Point", "Percentage", "Expected", "Actual");
+        addRowToTable(table, "head",
+                statistic.getHeadRecognitionPercent(),
+                statistic.getHeadExpected(),
+                statistic.getHeadActual());
+        addRowToTable(table, "Right shoulder",
+                statistic.getRightShoulderRecognitionPercent(),
+                statistic.getRightShoulderExpected(),
+                statistic.getRightShoulderActual());
+        addRowToTable(table, "Right elbow",
+                statistic.getRightElbowRecognitionPercent(),
+                statistic.getRightElbowExpected(),
+                statistic.getRightElbowActual());
+        addRowToTable(table, "Right wrist",
+                statistic.getRightWristRecognitionPercent(),
+                statistic.getRightWristExpected(),
+                statistic.getRightWristActual());
+        addRowToTable(table, "Left shoulder",
+                statistic.getLeftShoulderRecognitionPercent(),
+                statistic.getLeftShoulderExpected(),
+                statistic.getLeftShoulderActual());
+        addRowToTable(table, "Left elbow",
+                statistic.getLeftElbowRecognitionPercent(),
+                statistic.getLeftElbowExpected(),
+                statistic.getLeftElbowActual());
+        addRowToTable(table, "Left wrist",
+                statistic.getLeftWristRecognitionPercent(),
+                statistic.getLeftWristExpected(),
+                statistic.getLeftWristExpected());
+        Paragraph paragraph = new Paragraph("Skeletons Summary");
+        paragraph.add(table);
+        document.add(paragraph);
+    }
+
     private void addTimePeriod(Document document,
                                ISwimmingPeriodTime periodTime) throws DocumentException {
-        document.newPage();
-        String text = "Time Period Summary";
-        Paragraph paragraph = new Paragraph(text);
+        Paragraph paragraph = new Paragraph("Time Period Summary");
         List<PeriodTime> rights = periodTime.getRightTimes();
         List<PeriodTime> lefts = periodTime.getLeftTimes();
         PdfPTable table = new PdfPTable(4);
-        table.addCell("Category");
-        table.addCell("Start frame");
-        table.addCell("End frame");
-        table.addCell("Length");
+        addRowToPdfTable(table, "Category", "Start frame", "End frame", "Length");
         int indexR = 0;
         int indexL = 0;
         while(indexR < rights.size() && indexL < lefts.size()) {
@@ -121,12 +166,30 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
     }
 
+    //TODO refactor this to class
+    private void addRowToPdfTable(PdfPTable table, String c1, String c2, String c3, String c4) {
+        table.addCell(c1);
+        table.addCell(c2);
+        table.addCell(c3);
+        table.addCell(c4);
+    }
+
+    //TODO refactor this to class
     private void addRowToTable(PdfPTable table, String name, int start, int end, int length) {
         table.addCell(name);
         table.addCell(String.valueOf(start));
         table.addCell(String.valueOf(end));
         table.addCell(String.valueOf(length));
     }
+
+    //TODO refactor this to class
+    private void addRowToTable(PdfPTable table, String name, double dub, int i1, int i2) {
+        table.addCell(name);
+        table.addCell(String.valueOf(dub));
+        table.addCell(String.valueOf(i1));
+        table.addCell(String.valueOf(i2));
+    }
+
 
     private void addHeadGraphs(Document document,
                                PdfWriter pdfWriter,
