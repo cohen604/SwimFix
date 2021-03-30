@@ -189,11 +189,12 @@ public class LogicManager {
             if (feedbackVideo != null) {
                 // add a graph to the file
                 List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
-                List<ISwimmingSkeleton> current = feedbackVideo.getSwimmingSkeletons();
-                IStatistic statistic = _statisticProvider.analyze(raw, current);
+                List<ISwimmingSkeleton> model = _skeletonLoader.read(feedbackVideo.getMLSkeletonsPath());
+                List<ISwimmingSkeleton> modelAndInterpolation = feedbackVideo.getSwimmingSkeletons();
+                IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);
                 String pdfPath = _reportProvider.generateReport(
                         raw,
-                        current,
+                        modelAndInterpolation,
                         user.getReportsPath(),
                         statistic,
                         feedbackVideo.getSwimmingPeriodTime());

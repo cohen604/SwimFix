@@ -2,45 +2,87 @@ package Domain.StatisticsData;
 
 public interface IStatistic {
 
-    double getHeadRecognitionPercent();
+    double getHeadImprove();
 
-    int getHeadExpected();
+    double getHeadRatioModel();
+
+    double getHeadRatioModelAndInterpolation();
+
+    int getHeadModel();
+
+    int getHeadModelAndInterpolation();
 
     int getHeadActual();
 
-    double getRightShoulderRecognitionPercent();
+    double getRightShoulderImprove();
 
-    int getRightShoulderExpected();
+    double getRightShoulderRatioModel();
+
+    double getRightShoulderRatioModelAndInterpolation();
+
+    int getRightShoulderModel();
+
+    int getRightShoulderModelAndInterpolation();
 
     int getRightShoulderActual();
 
-    double getRightElbowRecognitionPercent();
+    double getRightElbowImprove();
 
-    int getRightElbowExpected();
+    double getRightElbowRatioModel();
+
+    double getRightElbowRatioModelAndInterpolation();
+
+    int getRightElbowModel();
+
+    int getRightElbowModelAndInterpolation();
 
     int getRightElbowActual();
 
-    double getRightWristRecognitionPercent();
+    double getRightWristImprove();
 
-    int getRightWristExpected();
+    double getRightWristRatioModel();
+
+    double getRightWristRatioModelAndInterpolation();
+
+    int getRightWristModel();
+
+    int getRightWristModelAndInterpolation();
 
     int getRightWristActual();
 
-    double getLeftShoulderRecognitionPercent();
+    double getLeftShoulderImprove();
 
-    int getLeftShoulderExpected();
+    double getLeftShoulderRatioModel();
+
+    double getLeftShoulderRatioModelAndInterpolation();
+
+    int getLeftShoulderModel();
+
+    int getLeftShoulderModelAndInterpolation();
 
     int getLeftShoulderActual();
 
-    double getLeftElbowRecognitionPercent();
+    double getLeftElbowImprove();
 
-    int getLeftElbowExpected();
+    double getLeftElbowRatioModel();
+
+    double getLeftElbowRatioModelAndInterpolation();
+
+    int getLeftElbowModel();
+
+    int getLeftElbowModelAndInterpolation();
 
     int getLeftElbowActual();
 
-    double getLeftWristRecognitionPercent();
+    double getLeftWristImprove();
 
-    int getLeftWristExpected();
+    double getLeftWristRatioModel();
+
+    double getLeftWristRatioModelAndInterpolation();
+
+    int getLeftWristModel();
+
+    int getLeftWristModelAndInterpolation();
 
     int getLeftWristActual();
 

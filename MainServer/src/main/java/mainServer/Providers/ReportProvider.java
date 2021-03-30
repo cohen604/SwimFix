@@ -96,36 +96,57 @@ public class ReportProvider implements IReportProvider {
 
     private void addPercentSummary(Document document,
                                    IStatistic statistic) throws DocumentException {
-        PdfPTable table = new PdfPTable( 4);
-        addRowToPdfTable(table, "Point", "Percentage", "Expected", "Actual");
+        PdfPTable table = new PdfPTable( 5);
+        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvment");
         addRowToTable(table, "head",
-                statistic.getHeadRecognitionPercent(),
-                statistic.getHeadExpected(),
-                statistic.getHeadActual());
+                statistic.getHeadModel(),
+                statistic.getHeadRatioModel(),
+                statistic.getHeadModelAndInterpolation(),
+                statistic.getHeadRatioModelAndInterpolation(),
+                statistic.getHeadActual(),
+                statistic.getHeadImprove());
         addRowToTable(table, "Right shoulder",
-                statistic.getRightShoulderRecognitionPercent(),
-                statistic.getRightShoulderExpected(),
-                statistic.getRightShoulderActual());
+                statistic.getRightShoulderModel(),
+                statistic.getRightShoulderRatioModel(),
+                statistic.getRightShoulderModelAndInterpolation(),
+                statistic.getRightShoulderRatioModelAndInterpolation(),
+                statistic.getRightShoulderActual(),
+                statistic.getRightShoulderImprove());
         addRowToTable(table, "Right elbow",
-                statistic.getRightElbowRecognitionPercent(),
-                statistic.getRightElbowExpected(),
-                statistic.getRightElbowActual());
+                statistic.getRightElbowModel(),
+                statistic.getRightElbowRatioModel(),
+                statistic.getRightElbowModelAndInterpolation(),
+                statistic.getRightElbowRatioModelAndInterpolation(),
+                statistic.getRightElbowActual(),
+                statistic.getRightElbowImprove());
         addRowToTable(table, "Right wrist",
-                statistic.getRightWristRecognitionPercent(),
-                statistic.getRightWristExpected(),
-                statistic.getRightWristActual());
+                statistic.getRightWristModel(),
+                statistic.getRightWristRatioModel(),
+                statistic.getRightWristModelAndInterpolation(),
+                statistic.getRightWristRatioModelAndInterpolation(),
+                statistic.getRightWristActual(),
+                statistic.getRightWristImprove());
         addRowToTable(table, "Left shoulder",
-                statistic.getLeftShoulderRecognitionPercent(),
-                statistic.getLeftShoulderExpected(),
-                statistic.getLeftShoulderActual());
+                statistic.getLeftShoulderModel(),
+                statistic.getLeftShoulderRatioModel(),
+                statistic.getLeftShoulderModelAndInterpolation(),
+                statistic.getLeftShoulderRatioModelAndInterpolation(),
+                statistic.getLeftShoulderActual(),
+                statistic.getLeftShoulderImprove());
         addRowToTable(table, "Left elbow",
-                statistic.getLeftElbowRecognitionPercent(),
-                statistic.getLeftElbowExpected(),
-                statistic.getLeftElbowActual());
+                statistic.getLeftElbowModel(),
+                statistic.getLeftElbowRatioModel(),
+                statistic.getLeftElbowModelAndInterpolation(),
+                statistic.getLeftElbowRatioModelAndInterpolation(),
+                statistic.getLeftElbowActual(),
+                statistic.getLeftElbowImprove());
         addRowToTable(table, "Left wrist",
-                statistic.getLeftWristRecognitionPercent(),
-                statistic.getLeftWristExpected(),
-                statistic.getLeftWristExpected());
+                statistic.getLeftWristModel(),
+                statistic.getLeftWristRatioModel(),
+                statistic.getLeftWristModelAndInterpolation(),
+                statistic.getLeftWristRatioModelAndInterpolation(),
+                statistic.getLeftWristActual(),
+                statistic.getLeftWristImprove());
         Paragraph paragraph = new Paragraph("Skeletons Summary");
         paragraph.add(table);
         document.add(paragraph);
@@ -175,6 +196,15 @@ public class ReportProvider implements IReportProvider {
     }
 
     //TODO refactor this to class
+    private void addRowToPdfTable(PdfPTable table, String c1, String c2, String c3, String c4, String c5) {
+        table.addCell(c1);
+        table.addCell(c2);
+        table.addCell(c3);
+        table.addCell(c4);
+        table.addCell(c5);
+    }
+
+    //TODO refactor this to class
     private void addRowToTable(PdfPTable table, String name, int start, int end, int length) {
         table.addCell(name);
         table.addCell(String.valueOf(start));
@@ -183,13 +213,21 @@ public class ReportProvider implements IReportProvider {
     }
 
     //TODO refactor this to class
-    private void addRowToTable(PdfPTable table, String name, double dub, int i1, int i2) {
+    private void addRowToTable(PdfPTable table, String name,
+                               int count1, double precent1,
+                               int count2, double precent2,
+                               int actual,
+                               double improvement) {
         table.addCell(name);
-        table.addCell(String.valueOf(dub));
-        table.addCell(String.valueOf(i1));
-        table.addCell(String.valueOf(i2));
+        table.addCell(getCountAndPrecent(count1, precent1));
+        table.addCell(getCountAndPrecent(count2, precent2));
+        table.addCell(String.valueOf(actual));
+        table.addCell(improvement + "%");
     }
 
+    private String getCountAndPrecent( int count, double precent) {
+        return count +" ( " + precent + "% )";
+    }
 
     private void addHeadGraphs(Document document,
                                PdfWriter pdfWriter,
@@ -201,8 +239,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XHeadFilter();
         ISkeletonValueFilter yFilter = new YHeadFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getHeadRecognitionPercent(),
-                statistic.getHeadExpected(),
+                statistic.getHeadRatioModel(),
+                statistic.getHeadModel(),
                 statistic.getHeadActual());
     }
 
@@ -216,8 +254,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XRightShoulderFilter();
         ISkeletonValueFilter yFilter = new YRightShoulderFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getRightShoulderRecognitionPercent(),
-                statistic.getRightShoulderExpected(),
+                statistic.getRightShoulderRatioModel(),
+                statistic.getRightShoulderModel(),
                 statistic.getRightShoulderActual());
     }
 
@@ -231,8 +269,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XRightElbowFilter();
         ISkeletonValueFilter yFilter = new YRightElbowFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getRightElbowRecognitionPercent(),
-                statistic.getRightElbowExpected(),
+                statistic.getRightElbowRatioModel(),
+                statistic.getRightElbowModel(),
                 statistic.getRightElbowActual());
     }
 
@@ -246,8 +284,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XRightWristFilter();
         ISkeletonValueFilter yFilter = new YRightWristFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getRightWristRecognitionPercent(),
-                statistic.getRightWristExpected(),
+                statistic.getRightWristRatioModel(),
+                statistic.getRightWristModel(),
                 statistic.getRightWristActual());
     }
 
@@ -261,8 +299,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XLeftShoulderFilter();
         ISkeletonValueFilter yFilter = new YLeftShoulderFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getLeftShoulderRecognitionPercent(),
-                statistic.getLeftShoulderExpected(),
+                statistic.getLeftShoulderRatioModel(),
+                statistic.getLeftShoulderModel(),
                 statistic.getLeftShoulderActual());
     }
 
@@ -276,8 +314,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XLeftElbowFilter();
         ISkeletonValueFilter yFilter = new YLeftElbowFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getLeftElbowRecognitionPercent(),
-                statistic.getLeftElbowExpected(),
+                statistic.getLeftElbowRatioModel(),
+                statistic.getLeftElbowModel(),
                 statistic.getLeftElbowActual());
     }
 
@@ -291,8 +329,8 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter xFilter = new XLeftWristFilter();
         ISkeletonValueFilter yFilter = new YLeftWristFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, current, subject, xFilter , yFilter,
-                statistic.getLeftWristRecognitionPercent(),
-                statistic.getLeftWristExpected(),
+                statistic.getLeftWristRatioModel(),
+                statistic.getLeftWristModel(),
                 statistic.getLeftWristActual());
     }
 

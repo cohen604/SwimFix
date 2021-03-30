@@ -16,8 +16,10 @@ public class StatisticProvider implements IStatisticProvider {
     }
 
     @Override
-    public IStatistic analyze(List<ISwimmingSkeleton> raw, List<ISwimmingSkeleton> current) {
-        return _factoryStatistic.create(raw, current);
+    public IStatistic analyze(List<ISwimmingSkeleton> raw,
+                              List<ISwimmingSkeleton> model,
+                              List<ISwimmingSkeleton> modelAndInterpolation) {
+        return _factoryStatistic.create(raw, model, modelAndInterpolation);
     }
 
 }

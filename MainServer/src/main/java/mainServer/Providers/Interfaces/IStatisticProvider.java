@@ -8,5 +8,6 @@ import java.util.List;
 public interface IStatisticProvider {
 
     IStatistic analyze(List<ISwimmingSkeleton> raw,
-                       List<ISwimmingSkeleton> current);
+                       List<ISwimmingSkeleton> model,
+                       List<ISwimmingSkeleton> modelAndInterpolation);
 }
