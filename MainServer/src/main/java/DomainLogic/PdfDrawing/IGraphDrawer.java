@@ -8,18 +8,10 @@ import java.util.List;
 
 public interface IGraphDrawer {
 
-    /**
-     * The function draw graphs to pdfWriter
-     * @param pdfWriter
-     * @param raw
-     * @param current
-     * @param subject
-     * @param xFilter
-     * @param yFilter
-     */
     void drawGraphs(PdfWriter pdfWriter,
                     List<ISwimmingSkeleton> raw,
-                    List<ISwimmingSkeleton> current,
+                    List<ISwimmingSkeleton> model,
+                    List<ISwimmingSkeleton> modelAndInterpolation,
                     String subject,
                     ISkeletonValueFilter xFilter,
                     ISkeletonValueFilter yFilter,

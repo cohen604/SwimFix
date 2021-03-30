@@ -194,6 +194,7 @@ public class LogicManager {
                 IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);
                 String pdfPath = _reportProvider.generateReport(
                         raw,
+                        model,
                         modelAndInterpolation,
                         user.getReportsPath(),
                         statistic,
