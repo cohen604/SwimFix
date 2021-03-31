@@ -1,6 +1,7 @@
 package mainServer.Providers;
 
 import DTO.*;
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.Streaming.*;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
@@ -13,6 +14,7 @@ import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
+import mainServer.Providers.Interfaces.IPeriodTimeProvider;
 import org.opencv.core.Mat;
 
 import java.io.File;
@@ -37,6 +39,7 @@ public class FeedbackProvider implements IFeedbackProvider {
     private ISkeletonsLoader iSkeletonsLoader;
     private IFactoryVideoHandler iFactoryVideoHandler;
     private IFactoryDraw iFactoryDraw;
+    private IPeriodTimeProvider periodTimeProvider;
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
@@ -47,7 +50,9 @@ public class FeedbackProvider implements IFeedbackProvider {
                             IFactoryErrorDetectors iFactoryErrorDetectors,
                             ISkeletonsLoader iSkeletonsLoader,
                             IFactoryVideoHandler iFactoryVideoHandler,
-                            IFactoryDraw iFactoryDraw) {
+                            IFactoryDraw iFactoryDraw,
+                            IPeriodTimeProvider periodTimeProvider) {
+
         this.mlConnectionHandler = mlConnectionHandler;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.iFactorySkeletonInterpolation = iFactorySkeletonInterpolation;
@@ -58,6 +63,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         this.iSkeletonsLoader = iSkeletonsLoader;
         this.iFactoryVideoHandler = iFactoryVideoHandler;
         this.iFactoryDraw = iFactoryDraw;
+        this.periodTimeProvider = periodTimeProvider;
     }
 
     @Override
@@ -91,18 +97,20 @@ public class FeedbackProvider implements IFeedbackProvider {
         int size = frames.size();
         int height = frames.get(0).height();
         int width = frames.get(0).width();
-
+        // ml skeletons
         List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
         String mlSkeletonsPath = generateName(mlSkeletonsFolderPath, ".csv", time);
-        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
-        // save the ml skeletons
-        iSkeletonsLoader.save(taggedVideo.getTags(), mlSkeletonsPath);
-        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        skeletons = taggedVideo.getTags();
-        //interpolate for the new skeletons
+        iSkeletonsLoader.save(skeletons, mlSkeletonsPath);
+        // interpolate for the new skeletons
         skeletons = completeAndInterpolate(skeletons);
-        taggedVideo.setTags(skeletons);
+        //time period
+        ISwimmingPeriodTime periodTime = periodTimeProvider.analyzeTimes(skeletons);
+        skeletons = periodTimeProvider.correctSkeletons(skeletons, periodTime);
+        periodTime = periodTimeProvider.analyzeTimes(skeletons);
+        // tagged video
+        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
         // error detection
+        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         for(int i =0; i<skeletons.size(); i++) {
             ISwimmingSkeleton skeleton = skeletons.get(i);
             List<SwimmingError> errors = new LinkedList<>();
@@ -117,12 +125,12 @@ public class FeedbackProvider implements IFeedbackProvider {
                 errorMap.put(i, errors);
             }
         }
-
+        // generate feedback
         String feedbackPath = generateName(feedbackFolderPath, ".mp4", time);
         File feedbackFile = videoHandler.getFeedBackVideoFile(feedbackPath, video.getPath(), skeletons,
                                 errorMap, null);
         if(feedbackFile.exists()) {
-            return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackPath);
+            return iFactoryFeedbackVideo.create(video, taggedVideo, errorMap, feedbackPath, periodTime);
         }
         return null;
     }
@@ -243,7 +251,7 @@ public class FeedbackProvider implements IFeedbackProvider {
      * @return - new skeleton with more points
      */
     private List<ISwimmingSkeleton> completeAndInterpolate(List<ISwimmingSkeleton> skeletons) {
-        skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
+        //skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
         ISkeletonInterpolation interpolation = this.iFactorySkeletonInterpolation.factory();
         skeletons = interpolation.interpolate(skeletons);
         //skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);

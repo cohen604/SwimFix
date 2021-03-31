@@ -5,8 +5,10 @@ public class FactorySkeletonInterpolation implements IFactorySkeletonInterpolati
     @Override
     public ISkeletonInterpolation factory() {
         Interpolation head = new LinearInterpolation();
-        Interpolation other = new LinearInterpolation();
-        return new SkeletonInterpolation(head, other);
+        Interpolation linear = new LinearInterpolation();
+        Interpolation spline = new SplineInterpolation();
+        //Interpolation interExter = new InterExter(spline, linear);
+        return new SkeletonInterpolation(spline, head);
     }
 
 }

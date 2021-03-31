@@ -1,5 +1,6 @@
 package Domain.Streaming;
 
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingData.SwimmingError;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public interface IFactoryFeedbackVideo {
     IFeedbackVideo create(IVideo video,
                           TaggedVideo taggedVideo,
                           Map<Integer, List<SwimmingError>> errorMap,
-                          String path);
+                          String path,
+                          ISwimmingPeriodTime periodTime);
 
 }

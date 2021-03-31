@@ -109,12 +109,14 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
 
     @Override
     public boolean hasRightSide() {
+//        return containsRightShoulder() || containsRightElbow() || containsRightWrist();
         return containsRightShoulder() && containsRightElbow()
                 || containsRightElbow() && containsRightWrist();
     }
 
     @Override
     public boolean hasLeftSide() {
+//        return containsLeftShoulder() ||  containsLeftElbow() || containsLeftWrist();
         return containsLeftShoulder() &&  containsLeftElbow()
                 || containsLeftElbow() && containsLeftWrist();
     }
@@ -226,5 +228,35 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
             this.leftWrist = leftWrist;
             addEdgeIfNotNull(leftElbow, leftWrist);
         }
+    }
+
+    public void removeRightShoulder() {
+        this.rightShoulder = null;
+        setUpAllEdges();
+    }
+
+    public void removeRightElbow() {
+        this.rightElbow = null;
+        setUpAllEdges();
+    }
+
+    public void removeRightWrist() {
+        this.rightWrist = null;
+        setUpAllEdges();
+    }
+
+    public void removeLeftShoulder() {
+        this.leftShoulder = null;
+        setUpAllEdges();
+    }
+
+    public void removeLeftElbow() {
+        this.leftElbow = null;
+        setUpAllEdges();
+    }
+
+    public void removeLeftWrist() {
+        this.leftWrist = null;
+        setUpAllEdges();
     }
 }

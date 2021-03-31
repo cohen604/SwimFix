@@ -195,7 +195,8 @@ public class LogicManager {
                         raw,
                         current,
                         user.getReportsPath(),
-                        statistic);
+                        statistic,
+                        feedbackVideo.getSwimmingPeriodTime());
                 ResearcherReportDTO reportDTO = new ResearcherReportDTO(
                         feedbackVideo.getPath(),
                         feedbackVideo.getSkeletonsPath(),

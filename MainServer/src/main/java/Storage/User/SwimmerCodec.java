@@ -1,5 +1,8 @@
 package Storage.User;
 
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
+import Domain.PeriodTimeData.PeriodTime;
+import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.TaggedVideo;
@@ -10,6 +13,7 @@ import Domain.UserData.Swimmer;
 import Domain.UserData.User;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 import Storage.SwimmingErrors.RightElbowErrorCodec;
+import mainServer.Providers.Interfaces.IPeriodTimeProvider;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -39,9 +43,17 @@ public class SwimmerCodec implements Codec<Swimmer> {
             String videoPath = bsonReader.readString("video_path");
             String skeletonsPath = bsonReader.readString("skeletons_path");
             String mlSkeletonsPath = bsonReader.readString("ml_skeletons_path");
-            Map<Integer, List<SwimmingError>> map = decodeErrorMap(bsonReader, decoderContext);
+            String errors = bsonReader.readName();
+            Map<Integer, List<SwimmingError>> errorMap = decodeErrorMap(bsonReader, decoderContext);
+            String periods = bsonReader.readName();
+            ISwimmingPeriodTime periodTime = decodePeriodTime(bsonReader, decoderContext);
             bsonReader.readEndDocument();
-            feedbacks.add(createFeedback(feedbackPath, videoPath, skeletonsPath, mlSkeletonsPath, map));
+            feedbacks.add(createFeedback(feedbackPath,
+                    videoPath,
+                    skeletonsPath,
+                    mlSkeletonsPath,
+                    errorMap,
+                    periodTime));
         }
         bsonReader.readEndArray();
         bsonReader.readEndDocument();
@@ -53,11 +65,12 @@ public class SwimmerCodec implements Codec<Swimmer> {
                                         String videoPath,
                                         String skeletonsPath,
                                         String mlSkeletonsPath,
-                                        Map<Integer, List<SwimmingError>> map) {
+                                        Map<Integer, List<SwimmingError>> map,
+                                        ISwimmingPeriodTime periodTime) {
         Video video = new Video(videoPath);
         SkeletonsLoader loader = new SkeletonsLoader();
         TaggedVideo taggedVideo = new TaggedVideo(loader.read(skeletonsPath),mlSkeletonsPath,skeletonsPath);
-        return new FeedbackVideo(video, taggedVideo,map, feedbackPath);
+        return new FeedbackVideo(video, taggedVideo,map, feedbackPath, periodTime);
     }
 
     public Map<Integer, List<SwimmingError>> decodeErrorMap(BsonReader bsonReader, DecoderContext decoderContext) {
@@ -109,6 +122,30 @@ public class SwimmerCodec implements Codec<Swimmer> {
         return swimmingError;
     }
 
+    private ISwimmingPeriodTime decodePeriodTime(BsonReader bsonReader, DecoderContext decoderContext) {
+        bsonReader.readStartDocument();
+        String name = bsonReader.readName();
+        List<PeriodTime> rights = decodeTimes(bsonReader, decoderContext);
+        name = bsonReader.readName();
+        List<PeriodTime> lefts = decodeTimes(bsonReader, decoderContext);
+        bsonReader.readEndDocument();
+        return new SwimmingPeriodTime(rights, lefts);
+    }
+
+    private List<PeriodTime> decodeTimes(BsonReader bsonReader, DecoderContext decoderContext) {
+        List<PeriodTime> output = new LinkedList<>();
+        bsonReader.readStartArray();
+        while (bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+            bsonReader.readStartDocument();
+            int start = bsonReader.readInt32("start");
+            int end = bsonReader.readInt32("end");
+            output.add(new PeriodTime(start, end));
+            bsonReader.readEndDocument();
+        }
+        bsonReader.readEndArray();
+        return output;
+    }
+
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
@@ -121,9 +158,12 @@ public class SwimmerCodec implements Codec<Swimmer> {
             bsonWriter.writeString("video_path", feedbackVideo.getIVideo().getPath());
             bsonWriter.writeString("skeletons_path", feedbackVideo.getSkeletonsPath());
             bsonWriter.writeString("ml_skeletons_path", feedbackVideo.getMLSkeletonsPath());
-            bsonWriter.writeName("errors");
             // write swimming errors
+            bsonWriter.writeName("errors");
             encodeErrorMap(bsonWriter, feedbackVideo.getSwimmingErrors(), encoderContext);
+            // write time period
+            bsonWriter.writeName("periods");
+            encodeTimePeriod(bsonWriter, feedbackVideo.getSwimmingPeriodTime(), encoderContext);
             bsonWriter.writeEndDocument();
         }
         bsonWriter.writeEndArray();
@@ -169,6 +209,26 @@ public class SwimmerCodec implements Codec<Swimmer> {
             Codec<LeftPalmCrossHeadError> dateCodec = _codecRegistry.get(LeftPalmCrossHeadError.class);
             context.encodeWithChildContext(dateCodec, bsonWriter, (LeftPalmCrossHeadError)error);
         }
+    }
+
+    private void encodeTimePeriod(BsonWriter bsonWriter, ISwimmingPeriodTime periodTime, EncoderContext context) {
+        bsonWriter.writeStartDocument();
+        bsonWriter.writeName("right");
+        encodeTimes(bsonWriter, periodTime.getRightTimes(), context);
+        bsonWriter.writeName("left");
+        encodeTimes(bsonWriter, periodTime.getLeftTimes(), context);
+        bsonWriter.writeEndDocument();
+    }
+
+    private void encodeTimes(BsonWriter bsonWriter, List<PeriodTime> times, EncoderContext context) {
+        bsonWriter.writeStartArray();
+        for(PeriodTime p: times) {
+            bsonWriter.writeStartDocument();
+            bsonWriter.writeInt32("start", p.getStart());
+            bsonWriter.writeInt32("end", p.getEnd());
+            bsonWriter.writeEndDocument();
+        }
+        bsonWriter.writeEndArray();
     }
 
     @Override

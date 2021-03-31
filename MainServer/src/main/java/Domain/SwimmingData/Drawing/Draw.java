@@ -13,9 +13,22 @@ public class Draw implements IDraw {
 
     @Override
     public Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius) {
+//        Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
+//        Scalar color = new Scalar(0,255,0);
+//        int thickness = 3;
+//        Imgproc.circle(frame, point, radius, color, thickness);
+//        return frame;
+        return drawCircle(frame, skeletonPoint, radius, 3, 0, 255, 0);
+    }
+
+    @Override
+    public Mat drawCircle(Mat frame,
+                          IPoint skeletonPoint,
+                          int radius,
+                          int thickness,
+                          double red, double green, double blue) {
         Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
-        Scalar color = new Scalar(0,255,0);
-        int thickness = 3;
+        Scalar color = new Scalar(blue, green, red);
         Imgproc.circle(frame, point, radius, color, thickness);
         return frame;
     }
@@ -55,15 +68,18 @@ public class Draw implements IDraw {
 
     @Override
     public Mat drawSwimmer(Mat frame, ISwimmingSkeleton skeleton) {
+        // lines
+        List<Pair<IPoint , IPoint>> lines = skeleton.getLines();
+        for(Pair<IPoint , IPoint> line: lines) {
+            drawLine(frame, line.getKey(), line.getValue(), 0, 0, 0, 1, 3);
+            drawLine(frame, line.getKey(), line.getValue(), 255, 255, 255, 1, 1);
+        }
         // points
         int radius = 2;
         List<IPoint> points = skeleton.getPoints();
         for (IPoint point: points) {
-            drawCircle(frame, point, radius);
-        }
-        List<Pair<IPoint , IPoint>> lines = skeleton.getLines();
-        for(Pair<IPoint , IPoint> line: lines) {
-            drawLine(frame, line.getKey(), line.getValue());
+            drawCircle(frame, point, radius + 1, 2, 0, 0, 0);
+            drawCircle(frame, point, radius, 2, 0, 0, 255);
         }
         return frame;
     }
@@ -75,10 +91,11 @@ public class Draw implements IDraw {
      */
     @Override
     public Mat drawLogo(Mat frame) {
-        String logo = "SwimFix";
-        double x = frame.width() - 130;
+        String logo = "Swim Analytics";
+        double x = 10;
         double y = 30;
-        return drawMessage(frame, logo, x, y, 2);
+        int font = Core.FONT_HERSHEY_SIMPLEX;
+        return drawMessage(frame, logo, x, y, 2, 0.7, font, 0, 0, 0);
     }
 
     /**
@@ -88,14 +105,12 @@ public class Draw implements IDraw {
      */
     @Override
     public Mat drawMessage(Mat frame, String message, double x, double y, int thickness) {
-        org.opencv.core.Point point = new org.opencv.core.Point(x, y);
-        int scale = 1;
-        Scalar color = new Scalar(0,0,0);
-        Imgproc.putText(frame, message, point, Core.FONT_HERSHEY_SIMPLEX, scale, color , thickness);
-        return frame;
+        int font = Core.FONT_HERSHEY_SIMPLEX;
+        return drawMessage(frame, message, x, y, thickness, 1, font, 0, 0, 0);
     }
 
     //https://math.stackexchange.com/questions/1314006/drawing-an-arrow
+    @Override
     public Mat drawArrow(Mat frame, IPoint a, IPoint b) {
         double red = 6;
         double green = 217;
@@ -128,6 +143,14 @@ public class Draw implements IDraw {
         Imgproc.line(frame, pointA, pointB, color, thickness);
     }
 
+    private Mat drawMessage(Mat frame, String message, double x, double y,
+                            int thickness, double scale, int font,
+                            double red, double green, double blue) {
+        org.opencv.core.Point point = new org.opencv.core.Point(x, y);
+        Scalar color = new Scalar(blue, red, green);
+        Imgproc.putText(frame, message, point, font, scale, color , thickness);
+        return frame;
+    }
 
 
 }

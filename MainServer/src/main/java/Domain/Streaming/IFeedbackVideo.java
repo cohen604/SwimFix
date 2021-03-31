@@ -1,6 +1,8 @@
 package Domain.Streaming;
 
 import DTO.FeedbackVideoStreamer;
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
+import Domain.PeriodTimeData.PeriodTime;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 
@@ -53,5 +55,7 @@ public interface IFeedbackVideo {
     String getSkeletonsPath();
 
     Map<Integer, List<SwimmingError>> getSwimmingErrors();
+
+    ISwimmingPeriodTime getSwimmingPeriodTime();
 
 }

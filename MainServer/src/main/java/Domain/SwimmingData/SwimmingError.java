@@ -20,6 +20,15 @@ public abstract class SwimmingError implements IDraw {
     }
 
     @Override
+    public Mat drawCircle(Mat frame,
+                          IPoint skeletonPoint,
+                          int radius,
+                          int thickness,
+                          double red, double green, double blue) {
+        return drawer.drawCircle(frame, skeletonPoint, radius, thickness, red, green, blue);
+    }
+
+    @Override
     public Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
                            double endAngle, IPoint center, double r, double g,
                            double b, double a) {

@@ -1,4 +1,5 @@
 package mainServer.Providers.Interfaces;
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.StatisticsData.IStatistic;
 import Domain.SwimmingData.ISwimmingSkeleton;
 
@@ -9,5 +10,6 @@ public interface IReportProvider {
     String generateReport(List<ISwimmingSkeleton> raw,
                           List<ISwimmingSkeleton> current,
                           String pdfFolderPath,
-                          IStatistic statistic);
+                          IStatistic statistic,
+                          ISwimmingPeriodTime periodTime);
 }

@@ -239,7 +239,8 @@ class Ratio {
     }
 
     double getRatio() {
-        return (double)_actualCount / (double)_expectedCount;
+        double value = (double)_actualCount / (double)_expectedCount;
+        return Math.floor(value * 10000) / 100;
     }
 
     int getExpectedCount() {

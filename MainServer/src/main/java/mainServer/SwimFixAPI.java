@@ -1,6 +1,8 @@
 package mainServer;
 
 import DTO.*;
+import Domain.PeriodTimeData.FactorySwimmingPeriodTime;
+import Domain.PeriodTimeData.IFactorySwimmingPeriodTime;
 import Domain.StatisticsData.FactoryStatistic;
 import Domain.StatisticsData.IFactoryStatistic;
 import Domain.StatisticsData.IStatistic;
@@ -21,10 +23,7 @@ import mainServer.Providers.*;
 import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
-import mainServer.Providers.Interfaces.IFeedbackProvider;
-import mainServer.Providers.Interfaces.IReportProvider;
-import mainServer.Providers.Interfaces.IStatisticProvider;
-import mainServer.Providers.Interfaces.IUserProvider;
+import mainServer.Providers.Interfaces.*;
 
 public class SwimFixAPI {
 
@@ -43,10 +42,12 @@ public class SwimFixAPI {
       ISkeletonsLoader skeletonsLoaderFeedback = new SkeletonsLoader();
       IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
       IFactoryDraw iFactoryDraw = new FactoryDraw();
+      IFactorySwimmingPeriodTime factorySwimmingPeriodTime = new FactorySwimmingPeriodTime();
+      IPeriodTimeProvider iPeriodTimeProvider = new PeriodTimeProvider(factorySwimmingPeriodTime);
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
               iFactorySkeletonInterpolation, completionBefore,
               completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoaderFeedback,
-              iFactoryVideoHandler, iFactoryDraw);
+              iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider);
 
       ISkeletonsLoader skeletonsLoaderLogic = new SkeletonsLoader();
 

@@ -1,37 +1,31 @@
 package Domain.Streaming;
-import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
+import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import Domain.SwimmingData.SwimmingError;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class FeedbackVideo extends Video implements IFeedbackVideo {
 
+    private Map<Integer, List<SwimmingError>> errorMap;
+    private TaggedVideo taggedVideo; // swimming skeletons
+    private String path; // The feedback video path to insert into
+    private boolean feedbackUpdated; // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
     private VisualComment visualComment;
     private TextualComment textualComment;
-    private Map<Integer, List<SwimmingError>> errorMap;
-    private TaggedVideo taggedVideo;
-    // The feedback video path to insert into
-    private String path;
-    // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
-    private boolean feedbackUpdated;
+    private ISwimmingPeriodTime periodTime;
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
-                         String path) {
+                         String path, ISwimmingPeriodTime periodTime) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
         this.path = path;
         this.feedbackUpdated = false;
+        this.periodTime = periodTime;
         //TODO
         this.visualComment = null;
         this.textualComment = null;
@@ -105,6 +99,12 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     public Map<Integer, List<SwimmingError>> getSwimmingErrors() {
         return this.errorMap;
     }
+
+    @Override
+    public ISwimmingPeriodTime getSwimmingPeriodTime() {
+        return this.periodTime;
+    }
+
 
     @Override
     public boolean isFeedbackUpdated() {
