@@ -92,6 +92,7 @@ public class IPointUtils {
     public static IPoint pivotVector(IPoint point, double theta) {
         double py = point.getY();
         double px = point.getX();
+        theta = Math.toRadians(theta);
         double x = px * Math.cos(theta) - py * Math.sin(theta);
         double y = px * Math.sin(theta) + py * Math.cos(theta);
         return new SkeletonPoint(x, y);

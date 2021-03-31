@@ -21,12 +21,23 @@ public class RightElbowError extends ElbowError {
         IPoint shoulder = skeleton.getRightShoulder();
         IPoint elbow = skeleton.getRightElbow();
         IPoint wrist = skeleton.getRightWrist();
-        drawShoulderElbowWrist(frame, shoulder, elbow, wrist, 50);
-        // recommendation
-        IPoint middle = IPointUtils.getMiddlePoint(elbow, wrist);
-        //double slope = 1 / IPointUtils.calcSlope(wrist, elbow);
+
+        IPoint v = IPointUtils.getVec(shoulder, elbow);
+        IPoint vmin = IPointUtils.pivotVector(v, this.minAngle);
+        IPoint vmax = IPointUtils.pivotVector(v, -this.maxAngle);
+
+        vmin = IPointUtils.mulByScalar(vmin, 2);
+        vmax = IPointUtils.mulByScalar(vmax, 2);
+
+        vmin = IPointUtils.addByScalars(elbow, vmin.getX(), vmin.getY());
+        vmax = IPointUtils.addByScalars(elbow, -vmax.getX(), -vmax.getY());
+
+        drawLine(frame, elbow, vmin, 10, 10, 10, 1, 1);
+        drawLine(frame, elbow, vmax, 10, 10, 10, 1, 1);
+
         double additionX = inside ? -20 : 35;
-        IPoint endArrow = IPointUtils.addByScalars(middle, additionX, 0);
-        drawArrow(frame, middle, endArrow);
+
+        IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
+        drawArrow(frame, wrist, endArrow);
     }
 }

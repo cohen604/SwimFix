@@ -26,17 +26,18 @@ public class LeftElbowError extends ElbowError {
         IPoint vmin = IPointUtils.pivotVector(v, -this.minAngle);
         IPoint vmax = IPointUtils.pivotVector(v, this.maxAngle);
 
-        vmin = IPointUtils.mulByScalar(vmin, 1.3);
-        vmax = IPointUtils.mulByScalar(vmax, 1.3);
+        vmin = IPointUtils.mulByScalar(vmin, 2);
+        vmax = IPointUtils.mulByScalar(vmax, 2);
 
         vmin = IPointUtils.addByScalars(elbow, vmin.getX(), vmin.getY());
-        vmax = IPointUtils.addByScalars(elbow, vmax.getX(), vmax.getY());
+        vmax = IPointUtils.addByScalars(elbow, -vmax.getX(), -vmax.getY());
 
-        drawLine(frame, elbow, vmin, 10, 10, 10, 1, 3);
-        drawLine(frame, elbow, vmax, 10, 10, 10, 1, 3);
+        drawLine(frame, elbow, vmin, 10, 10, 10, 1, 1);
+        drawLine(frame, elbow, vmax, 10, 10, 10, 1, 1);
 
         double additionX = inside ? 20 : -35;
         IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
         drawArrow(frame, wrist, endArrow);
+
     }
 }
