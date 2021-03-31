@@ -159,7 +159,7 @@ public class ReportProvider implements IReportProvider {
         List<PeriodTime> rights = periodTime.getRightTimes();
         List<PeriodTime> lefts = periodTime.getLeftTimes();
         PdfPTable table = new PdfPTable(4);
-        addRowToPdfTable(table, "Category", "Start frame", "End frame", "Length");
+        addRowToPdfTable(table, "Category", "Start frame", "End frame", "Length (Frames)");
         int indexR = 0;
         int indexL = 0;
         while(indexR < rights.size() && indexL < lefts.size()) {
@@ -242,8 +242,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YHeadFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getHeadRatioModel(),
-                statistic.getHeadModel(),
-                statistic.getHeadActual());
+                statistic.getHeadRatioModelAndInterpolation(),
+                statistic.getHeadActual(),
+                statistic.getHeadModelAndInterpolation(),
+                statistic.getHeadModel());
     }
 
     private void addRightShoulderGraphs(Document document,
@@ -258,8 +260,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YRightShoulderFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getRightShoulderRatioModel(),
-                statistic.getRightShoulderModel(),
-                statistic.getRightShoulderActual());
+                statistic.getRightShoulderRatioModelAndInterpolation(),
+                statistic.getRightShoulderActual(),
+                statistic.getRightShoulderModelAndInterpolation(),
+                statistic.getRightShoulderModel());
     }
 
     private void addRightElbowGraphs(Document document,
@@ -274,8 +278,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YRightElbowFilter();
         _graphDrawer.drawGraphs(pdfWriter,raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getRightElbowRatioModel(),
-                statistic.getRightElbowModel(),
-                statistic.getRightElbowActual());
+                statistic.getRightElbowRatioModelAndInterpolation(),
+                statistic.getRightElbowActual(),
+                statistic.getRightElbowModelAndInterpolation(),
+                statistic.getRightElbowModel());
     }
 
     private void addRightWristGraphs(Document document,
@@ -290,8 +296,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YRightWristFilter();
         _graphDrawer.drawGraphs(pdfWriter,raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getRightWristRatioModel(),
-                statistic.getRightWristModel(),
-                statistic.getRightWristActual());
+                statistic.getRightWristRatioModelAndInterpolation(),
+                statistic.getRightWristActual(),
+                statistic.getRightWristModelAndInterpolation(),
+                statistic.getRightWristModel());
     }
 
     private void addLeftShoulderGraphs(Document document,
@@ -306,8 +314,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YLeftShoulderFilter();
         _graphDrawer.drawGraphs(pdfWriter,raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getLeftShoulderRatioModel(),
-                statistic.getLeftShoulderModel(),
-                statistic.getLeftShoulderActual());
+                statistic.getLeftShoulderRatioModelAndInterpolation(),
+                statistic.getLeftShoulderActual(),
+                statistic.getLeftShoulderModelAndInterpolation(),
+                statistic.getLeftShoulderModel());
     }
 
     private void addLeftElbowGraphs(Document document,
@@ -322,8 +332,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YLeftElbowFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getLeftElbowRatioModel(),
-                statistic.getLeftElbowModel(),
-                statistic.getLeftElbowActual());
+                statistic.getLeftElbowRatioModelAndInterpolation(),
+                statistic.getLeftElbowActual(),
+                statistic.getLeftElbowModelAndInterpolation(),
+                statistic.getLeftElbowModel());
     }
 
     private void addLeftWristGraphs(Document document,
@@ -338,8 +350,10 @@ public class ReportProvider implements IReportProvider {
         ISkeletonValueFilter yFilter = new YLeftWristFilter();
         _graphDrawer.drawGraphs(pdfWriter, raw, model, modelAndInterpolation, subject, xFilter , yFilter,
                 statistic.getLeftWristRatioModel(),
-                statistic.getLeftWristModel(),
-                statistic.getLeftWristActual());
+                statistic.getLeftWristRatioModelAndInterpolation(),
+                statistic.getLeftWristActual(),
+                statistic.getLeftWristModelAndInterpolation(),
+                statistic.getLeftWristModel());
     }
 
 

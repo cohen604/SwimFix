@@ -15,8 +15,10 @@ public interface IPdfDrawer {
                     String subject,
                     ISkeletonValueFilter xFilter,
                     ISkeletonValueFilter yFilter,
-                    double ratio,
-                    int expectedCount,
+                    double ratioModel,
+                    double ratioModelAndInterpolation,
+                    int modelCount,
+                    int modelAndInterpolationCount,
                     int actualCount);
 
 
