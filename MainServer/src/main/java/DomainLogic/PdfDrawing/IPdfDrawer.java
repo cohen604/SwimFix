@@ -6,7 +6,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.util.List;
 
-public interface IGraphDrawer {
+public interface IPdfDrawer {
 
     void drawGraphs(PdfWriter pdfWriter,
                     List<ISwimmingSkeleton> raw,

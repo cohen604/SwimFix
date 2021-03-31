@@ -108,7 +108,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         skeletons = periodTimeProvider.correctSkeletons(skeletons, periodTime);
         periodTime = periodTimeProvider.analyzeTimes(skeletons);
         // tagged video
-        TaggedVideo taggedVideo = new TaggedVideo(skeletons, skeletonsPath, mlSkeletonsPath);
+        TaggedVideo taggedVideo = new TaggedVideo(skeletons, mlSkeletonsPath, skeletonsPath);
         // error detection
         Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
         for(int i =0; i<skeletons.size(); i++) {

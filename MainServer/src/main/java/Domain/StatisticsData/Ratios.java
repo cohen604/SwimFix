@@ -46,7 +46,8 @@ public class Ratios {
     }
 
     double getImprovment() {
-        return getRatioModelAndInterpolation() - getRatioModel();
+        double val = getRatioModelAndInterpolation() - getRatioModel();
+        return Math.floor(val * 10) / 10;
     }
 
     private double getRatio(double a, double b) {

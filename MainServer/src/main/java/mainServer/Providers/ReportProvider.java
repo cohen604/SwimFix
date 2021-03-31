@@ -3,7 +3,7 @@ package mainServer.Providers;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.PeriodTimeData.PeriodTime;
 import Domain.StatisticsData.IStatistic;
-import DomainLogic.PdfDrawing.IGraphDrawer;
+import DomainLogic.PdfDrawing.IPdfDrawer;
 import Domain.SwimmingData.ISwimmingSkeleton;
 import DomainLogic.SkeletonsValueFilters.HeadFilters.*;
 import DomainLogic.SkeletonsValueFilters.RightShoulderFilters.*;
@@ -25,9 +25,9 @@ import java.util.List;
 
 public class ReportProvider implements IReportProvider {
 
-    private IGraphDrawer _graphDrawer;
+    private IPdfDrawer _graphDrawer;
 
-    public ReportProvider(IGraphDrawer graphDrawer) {
+    public ReportProvider(IPdfDrawer graphDrawer) {
         _graphDrawer = graphDrawer;
     }
 

@@ -3,16 +3,12 @@ package UnitTests.ProvidersTests;
 import DTO.FileDTO;
 import Domain.StatisticsData.IStatistic;
 import Domain.StatisticsData.StatisticsHolder;
-import DomainLogic.FileLoaders.ISkeletonsLoader;
-import DomainLogic.FileLoaders.SkeletonsLoader;
-import DomainLogic.PdfDrawing.IGraphDrawer;
+import DomainLogic.PdfDrawing.IPdfDrawer;
 import DomainLogic.PdfDrawing.PdfDrawer;
 import junit.framework.TestCase;
 import mainServer.Providers.ReportProvider;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.mockito.Mock;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +22,7 @@ public class StatisticsProviderTest extends TestCase {
     private List<String> deleteList;
     @Before
     public void setUp() {
-        IGraphDrawer graphDrawer = new PdfDrawer();
+        IPdfDrawer graphDrawer = new PdfDrawer();
         _statisticsProvider = new ReportProvider(graphDrawer);
         deleteList = new LinkedList<>();
     }
@@ -50,7 +46,7 @@ public class StatisticsProviderTest extends TestCase {
             String skeletonsPath = "./src/test/java/TestingVideos/test@gmail.com/feedbacksSkeletons/2021-03-12-17-36-11.csv";
             byte[] bytes = Files.readAllBytes(Paths.get(rawPath));
             FileDTO fileDTO = new FileDTO(skeletonsPath, bytes);
-            IStatistic statistic = new StatisticsHolder(new LinkedList<>(), new LinkedList<>()); //TODO change this
+            IStatistic statistic = new StatisticsHolder(new LinkedList<>(), new LinkedList<>(), new LinkedList<>()); //TODO change this
             //Act
             //String filePath = _statisticsProvider.generateReport(, skeletonsPath, pdfFolder, statistic);
             //deleteList.add(filePath);

@@ -5,9 +5,8 @@ import Domain.PeriodTimeData.FactorySwimmingPeriodTime;
 import Domain.PeriodTimeData.IFactorySwimmingPeriodTime;
 import Domain.StatisticsData.FactoryStatistic;
 import Domain.StatisticsData.IFactoryStatistic;
-import Domain.StatisticsData.IStatistic;
 import Domain.Streaming.*;
-import DomainLogic.PdfDrawing.IGraphDrawer;
+import DomainLogic.PdfDrawing.IPdfDrawer;
 import DomainLogic.PdfDrawing.PdfDrawer;
 import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
@@ -54,7 +53,7 @@ public class SwimFixAPI {
       IFactoryStatistic factoryStatistic = new FactoryStatistic();
       IStatisticProvider statisticProvider = new StatisticProvider(factoryStatistic);
 
-      IGraphDrawer graphDrawer = new PdfDrawer();
+      IPdfDrawer graphDrawer = new PdfDrawer();
       IReportProvider reportProvider = new ReportProvider(graphDrawer);
 
       this.logicManager = new LogicManager(
