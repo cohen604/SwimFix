@@ -4,8 +4,6 @@ import Domain.SwimmingData.Points.IPoint;
 
 public class SkeletonPoint implements IPoint {
 
-    private final static double THRESHOLD =  0.035;
-
     private double x;
     private double y;
     private double confident;
@@ -16,14 +14,9 @@ public class SkeletonPoint implements IPoint {
         this.confident = confident;
     }
 
-
     /**
      * Getters
      */
-
-    public boolean isConfident() {
-        return this.confident > THRESHOLD;
-    }
 
     public double getX() {
         return x;

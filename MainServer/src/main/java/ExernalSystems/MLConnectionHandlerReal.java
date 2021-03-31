@@ -65,6 +65,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
         body.add("video", Base64.getEncoder().encode(data));
+        //TODO delete len, height, width
         body.add("len", len);
         body.add("height", height);
         body.add("width", width);

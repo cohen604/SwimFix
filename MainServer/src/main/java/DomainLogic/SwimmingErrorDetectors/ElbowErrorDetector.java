@@ -109,10 +109,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
                 angle = 360 - angle;
             }
             if(isNotValidAngleMin(angle)) {
-                errors.add(iFactoryElbowError.createRight(angle, false));
+                errors.add(iFactoryElbowError.createRight(this.maxAngle, this.minAngle, angle, false));
             }
             else if(isNotValidAngleMax(angle)) {
-                errors.add(iFactoryElbowError.createRight(angle, true));
+                errors.add(iFactoryElbowError.createRight(this.maxAngle, this.minAngle, angle, true));
             }
         }
     }
@@ -128,10 +128,10 @@ public class ElbowErrorDetector implements SwimmingErrorDetector {
                 angle = 360 - angle;
             }
             if(isNotValidAngleMin(angle)) {
-                errors.add(iFactoryElbowError.createLeft(angle, false));
+                errors.add(iFactoryElbowError.createLeft(this.maxAngle, this.minAngle, angle, false));
             }
             else if(isNotValidAngleMax(angle)) {
-                errors.add(iFactoryElbowError.createLeft(angle, true));
+                errors.add(iFactoryElbowError.createLeft(this.maxAngle, this.minAngle, angle, true));
             }
         }
     }

@@ -15,9 +15,12 @@ public class LeftElbowErrorCodec implements Codec<LeftElbowError> {
         //bsonReader.readStartDocument();
         //String tag = bsonReader.readString("tag");
         double angle = bsonReader.readDouble("angle");
+        double minAngle = bsonReader.readDouble("minAngle");
+        double maxAngle = bsonReader.readDouble("maxAngle");
+
         boolean inside = bsonReader.readBoolean("side");
         //bsonReader.readEndDocument();
-        return new LeftElbowError(new Draw(), angle, inside);
+        return new LeftElbowError(new Draw(), maxAngle, minAngle, angle, inside);
     }
 
     @Override
@@ -26,6 +29,8 @@ public class LeftElbowErrorCodec implements Codec<LeftElbowError> {
         // must right tag first
         bsonWriter.writeString("tag", leftElbowError.getTag());
         bsonWriter.writeDouble("angle", leftElbowError.getAngle());
+        bsonWriter.writeDouble("minAngle", leftElbowError.getMinAngle());
+        bsonWriter.writeDouble("maxAngle", leftElbowError.getMaxAngle());
         bsonWriter.writeBoolean("side", leftElbowError.getIndise());
         bsonWriter.writeEndDocument();
     }
