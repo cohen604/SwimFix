@@ -37,16 +37,17 @@ public class PdfDrawer implements IPdfDrawer {
         y = drawText(canvas, "Number of frames: " + raw.size(), x, y, 14);
         y = drawText(canvas, "Percent: " + ratio, x, y, 14);
         y = drawText(canvas, "Expected: " + expectedCount + " , Actual: "+actualCount, x, y, 14);
-        y = drawText(canvas, "Expected", x, y, 14, BaseColor.RED);
-        y = drawText(canvas, "Predict", x, y, 14, BaseColor.BLUE);
+        y = drawText(canvas, "Model", x, y, 14, RED);
+        y = drawText(canvas, "Model And Interpolation", x, y, 14, BLUE);
+        y = drawText(canvas, "Actual", x, y, 14, GREEN);
         y = drawText(canvas, "X axis " + subject, x, y, 14);
         canvas.endText();
 
-        y = drawGraph(canvas, 50, y - 250, 500, 250, raw, model, modelAndInterpolation, xFilter);
+        y = drawGraph(canvas, 60, y - 250, 500, 250, raw, model, modelAndInterpolation, xFilter);
         canvas.beginText();
         y = drawText(canvas, "Y axis " +subject, x, y, 14);
         canvas.endText();
-        drawGraph(canvas, 50, y - 250, 500, 250, raw, model, modelAndInterpolation, yFilter);
+        drawGraph(canvas, 60, y - 250, 500, 250, raw, model, modelAndInterpolation, yFilter);
         canvas.closePathStroke();
     }
 
@@ -87,7 +88,8 @@ public class PdfDrawer implements IPdfDrawer {
         // draw the axis
         drawLineOnCanvas(canvas, xStart, yStart, xStart, yStart + ySize, BaseColor.BLACK, 2);
         drawLineOnCanvas(canvas, xStart, yStart, xStart + xSize, yStart, BaseColor.BLACK, 2);
-        
+        drawText(canvas, "Frames", (xStart + xSize) / 2, yStart - 20, 12 );
+        drawText(canvas, "Value", xStart - 35, yStart + ySize / 2, 12 );
         double yMax = findMaxValue(raw, model, modelAndInterpolation, filter);
         double xAdd = xSize / model.size();
 
@@ -141,7 +143,7 @@ public class PdfDrawer implements IPdfDrawer {
     }
 
     private void drawPointOnCanvas(PdfContentByte canvas, double x, double y, BaseColor color) {
-        double radius = 3;
+        double radius = 2;
         PdfContentByte dup = canvas.getDuplicate();
         dup.setColorStroke(color);
         dup.setColorFill(color);
