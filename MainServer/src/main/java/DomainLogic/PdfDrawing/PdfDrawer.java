@@ -10,12 +10,18 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.util.List;
 
-public class PdfDrawer implements IGraphDrawer{
+public class PdfDrawer implements IPdfDrawer {
+
+    private static BaseColor RED = new BaseColor(255, 53, 53, 178);
+    private static BaseColor BLUE = BaseColor.BLUE; //new BaseColor(50, 115, 255, 255);
+    private static BaseColor GREEN = BaseColor.GREEN; //new BaseColor(56, 244, 75,);
+
 
     @Override
     public void drawGraphs(PdfWriter pdfWriter,
                            List<ISwimmingSkeleton> raw,
-                           List<ISwimmingSkeleton> current,
+                           List<ISwimmingSkeleton> model,
+                           List<ISwimmingSkeleton> modelAndInterpolation,
                            String subject,
                            ISkeletonValueFilter xFilter,
                            ISkeletonValueFilter yFilter,
@@ -31,16 +37,17 @@ public class PdfDrawer implements IGraphDrawer{
         y = drawText(canvas, "Number of frames: " + raw.size(), x, y, 14);
         y = drawText(canvas, "Percent: " + ratio, x, y, 14);
         y = drawText(canvas, "Expected: " + expectedCount + " , Actual: "+actualCount, x, y, 14);
-        y = drawText(canvas, "Expected", x, y, 14, BaseColor.RED);
-        y = drawText(canvas, "Predict", x, y, 14, BaseColor.BLUE);
-        y = drawText(canvas, "X " + subject, x, y, 14);
+        y = drawText(canvas, "Model", x, y, 14, RED);
+        y = drawText(canvas, "Model And Interpolation", x, y, 14, BLUE);
+        y = drawText(canvas, "Actual", x, y, 14, GREEN);
+        y = drawText(canvas, "X axis " + subject, x, y, 14);
         canvas.endText();
 
-        y = drawGraph(canvas, 50, y - 250, 500, 250, raw, current, xFilter);
+        y = drawGraph(canvas, 60, y - 250, 500, 250, raw, model, modelAndInterpolation, xFilter);
         canvas.beginText();
-        y = drawText(canvas, "Y " +subject, x, y, 14);
+        y = drawText(canvas, "Y axis " +subject, x, y, 14);
         canvas.endText();
-        drawGraph(canvas, 50, y - 250, 500, 250, raw, current, yFilter);
+        drawGraph(canvas, 60, y - 250, 500, 250, raw, model, modelAndInterpolation, yFilter);
         canvas.closePathStroke();
     }
 
@@ -75,79 +82,117 @@ public class PdfDrawer implements IGraphDrawer{
     private double drawGraph(PdfContentByte canvas,
                              double xStart, double yStart, double xSize, double ySize,
                              List<ISwimmingSkeleton> raw,
-                             List<ISwimmingSkeleton> current,
+                             List<ISwimmingSkeleton> model,
+                             List<ISwimmingSkeleton> modelAndInterpolation,
                              ISkeletonValueFilter filter) {
         // draw the axis
-        canvas.moveTo(xStart, yStart);
-        canvas.lineTo(xStart, yStart + ySize); // draw y line
-        canvas.moveTo(xStart, yStart);
-        canvas.lineTo(xStart + xSize, yStart); // draw x line
-        canvas.fillStroke();
-        //find y max
-        double yMax = findMaxValue(raw, current, filter);
-        // draw points in the graph
-        double xAdd = xSize / raw.size();
-        double radius = 2;
-        double yPrevRaw = 0;
-        double yPrevCurrent = 0;
-        for(int i=0; i<raw.size(); i++) {
-            double x = xStart + i * xAdd;
-            // get raw i value
-            double y = filter.filter(raw.get(i));
-            y = yStart + changeRange(yMax, 0, ySize, 0,  y);
-            if( i > 0) {
-                drawLineOnCanvas(canvas, x, y, x - xAdd, yPrevRaw, BaseColor.RED, 5);
-            }
-            //drawPointOnCanvas(canvas, x, y, BaseColor.RED);
-            yPrevRaw = y;
-            // get current i value
-            y = filter.filter(current.get(i));
-            y = yStart + changeRange(yMax, 0, ySize, 0,  y);
-            if( i > 0) {
-                drawLineOnCanvas(canvas, x, y, x - xAdd, yPrevCurrent, BaseColor.BLUE, 1);
-            }
-            //drawPointOnCanvas(canvas, x, y, BaseColor.BLUE);
-            yPrevCurrent = y;
-        }
+        drawLineOnCanvas(canvas, xStart, yStart, xStart, yStart + ySize, BaseColor.BLACK, 2);
+        drawLineOnCanvas(canvas, xStart, yStart, xStart + xSize, yStart, BaseColor.BLACK, 2);
+        drawText(canvas, "Frames", (xStart + xSize) / 2, yStart - 20, 12 );
+        drawText(canvas, "Value", xStart - 35, yStart + ySize / 2, 12 );
+        double yMax = findMaxValue(raw, model, modelAndInterpolation, filter);
+        double xAdd = xSize / model.size();
+
+        drawGraphModel(canvas, model, filter, xStart, yStart, xSize, ySize, xAdd, yMax, RED, 4);
+        drawGraphModel(canvas, modelAndInterpolation, filter, xStart, yStart, xSize, ySize, xAdd, yMax,
+                BLUE, 1.5);
+        drawGraphActual(canvas, raw, filter, xStart, yStart, xSize, ySize, xAdd, yMax, GREEN);
         return yStart - 30;
+    }
+
+    private void drawGraphModel(PdfContentByte canvas,
+                                List<ISwimmingSkeleton> model,
+                                ISkeletonValueFilter filter,
+                                double xStart, double yStart, double xSize, double ySize,
+                                double xAdd, double yMax,
+                                BaseColor color, double width){
+        if(model != null) {
+            double yPrev = 0;
+            double y = 0;
+            double x = 0;
+            for (int i = 0; i < model.size(); i++) {
+                x = xStart + i * xAdd;
+                // model draw
+                y = filter.filter(model.get(i));
+                y = yStart + changeRange(yMax, 0, ySize, 0, y);
+                if (i > 0) {
+                    drawLineOnCanvas(canvas, x, y, x - xAdd, yPrev, color, width);
+                }
+                yPrev = y;
+            }
+        }
+    }
+
+    private void drawGraphActual(PdfContentByte canvas,
+                                List<ISwimmingSkeleton> model,
+                                ISkeletonValueFilter filter,
+                                double xStart, double yStart, double xSize, double ySize,
+                                double xAdd, double yMax,
+                                BaseColor color){
+        if(model != null) {
+            double y = 0;
+            double x = 0;
+            for (int i = 0; i < model.size(); i++) {
+                x = xStart + i * xAdd;
+                // actual draw
+                y = filter.filter(model.get(i));
+                y = yStart + changeRange(yMax, 0, ySize, 0, y);
+                drawPointOnCanvas(canvas, x, y, color);
+            }
+        }
     }
 
     private void drawPointOnCanvas(PdfContentByte canvas, double x, double y, BaseColor color) {
         double radius = 2;
-        canvas.setColorFill(color);
-        canvas.circle(x, y, radius);
-        canvas.fillStroke();
+        PdfContentByte dup = canvas.getDuplicate();
+        dup.setColorStroke(color);
+        dup.setColorFill(color);
+        dup.circle(x, y, radius);
+        dup.fillStroke();
+        dup.fill();
+        canvas.add(dup);
     }
 
     private void drawLineOnCanvas(PdfContentByte canvas,
-                                         double x0, double y0, double x1, double y1,
-                                         BaseColor color,
-                                         double width) {
-        canvas.setColorFill(color);
-        canvas.setLineWidth(width);
-        canvas.moveTo(x0, y0);
-        canvas.lineTo(x1, y1); // draw y line
-        canvas.fill();
+                                  double x0, double y0, double x1, double y1,
+                                  BaseColor color,
+                                  double width) {
+        PdfContentByte dup = canvas.getDuplicate();
+        dup.setColorFill(color);
+        dup.setColorStroke(color);
+        dup.setLineWidth(width);
+        dup.moveTo(x0, y0);
+        dup.lineTo(x1, y1); // draw y line
+        dup.fillStroke();
+        canvas.add(dup);
     }
 
 
     private double findMaxValue(List<ISwimmingSkeleton> raw,
-                                       List<ISwimmingSkeleton> current,
-                                       ISkeletonValueFilter filter) {
+                                List<ISwimmingSkeleton> model,
+                                List<ISwimmingSkeleton> modelAndInterpolation,
+                                ISkeletonValueFilter filter) {
         double yMax = 200;
-        double value = 0;
         for(int i=0; i<raw.size(); i++) {
-            value = filter.filter(raw.get(i));
-            if(value > yMax) {
-                yMax = value;
-            }
-            value = filter.filter(current.get(i));
-            if(value > yMax) {
-                yMax = value;
-            }
-
+            yMax = findMax(raw, i, filter, yMax);
+            yMax = findMax(model, i, filter, yMax);
+            yMax = findMax(modelAndInterpolation, i, filter, yMax);
         }
         return yMax;
+    }
+
+    private double findMax(List<ISwimmingSkeleton> skeletons,
+                           int index,
+                           ISkeletonValueFilter filter,
+                           double max) {
+        if(skeletons==null) {
+            return max;
+        }
+        double value = filter.filter(skeletons.get(index));
+        if(value > max) {
+            return value;
+        }
+        return max;
     }
 
     private double changeRange(double oldMax, double oldMin, double newMax, double newMin, double oldValue) {
