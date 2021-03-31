@@ -25,8 +25,10 @@ public class PdfDrawer implements IPdfDrawer {
                            String subject,
                            ISkeletonValueFilter xFilter,
                            ISkeletonValueFilter yFilter,
-                           double ratio,
-                           int expectedCount,
+                           double ratioModel,
+                           double ratioModelAndInterpolation,
+                           int modelCount,
+                           int modelAndInterpolationCount,
                            int actualCount){
         double x = 50;
         double y = 800;
@@ -35,8 +37,11 @@ public class PdfDrawer implements IPdfDrawer {
         canvas.beginText();
         y = drawText(canvas, subject, x, y, 18);
         y = drawText(canvas, "Number of frames: " + raw.size(), x, y, 14);
-        y = drawText(canvas, "Percent: " + ratio, x, y, 14);
-        y = drawText(canvas, "Expected: " + expectedCount + " , Actual: "+actualCount, x, y, 14);
+        y = drawText(canvas, "Model: " + modelCount
+                + " , Model And Interpolation: " + modelAndInterpolationCount
+                + " , Actual: " + actualCount, x, y, 14);
+        y = drawText(canvas, "Model Ratio: " + ratioModel, x, y, 14);
+        y = drawText(canvas, "Model and Interpolation Ratio: " + ratioModelAndInterpolation, x, y, 14);
         y = drawText(canvas, "Model", x, y, 14, RED);
         y = drawText(canvas, "Model And Interpolation", x, y, 14, BLUE);
         y = drawText(canvas, "Actual", x, y, 14, GREEN);
