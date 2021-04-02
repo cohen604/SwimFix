@@ -1,16 +1,17 @@
-import 'package:client/Domain/FeedBackVideoStreamer.dart';
-import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/VideoScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
-import 'package:client/Web/Screens/WebLoginScreen.dart';
-import 'package:client/Web/Screens/WebResearcherScreen.dart';
-import 'package:client/Web/Screens/WebSwimmerScreen.dart';
-import 'package:client/Web/Screens/WebUploadScreen.dart';
-import 'package:client/Web/Screens/WebWelcomeScreen.dart';
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
+
+import 'Arguments/CameraScreenArguments.dart';
+import 'Arguments/ResearcherScreenArguments.dart';
+import 'Arguments/SwimmerScreenArguments.dart';
+import 'Arguments/UploadScreenArguments.dart';
+import 'Arguments/VideoScreenArguments.dart';
+import 'Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/WebLoginScreen.dart';
+import 'package:client/Screens/WebResearcherScreen.dart';
+import 'package:client/Screens/WebSwimmerScreen.dart';
+import 'package:client/Screens/WebUploadScreen.dart';
+import 'package:client/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 
 /// if(kIsWeb) {
@@ -25,7 +26,6 @@ class ScreenHolder {
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
     return new WebWelcomeScreen(arguments: args);
   }
-
 
   Widget getSwimmerScreen(SwimmerScreenArguments args) {
     //TODO delete this

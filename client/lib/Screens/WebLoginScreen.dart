@@ -1,9 +1,10 @@
-import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
+
+import 'Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/Components/MessagePopUp.dart';
-import 'package:client/Web/WebColors.dart';
+import 'package:client/Screens/PopUps/MessagePopUp.dart';
+import 'package:client/Screens/WebColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

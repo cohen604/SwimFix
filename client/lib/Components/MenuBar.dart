@@ -1,9 +1,9 @@
-import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
+import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/WebColors.dart';
+import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

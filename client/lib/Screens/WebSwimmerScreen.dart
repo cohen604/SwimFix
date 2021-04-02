@@ -1,12 +1,8 @@
-import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
-import 'package:client/Web/Components/IconCardButton.dart';
-import 'package:client/Web/Components/ImageCardButton.dart';
-import 'package:client/Web/Components/CircleButton.dart';
-import 'package:client/Web/Components/MenuBar.dart';
-import 'package:client/Web/WebColors.dart';
+import 'Arguments/SwimmerScreenArguments.dart';
+import 'Arguments/UploadScreenArguments.dart';
+import 'package:client/Components/IconCardButton.dart';
+import 'package:client/Components/MenuBar.dart';
+import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

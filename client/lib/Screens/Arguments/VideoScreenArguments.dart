@@ -1,8 +1,5 @@
-import 'dart:io';
-
-import 'package:client/Services/VideoRepresantations/VideoWithoutFeedback.dart';
-
-import '../FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Video/VideoWithoutFeedback.dart';
 
 class VideoScreenArguments {
 

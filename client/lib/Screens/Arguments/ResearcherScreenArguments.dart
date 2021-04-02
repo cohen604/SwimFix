@@ -1,4 +1,4 @@
-import 'package:client/Domain/Swimmer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
 
 class ResearcherScreenArguments {
 

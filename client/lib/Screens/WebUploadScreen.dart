@@ -1,47 +1,50 @@
 import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
-import 'package:client/Domain/FileDonwloaded.dart';
-import 'package:client/Domain/ResearcherReport.dart';
-import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
-import 'package:client/Domain/Swimmer.dart';
+import 'package:chewie/chewie.dart';
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:video_player/video_player.dart';
+import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Web/Components/ImageCardButton.dart';
-import 'package:client/Web/Components/CircleButton.dart';
-import 'package:client/Web/Components/MenuBar.dart';
-import 'package:client/Web/Components/MessagePopUp.dart';
-import 'package:client/Web/Components/NumberButton.dart';
-import 'package:client/Web/Components/TextButton.dart';
-import 'package:client/Web/WebColors.dart';
+import 'package:client/Components/MenuBar.dart';
+import 'package:client/Components/NumberButton.dart';
+import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 
-class WebResearcherScreen extends StatefulWidget {
+class WebUploadScreen extends StatefulWidget {
 
-  ResearcherScreenArguments args;
-  WebResearcherScreen({this.args, Key key}) : super(key: key);
+  UploadScreenArguments args;
+  WebUploadScreen({this.args, Key key}) : super(key: key);
 
   @override
-  _WebResearcherScreenState createState() => _WebResearcherScreenState();
+  _WebUploadScreenState createState() => _WebUploadScreenState();
 }
 
-class _WebResearcherScreenState extends State<WebResearcherScreen> {
+class _WebUploadScreenState extends State<WebUploadScreen> {
 
   LogicManager _logicManager = LogicManager.getInstance();
   WebColors _webColors = new WebColors();
-  ResearcherStep _step = ResearcherStep.Upload_Video;
+  UploadStep _step = UploadStep.Upload;
 
   bool _hasVideo = false;
   File _video;
 
-  bool _hasLabels = false;
-  File _labels;
+  bool _hasFeedback = false;
+  FeedbackVideoStreamer _feedbackLink;
+  VideoPlayerController _controller;
+  ChewieController _chewieController;
 
-  bool _hasResults = false;
-  ResearcherReport _report;
+  @override
+  void dispose() {
+    super.dispose();
+    if(_controller!=null) {
+      _controller.dispose();
+    }
+  }
 
   void onLogout() {
     _logicManager.logout(this.widget.args.swimmer).then(
@@ -84,6 +87,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     uploadInput.click();
     document.body.append(uploadInput);
     uploadInput.onChange.listen((e) {
+      //var bytes = Base64Decoder().convert(uploadInput.result.toString().split(",").last)
       updateFile(uploadInput.files[0]);
     });
     uploadInput.remove();
@@ -100,17 +104,6 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  void uploadLabelsWeb() {
-    uploadFile('.csv',
-      (File file) {
-          this.setState(() {
-            _labels = file;
-            _hasLabels = true;
-          });
-        }
-    );
-  }
-
   void removeSelectedVideo() {
     if(_hasVideo) {
       this.setState(() {
@@ -120,83 +113,78 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     }
   }
 
-  void removeSelectedLabels() {
-    if(_hasLabels) {
-      this.setState(() {
-        _hasLabels = false;
-        _labels = null;
-      });
-    }
-  }
-
   void readFile(File file, Function callback) {
     final reader = new FileReader();
-    reader.readAsDataUrl(file.slice(0, file.size, file.type));
+    reader.readAsDataUrl(_video.slice(0, _video.size, _video.type));
     reader.onLoadEnd.listen((e) {
-      var bytes = reader.result;
-      // print('before');
-      // print(bytes.toString());
-      bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
+      var bytes = Base64Decoder().convert(reader.result.toString().split(",").last);
       callback(bytes);
     });
   }
 
-  void postVideoAndCsv() {
-    readFile(_video, (videoBytes) {
-      readFile(_labels, (labelsBytes) {
-        _logicManager.postVideoAndCsvForAnalyze(
-            _video.name,
-            videoBytes,
-            _labels.name,
-            labelsBytes,
-            this.widget.args.swimmer)
-          .then( (result) {
-            if(result!=null) {
-              this.setState(() {
-                _hasResults = true;
-                _report = result;
-                nextState();
+  Future<bool> setController() async {
+    String url = _logicManager.getStreamUrl() + _feedbackLink.getPath();
+    _controller = VideoPlayerController.network(url);
+    await _controller.initialize();
+    _controller.play();
+
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      // aspectRatio: 16 / 9,
+      autoPlay: true,
+      looping: false,
+      //note: this muse be false cause chewiew having problem in full screen
+      allowFullScreen: false,
+      fullScreenByDefault: false,
+      allowMuting: false,
+    );
+    //DO NOT DELETE THIS!!
+    // setState(() {});
+    return true;
+  }
+
+  void postVideo() {
+    readFile(_video, (Uint8List videoBytes) {
+      _logicManager.postVideoForStreaming(
+          videoBytes,
+          videoBytes.length,
+          _video.name,
+          this.widget.args.swimmer).then((feedbackLink) {
+            if(feedbackLink != null) {
+              _feedbackLink = feedbackLink;
+              setController().then((bool value) {
+                this.setState(() {
+                  _hasFeedback = true;
+                  _step = UploadStep.View;
+                });
               });
             }
             else {
               this.setState(() {
-                _step = ResearcherStep.Error;
+                _step = UploadStep.Error;
               });
             }
-          }
-        );
       });
     });
-    // _logicManager.postVideoAndCsvForAnalyze()
   }
 
   void nextState() {
-    if(_step == ResearcherStep.Upload_Video) {
+    if(_step == UploadStep.Upload) {
       this.setState(() {
-        _step = ResearcherStep.Upload_Csv;
+        postVideo();
+        _step = UploadStep.WaitingResults;
       });
     }
-    else if(_step == ResearcherStep.Upload_Csv) {
+    else if(_step == UploadStep.WaitingResults)  {
       this.setState(() {
-        _step = ResearcherStep.Submit;
-      });
-    }
-    else if(_step == ResearcherStep.Submit) {
-      postVideoAndCsv();
-      this.setState(() {
-        _step = ResearcherStep.WaitingResults;
-      });
-    }
-    else if(_step == ResearcherStep.WaitingResults)  {
-      this.setState(() {
-        _step = ResearcherStep.View;
+        _step = UploadStep.View;
       });
     }
   }
 
   void uploadVideoFunctionButton() {
     this.setState(() {
-      _step = ResearcherStep.Upload_Video;
+      _step = UploadStep.Upload;
     });
   }
 
@@ -210,64 +198,10 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           number: 1,
           title: 'Upload Video',
           background: _webColors.getBackgroundForI7(),
-          selected: _step.index >= ResearcherStep.Upload_Video.index,
+          selected: _step.index >= UploadStep.Upload.index,
           selectedColor: _webColors.getBackgroundForI1(),
-          onClick: _step.index >= ResearcherStep.Upload_Video.index?
+          onClick: _step.index >= UploadStep.Upload.index?
             uploadVideoFunctionButton: null,
-          fontSize: 21,
-          flex: 1
-        ),
-      ),
-    );
-  }
-
-  void uploadLabelsFunctionButton() {
-    this.setState(() {
-      _step = ResearcherStep.Upload_Csv;
-    });
-  }
-
-  Widget buildUploadLabelsButton(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
-      child: Container(
-        // margin: EdgeInsets.all(30.0),
-        child: NumberButton(
-          number: 2,
-          title: 'Upload Labels',
-          background: _webColors.getBackgroundForI7(),
-          selected: _step.index >= ResearcherStep.Upload_Csv.index,
-          selectedColor: _webColors.getBackgroundForI1(),
-          onClick: _step.index >= ResearcherStep.Upload_Csv.index ?
-            uploadLabelsFunctionButton : null,
-          fontSize: 21,
-          flex: 1
-        ),
-      ),
-    );
-  }
-
-  void getReportFunctionButton() {
-    this.setState(() {
-        _step = ResearcherStep.Submit;
-      });
-  }
-
-  Widget buildGetReportButton(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
-      child: Container(
-        // margin: EdgeInsets.all(10.0),
-        child: NumberButton(
-          number: 3,
-          title: 'Get Report',
-          background: _webColors.getBackgroundForI7(),
-          selected: _step.index >= ResearcherStep.Submit.index,
-          selectedColor: _webColors.getBackgroundForI1(),
-          onClick: _step.index >= ResearcherStep.Submit.index?
-              getReportFunctionButton : null,
           fontSize: 21,
           flex: 1
         ),
@@ -277,7 +211,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   void viewFunctionButton() {
     this.setState(() {
-        _step = ResearcherStep.WaitingResults;
+        _step = UploadStep.WaitingResults;
       });
   }
 
@@ -288,12 +222,12 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       child: Container(
         // margin: EdgeInsets.all(10.0),
         child: NumberButton(
-            number: 4,
+            number: 2,
             title: 'View',
             background: _webColors.getBackgroundForI8(),
-            selected: _step.index >= ResearcherStep.WaitingResults.index,
+            selected: _step.index >= UploadStep.WaitingResults.index,
             selectedColor: _webColors.getBackgroundForI1(),
-            onClick: _step.index >= ResearcherStep.WaitingResults.index?
+            onClick: _step.index >= UploadStep.WaitingResults.index?
               viewFunctionButton : null,
             fontSize: 21,
             flex: 1
@@ -469,176 +403,25 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
     );
   }
 
-  Widget buildLabelsStep(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-            margin: EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                buildTitle(context, 'Upload Labels', createFlex: false),
-                SizedBox(height: 5.0,),
-                buildDescription(context, 'Please select a Csv file that contains the labels of the swimming video.'
-                  '\nMake sure the csv contains the (x, y) values of:',
-                  createFlex: false,
-                  fontSize: 20,),
-                buildDescription(context, 'Head, Right Shoulder, Right Elbow, Right Wrist,'
-                    ' Left Shoulder, Left Elbow, Left Wrist.'
-                    '\nExample for Csv:',
-                    fontSize: 20,
-                    createFlex: false),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'images/csv_example.png',
-                    height: 140.0,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                SizedBox(height: 5.0,),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: buildTextButton(context, 'Select', uploadLabelsWeb),
-                ),
-              ],
-            )
-        ),
-        _hasLabels ? buildSelectedFile(context, _labels, createFlex: false) : Container(),
-        _hasLabels ? Container(
-          margin: EdgeInsets.only(right: 10.0, left:10.0),
-          child: Row(
-            children: [
-              Flexible(child: Container()),
-              buildTextButton(context, 'Remove',
-                  removeSelectedLabels,
-                  fontSize: 20),
-              SizedBox(width: 10,),
-              buildElevatedButton(context, 'Next', nextState),
-            ],
-          ),
-        )
-            : Flexible( flex: 2, child: Container(),)
-      ],
-    );
-  }
-
-  Widget buildSubmitStep(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-            margin: EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                buildTitle(context, 'Submit Data', createFlex: false),
-                SizedBox(height: 5.0,),
-                buildDescription(context, 'Verify that the selected files are correct',
-                    createFlex: false),
-                SizedBox(height: 5.0,),
-              ],
-            )
-        ),
-        Container(
-          padding: EdgeInsets.only(top:5.0, right: 20.0 ,left: 20.0),
-          child: Row(
-            children: [
-              buildDescription(context, 'Video'),
-              buildDescription(context, 'Labels')
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            buildSelectedFile(context, _video),
-            buildSelectedFile(context, _labels),
-          ],
-        ),
-        Container(
-          margin: EdgeInsets.only(right: 10.0, left:10.0),
-          child: Row(
-            children: [
-              Flexible(child: Container()),
-              buildElevatedButton(context, 'Next', nextState),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
   Widget buildWaitingResultStep(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Center(
-        child: LinearProgressIndicator(),
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
-  void onFileClick(String fileLink) {
-    Swimmer swimmer = this.widget.args.swimmer;
-    _logicManager.getFileForDownload(
-        swimmer.uid,
-        swimmer.email,
-        swimmer.name,
-      fileLink,
-    ).then((FileDownloaded fileDownloaded) {
-          String content = base64Encode(fileDownloaded.bytes);
-          AnchorElement(
-              href: "data:application/octet-stream;charset=utf-16le;base64,$content")
-            ..setAttribute("download", fileDownloaded.fileName)
-            ..click();
-        }
-    );
-  }
-
-  void onFeedbackClick() {
-    // _report = new ResearcherReport(
-    //     "clients/avrahamcalev2@gmail.com/feedbacks/2021-03-19-17-03-00.mp4",
-    //     "clients/avrahamcalev2@gmail.com/mlSkeletons/2021-03-19-17-03-00.csv",
-    //     "link 3");
-    if(_report.videoLink!=null) {
-      onFileClick(_report.videoLink);
-    }
-  }
-
-  void onCsvClick() {
-    if(_report.csvLink!=null) {
-      onFileClick(_report.csvLink);
-    }
-  }
-
-  void onPdfClick() {
-    if(_report.pdfLink!=null) {
-      onFileClick(_report.pdfLink);
-    }
-  }
-
   Widget buildViewStep(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          buildTitle(context, 'View report', createFlex: false),
-          SizedBox(height: 10.0,),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              padding: EdgeInsets.only(left:10),
-              child: buildTextButton(context, 'Feedback', onFeedbackClick),
-            ),
+    return Material(
+      child: SingleChildScrollView(
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Chewie(
+            controller: _chewieController,
           ),
-          SizedBox(height: 5.0,),
-          Align(
-              alignment: Alignment.topLeft,
-              child: buildTextButton(context, 'Csv', onCsvClick)
-          ),
-          SizedBox(height: 5.0,),
-          Align(
-              alignment: Alignment.topLeft,
-              child: buildTextButton(context, 'Pdf', onPdfClick)
-          ),
-        ],
-      )
+        ),
+      ),
     );
   }
 
@@ -650,7 +433,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
           buildTitle(context, 'Error', createFlex: false),
           SizedBox(height: 5.0,),
           buildDescription(context, 'Something is broken.\n'
-              'Maybe the uploaded files aren\'t correct or the servers are down.\n'
+              'Maybe the swimming video isn\'t correct or the servers are down.\n'
               'For more information contact swimAnalytics@gmail.com',
             createFlex: false,
             fontSize: 20,),
@@ -667,8 +450,6 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
       child: Column(
         children: [
           buildUploadVideoButton(context, 1),
-          buildUploadLabelsButton(context, 1),
-          buildGetReportButton(context, 1),
           buildViewResultsButton(context, 1),
           Flexible(
             flex: 5,
@@ -681,23 +462,17 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   Widget buildCurrentStep(BuildContext context, int flex) {
     Widget child;
-    if(_step == ResearcherStep.Upload_Video) {
+    if(_step == UploadStep.Upload) {
       child = buildVideoStep(context);
     }
-    else if(_step == ResearcherStep.Upload_Csv) {
-      child = buildLabelsStep(context);
+    else if(_step == UploadStep.Error) {
+      child = buildErrorStep(context);
     }
-    else if(_step == ResearcherStep.Submit) {
-      child = buildSubmitStep(context);
-    }
-    else if(_step == ResearcherStep.WaitingResults)  {
+    else if(_step == UploadStep.WaitingResults)  {
       child = buildWaitingResultStep(context);
     }
-    else if(_step == ResearcherStep.View) {
+    else if(_step == UploadStep.View) {
       child = buildViewStep(context);
-    }
-    else if(_step == ResearcherStep.Error) {
-      child = buildErrorStep(context);
     }
     return  Flexible(
         flex: flex,
@@ -747,11 +522,9 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
 }
 
-enum ResearcherStep {
-  Upload_Video,
-  Upload_Csv,
+enum UploadStep {
+  Upload,
   Error,
-  Submit,
   WaitingResults,
   View,
 }

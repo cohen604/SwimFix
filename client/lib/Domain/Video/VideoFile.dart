@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:client/Domain/FeedBackVideoStreamer.dart';
-
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
 import 'package:client/Services/LogicManager.dart';
-
 import 'VideoWithoutFeedback.dart';
 
 class VideoFile extends VideoWithoutFeedback {

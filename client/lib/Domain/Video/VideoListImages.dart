@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
-import 'package:client/Domain/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:image/image.dart';
-import 'VideoWithoutFeedback.dart';
 import 'dart:io';
+
+import 'VideoWithoutFeedback.dart';
 
 class VideoListImages extends VideoWithoutFeedback {
 
