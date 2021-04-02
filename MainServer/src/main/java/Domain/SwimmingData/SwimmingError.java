@@ -67,6 +67,11 @@ public abstract class SwimmingError implements IDraw {
         return drawer.drawArrow(frame, a, b);
     }
 
+    @Override
+    public Mat drawVerticalArrow(Mat frame, IPoint pointA, IPoint pointB, boolean verticalSide) {
+        return drawer.drawVerticalArrow(frame, pointA, pointB, verticalSide);
+    }
+
     public abstract void draw(Mat frame, ISwimmingSkeleton skeleton);
 
     public String getTag() {

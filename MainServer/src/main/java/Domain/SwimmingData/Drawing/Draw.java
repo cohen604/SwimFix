@@ -135,6 +135,21 @@ public class Draw implements IDraw {
         return frame;
     }
 
+    @Override
+    public Mat drawVerticalArrow(Mat frame,
+                                 IPoint pointA,
+                                 IPoint pointB,
+                                 boolean verticalSide) {
+        IPoint vec = IPointUtils.getVec(pointA, pointB);
+        double rotationAngle = -90;
+        if(verticalSide) {
+            rotationAngle = 90;
+        }
+        vec = IPointUtils.pivotVector(vec, rotationAngle);
+        vec = IPointUtils.addByScalars(vec, pointB.getX(), pointB.getY());
+        return drawArrow(frame, pointB, vec);
+    }
+
     private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b) {
         Point pointA = new Point(a.getX(),a.getY());
         Point pointB = new Point(x, y);
@@ -151,6 +166,5 @@ public class Draw implements IDraw {
         Imgproc.putText(frame, message, point, font, scale, color , thickness);
         return frame;
     }
-
 
 }

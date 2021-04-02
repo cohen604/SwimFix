@@ -14,14 +14,14 @@ public class FactoryForearmError implements IFactoryForearmError {
     }
 
     @Override
-    public SwimmingError createLeft(double angle, boolean inside) {
+    public SwimmingError createLeft(double angle, double maxAngle, double minAngle, boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new LeftForearmError(drawer, angle, inside);
+        return new LeftForearmError(drawer, angle, maxAngle, minAngle, inside);
     }
 
     @Override
-    public SwimmingError createRight(double angle, boolean inside) {
+    public SwimmingError createRight(double angle, double maxAngle, double minAngle, boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new RightForearmError(drawer, angle, inside);
+        return new RightForearmError(drawer, angle, maxAngle, minAngle, inside);
     }
 }
