@@ -1,9 +1,8 @@
 package Domain.Streaming;
 
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
-import Domain.SwimmingData.SwimmingError;
+import Domain.Errors.Interfaces.SwimmingError;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 

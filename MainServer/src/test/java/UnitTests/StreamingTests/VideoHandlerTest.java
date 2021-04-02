@@ -1,8 +1,8 @@
 package UnitTests.StreamingTests;
 
-import Domain.SwimmingData.Drawing.Draw;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingError;
+import Domain.Drawing.Draw;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Errors.Interfaces.SwimmingError;
 import Domain.Streaming.VideoHandler;
 import junit.framework.TestCase;
 import org.junit.After;

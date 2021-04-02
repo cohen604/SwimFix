@@ -1,10 +1,10 @@
 package mainServer.Providers;
 
+import Domain.PeriodTimeData.IPeriodTime;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
-import Domain.PeriodTimeData.PeriodTime;
 import Domain.StatisticsData.IStatistic;
 import DomainLogic.PdfDrawing.IPdfDrawer;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.SkeletonsValueFilters.HeadFilters.*;
 import DomainLogic.SkeletonsValueFilters.RightShoulderFilters.*;
 import DomainLogic.SkeletonsValueFilters.RightElbowFilters.*;
@@ -156,15 +156,15 @@ public class ReportProvider implements IReportProvider {
     private void addTimePeriod(Document document,
                                ISwimmingPeriodTime periodTime) throws DocumentException {
         Paragraph paragraph = new Paragraph("Time Period Summary");
-        List<PeriodTime> rights = periodTime.getRightTimes();
-        List<PeriodTime> lefts = periodTime.getLeftTimes();
+        List<IPeriodTime> rights = periodTime.getRightTimes();
+        List<IPeriodTime> lefts = periodTime.getLeftTimes();
         PdfPTable table = new PdfPTable(4);
         addRowToPdfTable(table, "Category", "Start frame", "End frame", "Length (Frames)");
         int indexR = 0;
         int indexL = 0;
         while(indexR < rights.size() && indexL < lefts.size()) {
-            PeriodTime rp = rights.get(indexR);
-            PeriodTime lp = lefts.get(indexL);
+            IPeriodTime rp = rights.get(indexR);
+            IPeriodTime lp = lefts.get(indexL);
             if(rp.getStart() < lp.getStart()) {
                 addRowToTable(table, "right", rp.getStart(), rp.getEnd(), rp.getTimeLength());
                 indexR++;
@@ -175,12 +175,12 @@ public class ReportProvider implements IReportProvider {
             }
         }
         while(indexR < rights.size()) {
-            PeriodTime rp = rights.get(indexR);
+            IPeriodTime rp = rights.get(indexR);
             addRowToTable(table, "right", rp.getStart(), rp.getEnd(), rp.getTimeLength());
             indexR++;
         }
         while(indexL < lefts.size()) {
-            PeriodTime lp = lefts.get(indexL);
+            IPeriodTime lp = lefts.get(indexL);
             addRowToTable(table, "left", lp.getStart(), lp.getEnd(), lp.getTimeLength());
             indexL++;
         }

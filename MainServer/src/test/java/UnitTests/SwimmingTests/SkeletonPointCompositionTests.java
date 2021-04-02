@@ -1,6 +1,6 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
 import junit.framework.TestCase;
 import org.junit.Assert;
 

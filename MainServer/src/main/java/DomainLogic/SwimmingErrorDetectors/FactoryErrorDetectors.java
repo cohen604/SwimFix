@@ -1,25 +1,43 @@
 package DomainLogic.SwimmingErrorDetectors;
 
+import Domain.Errors.Interfaces.IFactoryElbowError;
+import Domain.Errors.Interfaces.IFactoryForearmError;
+import Domain.Errors.Interfaces.IFactoryPalmCrossHeadError;
+import DomainLogic.SwimmingErrorDetectors.SkeletonDetoctors.ElbowErrorDetector;
+import DomainLogic.SwimmingErrorDetectors.SkeletonDetoctors.ForearmErrorDetector;
+import DomainLogic.SwimmingErrorDetectors.SkeletonDetoctors.ISkeletonErrorDetector;
+import DomainLogic.SwimmingErrorDetectors.SkeletonDetoctors.PalmCrossHeadDetector;
+
+import java.util.LinkedList;
+import java.util.List;
+
 public class FactoryErrorDetectors implements IFactoryErrorDetectors {
 
-    @Override
-    public SwimmingErrorDetector createElbowErrorDetector(double minAngle, double maxAngle) {
-        IFactoryDraw iFactoryDraw = new FactoryDraw();
-        IFactoryElbowError iFactoryElbowError = new FactoryElbowError(iFactoryDraw);
-        return new ElbowErrorDetector(iFactoryElbowError,minAngle, maxAngle);
+    private IFactoryElbowError factoryElbowError;
+    private IFactoryPalmCrossHeadError factoryPalmCrossHeadError;
+    private IFactoryForearmError factoryForearmError;
+
+    public FactoryErrorDetectors(IFactoryElbowError factoryElbowError,
+                                 IFactoryPalmCrossHeadError factoryPalmCrossHeadError,
+                                 IFactoryForearmError factoryForearmError) {
+        this.factoryElbowError = factoryElbowError;
+        this.factoryPalmCrossHeadError = factoryPalmCrossHeadError;
+        this.factoryForearmError = factoryForearmError;
     }
 
     @Override
-    public SwimmingErrorDetector createForearmErrorDetector(double minAngle, double maxAngle) {
-        IFactoryDraw iFactoryDraw = new FactoryDraw();
-        IFactoryForearmError iFactoryForearmError = new FactoryForearmError(iFactoryDraw);
-        return new ForearmErrorDetector(iFactoryForearmError,minAngle,maxAngle);
+    public ISwimmingTimeErrorDetector createTimeErrorDetector() {
+        List<ISkeletonErrorDetector> detectors = new LinkedList<>();
+        detectors.add(new ElbowErrorDetector(factoryElbowError, 90, 175));
+        detectors.add(new ForearmErrorDetector(factoryForearmError, -10, 45));
+
+        return new MaxDetector(detectors);
     }
 
     @Override
-    public SwimmingErrorDetector createPalmCrossHeadErrorDetector() {
-        IFactoryDraw iFactoryDraw = new FactoryDraw();
-        IFactoryPalmCrossHeadError iFactoryPalmCrossHeadError = new FactoryPalmCrossHeadError(iFactoryDraw);
-        return new PalmCrossHeadDetector(iFactoryPalmCrossHeadError);
+    public ISwimmingErrorDetector createErrorDetector() {
+        List<ISkeletonErrorDetector> detectors = new LinkedList<>();
+        detectors.add(new PalmCrossHeadDetector(factoryPalmCrossHeadError));
+        return new RegularDetector(detectors);
     }
 }

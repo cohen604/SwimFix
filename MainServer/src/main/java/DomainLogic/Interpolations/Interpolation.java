@@ -1,6 +1,6 @@
 package DomainLogic.Interpolations;
 
-import Domain.SwimmingData.Points.IPoint;
+import Domain.Points.IPoint;
 
 import java.util.List;
 

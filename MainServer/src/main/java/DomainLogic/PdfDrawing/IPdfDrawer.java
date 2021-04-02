@@ -1,6 +1,6 @@
 package DomainLogic.PdfDrawing;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.SkeletonsValueFilters.ISkeletonValueFilter;
 import com.itextpdf.text.pdf.PdfWriter;
 

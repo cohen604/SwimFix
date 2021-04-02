@@ -1,6 +1,7 @@
 package Domain.Streaming;
-import Domain.SwimmingData.*;
-import Domain.SwimmingData.Drawing.IDraw;
+import Domain.Errors.Interfaces.SwimmingError;
+import Domain.SwimmingSkeletonsData.*;
+import Domain.Drawing.IDraw;
 import org.opencv.core.*;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;

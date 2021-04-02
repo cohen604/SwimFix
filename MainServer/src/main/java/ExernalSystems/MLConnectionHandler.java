@@ -1,8 +1,7 @@
 package ExernalSystems;
 
 import Domain.Streaming.IVideo;
-import Domain.Streaming.TaggedVideo;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 import java.util.List;
 

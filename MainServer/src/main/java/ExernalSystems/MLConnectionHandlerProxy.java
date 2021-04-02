@@ -1,14 +1,9 @@
 package ExernalSystems;
 
 import Domain.Streaming.IVideo;
-import Domain.Streaming.TaggedVideo;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.nio.file.Files.readAllLines;

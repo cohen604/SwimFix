@@ -3,7 +3,7 @@ package mainServer;
 import DTO.*;
 import Domain.StatisticsData.IStatistic;
 import Domain.Streaming.*;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import mainServer.Providers.Interfaces.IFeedbackProvider;

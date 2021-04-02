@@ -1,11 +1,9 @@
 package mainServer.Providers.Interfaces;
 
 import DTO.ConvertedVideoDTO;
-import DTO.FeedbackFilterDTO;
 import DTO.FeedbackVideoDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.IVideo;
-import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
 
 import java.time.LocalDateTime;
 import java.util.List;

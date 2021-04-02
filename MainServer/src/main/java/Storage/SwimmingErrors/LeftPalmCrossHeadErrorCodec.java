@@ -1,8 +1,7 @@
 package Storage.SwimmingErrors;
 
-import Domain.SwimmingData.Drawing.Draw;
-import Domain.SwimmingData.Errors.LeftForearmError;
-import Domain.SwimmingData.Errors.LeftPalmCrossHeadError;
+import Domain.Drawing.Draw;
+import Domain.Errors.LeftPalmCrossHeadError;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

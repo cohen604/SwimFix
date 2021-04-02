@@ -1,6 +1,6 @@
 package Domain.PeriodTimeData;
 
-public class PeriodTime {
+public class PeriodTime implements IPeriodTime{
 
     private int start;
     private int end;

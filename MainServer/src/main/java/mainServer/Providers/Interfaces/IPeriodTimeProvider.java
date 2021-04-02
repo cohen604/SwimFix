@@ -1,7 +1,7 @@
 package mainServer.Providers.Interfaces;
 
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 import java.util.List;
 

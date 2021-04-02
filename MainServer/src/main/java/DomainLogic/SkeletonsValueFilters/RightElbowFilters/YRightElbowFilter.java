@@ -1,6 +1,6 @@
 package DomainLogic.SkeletonsValueFilters.RightElbowFilters;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.SkeletonsValueFilters.ISkeletonValueFilter;
 
 public class YRightElbowFilter implements ISkeletonValueFilter {

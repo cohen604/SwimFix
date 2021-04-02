@@ -1,12 +1,16 @@
 package UnitTests.SwimmingErrorDetectorsTests;
 
-import Domain.SwimmingData.Errors.LeftForearmError;
-import Domain.SwimmingData.Errors.RightForearmError;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingError;
-import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import Domain.Drawing.FactoryDraw;
+import Domain.Drawing.IFactoryDraw;
+import Domain.Errors.Factories.FactoryForearmError;
+import Domain.Errors.Interfaces.IFactoryForearmError;
+import Domain.Errors.LeftForearmError;
+import Domain.Errors.RightForearmError;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Errors.Interfaces.SwimmingError;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import DomainLogic.SwimmingErrorDetectors.SkeletonDetoctors.ForearmErrorDetector;
 import junit.framework.TestCase;
-import DomainLogic.SwimmingErrorDetectors.*;
 import org.junit.Before;
 
 import java.util.LinkedList;

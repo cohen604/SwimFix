@@ -1,7 +1,6 @@
 package Domain.StatisticsData;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import DomainLogic.SkeletonFilters.ISkeletonFilter;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 import java.util.List;
 

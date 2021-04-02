@@ -1,6 +1,6 @@
 package DomainLogic.SkeletonsValueFilters;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 public interface ISkeletonValueFilter {
 
