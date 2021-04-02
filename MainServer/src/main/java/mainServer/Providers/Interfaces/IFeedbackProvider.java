@@ -20,14 +20,16 @@ public interface IFeedbackProvider {
     FeedbackVideoDTO streamFeedback(String path);
 
     /**
-     * TODO - add comments
+     *
      * @param video
-     * @param errorDetectors
      * @param feedbackFolderPath
+     * @param skeletonsPath
+     * @param mlSkeletonsPath
+     * @param detectorsNames
+     * @param time
      * @return
      */
     IFeedbackVideo getFeedbackVideo(IVideo video,
-                                    List<SwimmingErrorDetector> errorDetectors,
                                     String feedbackFolderPath,
                                     String skeletonsPath,
                                     String mlSkeletonsPath,
@@ -47,25 +49,5 @@ public interface IFeedbackProvider {
                                          String feedbackSkeletonsFolderPath,
                                          String mlSkeletonsFolderPath,
                                          List<String> detectorsNames);
-
-    /**
-     * TODO - add comments
-     * @return
-     */
-    List<String> getErrorDetectorsNames();
-
-    /**
-     * TODO - add comments
-     * @param feedbackFolderPath
-     * @param filterDTO
-     * @param video
-     * @return
-     */
-    IFeedbackVideo filterFeedbackVideo(String feedbackFolderPath,
-                                       String skeletonsPath,
-                                       String mlSkeletonsPath,
-                                       FeedbackFilterDTO filterDTO,
-                                       IVideo video,
-                                       List<String> detectorsNames);
 
 }

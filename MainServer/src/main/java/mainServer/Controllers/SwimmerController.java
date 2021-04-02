@@ -38,24 +38,4 @@ public class SwimmerController {
         }
         return null;
     }
-
-    @PostMapping("/feedback/filter")
-    @CrossOrigin(origins = "*")
-    public String filterFeedback(@RequestPart(name = "uid") String uid,
-                                 @RequestPart(name = "email") String email,
-                                 @RequestPart(name = "name") String name,
-                                 @RequestPart(name = "body") String body) {
-        try {
-            System.out.println("Received feedback video Filter DTO");
-            FeedbackFilterDTO filterDTO = new Gson().fromJson(body, FeedbackFilterDTO.class);
-            UserDTO userDTO = new UserDTO(uid, email, name);
-            ActionResult<FeedbackVideoStreamer> actionResult =
-                    swimFixAPI.filterFeedbackVideo(userDTO, filterDTO);
-            System.out.println("Streaming link generated, send link");
-            return actionResult.toJson();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

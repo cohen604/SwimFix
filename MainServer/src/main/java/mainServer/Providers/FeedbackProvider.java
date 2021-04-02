@@ -11,8 +11,7 @@ import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import DomainLogic.Interpolations.ISkeletonInterpolation;
 import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
-import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
-import DomainLogic.SwimmingErrorDetectors.SwimmingErrorDetector;
+import mainServer.Providers.Interfaces.IDetectProvider;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
 import mainServer.Providers.Interfaces.IPeriodTimeProvider;
 import org.opencv.core.Mat;
@@ -21,8 +20,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +29,9 @@ public class FeedbackProvider implements IFeedbackProvider {
     private MLConnectionHandler mlConnectionHandler;
     private IFactoryFeedbackVideo iFactoryFeedbackVideo;
     private IFactorySkeletonInterpolation iFactorySkeletonInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation;
-    private ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation;
+    private ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation; //TODO delete this if we are in good position
     private IFactoryVideo iFactoryVideo;
-    private IFactoryErrorDetectors iFactoryErrorDetectors;
+    private IDetectProvider iDetectProvider;
     private ISkeletonsLoader iSkeletonsLoader;
     private IFactoryVideoHandler iFactoryVideoHandler;
     private IFactoryDraw iFactoryDraw;
@@ -45,9 +41,8 @@ public class FeedbackProvider implements IFeedbackProvider {
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
                             IFactorySkeletonInterpolation iFactorySkeletonInterpolation,
                             ISkeletonsCompletion iSkeletonsCompletionBeforeInterpolation,
-                            ISkeletonsCompletion iSkeletonsCompletionAfterInterpolation,
                             IFactoryVideo iFactoryVideo,
-                            IFactoryErrorDetectors iFactoryErrorDetectors,
+                            IDetectProvider iDetectProvider,
                             ISkeletonsLoader iSkeletonsLoader,
                             IFactoryVideoHandler iFactoryVideoHandler,
                             IFactoryDraw iFactoryDraw,
@@ -57,9 +52,8 @@ public class FeedbackProvider implements IFeedbackProvider {
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
         this.iFactorySkeletonInterpolation = iFactorySkeletonInterpolation;
         this.iSkeletonsCompletionBeforeInterpolation = iSkeletonsCompletionBeforeInterpolation;
-        this.iSkeletonsCompletionAfterInterpolation = iSkeletonsCompletionAfterInterpolation;
         this.iFactoryVideo = iFactoryVideo;
-        this.iFactoryErrorDetectors = iFactoryErrorDetectors;
+        this.iDetectProvider = iDetectProvider;
         this.iSkeletonsLoader = iSkeletonsLoader;
         this.iFactoryVideoHandler = iFactoryVideoHandler;
         this.iFactoryDraw = iFactoryDraw;
@@ -84,7 +78,6 @@ public class FeedbackProvider implements IFeedbackProvider {
 
     @Override
     public IFeedbackVideo getFeedbackVideo(IVideo video,
-                                           List<SwimmingErrorDetector> errorDetectors,
                                            String feedbackFolderPath,
                                            String skeletonsPath,
                                            String mlSkeletonsFolderPath,
@@ -110,21 +103,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         // tagged video
         TaggedVideo taggedVideo = new TaggedVideo(skeletons, mlSkeletonsPath, skeletonsPath);
         // error detection
-        Map<Integer, List<SwimmingError>> errorMap = new HashMap<>();
-        for(int i =0; i<skeletons.size(); i++) {
-            ISwimmingSkeleton skeleton = skeletons.get(i);
-            List<SwimmingError> errors = new LinkedList<>();
-            for(SwimmingErrorDetector detector: errorDetectors) {
-                if (detectorsNames != null && !detectorsNames.contains(detector.getTag())) {
-                    detectorsNames.add(detector.getTag());
-                }
-                List<SwimmingError> detectorErrors = detector.detect(skeleton);
-                errors.addAll(detectorErrors);
-            }
-            if(!errors.isEmpty()) {
-                errorMap.put(i, errors);
-            }
-        }
+        Map<Integer, List<SwimmingError>> errorMap = this.iDetectProvider.detect(skeletons, periodTime);
         // generate feedback
         String feedbackPath = generateName(feedbackFolderPath, ".mp4", time);
         File feedbackFile = videoHandler.getFeedBackVideoFile(feedbackPath, video.getPath(), skeletons,
@@ -149,14 +128,11 @@ public class FeedbackProvider implements IFeedbackProvider {
         if(videoHandler.createAndGetFrames(convertedVideoDTO.getBytes(), videoPath)) {
             IVideo video = iFactoryVideo.create(convertedVideoDTO, videoPath);
             if (video.isVideoExists()) {
-                // decoders step
-                List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
                 // create the skeleton path
                 String skeletonsPath = generateName(feedbackSkeletonsFolderPath, ".csv", localDateTime);
                 // create feedback
                 IFeedbackVideo feedbackVideo = getFeedbackVideo(
-                        video, errorDetectors,
-                        feedbackFolderPath, skeletonsPath, mlSkeletonsFolderPath,
+                        video, feedbackFolderPath, skeletonsPath, mlSkeletonsFolderPath,
                         detectorsNames, localDateTime);
                 if (feedbackVideo != null) {
                     iSkeletonsLoader.save(feedbackVideo.getSwimmingSkeletons(), skeletonsPath);
@@ -179,72 +155,6 @@ public class FeedbackProvider implements IFeedbackProvider {
         return folderPath + "\\" + time.format(formatter) + fileType;
     }
 
-    @Override
-    public List<String> getErrorDetectorsNames() {
-        List<SwimmingErrorDetector> errorDetectors = getSwimmingErrorDetectors();
-        List<String> detectorsNames = new LinkedList<>();
-        for (SwimmingErrorDetector detector : errorDetectors) {
-            detectorsNames.add(detector.getTag());
-        }
-        return detectorsNames;
-    }
-
-
-    @Override
-    public IFeedbackVideo filterFeedbackVideo(String feedbackFolderPath,
-                                              String skeletonsPath,
-                                              String mlSkeletonsPath,
-                                              FeedbackFilterDTO filterDTO,
-                                              IVideo video,
-                                              List<String> detectorsNames) {
-        //TODO remove this - need to call filter form the origin skeletons saved
-        // and not create a new feedback that we save in the server file system
-        LocalDateTime localDateTime = LocalDateTime.now();
-        List<SwimmingErrorDetector> errorDetectors = buildDetectors(filterDTO);
-        return getFeedbackVideo(video, errorDetectors,
-                feedbackFolderPath, skeletonsPath, mlSkeletonsPath,
-                detectorsNames, localDateTime);
-    }
-
-    /**
-     * The function build an error detector list from a given filter
-     * @param filterDTO - filter
-     * @return
-     */
-    private List<SwimmingErrorDetector> buildDetectors(FeedbackFilterDTO filterDTO) {
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        for(String name: filterDTO.getFilters()) {
-            //todo Change this in the future to recive not a list of string but list of errorsTDO
-            //  for now its the same as the getTag function in the detectors
-            switch (name) {
-                case "Elbow":
-                    output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-                    break;
-                case "Forearm":
-                    output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-                    break;
-                case "Palm":
-                    output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-                    break;
-            }
-        }
-        return output;
-    }
-
-    /**
-     * The function return a list of error detectors to check
-     * @return
-     */
-    private List<SwimmingErrorDetector> getSwimmingErrorDetectors() {
-        //TODO change this by the selected filters
-        List<SwimmingErrorDetector> output = new LinkedList<>();
-        output.add(iFactoryErrorDetectors.createElbowErrorDetector(90, 175));
-        output.add(iFactoryErrorDetectors.createForearmErrorDetector(-10, 45));
-        output.add(iFactoryErrorDetectors.createPalmCrossHeadErrorDetector());
-        return output;
-    }
-
-
     /**
      * the function add more points to the swimmer, using interpolation and compilation
      * @param skeletons - the given skeleton the ML find
@@ -254,7 +164,6 @@ public class FeedbackProvider implements IFeedbackProvider {
         //skeletons = iSkeletonsCompletionBeforeInterpolation.complete(skeletons);
         ISkeletonInterpolation interpolation = this.iFactorySkeletonInterpolation.factory();
         skeletons = interpolation.interpolate(skeletons);
-        //skeletons = iSkeletonsCompletionAfterInterpolation.complete(skeletons);
         return skeletons;
     }
 

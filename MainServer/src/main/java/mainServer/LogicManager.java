@@ -29,9 +29,6 @@ public class LogicManager {
     private IStatisticProvider _statisticProvider;
     private IReportProvider _reportProvider;
 
-    private IFeedbackVideo lastFeedbackVideo; //TODO delete this
-
-
     public LogicManager(IUserProvider userProvider,
                         IFeedbackProvider streamProvider,
                         ISkeletonsLoader skeletonLoader,
@@ -114,8 +111,6 @@ public class LogicManager {
                     user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
             if (feedbackVideo != null) {
                 _userProvider.addFeedbackToUser(user, feedbackVideo);
-                //TODO delete this after removing lastFeedbackVideo
-                this.lastFeedbackVideo = feedbackVideo;
                 FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
                 if (feedbackVideoStreamer != null) {
                     return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
@@ -142,32 +137,6 @@ public class LogicManager {
         }
         //TODO return error
         //TODO maybe always generate a video if it a error video then return error video ?
-        return null;
-    }
-
-    /**
-     * The function create a new feedback video, filter, and send a new feedback link
-     * @param userDTO - the user info
-     * @param filterDTO - the feedback to filter
-     * @return new feedbackVideoStreamer
-     */
-    public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
-        IUser user = _userProvider.getUser(userDTO);
-        if(user != null && lastFeedbackVideo != null) {
-            // TODO - feedback video isn't video any more
-            IVideo video = this.lastFeedbackVideo.getIVideo();
-            List<String> detectorsNames = new LinkedList<>();
-            IFeedbackVideo feedbackVideo = _feedbackProvider.filterFeedbackVideo(
-                    user.getFeedbacksPath(),
-                    user.getSkeletonsPath(),
-                    user.getMLSkeletonsPath(),
-                    filterDTO, video, detectorsNames);
-            FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-            if(feedbackVideoStreamer == null) {
-                //TODO return here action result error!!
-            }
-            return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
-        }
         return null;
     }
 

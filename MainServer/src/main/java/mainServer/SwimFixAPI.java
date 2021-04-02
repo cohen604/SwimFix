@@ -13,7 +13,6 @@ import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
-import DomainLogic.Completions.SkeletonsCompletionAfter;
 import DomainLogic.Completions.SkeletonsCompletionBefore;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import DomainLogic.FileLoaders.SkeletonsLoader;
@@ -32,11 +31,11 @@ public class SwimFixAPI {
       IUserProvider userProvider = new UserProvider(new UserDao());
 
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors();
+      IDetectProvider detectProvider = new DetectProvider(iFactoryErrorDetectors);
       IFactoryVideo iFactoryVideo = new FactoryVideo();
       IFactoryFeedbackVideo iFactoryFeedbackVideo = new FactoryFeedbackVideo();
       IFactorySkeletonInterpolation iFactorySkeletonInterpolation = new FactorySkeletonInterpolation();
       ISkeletonsCompletion completionBefore = new SkeletonsCompletionBefore();
-      ISkeletonsCompletion completionAfter = new SkeletonsCompletionAfter();
       MLConnectionHandler mlConnectionHandler = new MLConnectionHandlerProxy();
       ISkeletonsLoader skeletonsLoaderFeedback = new SkeletonsLoader();
       IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
@@ -44,8 +43,7 @@ public class SwimFixAPI {
       IFactorySwimmingPeriodTime factorySwimmingPeriodTime = new FactorySwimmingPeriodTime();
       IPeriodTimeProvider iPeriodTimeProvider = new PeriodTimeProvider(factorySwimmingPeriodTime);
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
-              iFactorySkeletonInterpolation, completionBefore,
-              completionAfter, iFactoryVideo, iFactoryErrorDetectors, skeletonsLoaderFeedback,
+              iFactorySkeletonInterpolation, completionBefore, iFactoryVideo, detectProvider, skeletonsLoaderFeedback,
               iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider);
 
       ISkeletonsLoader skeletonsLoaderLogic = new SkeletonsLoader();
@@ -79,10 +77,6 @@ public class SwimFixAPI {
 
    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
       return logicManager.streamFile(path);
-   }
-
-   public ActionResult<FeedbackVideoStreamer> filterFeedbackVideo(UserDTO userDTO, FeedbackFilterDTO filterDTO) {
-      return logicManager.filterFeedbackVideo(userDTO, filterDTO);
    }
 
    public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
