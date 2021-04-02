@@ -13,11 +13,6 @@ public class Draw implements IDraw {
 
     @Override
     public Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius) {
-//        Point point = new Point(skeletonPoint.getX(),skeletonPoint.getY());
-//        Scalar color = new Scalar(0,255,0);
-//        int thickness = 3;
-//        Imgproc.circle(frame, point, radius, color, thickness);
-//        return frame;
         return drawCircle(frame, skeletonPoint, radius, 3, 0, 255, 0);
     }
 
@@ -111,10 +106,12 @@ public class Draw implements IDraw {
 
     //https://math.stackexchange.com/questions/1314006/drawing-an-arrow
     @Override
-    public Mat drawArrow(Mat frame, IPoint a, IPoint b) {
-        double red = 6;
-        double green = 217;
-        double blue = 27;
+    public Mat drawArrow(Mat frame,
+                         IPoint a,
+                         IPoint b,
+                         double red,
+                         double green,
+                         double blue) {
         double size = 8 / IPointUtils.calcDistance(a, b);
         //System.out.println("Arrow Size "+ size);
         if(size > 0.5) {
@@ -144,7 +141,10 @@ public class Draw implements IDraw {
     public Mat drawVerticalArrow(Mat frame,
                                  IPoint pointA,
                                  IPoint pointB,
-                                 boolean verticalSide) {
+                                 boolean verticalSide,
+                                 double red,
+                                 double green,
+                                 double blue) {
         IPoint vec = IPointUtils.getVec(pointA, pointB);
         double rotationAngle = -90;
         if(verticalSide) {
@@ -152,7 +152,7 @@ public class Draw implements IDraw {
         }
         vec = IPointUtils.pivotVector(vec, rotationAngle);
         vec = IPointUtils.addByScalars(vec, pointB.getX(), pointB.getY());
-        return drawArrow(frame, pointB, vec);
+        return drawArrow(frame, pointB, vec, red, green, blue);
     }
 
     private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b) {

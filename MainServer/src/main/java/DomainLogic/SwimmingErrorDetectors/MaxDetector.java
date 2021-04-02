@@ -32,7 +32,6 @@ public class MaxDetector implements ISwimmingTimeErrorDetector {
     private void detectRight(List<ISwimmingSkeleton> skeletons,
                              List<IPeriodTime> rights,
                              Map<Integer, List<SwimmingError>> errorMap) {
-
         int tresholdMax = 4;
         ISkeletonValueFilter filter = new YRightWristFilter();
         detect(skeletons, rights, errorMap, tresholdMax, filter);
@@ -58,7 +57,7 @@ public class MaxDetector implements ISwimmingTimeErrorDetector {
             if(index <0) {
                 index =0;
             }
-            for(; index < frameIndex+tresholdMax && index < skeletons.size(); index++) {
+            for(; index < frameIndex+tresholdMax || index < skeletons.size(); index++) {
                 ISwimmingSkeleton skeleton = skeletons.get(index);
                 for(ISkeletonErrorDetector detector: this.detectors) {
                     addToMap(errorMap, index, detector.detect(skeleton));

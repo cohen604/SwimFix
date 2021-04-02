@@ -42,10 +42,10 @@ public class LeftForearmError extends ForearmError {
         drawLine(frame, elbow, wrist, 255, 0, 0, 1, 2);
         // recommendation
         if(wrist.getX() < elbow.getX()) {
-            drawVerticalArrow(frame, elbow, wrist, false);
+            drawVerticalArrow(frame, elbow, wrist, false, 10, 217, 27);
         }
         else {
-            drawVerticalArrow(frame, elbow, wrist, true);
+            drawVerticalArrow(frame, elbow, wrist, true,10, 217, 27);
         }
     }
 }
