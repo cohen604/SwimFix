@@ -256,7 +256,7 @@ public class ReportProvider implements IReportProvider {
     }
 
     private String getCountAndPrecent( int count, double precent) {
-        return count +" ( " + precent + "% )";
+        return count +" (" + precent + "%)";
     }
 
     private void addHeadGraphs(Document document,
