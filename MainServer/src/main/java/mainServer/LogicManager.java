@@ -167,7 +167,8 @@ public class LogicManager {
                         modelAndInterpolation,
                         user.getReportsPath(),
                         statistic,
-                        feedbackVideo.getSwimmingPeriodTime());
+                        feedbackVideo.getSwimmingPeriodTime(),
+                        feedbackVideo.getSwimmingErrors());
                 ResearcherReportDTO reportDTO = new ResearcherReportDTO(
                         feedbackVideo.getPath(),
                         feedbackVideo.getSkeletonsPath(),

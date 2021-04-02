@@ -57,7 +57,7 @@ public class MaxDetector implements ISwimmingTimeErrorDetector {
             if(index <0) {
                 index =0;
             }
-            for(; index < frameIndex+tresholdMax || index < skeletons.size(); index++) {
+            for(; index < frameIndex+tresholdMax && index < skeletons.size(); index++) {
                 ISwimmingSkeleton skeleton = skeletons.get(index);
                 for(ISkeletonErrorDetector detector: this.detectors) {
                     addToMap(errorMap, index, detector.detect(skeleton));

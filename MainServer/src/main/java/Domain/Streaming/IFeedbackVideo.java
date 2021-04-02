@@ -44,17 +44,33 @@ public interface IFeedbackVideo {
     IVideo getIVideo();
 
     /**
-     * TODO comment
-     * @return
+     * The function get the swimming skeletons
+     * @return swimming skeletons
      */
     List<ISwimmingSkeleton> getSwimmingSkeletons();
 
+    /**
+     * The function return the path of the ml skeletons csv
+     * @return path of the ml skeletons csv
+     */
     String getMLSkeletonsPath();
 
+    /**
+     * The function return the path of the skeletons csv
+     * @return path of the ml skeletons csv
+     */
     String getSkeletonsPath();
 
+    /**
+     * The function return the swimming error map
+     * @return the swimming error map
+     */
     Map<Integer, List<SwimmingError>> getSwimmingErrors();
 
+    /**
+     * The function return the swimming period times
+     * @return the swimming period time
+     */
     ISwimmingPeriodTime getSwimmingPeriodTime();
 
 }
