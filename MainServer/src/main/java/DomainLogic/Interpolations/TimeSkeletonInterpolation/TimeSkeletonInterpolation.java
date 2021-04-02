@@ -1,8 +1,8 @@
 package DomainLogic.Interpolations.TimeSkeletonInterpolation;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import DomainLogic.Interpolations.ISkeletonInterpolation;
 import DomainLogic.SkeletonFilters.*;
 

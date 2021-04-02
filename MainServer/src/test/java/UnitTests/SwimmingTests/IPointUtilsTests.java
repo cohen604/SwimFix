@@ -1,10 +1,10 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonGraph.SkeletonPoint;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SkeletonPoint;
 import junit.framework.TestCase;
 
-import static Domain.SwimmingData.Points.IPointUtils.*;
+import static Domain.Points.IPointUtils.*;
 
 public class IPointUtilsTests extends TestCase {
 

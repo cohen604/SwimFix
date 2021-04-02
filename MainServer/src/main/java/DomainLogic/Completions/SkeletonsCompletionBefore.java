@@ -1,9 +1,9 @@
 package DomainLogic.Completions;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package DomainLogic.SkeletonsValueFilters.HeadFilters;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.SkeletonsValueFilters.ISkeletonValueFilter;
 
 public class YHeadFilter implements ISkeletonValueFilter {

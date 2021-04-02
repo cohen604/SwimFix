@@ -4,21 +4,21 @@ import java.util.List;
 
 public class SwimmingPeriodTime implements ISwimmingPeriodTime {
 
-    private List<PeriodTime> rights;
-    private List<PeriodTime> lefts;
+    private List<IPeriodTime> rights;
+    private List<IPeriodTime> lefts;
 
-    public SwimmingPeriodTime(List<PeriodTime> rights, List<PeriodTime> lefts) {
+    public SwimmingPeriodTime(List<IPeriodTime> rights, List<IPeriodTime> lefts) {
         this.rights = rights;
         this.lefts = lefts;
     }
 
     @Override
-    public List<PeriodTime> getRightTimes() {
+    public List<IPeriodTime> getRightTimes() {
         return this.rights;
     }
 
     @Override
-    public List<PeriodTime> getLeftTimes() {
+    public List<IPeriodTime> getLeftTimes() {
         return this.lefts;
     }
 

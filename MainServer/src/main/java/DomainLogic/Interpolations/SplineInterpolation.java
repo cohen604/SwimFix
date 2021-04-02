@@ -1,7 +1,7 @@
 package DomainLogic.Interpolations;
 
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
 import org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 

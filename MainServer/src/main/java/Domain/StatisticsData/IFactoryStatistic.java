@@ -1,6 +1,6 @@
 package Domain.StatisticsData;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 import java.util.List;
 

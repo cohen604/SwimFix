@@ -1,8 +1,8 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
 public class SwimmingSkeletonCompositionTests extends SwimmingSkeletonTests {
 

@@ -1,5 +1,6 @@
 package Storage.User;
 
+import Domain.PeriodTimeData.IPeriodTime;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.PeriodTimeData.PeriodTime;
 import Domain.PeriodTimeData.SwimmingPeriodTime;
@@ -7,13 +8,10 @@ import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
-import Domain.SwimmingData.Errors.*;
-import Domain.SwimmingData.SwimmingError;
+import Domain.Errors.*;
+import Domain.Errors.Interfaces.SwimmingError;
 import Domain.UserData.Swimmer;
-import Domain.UserData.User;
 import DomainLogic.FileLoaders.SkeletonsLoader;
-import Storage.SwimmingErrors.RightElbowErrorCodec;
-import mainServer.Providers.Interfaces.IPeriodTimeProvider;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -125,15 +123,15 @@ public class SwimmerCodec implements Codec<Swimmer> {
     private ISwimmingPeriodTime decodePeriodTime(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String name = bsonReader.readName();
-        List<PeriodTime> rights = decodeTimes(bsonReader, decoderContext);
+        List<IPeriodTime> rights = decodeTimes(bsonReader, decoderContext);
         name = bsonReader.readName();
-        List<PeriodTime> lefts = decodeTimes(bsonReader, decoderContext);
+        List<IPeriodTime> lefts = decodeTimes(bsonReader, decoderContext);
         bsonReader.readEndDocument();
         return new SwimmingPeriodTime(rights, lefts);
     }
 
-    private List<PeriodTime> decodeTimes(BsonReader bsonReader, DecoderContext decoderContext) {
-        List<PeriodTime> output = new LinkedList<>();
+    private List<IPeriodTime> decodeTimes(BsonReader bsonReader, DecoderContext decoderContext) {
+        List<IPeriodTime> output = new LinkedList<>();
         bsonReader.readStartArray();
         while (bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             bsonReader.readStartDocument();
@@ -220,9 +218,9 @@ public class SwimmerCodec implements Codec<Swimmer> {
         bsonWriter.writeEndDocument();
     }
 
-    private void encodeTimes(BsonWriter bsonWriter, List<PeriodTime> times, EncoderContext context) {
+    private void encodeTimes(BsonWriter bsonWriter, List<IPeriodTime> times, EncoderContext context) {
         bsonWriter.writeStartArray();
-        for(PeriodTime p: times) {
+        for(IPeriodTime p: times) {
             bsonWriter.writeStartDocument();
             bsonWriter.writeInt32("start", p.getStart());
             bsonWriter.writeInt32("end", p.getEnd());

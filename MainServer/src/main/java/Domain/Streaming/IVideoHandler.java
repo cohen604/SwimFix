@@ -1,7 +1,7 @@
 package Domain.Streaming;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingError;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Errors.Interfaces.SwimmingError;
 import org.opencv.core.Mat;
 
 import java.io.File;

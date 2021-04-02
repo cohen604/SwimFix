@@ -2,7 +2,7 @@ package mainServer.Providers;
 
 import Domain.StatisticsData.IFactoryStatistic;
 import Domain.StatisticsData.IStatistic;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import mainServer.Providers.Interfaces.IStatisticProvider;
 
 import java.util.List;

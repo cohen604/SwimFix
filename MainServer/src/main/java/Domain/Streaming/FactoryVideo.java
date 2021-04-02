@@ -1,7 +1,6 @@
 package Domain.Streaming;
 
 import DTO.ConvertedVideoDTO;
-import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 
 public class FactoryVideo implements IFactoryVideo{
 

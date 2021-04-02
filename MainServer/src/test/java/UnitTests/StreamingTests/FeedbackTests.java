@@ -1,15 +1,11 @@
 package UnitTests.StreamingTests;
 
-import DTO.FeedbackVideoDTO;
 import DTO.FeedbackVideoStreamer;
-import Domain.PeriodTimeData.PeriodTime;
 import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
 import Domain.Streaming.Video;
-import Domain.Streaming.VideoHandler;
-import Domain.SwimmingData.Drawing.Draw;
-import Domain.SwimmingData.SwimmingError;
+import Domain.Errors.Interfaces.SwimmingError;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;

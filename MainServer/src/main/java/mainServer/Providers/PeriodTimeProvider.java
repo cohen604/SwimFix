@@ -1,10 +1,11 @@
 package mainServer.Providers;
 
 import Domain.PeriodTimeData.IFactorySwimmingPeriodTime;
+import Domain.PeriodTimeData.IPeriodTime;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.PeriodTimeData.PeriodTime;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import DomainLogic.SkeletonFilters.ISkeletonFilter;
 import DomainLogic.SkeletonFilters.LeftFilter;
 import DomainLogic.SkeletonFilters.RightFilter;
@@ -23,17 +24,17 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
 
     @Override
     public ISwimmingPeriodTime analyzeTimes(List<ISwimmingSkeleton> skeletons) {
-        List<PeriodTime> rights = analyze(skeletons, new RightFilter());
-        List<PeriodTime> lefts = analyze(skeletons, new LeftFilter());
+        List<IPeriodTime> rights = analyze(skeletons, new RightFilter());
+        List<IPeriodTime> lefts = analyze(skeletons, new LeftFilter());
         return factorySwimmingPeriodTime.factory(rights, lefts);
     }
 
     @Override
     public List<ISwimmingSkeleton> correctSkeletons(List<ISwimmingSkeleton> skeletons, ISwimmingPeriodTime times) {
         int tresholdPeriod = 6;
-        List<PeriodTime> rights = times.getRightTimes();
+        List<IPeriodTime> rights = times.getRightTimes();
         for(int j =0; j<rights.size(); j++) {
-            PeriodTime period = rights.get(j);
+            IPeriodTime period = rights.get(j);
             if(period.getTimeLength() < tresholdPeriod) {
                 for(int i=period.getStart(); i<period.getEnd(); i++) {
                     ISwimmingSkeleton skeleton = skeletons.get(i);
@@ -46,9 +47,9 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
             }
         }
 
-        List<PeriodTime> lefts = times.getLeftTimes();
+        List<IPeriodTime> lefts = times.getLeftTimes();
         for(int j =0; j<lefts.size(); j++) {
-            PeriodTime period = lefts.get(j);
+            IPeriodTime period = lefts.get(j);
             if(period.getTimeLength() < tresholdPeriod) {
                 for(int i=period.getStart(); i<period.getEnd(); i++) {
                     ISwimmingSkeleton skeleton = skeletons.get(i);
@@ -63,8 +64,8 @@ public class PeriodTimeProvider implements IPeriodTimeProvider {
         return skeletons;
     }
 
-    private List<PeriodTime> analyze(List<ISwimmingSkeleton> skeletons, ISkeletonFilter filter) {
-        List<PeriodTime> output = new LinkedList<>();
+    private List<IPeriodTime> analyze(List<ISwimmingSkeleton> skeletons, ISkeletonFilter filter) {
+        List<IPeriodTime> output = new LinkedList<>();
         int start = -1;
         for(int i=0; i < skeletons.size(); i++) {
             boolean check = filter.check(skeletons.get(i));

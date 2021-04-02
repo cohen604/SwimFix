@@ -1,8 +1,8 @@
 package DomainLogic.Interpolations;
 
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 import DomainLogic.Interpolations.TimeSkeletonInterpolation.TimeSkeletonInterpolation;
 
 import java.util.LinkedList;

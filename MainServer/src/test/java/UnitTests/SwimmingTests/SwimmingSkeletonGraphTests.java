@@ -1,11 +1,7 @@
 package UnitTests.SwimmingTests;
 
-import Domain.SwimmingData.*;
-import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
-import Domain.SwimmingData.Points.IPoint;
-import javafx.util.Pair;
-import junit.framework.TestCase;
-import org.junit.Before;
+import Domain.SwimmingSkeletonsData.*;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SwimmingSkeleton;
 
 import java.util.LinkedList;
 import java.util.List;

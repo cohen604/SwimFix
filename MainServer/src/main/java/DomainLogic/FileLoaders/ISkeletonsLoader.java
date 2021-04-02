@@ -1,8 +1,7 @@
 package DomainLogic.FileLoaders;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ISkeletonsLoader {

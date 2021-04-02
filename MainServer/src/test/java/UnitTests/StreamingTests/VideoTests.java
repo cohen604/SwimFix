@@ -2,15 +2,12 @@ package UnitTests.StreamingTests;
 
 import DTO.ConvertedVideoDTO;
 import Domain.Streaming.Video;
-import Domain.Streaming.VideoHandler;
-import Domain.SwimmingData.Drawing.Draw;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 

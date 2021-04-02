@@ -1,9 +1,8 @@
 package ExernalSystems;
 
 import Domain.Streaming.IVideo;
-import Domain.Streaming.TaggedVideo;
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.LinkedList;

@@ -1,13 +1,11 @@
 package ExternalSystemTests;
 
 import Domain.Streaming.*;
-import Domain.SwimmingData.Drawing.Draw;
-import Domain.SwimmingData.ISwimmingSkeleton;
+import Domain.Drawing.Draw;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerReal;
 import junit.framework.TestCase;
-import DomainLogic.SwimmingErrorDetectors.FactoryDraw;
-import DomainLogic.SwimmingErrorDetectors.IFactoryDraw;
 import org.junit.After;
 import org.junit.Before;
 import org.opencv.core.Mat;

@@ -1,7 +1,7 @@
 package Domain.Streaming;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.SwimmingSkeletonGraph.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SwimmingSkeleton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -1,16 +1,15 @@
 package DomainLogic.FileLoaders;
 
-import Domain.SwimmingData.ISwimmingSkeleton;
-import Domain.SwimmingData.Points.IPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
-import Domain.SwimmingData.SwimmingSkeletonComposition.SwimmingSkeleton;
+import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.Points.IPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
