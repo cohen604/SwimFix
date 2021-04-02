@@ -7,9 +7,8 @@ import 'package:client/Web/WebColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:client/Screens/Screen.dart';
 
-class WebLoginScreen extends Screen {
+class WebLoginScreen extends StatefulWidget {
 
   WebLoginScreen({Key key}) : super(key: key);
 

@@ -12,11 +12,10 @@ import 'package:client/Web/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:client/Screens/Screen.dart';
 import 'package:flutter/scheduler.dart';
 
 
-class WebUploadScreen extends Screen {
+class WebUploadScreen extends StatefulWidget {
 
   UploadScreenArguments args;
   WebUploadScreen({this.args, Key key}) : super(key: key);
