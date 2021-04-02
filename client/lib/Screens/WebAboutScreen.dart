@@ -67,7 +67,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       child: Column(
         children: [
           Flexible(
-            flex: 3,
+            flex: 4,
             child: Container(
             ),
           ),
@@ -77,11 +77,15 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
               alignment: Alignment.topRight,
               child: ElevatedButton(
                 style: ButtonStyle(
+                  shadowColor: MaterialStateColor.resolveWith((states) =>Colors.black),
                   backgroundColor: MaterialStateColor.resolveWith((states) => _webColors.getBackgroundForI1()),
+                  shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  )),
                 ),
                 child: Container(
-                    padding: EdgeInsets.all(3),
-                    child: buildText(context, 'Sign Up', 24,
+                    padding: EdgeInsets.all(5),
+                    child: buildText(context, 'Sign Up', 28,
                       fontWeight: FontWeight.bold)
                 ),
               )
