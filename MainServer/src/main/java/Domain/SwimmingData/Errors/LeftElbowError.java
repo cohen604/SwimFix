@@ -17,10 +17,9 @@ public class LeftElbowError extends ElbowError {
     }
 
     @Override
-    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
+    public void drawBefore(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint shoulder = skeleton.getLeftShoulder();
         IPoint elbow = skeleton.getLeftElbow();
-        IPoint wrist = skeleton.getLeftWrist();
 
         IPoint v = IPointUtils.getVec(shoulder, elbow);
         IPoint vmin = IPointUtils.pivotVector(v, -this.minAngle);
@@ -34,10 +33,14 @@ public class LeftElbowError extends ElbowError {
 
         drawLine(frame, elbow, vmin, 10, 10, 10, 1, 1);
         drawLine(frame, elbow, vmax, 10, 10, 10, 1, 1);
+    }
+
+    @Override
+    public void drawAfter(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint wrist = skeleton.getLeftWrist();
 
         double additionX = inside ? 20 : -35;
         IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
         drawArrow(frame, wrist, endArrow);
-
     }
 }

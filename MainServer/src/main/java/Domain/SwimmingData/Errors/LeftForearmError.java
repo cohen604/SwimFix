@@ -17,17 +17,34 @@ public class LeftForearmError extends ForearmError{
     }
 
     @Override
-    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
+    public void drawBefore(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint elbow = skeleton.getLeftElbow();
         IPoint wrist = skeleton.getLeftWrist();
-        int thickness = 2;
-        double r = 240, g = 88, b = 248, a = 255.0;
-        drawLine(frame, elbow, wrist, r, g, b, a, thickness);
 
+        double distance = IPointUtils.calcDistance(elbow, wrist);
+        IPoint elbowTag = IPointUtils.addByScalars(elbow, 0, distance * 2);
+        IPoint v = IPointUtils.getVec(elbow, elbowTag);
+        IPoint thetaMax = IPointUtils.pivotVector(v, -this.maxAngle);
+        IPoint thetaMin = IPointUtils.pivotVector(v, -this.minAngle);
+
+        thetaMax = IPointUtils.addByScalars(thetaMax, elbow.getX(), elbow.getY());
+        thetaMin = IPointUtils.addByScalars(thetaMin, elbow.getX(), elbow.getY());
+
+        drawLine(frame, elbow, thetaMax, 0, 255, 0, 1, 2);
+        drawLine(frame, elbow, thetaMin, 0, 255, 0, 1, 2);
+    }
+
+    @Override
+    public void drawAfter(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint elbow = skeleton.getLeftElbow();
+        IPoint wrist = skeleton.getLeftWrist();
+        drawLine(frame, elbow, wrist, 255, 0, 0, 1, 2);
         // recommendation
-        //double slope = 1 / IPointUtils.calcSlope(wrist, elbow);
-        double additionX = inside ? 20 : -35;
-        IPoint endArrow = IPointUtils.addByScalars(elbow, additionX, 0);
-        drawArrow(frame, elbow, endArrow);
+        if(wrist.getX() < elbow.getX()) {
+            drawVerticalArrow(frame, elbow, wrist, false);
+        }
+        else {
+            drawVerticalArrow(frame, elbow, wrist, true);
+        }
     }
 }

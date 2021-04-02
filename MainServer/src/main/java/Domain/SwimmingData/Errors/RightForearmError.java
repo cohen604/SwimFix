@@ -17,11 +17,9 @@ public class RightForearmError extends ForearmError{
     }
 
     @Override
-    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
+    public void drawBefore(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint elbow = skeleton.getRightElbow();
         IPoint wrist = skeleton.getRightWrist();
-
-        drawLine(frame, elbow, wrist, 255, 0, 0, 1, 1);
 
         double distance = IPointUtils.calcDistance(elbow, wrist);
         IPoint elbowTag = IPointUtils.addByScalars(elbow, 0, distance * 2);
@@ -35,16 +33,19 @@ public class RightForearmError extends ForearmError{
         drawLine(frame, elbow, thetaMax, 0, 255, 0, 1, 2);
         drawLine(frame, elbow, thetaMin, 0, 255, 0, 1, 2);
 
+    }
+
+    @Override
+    public void drawAfter(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint elbow = skeleton.getRightElbow();
+        IPoint wrist = skeleton.getRightWrist();
+        drawLine(frame, elbow, wrist, 255, 0, 0, 1, 1);
         // recommendation
-        drawVerticalArrow(frame, elbow, wrist, inside);
-//        IPoint vecWristElbow = IPointUtils.getVec(elbow, wrist);
-//        double rotationAngle = -90; // arrow to right
-//        if(inside) {
-//            // arrow to left
-//            rotationAngle = 90;
-//        }
-//        vecWristElbow = IPointUtils.pivotVector(vecWristElbow, rotationAngle);
-//        vecWristElbow = IPointUtils.addByScalars(vecWristElbow, wrist.getX(), wrist.getY());
-//        drawArrow(frame, wrist, vecWristElbow);
+        if(wrist.getX() > elbow.getX()) {
+            drawVerticalArrow(frame, elbow, wrist, true);
+        }
+        else {
+            drawVerticalArrow(frame, elbow, wrist, false);
+        }
     }
 }
