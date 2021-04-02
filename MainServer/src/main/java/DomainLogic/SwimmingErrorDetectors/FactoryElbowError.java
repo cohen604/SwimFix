@@ -14,14 +14,14 @@ public class FactoryElbowError implements IFactoryElbowError {
     }
 
     @Override
-    public SwimmingError createLeft(double angle, boolean inside) {
+    public SwimmingError createLeft(double maxAngle, double minAngle, double angle, boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new LeftElbowError(drawer, angle, inside);
+        return new LeftElbowError(drawer, maxAngle, minAngle, angle, inside);
     }
 
     @Override
-    public SwimmingError createRight(double angle, boolean inside) {
+    public SwimmingError createRight(double maxAngle, double minAngle, double angle, boolean inside) {
         IDraw drawer = iFactoryDraw.create();
-        return new RightElbowError(drawer, angle, inside);
+        return new RightElbowError(drawer, maxAngle, minAngle,  angle, inside);
     }
 }

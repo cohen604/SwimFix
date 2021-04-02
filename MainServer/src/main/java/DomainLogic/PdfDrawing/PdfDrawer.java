@@ -90,7 +90,7 @@ public class PdfDrawer implements IPdfDrawer {
                              List<ISwimmingSkeleton> model,
                              List<ISwimmingSkeleton> modelAndInterpolation,
                              ISkeletonValueFilter filter) {
-        // draw the axis
+        // drawBefore the axis
         drawLineOnCanvas(canvas, xStart, yStart, xStart, yStart + ySize, BaseColor.BLACK, 2);
         drawLineOnCanvas(canvas, xStart, yStart, xStart + xSize, yStart, BaseColor.BLACK, 2);
         drawText(canvas, "Frames", (xStart + xSize) / 2, yStart - 20, 12 );
@@ -117,7 +117,7 @@ public class PdfDrawer implements IPdfDrawer {
             double x = 0;
             for (int i = 0; i < model.size(); i++) {
                 x = xStart + i * xAdd;
-                // model draw
+                // model drawBefore
                 y = filter.filter(model.get(i));
                 y = yStart + changeRange(yMax, 0, ySize, 0, y);
                 if (i > 0) {
@@ -139,7 +139,7 @@ public class PdfDrawer implements IPdfDrawer {
             double x = 0;
             for (int i = 0; i < model.size(); i++) {
                 x = xStart + i * xAdd;
-                // actual draw
+                // actual drawBefore
                 y = filter.filter(model.get(i));
                 y = yStart + changeRange(yMax, 0, ySize, 0, y);
                 drawPointOnCanvas(canvas, x, y, color);
@@ -167,7 +167,7 @@ public class PdfDrawer implements IPdfDrawer {
         dup.setColorStroke(color);
         dup.setLineWidth(width);
         dup.moveTo(x0, y0);
-        dup.lineTo(x1, y1); // draw y line
+        dup.lineTo(x1, y1); // drawBefore y line
         dup.fillStroke();
         canvas.add(dup);
     }

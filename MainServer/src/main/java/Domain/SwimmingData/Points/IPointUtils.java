@@ -1,6 +1,6 @@
 package Domain.SwimmingData.Points;
 
-import Domain.SwimmingData.SwimmingSkeletonGraph.SkeletonPoint;
+import Domain.SwimmingData.SwimmingSkeletonComposition.SkeletonPoint;
 
 public class IPointUtils {
 
@@ -34,7 +34,13 @@ public class IPointUtils {
         double x = other.getX() - current.getX();
         double y = other.getY() - current.getY();
         double size = Math.sqrt(x*x + y*y);
-        return new SkeletonPoint( x/size, y/size, -1);
+        return new SkeletonPoint( x/size, y/size);
+    }
+
+    public static IPoint getVec(IPoint current, IPoint other) {
+        double x = other.getX() - current.getX();
+        double y = other.getY() - current.getY();
+        return new SkeletonPoint(x, y);
     }
 
     public static double getAngleBetween(IPoint current, IPoint other) {
@@ -45,17 +51,17 @@ public class IPointUtils {
     }
 
     public static IPoint mulByScalar(IPoint a, double scalar) {
-        return new SkeletonPoint(a.getX() * scalar, a.getY() * scalar, -1);
+        return new SkeletonPoint(a.getX() * scalar, a.getY() * scalar);
     }
 
     public static IPoint addByScalars(IPoint a, double scalarX, double scalarY) {
-        return new SkeletonPoint(a.getX() + scalarX, a.getY() + scalarY, -1);
+        return new SkeletonPoint(a.getX() + scalarX, a.getY() + scalarY);
     }
 
     public static IPoint getMiddlePoint(IPoint a, IPoint b) {
         double x = (a.getX() + b.getX()) / 2;
         double y = (a.getY() + b.getY()) / 2;
-        return new SkeletonPoint( x, y, -1);
+        return new SkeletonPoint( x, y);
     }
 
     public static IPoint calcPointOnLinearLineLowerThenDistance(double slop, IPoint point, double y) {
@@ -75,13 +81,21 @@ public class IPointUtils {
             }
         }
         while (distance > thresholdDistance);
-        return new SkeletonPoint(x, y, -1);
+        return new SkeletonPoint(x, y);
     }
 
     public static IPoint calcPointOnLinearForGivenX(double slope, IPoint point, double x) {
         double y = point.getY() + slope * (x - point.getX());
-        return new SkeletonPoint(x, y,-1);
+        return new SkeletonPoint(x, y);
     }
 
+    public static IPoint pivotVector(IPoint vec, double theta) {
+        double py = vec.getY();
+        double px = vec.getX();
+        theta = Math.toRadians(theta);
+        double x = px * Math.cos(theta) - py * Math.sin(theta);
+        double y = px * Math.sin(theta) + py * Math.cos(theta);
+        return new SkeletonPoint(x, y);
+    }
 
 }

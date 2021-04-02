@@ -1,20 +1,13 @@
-import 'package:client/Domain/FeedBackVideoStreamer.dart';
-import 'package:client/Domain/ScreenArguments/CameraScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/ResearcherScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/SwimmerScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/UploadScreenArguments.dart';
-import 'package:client/Domain/ScreenArguments/WelcomeScreenArguments.dart';
-import 'package:client/Screens/CameraScreen.dart';
-import 'package:client/Screens/LoginScreen.dart';
-import 'package:client/Screens/UploadScreen.dart';
-import 'package:client/Screens/VideosScreen.dart';
-import 'package:client/Screens/WelcomeScreen.dart';
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'Screens/Arguments/CameraScreenArguments.dart';
+import 'Screens/Arguments/ResearcherScreenArguments.dart';
+import 'Screens/Arguments/SwimmerScreenArguments.dart';
+import 'Screens/Arguments/UploadScreenArguments.dart';
+import 'Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Domain/ScreenArguments/VideoScreenArguments.dart';
-import 'Domain/Swimmer.dart';
+import 'Screens/Arguments/VideoScreenArguments.dart';
 import 'Screens/ScreensHolder.dart';
-import 'Screens/VideoPreviewScreen.dart';
 
 /// if running from web:localhost add to project arguments --web-host 5000
 void main() async {

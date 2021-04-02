@@ -17,9 +17,11 @@ public class LeftForearmErrorCodec implements Codec<LeftForearmError> {
         //bsonReader.readStartDocument();
         //String tag = bsonReader.readString("tag");
         double angle = bsonReader.readDouble("angle");
+        double angleMax = bsonReader.readDouble("angleMax");
+        double angleMin = bsonReader.readDouble("angleMin");
         boolean inside = bsonReader.readBoolean("side");
         //bsonReader.readEndDocument();
-        return new LeftForearmError(new Draw(), angle, inside);
+        return new LeftForearmError(new Draw(), angle, angleMax, angleMin, inside);
     }
 
     @Override
@@ -27,6 +29,8 @@ public class LeftForearmErrorCodec implements Codec<LeftForearmError> {
         bsonWriter.writeStartDocument();
         bsonWriter.writeString("tag", leftForearmError.getTag());
         bsonWriter.writeDouble("angle", leftForearmError.getAngle());
+        bsonWriter.writeDouble("angleMax", leftForearmError.getMaxAngle());
+        bsonWriter.writeDouble("angleMin", leftForearmError.getMinAngle());
         bsonWriter.writeBoolean("side", leftForearmError.getInside());
         bsonWriter.writeEndDocument();
     }

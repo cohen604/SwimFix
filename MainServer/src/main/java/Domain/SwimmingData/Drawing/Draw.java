@@ -85,7 +85,7 @@ public class Draw implements IDraw {
     }
 
     /**
-     * The function draw the logo on the frame
+     * The function drawBefore the logo on the frame
      * @param frame the current frame
      * @return the new frame with the logo
      */
@@ -99,7 +99,7 @@ public class Draw implements IDraw {
     }
 
     /**
-     * The function draw the logo on the frame
+     * The function drawBefore the logo on the frame
      * @param frame the current frame
      * @return the new frame with the logo
      */
@@ -115,8 +115,7 @@ public class Draw implements IDraw {
         double red = 6;
         double green = 217;
         double blue = 27;
-        drawLine(frame, a, b, red, green, blue, 0, 2);
-        double size = 10 / IPointUtils.calcDistance(a, b);
+        double size = 8 / IPointUtils.calcDistance(a, b);
         //System.out.println("Arrow Size "+ size);
         if(size > 0.5) {
             size = 0.5;
@@ -130,16 +129,40 @@ public class Draw implements IDraw {
                 - (a.getY() - b.getY()) * Math.sin(teta));
         double y4 = b.getY() + size * ((a.getY() - b.getY()) * Math.cos(teta)
                 + (a.getX() - b.getX()) * Math.sin(teta));
-        drawLine(frame, b, x3, y3, red, green, blue);
-        drawLine(frame, b, x4, y4, red, green, blue);
+
+        drawLine(frame, a, b, 10, 10, 10, 0, 3);
+        drawLine(frame, b, x3, y3, 10, 10, 10 , 3);
+        drawLine(frame, b, x4, y4, 10, 10, 10, 3);
+
+        drawLine(frame, a, b, red, green, blue, 0, 1);
+        drawLine(frame, b, x3, y3, red, green, blue, 1);
+        drawLine(frame, b, x4, y4, red, green, blue, 1);
         return frame;
     }
 
+    @Override
+    public Mat drawVerticalArrow(Mat frame,
+                                 IPoint pointA,
+                                 IPoint pointB,
+                                 boolean verticalSide) {
+        IPoint vec = IPointUtils.getVec(pointA, pointB);
+        double rotationAngle = -90;
+        if(verticalSide) {
+            rotationAngle = 90;
+        }
+        vec = IPointUtils.pivotVector(vec, rotationAngle);
+        vec = IPointUtils.addByScalars(vec, pointB.getX(), pointB.getY());
+        return drawArrow(frame, pointB, vec);
+    }
+
     private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b) {
+        drawLine(frame, a, x, y, r, g, b, 2);
+    }
+
+    private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b, int thickness) {
         Point pointA = new Point(a.getX(),a.getY());
         Point pointB = new Point(x, y);
         Scalar color = new Scalar(r,g,b);
-        int thickness = 2;
         Imgproc.line(frame, pointA, pointB, color, thickness);
     }
 
@@ -151,6 +174,5 @@ public class Draw implements IDraw {
         Imgproc.putText(frame, message, point, font, scale, color , thickness);
         return frame;
     }
-
 
 }

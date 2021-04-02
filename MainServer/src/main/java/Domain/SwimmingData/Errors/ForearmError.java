@@ -6,11 +6,19 @@ import Domain.SwimmingData.SwimmingError;
 public abstract class ForearmError extends SwimmingError{
 
     private double angle;
+    protected double maxAngle;
+    protected double minAngle;
     protected boolean inside;
 
-    public ForearmError(IDraw drawer, double angle, boolean inside, String tag){
+    public ForearmError(IDraw drawer,
+                        double angle,
+                        double maxAngle,
+                        double minAngle,
+                        boolean inside, String tag){
         super(drawer, tag);
         this.angle = angle;
+        this.maxAngle = maxAngle;
+        this.minAngle = minAngle;
         this.inside = inside;
     }
 
@@ -20,5 +28,13 @@ public abstract class ForearmError extends SwimmingError{
 
     public boolean getInside() {
         return this.inside;
+    }
+
+    public double getMaxAngle() {
+        return maxAngle;
+    }
+
+    public double getMinAngle() {
+        return minAngle;
     }
 }

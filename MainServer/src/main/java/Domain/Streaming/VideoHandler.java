@@ -2,7 +2,6 @@ package Domain.Streaming;
 import Domain.SwimmingData.*;
 import Domain.SwimmingData.Drawing.IDraw;
 import org.opencv.core.*;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.VideoWriter;
 
@@ -157,7 +156,7 @@ public class VideoHandler implements IVideoHandler {
 
 
     /**
-     * The function draw a visual comment on the frame
+     * The function drawBefore a visual comment on the frame
      * @param frame the current frame
      * @param visualComment the visual comment
      * @return the new frame
@@ -204,17 +203,21 @@ public class VideoHandler implements IVideoHandler {
                                              List<Object> visualComments) {
         for(int i=0; i<frames.size(); i++) {
             Mat frame = frames.get(i);
-            //TODO convert to 4 dimensions
-            //Mat des = new Mat(frame.rows(), frame.cols(), CvType.CV_8UC4);
-            //Imgproc.cvtColor(frame, des, Imgproc.COLOR_BGR2BGRA,4);
-            //frame = des;
             if (skeletons != null && !skeletons.isEmpty()) {
                 ISwimmingSkeleton skeleton = skeletons.get(i);
-                drawer.drawSwimmer(frame, skeleton);
+                // draw before skeleton error
                 if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {
                     List<SwimmingError> frameErrors = errors.get(i);
                     for (SwimmingError error : frameErrors) {
-                        error.draw(frame, skeleton);
+                        error.drawBefore(frame, skeleton);
+                    }
+                }
+                drawer.drawSwimmer(frame, skeleton);
+                // draw after skeleton error
+                if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {
+                    List<SwimmingError> frameErrors = errors.get(i);
+                    for (SwimmingError error : frameErrors) {
+                        error.drawAfter(frame, skeleton);
                     }
                 }
             }

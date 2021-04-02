@@ -17,9 +17,11 @@ public class RightElbowErrorCodec implements Codec<RightElbowError> {
         //bsonReader.readStartDocument();
         //String tag = bsonReader.readString("tag");
         double angle = bsonReader.readDouble("angle");
+        double minAngle = bsonReader.readDouble("minAngle");
+        double maxAngle = bsonReader.readDouble("maxAngle");
         boolean inside = bsonReader.readBoolean("side");
         //bsonReader.readEndDocument();
-        return new RightElbowError(new Draw(), angle, inside);
+        return new RightElbowError(new Draw(), maxAngle, minAngle, angle, inside);
     }
 
     @Override
@@ -27,6 +29,8 @@ public class RightElbowErrorCodec implements Codec<RightElbowError> {
         bsonWriter.writeStartDocument();
         bsonWriter.writeString("tag", rightElbowError.getTag());
         bsonWriter.writeDouble("angle", rightElbowError.getAngle());
+        bsonWriter.writeDouble("minAngle", rightElbowError.getMinAngle());
+        bsonWriter.writeDouble("maxAngle", rightElbowError.getMaxAngle());
         bsonWriter.writeBoolean("side", rightElbowError.getIndise());
         bsonWriter.writeEndDocument();
     }

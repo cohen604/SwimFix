@@ -8,6 +8,9 @@ import java.util.*;
 
 public class SwimmingSkeleton implements ISwimmingSkeleton {
 
+    private final static Map<KeyPoint, Double> CONFIDENCE_MAP = initConfidenceMap();
+    private final static double DEFAULT_THRESHOLD = 0.35;
+
     private Map<KeyPoint, IPoint> pointMap;
     private List<Pair<KeyPoint, KeyPoint>> edges;
 
@@ -16,12 +19,11 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         edges = new LinkedList<>();
     }
 
-    // TODO should be a builder class that do this complex building (its better)
     public SwimmingSkeleton(List<Double> frame) {
         this.pointMap = new HashMap<>();
         for(KeyPoint keyPoint : KeyPoint.values()) {
             SkeletonPoint point = toPoint(frame, keyPoint);
-            if(point.isConfident()) {
+            if(isConfident(point, keyPoint)) {
                 this.pointMap.put(keyPoint, point);
             }
         }
@@ -32,6 +34,22 @@ public class SwimmingSkeleton implements ISwimmingSkeleton {
         edges.add(new Pair<>(KeyPoint.HEAD, KeyPoint.L_SHOULDER));
         edges.add(new Pair<>(KeyPoint.L_SHOULDER, KeyPoint.L_ELBOW));
         edges.add(new Pair<>(KeyPoint.L_ELBOW, KeyPoint.L_WRIST));
+    }
+
+    private static Map<KeyPoint, Double> initConfidenceMap() {
+        HashMap<KeyPoint, Double> confidenceMap = new HashMap<>();
+        confidenceMap.put(KeyPoint.HEAD, 0.02);
+        confidenceMap.put(KeyPoint.R_SHOULDER, 0.02);
+        confidenceMap.put(KeyPoint.R_ELBOW, 0.07);
+        confidenceMap.put(KeyPoint.R_WRIST, 0.07);
+        confidenceMap.put(KeyPoint.L_SHOULDER, 0.02);
+        confidenceMap.put(KeyPoint.L_ELBOW, 0.07);
+        confidenceMap.put(KeyPoint.L_WRIST, 0.07);
+        return confidenceMap;
+    }
+
+    private boolean isConfident(SkeletonPoint point, KeyPoint keyPoint) {
+        return point.getConfident() > CONFIDENCE_MAP.getOrDefault(keyPoint, DEFAULT_THRESHOLD);
     }
 
     /**

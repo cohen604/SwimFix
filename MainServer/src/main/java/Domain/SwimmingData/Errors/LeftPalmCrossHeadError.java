@@ -13,15 +13,19 @@ public class LeftPalmCrossHeadError extends PalmCrossHeadError {
     }
 
     @Override
-    public void draw(Mat frame, ISwimmingSkeleton skeleton) {
+    public void drawBefore(Mat frame, ISwimmingSkeleton skeleton) {
         IPoint head = skeleton.getHead();
         IPoint wrist = skeleton.getLeftWrist();
         drawPalmCrossHead(frame, head, wrist);
 
-        IPoint endArrow = null;
-        //double slope = 1 / IPointUtils.calcSlope(wrist, skeleton.getLeftElbow());
+    }
+
+    @Override
+    public void drawAfter(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint wrist = skeleton.getLeftWrist();
+
         double additionX = inside ? 20 : -35;
-        endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
+        IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
         drawArrow(frame, wrist, endArrow);
     }
 }

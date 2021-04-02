@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
 public interface IDraw {
 
     /**
-     * The function draw a circle
+     * The function drawBefore a circle
      * @param frame
      * @param skeletonPoint
      * @param radius
@@ -15,7 +15,7 @@ public interface IDraw {
     Mat drawCircle(Mat frame, IPoint skeletonPoint, int radius);
 
     /***
-     * The function draw circle
+     * The function drawBefore circle
      * @param frame
      * @param skeletonPoint
      * @param thickness
@@ -51,7 +51,7 @@ public interface IDraw {
                            double b, double a);
 
     /**
-     * The function draw line
+     * The function drawBefore line
      * @param frame
      * @param a
      * @param b
@@ -59,7 +59,7 @@ public interface IDraw {
     Mat drawLine(Mat frame, IPoint a, IPoint b);
 
     /**
-     * The function draw a line
+     * The function drawBefore a line
      * @param frame
      * @param s1
      * @param s2
@@ -73,7 +73,7 @@ public interface IDraw {
                          double a, int thickness);
 
     /**
-     * The function draw swimming tag into the frame
+     * The function drawBefore swimming tag into the frame
      * @param frame the current frame
      * @param skeleton the image tag to print
      * @return the new frame
@@ -85,4 +85,6 @@ public interface IDraw {
     Mat drawMessage(Mat frame, String message, double x, double y, int thickness);
 
     Mat drawArrow(Mat frame, IPoint a, IPoint b);
+
+    Mat drawVerticalArrow(Mat frame, IPoint pointA, IPoint pointB, boolean verticalSide);
 }
