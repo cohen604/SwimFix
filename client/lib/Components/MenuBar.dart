@@ -56,7 +56,7 @@ class _MenuBarState extends State<MenuBar> {
             if (value) {
               this.setState(() {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushNamed(context, '/');
                 });
               });
             }
