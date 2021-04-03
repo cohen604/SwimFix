@@ -1,7 +1,15 @@
 import 'package:client/Components/AboutScreenMenuBar.dart';
+import 'package:client/Components/SimpleVideoPlayer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/WebColors.dart';
+import 'package:client/Services/GoogleAuth.dart';
+import 'package:client/Services/LogicManager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'Arguments/WelcomeScreenArguments.dart';
+import 'PopUps/MessagePopUp.dart';
 
 class WebAboutScreen extends StatefulWidget {
   @override
@@ -11,6 +19,68 @@ class WebAboutScreen extends StatefulWidget {
 class _WebAboutScreenState extends State<WebAboutScreen> {
 
   WebColors _webColors = new WebColors();
+  bool _signUpClicked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // _animationController = new AnimationController(
+    //   duration: Duration(seconds: 2, milliseconds: 30),
+    //   vsync: this,
+    // );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // _animationController.dispose();
+  }
+
+
+  void onSignUp() {
+    this.setState(() {
+      _signUpClicked = true;
+    });
+  }
+
+  void onLogo() {
+    this.setState(() {
+      _signUpClicked = false;
+    });
+  }
+
+  void onLogin() {
+    this.setState(() {
+      _signUpClicked = true;
+    });
+  }
+
+  void signInWithGoogle() async {
+    GoogleAuth googleAuth = new GoogleAuth();
+    User user = await googleAuth.signIn();
+    String name = user.displayName;
+    String email = user.email;
+    String uid = user.uid;
+    Swimmer swimmer = new Swimmer(uid, email, name);
+    LogicManager.getInstance().login(swimmer).then((logged) {
+      if (logged) {
+        this.setState(() {
+          WelcomeScreenArguments args = new WelcomeScreenArguments(swimmer);
+          Navigator.pushNamed(context, "/welcome",  arguments: args);
+        });
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new MessagePopUp('Something is broken.\n'
+                'Maybe Your Credentials aren\'t correct or the servers are down.\n'
+                'For more information contact swimAnalytics@gmail.com');
+          },
+        );
+      }
+    });
+  }
 
   Widget buildText(BuildContext context,
       String text,
@@ -60,7 +130,42 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     );
   }
 
+
   Widget buildRightLoginArea(BuildContext context) {
+    return AnimatedCrossFade(
+      crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
+      duration: Duration(seconds: 1),
+      firstChild: buildRightLoginArea1(context),
+      secondChild: buildRightLoginArea2(context),
+    );
+  }
+
+  Widget buildSignUpButton(BuildContext context) {
+    if(_signUpClicked) {
+      return Container();
+    }
+    return Container(
+        padding: EdgeInsets.only(right:20),
+        alignment: Alignment.topRight,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            shadowColor: MaterialStateColor.resolveWith((states) =>Colors.black),
+            backgroundColor: MaterialStateColor.resolveWith((states) => _webColors.getBackgroundForI1()),
+            shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            )),
+          ),
+          onPressed: onSignUp,
+          child: Container(
+              padding: EdgeInsets.all(5),
+              child: buildText(context, 'Sign Up', 28,
+                  fontWeight: FontWeight.bold)
+          ),
+        )
+    );
+  }
+
+  Widget buildRightLoginArea1(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -69,30 +174,44 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
           Flexible(
             flex: 4,
             child: Container(
-            ),
+              margin: EdgeInsets.all(20.0),
+              child: SimpleVideoPlayer('assets/videos/intro.mp4')),
           ),
           Flexible(
-            child: Container(
-              padding: EdgeInsets.only(right:20),
-              alignment: Alignment.topRight,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  shadowColor: MaterialStateColor.resolveWith((states) =>Colors.black),
-                  backgroundColor: MaterialStateColor.resolveWith((states) => _webColors.getBackgroundForI1()),
-                  shape: MaterialStateProperty.resolveWith((states) => RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  )),
-                ),
-                child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: buildText(context, 'Sign Up', 28,
-                      fontWeight: FontWeight.bold)
-                ),
-              )
-            )
+            child: buildSignUpButton(context),
           )
         ],
       ),
+    );
+  }
+
+  Widget buildLoginWithGoogle(context) {
+    return Card(
+      color: _webColors.getBackgroundForI7(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20.0),
+        splashColor: Theme.of(context).splashColor,
+        onTap: signInWithGoogle,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListTile(
+            title: buildText(context, "Sign In with Google", 21,
+                color: Colors.black),
+            leading: Image(image: AssetImage("assets/google_logo.png")),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRightLoginArea2(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 50 ,right: 50),
+      padding: EdgeInsets.all(20),
+      child: buildLoginWithGoogle(context),
     );
   }
 
@@ -120,10 +239,31 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     );
   }
 
-  Widget buildAboutArea(BuildContext context) {
+  Widget buildSupportArea(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height / 4,
+      color: _webColors.getBackgroundForI3(),
+      child: Row(
+        children: [
+          Flexible(
+            fit: FlexFit.tight,
+            child: Center(
+                child: buildText(context, "Web", 36,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)
+            )
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            child: Center(
+                child: buildText(context, "Mobile", 36,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)
+            )
+          ),
+        ],
+      ),
     );
   }
 
@@ -137,7 +277,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
           child: Column(
               children: [
                 buildLoginArea(context),
-                buildAboutArea(context),
+                buildSupportArea(context),
               ],
           ),
         ),
@@ -153,7 +293,10 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            AboutScreenMenuBar(),
+            AboutScreenMenuBar(
+              onLogo: onLogo,
+              onLogin: onSignUp,
+            ),
             Expanded(
                 child: buildAreas(context)
             ),

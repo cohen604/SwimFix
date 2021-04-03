@@ -48,7 +48,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     });
   }
 
-  Widget buildLoginWithGoogleMobile(context) {
+  Widget buildLoginWithGoogle(context) {
     return Center(
       child: Card(
         color: Colors.white,
@@ -145,7 +145,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         child: Column(
           children: [
             Flexible(
-                child: buildLoginWithGoogleMobile(context)
+                child: buildLoginWithGoogle(context)
             ),
           ],
         ),

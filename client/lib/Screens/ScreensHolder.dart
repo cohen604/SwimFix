@@ -24,10 +24,6 @@ class ScreenHolder {
     return new WebAboutScreen();
   }
 
-  Widget getLoginScreen() {
-      return new WebLoginScreen();
-  }
-
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
     return new WebWelcomeScreen(arguments: args);
   }

@@ -33,9 +33,6 @@ class MyApp extends StatelessWidget {
         '/': (context) {
           return _screenHolder.getAboutScreen();
         },
-        '/login': (context) {
-          return _screenHolder.getLoginScreen();
-        },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getWelcomeScreen(args);

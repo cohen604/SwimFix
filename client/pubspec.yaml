@@ -30,7 +30,8 @@ dependencies:
   http: ^0.12.2
   image_picker: ^0.6.7+14
   file_picker: ^2.1.0
-  chewie: ^0.12.0
+  chewie: ^0.12.0 #0.12.0
+  video_player: ^1.0.0 #last version is 2.0.0
   file: ^5.2.1
   universal_html: ^1.2.3
   flutter_ffmpeg: ^0.3.0
