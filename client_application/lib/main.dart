@@ -1,7 +1,12 @@
 import 'package:client_application/Screens/ScreensHolder.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'Screens/Arguments/WelcomeScreenArguments.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -23,11 +28,8 @@ class MyApp extends StatelessWidget {
           return _screensHolders.getLoginScreen();
         },
         '/welcome': (context) {
-          // WelcomeScreenArguments args = ModalRoute
-          //     .of(context)
-          //     .settings
-          //     .arguments;
-          return _screensHolders.getWelcomeScreen();
+          WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getWelcomeScreen(args);
         },
         '/upload': (context) {
           return _screensHolders.getUploadScreen();

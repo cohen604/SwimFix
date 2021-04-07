@@ -1,11 +1,17 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client_application/Screens/ColorsHolder.dart';
+import 'package:client_application/Screens/Drawers/BasicDrawer.dart';
+import 'package:client_application/Services/LogicManager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
 
-  Swimmer swimmer;
-  WelcomeScreen({this.swimmer, Key key}) : super(key: key);
+  WelcomeScreenArguments arguments;
+
+  WelcomeScreen(this.arguments) : super();
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -13,31 +19,60 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
+  LogicManager _logicManager = LogicManager.getInstance();
+  ColorsHolder _colorsHolder = new ColorsHolder();
 
-  Widget buildUpload(BuildContext context) {
-    return Card(
-      child: Text("Upload")
+  Widget buildHi(BuildContext context) {
+    return Center(
+      child: Text("Hi, ${this.widget.arguments.swimmer.name}",
+        style: TextStyle(
+          fontSize: 28,
+          color: _colorsHolder.getBackgroundForI2(),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
-  Widget buildButton(BuildContext context, String text) {
+  Widget buildUpload(BuildContext context) {
     return Container(
-      width: 200,
-      height: 100,
-      margin: EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).backgroundColor.withAlpha(50),
-      ),
-      child: InkWell(
-        hoverColor: Theme.of(context).shadowColor.withAlpha(50),
-        splashColor: Colors.blue,
-        onTap: ()=>{},
-        borderRadius: BorderRadius.circular(10),
-        child: Center(
-          child: Text(text , style:TextStyle(fontSize: 21, )),
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Card(
+        borderOnForeground: true,
+        child: ListTile(
+          leading: Icon(Icons.add_a_photo_sharp),
+          title: Text('Upload',
+            style: TextStyle(
+              fontSize: 22 * MediaQuery.of(context).textScaleFactor,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none,
+            ),
+          ),
+          onTap: ()=>{
+            print('tap2')
+          },
         ),
+      ),
+    );
+  }
+
+  Widget buildCamera(BuildContext context) {
+    return Card(
+      shadowColor: Colors.black,
+      child: ListTile(
+        leading: Icon(Icons.camera_alt_sharp),
+        title: Text('Camera',
+          style: TextStyle(
+            fontSize: 22 * MediaQuery.of(context).textScaleFactor,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+        ),
+        onTap: ()=>{
+          print('tap2')
+        },
       ),
     );
   }
@@ -46,34 +81,39 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: BasicDrawer(
+          this.widget.arguments.swimmer,
+          this.widget.arguments.swimmerPhotoURL,
+        ),
         appBar: AppBar(
-          title: Text("Welcome Screen"),
+          backgroundColor: _colorsHolder.getBackgroundForI1(),
+          title: Text("Swim Analytics"),
         ),
         body: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 15,
-            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height,
+            color: _colorsHolder.getBackgroundForI6(),
             padding: const EdgeInsets.all(16.0),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Hi, ${this.widget.swimmer.name}", style: TextStyle(
-                    fontSize: 28,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),),
-                  Spacer(flex: 1,),
-                  buildButton(context, "upload"),
-                  Spacer(flex: 1,),
-                  buildButton(context, "Feedback"),
-                  Spacer(flex: 5,),
-                ],
-              ),
+              children: [
+                buildHi(context),
+                SizedBox(height: 10,),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      buildUpload(context),
+                      buildCamera(context),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
 }

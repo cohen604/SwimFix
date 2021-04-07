@@ -1,4 +1,5 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/LogicManager.dart';
@@ -6,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'PopUps/MessagePopUp.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -23,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void signInWithGoogle() async {
     GoogleAuth googleAuth = new GoogleAuth();
     User user = await googleAuth.signIn();
+    print(user);
     String name = user.displayName;
     String email = user.email;
     String uid = user.uid;
@@ -30,11 +34,20 @@ class _LoginScreenState extends State<LoginScreen> {
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
         this.setState(() {
-          Navigator.pushNamed(context, "/welcome");
+          Navigator.pushNamed(context, "/welcome",
+              arguments: new WelcomeScreenArguments(
+                  swimmer, user.photoURL));
         });
       }
       else {
-        //TODO crete a fail popup
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new MessagePopUp('Something is broken.\n'
+                'Maybe Your Credentials aren\'t correct or the servers are down.\n'
+                'For more information contact swimAnalytics@gmail.com');
+          },
+        );
       }
     });
   }
@@ -65,32 +78,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget buildLogin(context) {
     return Container(
       decoration: BoxDecoration(
-        color: _colorsHolder.getBackgroundForI7(),
-        borderRadius: BorderRadius.circular(40.0),
+        image: DecorationImage(
+          image: AssetImage('assets/images/about_screen_background.png'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
+        ),
+        border: Border.all(color: _colorsHolder.getBackgroundForI7(), width: 4),
+        borderRadius: BorderRadius.circular(35.0),
       ),
-      padding: EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/about_screen_background.png'),
-            fit: BoxFit.cover,
-          ),
-          borderRadius: BorderRadius.circular(40.0),
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text( "SwimFix",
-                style: TextStyle(fontSize: 70.0, color:Colors.white,
-                  fontFamily: "Satisfy")
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: buildLoginWithGoogleMobile(context),
-              )
-          ],
-        ),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text( "SwimFix",
+              style: TextStyle(fontSize: 70.0, color:Colors.white,
+                fontFamily: "Satisfy")
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: buildLoginWithGoogleMobile(context),
+            )
+        ],
       ),
     );
   }

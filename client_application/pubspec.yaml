@@ -58,6 +58,7 @@ flutter:
   assets:
     - assets/
     - assets/images/about_screen_background.png
+    - assets/images/menubar_image.png
     - assets/images/swimmer_image.png
     - assets/videos/intro.mp4
 
