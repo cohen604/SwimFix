@@ -1,7 +1,9 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  ColorsHolder _colorsHolder = new ColorsHolder();
+
 
   void signInWithGoogle() async {
     GoogleAuth googleAuth = new GoogleAuth();
@@ -57,31 +62,37 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildLoginMobile(context) {
+  Widget buildLogin(context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: _colorsHolder.getBackgroundForI7(),
         borderRadius: BorderRadius.circular(40.0),
       ),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text( "SwimFix",
-              style: TextStyle(fontSize: 80.0, color:Colors.white,
-                fontFamily: "Satisfy")
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildLoginWithGoogleMobile(context),
-            )
-        ],
+      padding: EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/about_screen_background.png'),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text( "SwimFix",
+                style: TextStyle(fontSize: 70.0, color:Colors.white,
+                  fontFamily: "Satisfy")
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: buildLoginWithGoogleMobile(context),
+              )
+          ],
+        ),
       ),
     );
-  }
-
-  Widget buildLogin(context) {
-    return buildLoginMobile(context);
   }
 
   @override
@@ -92,6 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 15,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/about_screen_background.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
             alignment: Alignment.center,
             padding: const EdgeInsets.all(16.0),
             child: buildLogin(context),
