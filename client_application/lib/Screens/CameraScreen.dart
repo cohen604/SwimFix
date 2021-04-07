@@ -116,46 +116,6 @@ class _CameraScreenState extends State<CameraScreen> {
     print('pool length ${_pool.length}');
   }
 
-  //TODO delete this
-  /// The function handle an camera img and send him to the ml service
-  /// param img - the camera img to predict
-  Future<void> handleCameraImage(CameraImage img) async {
-    bool valid = await _logicManager.predictValidFrame(img);
-    if (valid) {
-      _pool.add(img);
-      _counterInvalidImages = 0;
-    }
-    else {
-      _counterInvalidImages += 1;
-      if (_counterInvalidImages > _thresholdInvalidImages &&
-          _pool.length > _thresholdFrames) {
-        List<CameraImage> bytes = new List();
-        bytes.addAll(_pool);
-        String name = 'pool${_poolWithNoFeedBack.length + 1}';
-        VideoListImages videoListImages = new VideoListImages(bytes, name);
-        _poolWithNoFeedBack.add(videoListImages);
-      }
-    }
-  }
-
-  /// TODO need to delete this
-  /// The function run on the queue of camera img and create the list of pools
-  Future<void> createListOfPoolsFromQueue() async {
-    print('start processing Queue');
-    bool run = true;
-    while(run) {
-      bool empty = await this._queue.isEmpty();
-      if (empty) {
-        run = false;
-      }
-      else {
-        CameraImage cameraImage =  await _queue.dequeue();
-        print('dequed $cameraImage');
-        await this.handleCameraImage(cameraImage);
-      }
-    }
-  }
-
   void startRecording() {
     _cameraController.startImageStream(handleCameraImageBlue); // handleCameraImage
   }

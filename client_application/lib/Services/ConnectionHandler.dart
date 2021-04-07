@@ -29,7 +29,7 @@ class ConnectionHandler {
   /// function that get response from the server in the address [path]
   Future<ServerResponse> getMessage (String path) async {
     String url = getUrl() + path;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         return toServerResponse(response.body);
       } else {
@@ -48,7 +48,7 @@ class ConnectionHandler {
       'Accept': 'application/json',
     };
     print('$url json ${json.encode(map)}');
-    final response = await http.post(url, body: json.encode(map), headers: headers);
+    final response = await http.post(Uri.parse(url), body: json.encode(map), headers: headers);
     if (response.statusCode == 200) {
       return toServerResponse(response.body);
     } else {

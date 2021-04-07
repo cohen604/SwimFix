@@ -4,7 +4,6 @@ import 'package:client_application/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginScreen extends StatefulWidget {
 
@@ -26,8 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
         this.setState(() {
-          Navigator.pushNamed(context, "/upload");
+          Navigator.pushNamed(context, "/welcome");
         });
+      }
+      else {
+        //TODO crete a fail popup
       }
     });
   }
@@ -60,11 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(40.0),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [Theme.of(context).primaryColor, Theme.of(context).backgroundColor.withAlpha(80)]
-        // ),
       ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -83,64 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildLoginWeb(context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0, left:120.0, right: 120.0),
-      child: Card(
-        color: Theme.of(context).primaryColor.withAlpha(30),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40.0),
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0),
-                      bottomLeft: Radius.circular(40.0)),
-                  color: Theme.of(context).primaryColor,
-                ),
-                //width: MediaQuery.of(context).size.width / 3,
-                //height: MediaQuery.of(context).size.height / 2,
-                padding: EdgeInsets.only(left:50, right: 50),
-                child: Center(
-                  child: Text( "SwimFix",
-                      style: TextStyle(fontSize: 80 * MediaQuery.of(context).textScaleFactor, color:Colors.white,
-                          fontFamily: "Satisfy")
-                  ),
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 3,
-              child: Container(
-                //height: MediaQuery.of(context).size.height / 2,
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: buildLoginWithGoogleMobile(context)
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Text(""),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget buildLogin(context) {
-    if (kIsWeb) {
-      return buildLoginWeb(context);
-    }
     return buildLoginMobile(context);
   }
 
