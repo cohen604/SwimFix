@@ -1,3 +1,4 @@
+import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ScreensHolder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
           return _screensHolders.getWelcomeScreen(args);
         },
         '/upload': (context) {
-          return _screensHolders.getUploadScreen();
+          UploadScreenArguments args =  ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getUploadScreen(args);
         },
         '/camera': (context) {
           return _screensHolders.getCameraScreen();

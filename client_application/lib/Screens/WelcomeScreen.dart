@@ -1,4 +1,6 @@
+import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Screens/Drawers/BasicDrawer.dart';
@@ -22,14 +24,35 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   LogicManager _logicManager = LogicManager.getInstance();
   ColorsHolder _colorsHolder = new ColorsHolder();
 
+  void onUpload(BuildContext context) {
+    AppUser appUser = this.widget.arguments.appUser;
+    Navigator.pushNamed(context, "/upload",
+      arguments: new UploadScreenArguments(appUser));
+  }
+
+  void onCamera(BuildContext context) {
+
+  }
+
   Widget buildHi(BuildContext context) {
     return Center(
-      child: Text("Hi, ${this.widget.arguments.swimmer.name}",
-        style: TextStyle(
-          fontSize: 28,
-          color: _colorsHolder.getBackgroundForI2(),
-          fontWeight: FontWeight.bold,
-        ),
+      child: Column(
+        children: [
+          Text("Welcome",
+            style: TextStyle(
+              fontSize: 28,
+              color: _colorsHolder.getBackgroundForI1(),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text("${this.widget.arguments.appUser.swimmer.name}",
+            style: TextStyle(
+              fontSize: 28,
+              color: _colorsHolder.getBackgroundForI1(),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -49,9 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               decoration: TextDecoration.none,
             ),
           ),
-          onTap: ()=>{
-            print('tap2')
-          },
+          onTap: ()=>onUpload(context),
         ),
       ),
     );
@@ -70,9 +91,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             decoration: TextDecoration.none,
           ),
         ),
-        onTap: ()=>{
-          print('tap2')
-        },
+        onTap: ()=>onCamera(context),
       ),
     );
   }
@@ -82,12 +101,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return SafeArea(
       child: Scaffold(
         drawer: BasicDrawer(
-          this.widget.arguments.swimmer,
-          this.widget.arguments.swimmerPhotoURL,
+          this.widget.arguments.appUser
         ),
         appBar: AppBar(
-          backgroundColor: _colorsHolder.getBackgroundForI1(),
-          title: Text("Swim Analytics"),
+          backgroundColor: Colors.blue,
+          title: Text("Swim Analytics",),
         ),
         body: SingleChildScrollView(
           child: Container(

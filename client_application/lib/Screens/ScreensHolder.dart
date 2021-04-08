@@ -1,4 +1,6 @@
+import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/LoginScreen.dart';
+import 'package:client_application/Screens/UploadScreen.dart';
 import 'package:client_application/Screens/WelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,8 +16,8 @@ class ScreensHolders {
     return new WelcomeScreen(args);
   }
 
-  Widget getUploadScreen() {
-    return null;
+  Widget getUploadScreen(UploadScreenArguments arguments) {
+    return new UploadScreen(arguments);
   }
 
   Widget getCameraScreen() {

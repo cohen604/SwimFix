@@ -1,4 +1,5 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
@@ -34,9 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
         this.setState(() {
+          AppUser appUser = new AppUser(swimmer, user.photoURL);
           Navigator.pushNamed(context, "/welcome",
-              arguments: new WelcomeScreenArguments(
-                  swimmer, user.photoURL));
+              arguments: new WelcomeScreenArguments(appUser));
         });
       }
       else {
@@ -90,9 +91,14 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text( "SwimFix",
-              style: TextStyle(fontSize: 70.0, color:Colors.white,
-                fontFamily: "Satisfy")
+            Text( "Swim Analytics",
+              style: TextStyle(
+                fontSize: 50.0,
+                color:Colors.white,
+                fontFamily: "Satisfy",
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

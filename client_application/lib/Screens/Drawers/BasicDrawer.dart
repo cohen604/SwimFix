@@ -1,16 +1,35 @@
+import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
 
 class BasicDrawer extends StatelessWidget {
 
-  Swimmer _swimmer;
-  String _photoURL;
+  AppUser appUser;
   ColorsHolder _colorsHolder;
 
-  BasicDrawer(this._swimmer, this._photoURL) {
+  BasicDrawer(this.appUser) {
     _colorsHolder = new ColorsHolder();
+  }
+
+  void onMenu(BuildContext context) {
+    Navigator.of(context).popUntil((route) => route.settings.name == '/welcome');
+  }
+
+  void onCamera(BuildContext context) {
+
+  }
+
+  void onUpload(BuildContext context) {
+    Navigator.pushNamed(context, "/upload",
+        arguments: new UploadScreenArguments(appUser));
+  }
+
+  void onLogout(BuildContext context) {
+    LogicManager.getInstance().logout(appUser.swimmer);
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -31,52 +50,54 @@ class BasicDrawer extends StatelessWidget {
                 ),
               ),
               child: Container (
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Center(
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(_photoURL),
-                        radius: 30,
-                        backgroundColor: Colors.transparent,
+                  child: Column(
+                    children: <Widget>[
+                      Center(
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(appUser.swimmerPhotoURL),
+                          radius: 30,
+                          backgroundColor: Colors.green,
+                          child: ElevatedButton(
+                            onPressed: ()=>onMenu(context),
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent
+                            ),
+                            child: Container(),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10.0),
-                    Center(
-                      child: Text(
-                        _swimmer.name,
-                        style: TextStyle(color: Colors.white, fontSize: 35,
-                            fontWeight: FontWeight.bold),
+                      SizedBox(width: 10.0),
+                      Center(
+                        child: Text(
+                          appUser.swimmer.name,
+                          style: TextStyle(color: Colors.white, fontSize: 35,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+            ListTile(
+              leading: Icon(Icons.menu_outlined),
+              title: Text('Menu'),
+              onTap: () => onMenu(context),
             ),
             ListTile(
               leading: Icon(Icons.add_a_photo),
               title: Text('Upload'),
-              onTap: () async {
-                LogicManager.getInstance().logout(_swimmer);
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
+              onTap: () => onUpload(context),
             ),
             ListTile(
               leading: Icon(Icons.camera_alt),
               title: Text('Camera'),
-              onTap: () async {
-                LogicManager.getInstance().logout(_swimmer);
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
+              onTap: () => onCamera(context),
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
-              onTap: () async {
-                LogicManager.getInstance().logout(_swimmer);
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
+              onTap: () => onLogout(context),
             ),
           ],
         ),
