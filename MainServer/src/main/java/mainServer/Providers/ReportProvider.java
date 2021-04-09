@@ -107,7 +107,7 @@ public class ReportProvider implements IReportProvider {
                                    IStatistic statistic) throws DocumentException {
         PdfPTable table = new PdfPTable( 5);
         addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvement");
-        addRowToTable(table, "head",
+        addRowToTable(table, "Head",
                 statistic.getHeadModel(),
                 statistic.getHeadRatioModel(),
                 statistic.getHeadModelAndInterpolation(),
@@ -163,7 +163,44 @@ public class ReportProvider implements IReportProvider {
 
     private void addTrueFalseSummary(Document document, IStatistic statistic) {
         PdfPTable table = new PdfPTable( 5);
-        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvement");
+        addRowToPdfTable(table, "Point", "Model Correct", "Model Wrong",
+                "Model & Interpolation Correct", "Model & Interpolation Wrong");
+        addRowToTable(table, "Head",
+                statistic.getHeadModelCorrect(),
+                statistic.getHeadModelWrong(),
+                statistic.getHeadModelAndInterCorrect(),
+                statistic.getHeadModelAndInterWrong());
+        addRowToTable(table, "Right shoulder",
+                statistic.getRightShoulderModelCorrect(),
+                statistic.getRightShoulderModelWrong(),
+                statistic.getRightShoulderModelAndInterCorrect(),
+                statistic.getRightShoulderModelAndInterWrong());
+        addRowToTable(table, "Right elbow",
+                statistic.getRightElbowModelCorrect(),
+                statistic.getRightElbowModelWrong(),
+                statistic.getRightElbowModelAndInterCorrect(),
+                statistic.getRightElbowModelAndInterWrong());
+        addRowToTable(table, "Right wrist",
+                statistic.getRightWristModelCorrect(),
+                statistic.getRightWristModelWrong(),
+                statistic.getRightWristModelAndInterCorrect(),
+                statistic.getRightWristModelAndInterWrong());
+        addRowToTable(table, "Left shoulder",
+                statistic.getLeftShoulderModelCorrect(),
+                statistic.getLeftShoulderModelWrong(),
+                statistic.getLeftShoulderModelAndInterCorrect(),
+                statistic.getLeftShoulderModelAndInterWrong());
+        addRowToTable(table, "Left elbow",
+                statistic.getLeftElbowModelCorrect(),
+                statistic.getLeftElbowModelWrong(),
+                statistic.getLeftElbowModelAndInterCorrect(),
+                statistic.getLeftElbowModelAndInterWrong());
+        addRowToTable(table, "Left wrist",
+                statistic.getLeftWristModelCorrect(),
+                statistic.getLeftWristModelWrong(),
+                statistic.getLeftWristModelAndInterCorrect(),
+                statistic.getLeftWristModelAndInterWrong());
+
     }
 
     private void addTimePeriod(Document document,
@@ -260,6 +297,16 @@ public class ReportProvider implements IReportProvider {
         table.addCell(getCountAndPrecent(count2, precent2));
         table.addCell(String.valueOf(actual));
         table.addCell(improvement + "%");
+    }
+
+    //TODO refactor this to class
+    private void addRowToTable(PdfPTable table, String name,
+                               int count1, int count2, int count3, int count4) {
+        table.addCell(name);
+        table.addCell(String.valueOf(count1));
+        table.addCell(String.valueOf(count2));
+        table.addCell(String.valueOf(count3));
+        table.addCell(String.valueOf(count4));
     }
 
     private String getCountAndPrecent( int count, double precent) {

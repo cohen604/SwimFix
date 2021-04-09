@@ -199,6 +199,26 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getHeadModelCorrect() {
+        return _headRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getHeadModelWrong() {
+        return _headRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getHeadModelAndInterCorrect() {
+        return _headRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getHeadModelAndInterWrong() {
+        return _headRecognizeRatios.getModelAndInterWrong();
+    }
+
+    @Override
     public double getRightShoulderImprove() {
         return _rightShoulderRecognizeRatios.getImprovement();
     }
@@ -226,6 +246,26 @@ public class StatisticsHolder implements IStatistic {
     @Override
     public int getRightShoulderActual() {
         return _rightShoulderRecognizeRatios.getActualCount();
+    }
+
+    @Override
+    public int getRightShoulderModelCorrect() {
+        return _rightShoulderRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getRightShoulderModelWrong() {
+        return _rightShoulderRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterCorrect() {
+        return _rightShoulderRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterWrong() {
+        return _rightShoulderRecognizeRatios.getModelAndInterWrong();
     }
 
     @Override
@@ -259,6 +299,26 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getRightElbowModelCorrect() {
+        return _rightElbowRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getRightElbowModelWrong() {
+        return _rightElbowRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterCorrect() {
+        return _rightElbowRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterWrong() {
+        return _rightElbowRecognizeRatios.getModelAndInterWrong();
+    }
+
+    @Override
     public double getRightWristImprove() {
         return _rightWristRecognizeRatios.getImprovement();
     }
@@ -286,6 +346,26 @@ public class StatisticsHolder implements IStatistic {
     @Override
     public int getRightWristActual() {
         return _rightWristRecognizeRatios.getActualCount();
+    }
+
+    @Override
+    public int getRightWristModelCorrect() {
+        return _rightWristRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getRightWristModelWrong() {
+        return _rightWristRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getRightWristModelAndInterCorrect() {
+        return _rightWristRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getRightWristModelAndInterWrong() {
+        return _rightWristRecognizeRatios.getModelAndInterWrong();
     }
 
     @Override
@@ -319,6 +399,26 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getLeftShoulderModelCorrect() {
+        return _leftShoulderRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getLeftShoulderModelWrong() {
+        return _leftShoulderRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterCorrect() {
+        return _leftShoulderRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterWrong() {
+        return _leftShoulderRecognizeRatios.getModelAndInterWrong();
+    }
+
+    @Override
     public double getLeftElbowImprove() {
         return _leftElbowRecognizeRatios.getImprovement();
     }
@@ -349,6 +449,26 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getLeftElbowModelCorrect() {
+        return _leftElbowRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getLeftElbowModelWrong() {
+        return _leftElbowRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterCorrect() {
+        return _leftElbowRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterWrong() {
+        return _leftElbowRecognizeRatios.getModelAndInterWrong();
+    }
+
+    @Override
     public double getLeftWristImprove() {
         return _leftWristRecognizeRatios.getImprovement();
     }
@@ -376,5 +496,25 @@ public class StatisticsHolder implements IStatistic {
     @Override
     public int getLeftWristActual() {
         return _leftWristRecognizeRatios.getActualCount();
+    }
+
+    @Override
+    public int getLeftWristModelCorrect() {
+        return _leftWristRecognizeRatios.getModelCorrect();
+    }
+
+    @Override
+    public int getLeftWristModelWrong() {
+        return _leftWristRecognizeRatios.getModelWrong();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterCorrect() {
+        return _leftWristRecognizeRatios.getModelAndInterCorrect();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterWrong() {
+        return _leftWristRecognizeRatios.getModelAndInterWrong();
     }
 }

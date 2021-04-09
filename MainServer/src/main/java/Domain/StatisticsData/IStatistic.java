@@ -2,6 +2,7 @@ package Domain.StatisticsData;
 
 public interface IStatistic {
 
+    // Head
     double getHeadImprove();
 
     double getHeadRatioModel();
@@ -14,6 +15,15 @@ public interface IStatistic {
 
     int getHeadActual();
 
+    int getHeadModelCorrect();
+
+    int getHeadModelWrong();
+
+    int getHeadModelAndInterCorrect();
+
+    int getHeadModelAndInterWrong();
+
+    // Right Shoulder
     double getRightShoulderImprove();
 
     double getRightShoulderRatioModel();
@@ -26,6 +36,15 @@ public interface IStatistic {
 
     int getRightShoulderActual();
 
+    int getRightShoulderModelCorrect();
+
+    int getRightShoulderModelWrong();
+
+    int getRightShoulderModelAndInterCorrect();
+
+    int getRightShoulderModelAndInterWrong();
+
+    // Right Elbow
     double getRightElbowImprove();
 
     double getRightElbowRatioModel();
@@ -38,6 +57,15 @@ public interface IStatistic {
 
     int getRightElbowActual();
 
+    int getRightElbowModelCorrect();
+
+    int getRightElbowModelWrong();
+
+    int getRightElbowModelAndInterCorrect();
+
+    int getRightElbowModelAndInterWrong();
+
+    // Right Wrist
     double getRightWristImprove();
 
     double getRightWristRatioModel();
@@ -50,6 +78,15 @@ public interface IStatistic {
 
     int getRightWristActual();
 
+    int getRightWristModelCorrect();
+
+    int getRightWristModelWrong();
+
+    int getRightWristModelAndInterCorrect();
+
+    int getRightWristModelAndInterWrong();
+
+    // Left Shoulder
     double getLeftShoulderImprove();
 
     double getLeftShoulderRatioModel();
@@ -62,6 +99,15 @@ public interface IStatistic {
 
     int getLeftShoulderActual();
 
+    int getLeftShoulderModelCorrect();
+
+    int getLeftShoulderModelWrong();
+
+    int getLeftShoulderModelAndInterCorrect();
+
+    int getLeftShoulderModelAndInterWrong();
+
+    // Left Elbow
     double getLeftElbowImprove();
 
     double getLeftElbowRatioModel();
@@ -74,6 +120,15 @@ public interface IStatistic {
 
     int getLeftElbowActual();
 
+    int getLeftElbowModelCorrect();
+
+    int getLeftElbowModelWrong();
+
+    int getLeftElbowModelAndInterCorrect();
+
+    int getLeftElbowModelAndInterWrong();
+
+    // Left Wrist
     double getLeftWristImprove();
 
     double getLeftWristRatioModel();
@@ -85,5 +140,13 @@ public interface IStatistic {
     int getLeftWristModelAndInterpolation();
 
     int getLeftWristActual();
+
+    int getLeftWristModelCorrect();
+
+    int getLeftWristModelWrong();
+
+    int getLeftWristModelAndInterCorrect();
+
+    int getLeftWristModelAndInterWrong();
 
 }
