@@ -10,6 +10,10 @@ public class Ratios {
     private int _modelTN;
     private int _modelFP;
     private int _modelFN;
+    private int _modelAndInterTP;
+    private int _modelAndInterTN;
+    private int _modelAndInterFP;
+    private int _modelAndInterFN;
 
     Ratios(int frames) {
         _frames = frames;
@@ -20,6 +24,10 @@ public class Ratios {
         _modelTN = 0;
         _modelFP = 0;
         _modelFN = 0;
+        _modelAndInterTP = 0;
+        _modelAndInterTN = 0;
+        _modelAndInterFP = 0;
+        _modelAndInterFN = 0;
     }
 
     void addActual() {
@@ -50,6 +58,22 @@ public class Ratios {
         _modelFN++;
     }
 
+    void addModelAndInterTP() {
+        _modelAndInterTP++;
+    }
+
+    void addModelAndInterTN() {
+        _modelAndInterTN++;
+    }
+
+    void addModelAndInterFP() {
+        _modelAndInterFP++;
+    }
+
+    void addModelAndInterFN() {
+        _modelAndInterFN++;
+    }
+
     int getActualCount() {
         return _actualCount;
     }
@@ -70,6 +94,14 @@ public class Ratios {
 
     int getModelFN() { return _modelFN; }
 
+    int getModelAndInterTP() { return _modelAndInterTP; }
+
+    int getModelAndInterTN() { return _modelAndInterTN; }
+
+    int getModelAndInterFP() { return _modelAndInterFP; }
+
+    int getModelAndInterFN() { return _modelAndInterFN; }
+
     double getRatioModel() {
         return getRatio(_modelCount, _actualCount);
     }
@@ -87,16 +119,32 @@ public class Ratios {
         return getRatio(_modelTP, _frames);
     }
 
-    double getRationModelTN() {
+    double getRatioModelTN() {
         return getRatio(_modelTN, _frames);
     }
 
-    double getRationModelFP() {
+    double getRatioModelFP() {
         return getRatio(_modelFP, _frames);
     }
 
-    double getRationModelFN() {
+    double getRatioModelFN() {
         return getRatio(_modelFN, _frames);
+    }
+
+    double getRatioModelAndInterTP() {
+        return getRatio(_modelAndInterTP, _frames);
+    }
+
+    double getRatioModelAndInterTN() {
+        return getRatio(_modelAndInterTN, _frames);
+    }
+
+    double getRatioModelAndInterFP() {
+        return getRatio(_modelAndInterFP, _frames);
+    }
+
+    double getRatioModelAndInterFN() {
+        return getRatio(_modelAndInterFN, _frames);
     }
 
     private double getRatio(double a, double b) {

@@ -31,6 +31,22 @@ public interface IStatistic {
 
     double getHeadRatioModelFN();
 
+    int getHeadModelAndInterTP();
+
+    int getHeadModelAndInterTN();
+
+    int getHeadModelAndInterFP();
+
+    int getHeadModelAndInterFN();
+
+    double getHeadRatioModelAndInterTP();
+
+    double getHeadRatioModelAndInterTN();
+
+    double getHeadRatioModelAndInterFP();
+
+    double getHeadRatioModelAndInterFN();
+
     // Right Shoulder
     double getRightShoulderImprove();
 
@@ -59,6 +75,22 @@ public interface IStatistic {
     double getRightShoulderRatioModelFP();
 
     double getRightShoulderRatioModelFN();
+
+    int getRightShoulderModelAndInterTP();
+
+    int getRightShoulderModelAndInterTN();
+
+    int getRightShoulderModelAndInterFP();
+
+    int getRightShoulderModelAndInterFN();
+
+    double getRightShoulderRatioModelAndInterTP();
+
+    double getRightShoulderRatioModelAndInterTN();
+
+    double getRightShoulderRatioModelAndInterFP();
+
+    double getRightShoulderRatioModelAndInterFN();
 
     // Right Elbow
     double getRightElbowImprove();
@@ -89,6 +121,22 @@ public interface IStatistic {
 
     double getRightElbowRatioModelFN();
 
+    int getRightElbowModelAndInterTP();
+
+    int getRightElbowModelAndInterTN();
+
+    int getRightElbowModelAndInterFP();
+
+    int getRightElbowModelAndInterFN();
+
+    double getRightElbowRatioModelAndInterTP();
+
+    double getRightElbowRatioModelAndInterTN();
+
+    double getRightElbowRatioModelAndInterFP();
+
+    double getRightElbowRatioModelAndInterFN();
+
     // Right Wrist
     double getRightWristImprove();
 
@@ -118,6 +166,22 @@ public interface IStatistic {
 
     double getRightWristRatioModelFN();
 
+    int getRightWristModelAndInterTP();
+
+    int getRightWristModelAndInterTN();
+
+    int getRightWristModelAndInterFP();
+
+    int getRightWristModelAndInterFN();
+
+    double getRightWristRatioModelAndInterTP();
+
+    double getRightWristRatioModelAndInterTN();
+
+    double getRightWristRatioModelAndInterFP();
+
+    double getRightWristRatioModelAndInterFN();
+
     // Left Shoulder
     double getLeftShoulderImprove();
 
@@ -141,11 +205,27 @@ public interface IStatistic {
 
     double getLeftShoulderRatioModelTP();
 
-    double getLeftShoulderRationModelTN();
+    double getLeftShoulderRatioModelTN();
 
     double getLeftShoulderRatioModelFP();
 
     double getLeftShoulderRatioModelFN();
+
+    int getLeftShoulderModelAndInterTP();
+
+    int getLeftShoulderModelAndInterTN();
+
+    int getLeftShoulderModelAndInterFP();
+
+    int getLeftShoulderModelAndInterFN();
+
+    double getLeftShoulderRatioModelAndInterTP();
+
+    double getLeftShoulderRatioModelAndInterTN();
+
+    double getLeftShoulderRatioModelAndInterFP();
+
+    double getLeftShoulderRatioModelAndInterFN();
 
     // Left Elbow
     double getLeftElbowImprove();
@@ -176,6 +256,22 @@ public interface IStatistic {
 
     double getLeftElbowRatioModelFN();
 
+    int getLeftElbowModelAndInterTP();
+
+    int getLeftElbowModelAndInterTN();
+
+    int getLeftElbowModelAndInterFP();
+
+    int getLeftElbowModelAndInterFN();
+
+    double getLeftElbowRatioModelAndInterTP();
+
+    double getLeftElbowRatioModelAndInterTN();
+
+    double getLeftElbowRatioModelAndInterFP();
+
+    double getLeftElbowRatioModelAndInterFN();
+
     // Left Wrist
     double getLeftWristImprove();
 
@@ -204,5 +300,21 @@ public interface IStatistic {
     double getLeftWristRatioModelFP();
 
     double getLeftWristRatioModelFN();
+
+    int getLeftWristModelAndInterTP();
+
+    int getLeftWristModelAndInterTN();
+
+    int getLeftWristModelAndInterFP();
+
+    int getLeftWristModelAndInterFN();
+
+    double getLeftWristRatioModelAndInterTP();
+
+    double getLeftWristRatioModelAndInterTN();
+
+    double getLeftWristRatioModelAndInterFP();
+
+    double getLeftWristRatioModelAndInterFN();
 
 }
