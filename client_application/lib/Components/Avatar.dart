@@ -14,20 +14,19 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color textColor = Colors.white;
+    Color textColor = Colors.black;
     Color backgroundColor = background;
     FontWeight fontWeight = FontWeight.normal;
     if(isSelected()) {
-      backgroundColor = backgroundSelected;
-      textColor = Colors.black;
+      backgroundColor = background;//backgroundSelected;
+      textColor = Colors.white;
       fontWeight = FontWeight.bold;
     }
     return ElevatedButton(
-      onPressed: ()=> {
-        if(onClick != null) {
-          onClick(context)
-        }
-      },
+      onPressed: isSelected() ?
+        ()=> onClick(context):
+        null
+      ,
       style: ElevatedButton.styleFrom(
           shape: CircleBorder(),
           primary: backgroundColor
@@ -43,29 +42,6 @@ class Avatar extends StatelessWidget {
           ),
         ),
       )
-    );
-    Widget child = Text(title,
-      style: TextStyle(
-        fontSize: 21 * MediaQuery.of(context).textScaleFactor,
-        color: textColor,
-        fontWeight: fontWeight,
-        decoration: TextDecoration.none,
-      ),
-    );
-    if(onClick!=null) {
-      child = ElevatedButton(
-          onPressed: ()=>onClick(context),
-          style: ElevatedButton.styleFrom(
-              shape: CircleBorder(),
-              primary: backgroundColor
-          ),
-          child: child,
-      );
-    }
-    return CircleAvatar(
-      radius: 25,
-      backgroundColor: backgroundColor,
-      child: child,
     );
   }
 }

@@ -29,17 +29,14 @@ class AvatarTitle extends StatelessWidget {
               backgroundSelected,
               onClick: onClick,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(description,
-                style: TextStyle(
-                  fontSize: 21 * MediaQuery
-                      .of(context)
-                      .textScaleFactor,
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  decoration: TextDecoration.none,
-                ),
+            Text(description,
+              style: TextStyle(
+                fontSize: 21 * MediaQuery
+                    .of(context)
+                    .textScaleFactor,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none,
               ),
             ),
           ],
