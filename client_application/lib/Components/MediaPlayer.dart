@@ -38,8 +38,9 @@ class _MediaPlayerState extends State<MediaPlayer> {
         looping: false,
         //note: this muse be false cause chewiew having problem in full screen
         allowFullScreen: true,
-        fullScreenByDefault: true,
+        fullScreenByDefault: false,
         allowMuting: false,
+        playbackSpeeds: [0.125, 0.25, 0.5, 0.75, 1],
       );
       //DO NOT DELETE THIS!!
       setState(() {});

@@ -1,4 +1,5 @@
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
+import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Screens/ScreensHolder.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
 
   ScreensHolders _screensHolders = new ScreensHolders();
-
+  ColorsHolder _colorsHolder = new ColorsHolder();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,10 @@ class MyApp extends StatelessWidget {
       title: 'SwimFix',
       initialRoute: '/',
       theme: ThemeData(
-        primarySwatch: Colors.blue, //main color (defualt color).
+        primaryColor: _colorsHolder.getBackgroundForI1(),
+        primarySwatch: _colorsHolder.createMaterialColor(
+            _colorsHolder.getBackgroundForI1()
+        ),
       ),
       routes: {
         '/': (context) {

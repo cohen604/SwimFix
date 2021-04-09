@@ -40,8 +40,8 @@ class _UploadScreenState extends State<UploadScreen> {
     if(result != null) {
       PlatformFile file = result.files.single;
       //TODO add path name validation and video type
-      print(file.path);
-      print(file.name);
+      //print(file.path);
+      //print(file.name);
       setState(() {
         _video = file;
         _state = UploadState.View;
@@ -64,9 +64,9 @@ class _UploadScreenState extends State<UploadScreen> {
     int length = _video.size;
     Uint8List bytes = new File(_video.path).readAsBytesSync();
     String path = _video.path;
-    print(length);
-    print(bytes);
-    print(path);
+    // print(length);
+    // print(bytes);
+    // print(path);
     Swimmer swimmer = this.widget.arguments.appUser.swimmer;
     logicManager.postVideoForStreaming(bytes, length, path, swimmer)
       .then((FeedbackVideoStreamer streamer) {
@@ -160,8 +160,8 @@ class _UploadScreenState extends State<UploadScreen> {
         title,
         isSelected,
         des,
+        _colorsHolder.getBackgroundForI1(),
         _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           // height: MediaQuery.of(context).size.height / 2,
@@ -174,8 +174,8 @@ class _UploadScreenState extends State<UploadScreen> {
                   buildTitle(context, 'Select Video'),
                   buildDes(context, 'You can select any video format to upload'),
                   SizedBox(height: 10,),
-                  Align(
-                    alignment: Alignment.bottomRight,
+                  Container(
+                    width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                       onPressed: onUpload,
                       child: Text('Upload',
@@ -197,8 +197,8 @@ class _UploadScreenState extends State<UploadScreen> {
         isSelected,
         des,
         isSelected() ? onClickSelect : null,
-        _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3()
+        _colorsHolder.getBackgroundForI1(),
+        _colorsHolder.getBackgroundForI2()
     );
   }
 
@@ -214,8 +214,8 @@ class _UploadScreenState extends State<UploadScreen> {
           title,
           isSelected,
           des,
+          _colorsHolder.getBackgroundForI1(),
           _colorsHolder.getBackgroundForI2(),
-          _colorsHolder.getBackgroundForI3(),
           child: Container(
               width: MediaQuery.of(context).size.width,
               // height: MediaQuery.of(context).size.height / 2,
@@ -266,16 +266,14 @@ class _UploadScreenState extends State<UploadScreen> {
         isSelected,
         des,
         isSelected() ? onClick : null,
-        _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3()
+        _colorsHolder.getBackgroundForI1(),
+        _colorsHolder.getBackgroundForI2()
     );
   }
 
   Widget buildSubmit(BuildContext context) {
     Function isSelected = () => _state.index >= UploadState.Submit.index;
-    Function onClick = (BuildContext context) => setState(() {
-      _state = UploadState.Submit;
-    });
+    Function onClick = null;
     String title = '3';
     String des = 'Submit';
     if(_state == UploadState.Submit) {
@@ -283,8 +281,8 @@ class _UploadScreenState extends State<UploadScreen> {
           title,
           isSelected,
           des,
+          _colorsHolder.getBackgroundForI1(),
           _colorsHolder.getBackgroundForI2(),
-          _colorsHolder.getBackgroundForI3(),
           child: Container(
               width: MediaQuery.of(context).size.width,
               // height: MediaQuery.of(context).size.height / 2,
@@ -319,8 +317,8 @@ class _UploadScreenState extends State<UploadScreen> {
         isSelected,
         des,
         isSelected() ? onClick : null,
-        _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3()
+        _colorsHolder.getBackgroundForI1(),
+        _colorsHolder.getBackgroundForI2()
     );
   }
 
@@ -333,8 +331,8 @@ class _UploadScreenState extends State<UploadScreen> {
         title,
         isSelected,
         des,
+        _colorsHolder.getBackgroundForI1(),
         _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           // height: MediaQuery.of(context).size.height / 2,
@@ -353,8 +351,8 @@ class _UploadScreenState extends State<UploadScreen> {
         isSelected,
         des,
         null,
-        _colorsHolder.getBackgroundForI2(),
-        _colorsHolder.getBackgroundForI3()
+        _colorsHolder.getBackgroundForI1(),
+        _colorsHolder.getBackgroundForI2()
     );
   }
 

@@ -33,7 +33,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void onCamera(BuildContext context) {
 
   }
-
+  
   Widget buildHi(BuildContext context) {
     return Center(
       child: Column(
@@ -57,41 +57,124 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget buildUpload(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: Card(
-        borderOnForeground: true,
-        child: ListTile(
-          leading: Icon(Icons.add_a_photo_sharp),
-          title: Text('Upload',
-            style: TextStyle(
-              fontSize: 22 * MediaQuery.of(context).textScaleFactor,
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-              decoration: TextDecoration.none,
-            ),
-          ),
-          onTap: ()=>onUpload(context),
+  Widget buildTitle(BuildContext context, String title) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(title,
+        style: TextStyle(
+          fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
         ),
       ),
     );
   }
 
-  Widget buildCamera(BuildContext context) {
-    return Card(
-      shadowColor: Colors.black,
-      child: ListTile(
-        leading: Icon(Icons.camera_alt_sharp),
-        title: Text('Camera',
-          style: TextStyle(
-            fontSize: 22 * MediaQuery.of(context).textScaleFactor,
-            color: Colors.black,
-            fontWeight: FontWeight.normal,
-            decoration: TextDecoration.none,
-          ),
+  Widget buildDes(BuildContext context, String des) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(des,
+        style: TextStyle(
+          fontSize: 18 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.grey,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none,
         ),
-        onTap: ()=>onCamera(context),
+      ),
+    );
+  }
+
+  Widget buildUpload(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Card(
+        borderOnForeground: true,
+        child: Container(
+          padding: EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              buildTitle(context, 'Upload video'),
+              buildDes(context, 'Upload a video file in any video format.'),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                      return _colorsHolder.getBackgroundForI1(); // Use the component's default.
+                    },
+                  ),
+                ),
+                onPressed: ()=>onUpload(context),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Wrap(
+                      spacing: 5,
+                      children: [
+                        Icon(Icons.add_a_photo_sharp),
+                        Text('Upload',
+                          style: TextStyle(
+                            fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              )
+            ],
+          ),
+        )
+      ),
+    );
+  }
+
+  Widget buildCamera(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Card(
+          borderOnForeground: true,
+          child: Container(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                buildTitle(context, 'Film video'),
+                buildDes(context, 'Film swimming video with your device camera.'),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return _colorsHolder.getBackgroundForI1(); // Use the component's default.
+                        },
+                      ),
+                    ),
+                    onPressed: ()=>onCamera(context),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Wrap(
+                          spacing: 5,
+                          children: [
+                            Icon(Icons.videocam),
+                            Text('Film',
+                              style: TextStyle(
+                                fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                )
+              ],
+            ),
+          )
       ),
     );
   }

@@ -86,12 +86,12 @@ class BasicDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.add_a_photo),
-              title: Text('Upload'),
+              title: Text('Upload Video'),
               onTap: () => onUpload(context),
             ),
             ListTile(
-              leading: Icon(Icons.camera_alt),
-              title: Text('Camera'),
+              leading: Icon(Icons.videocam),
+              title: Text('Film Video'),
               onTap: () => onCamera(context),
             ),
             ListTile(
