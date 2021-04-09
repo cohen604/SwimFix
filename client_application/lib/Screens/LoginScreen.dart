@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (BuildContext context) {
             return new MessagePopUp('Something is broken.\n'
                 'Maybe Your Credentials aren\'t correct or the servers are down.\n'
-                'For more information contact swimAnalytics@gmail.com');
+                'For more information contact help@swimanalytics.com');
           },
         );
       }

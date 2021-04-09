@@ -79,7 +79,7 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
     }
 
     @Override
-    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) throws Exception {
         try {
             byte[] data = Files.readAllBytes(Paths.get(video.getPath()));
             System.out.println("height "+height);
@@ -90,8 +90,8 @@ public class MLConnectionHandlerReal implements MLConnectionHandler{
             return createTaggedVideo(res);
         } catch (Exception e){
             System.out.println(e.getMessage());
+            throw new Exception("coudn't get skeltons from ML");
         }
-        return null;
     }
 
     /**

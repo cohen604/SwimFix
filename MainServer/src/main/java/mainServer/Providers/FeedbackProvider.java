@@ -82,7 +82,7 @@ public class FeedbackProvider implements IFeedbackProvider {
                                            String skeletonsPath,
                                            String mlSkeletonsFolderPath,
                                            List<String> detectorsNames,
-                                           LocalDateTime time) {
+                                           LocalDateTime time) throws Exception {
 
         IVideoHandler  videoHandler = iFactoryVideoHandler.create(iFactoryDraw.create());
         //TODO change this when changing the combination with th ml server
@@ -120,7 +120,7 @@ public class FeedbackProvider implements IFeedbackProvider {
                                                 String feedbackFolderPath,
                                                 String feedbackSkeletonsFolderPath,
                                                 String mlSkeletonsFolderPath,
-                                                List<String> detectorsNames) {
+                                                List<String> detectorsNames) throws Exception {
         LocalDateTime localDateTime = LocalDateTime.now();
         IVideoHandler  videoHandler = iFactoryVideoHandler.create(iFactoryDraw.create());
         // create IVideo

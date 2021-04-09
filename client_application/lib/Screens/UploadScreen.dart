@@ -63,10 +63,27 @@ class _UploadScreenState extends State<UploadScreen> {
     Swimmer swimmer = this.widget.arguments.appUser.swimmer;
     logicManager.postVideoForStreaming(bytes, length, path, swimmer)
       .then((FeedbackVideoStreamer streamer) {
-         setState(() {
-           _state = UploadState.Feedback;
-           _streamer = streamer;
-         });
+        if(streamer!=null) {
+          setState(() {
+            _state = UploadState.Feedback;
+            _streamer = streamer;
+          });
+        }
+        else {
+          setState(() {
+            _state = UploadState.View;
+          });
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Something Broken'),
+                content: Text('Maybe your video is corrupted or the server are down.\n'
+                    'For more information please content help@swimanalytics.com' ),
+              );
+            }
+          );
+        }
       }
     );
   }

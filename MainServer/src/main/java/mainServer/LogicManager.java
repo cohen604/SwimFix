@@ -102,20 +102,24 @@ public class LogicManager {
      * @ pre condition - the feedback video we are generating doesn't exits!
      */
     public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
-        IUser user = _userProvider.getUser(userDTO);
-        if(user != null) {
-            // create video
-            List<String> detectorsNames = new LinkedList<>();
-            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
-                    convertedVideoDTO, user.getVideosPath(),
-                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
-            if (feedbackVideo != null) {
-                _userProvider.addFeedbackToUser(user, feedbackVideo);
-                FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
-                if (feedbackVideoStreamer != null) {
-                    return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+        try {
+            IUser user = _userProvider.getUser(userDTO);
+            if (user != null) {
+                // create video
+                List<String> detectorsNames = new LinkedList<>();
+                IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                        convertedVideoDTO, user.getVideosPath(),
+                        user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
+                if (feedbackVideo != null) {
+                    _userProvider.addFeedbackToUser(user, feedbackVideo);
+                    FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
+                    if (feedbackVideoStreamer != null) {
+                        return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //TODO what to return when fail
         return new ActionResult<>(Response.FAIL, null);
@@ -149,32 +153,37 @@ public class LogicManager {
      */
     public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
         IUser user = _userProvider.getUser(userDTO);
-        if(user != null && user.isLogged() && user.isResearcher()) {
-            // create video
-            List<String> detectorsNames = new LinkedList<>();
-            IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
-                    videoDTO, user.getVideosPath(),
-                    user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
-            if (feedbackVideo != null) {
-                // add a graph to the file
-                List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
-                List<ISwimmingSkeleton> model = _skeletonLoader.read(feedbackVideo.getMLSkeletonsPath());
-                List<ISwimmingSkeleton> modelAndInterpolation = feedbackVideo.getSwimmingSkeletons();
-                IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);
-                String pdfPath = _reportProvider.generateReport(
-                        raw,
-                        model,
-                        modelAndInterpolation,
-                        user.getReportsPath(),
-                        statistic,
-                        feedbackVideo.getSwimmingPeriodTime(),
-                        feedbackVideo.getSwimmingErrors());
-                ResearcherReportDTO reportDTO = new ResearcherReportDTO(
-                        feedbackVideo.getPath(),
-                        feedbackVideo.getSkeletonsPath(),
-                        pdfPath);
-                return new ActionResult<>(Response.SUCCESS, reportDTO);
+        try {
+            if (user != null && user.isLogged() && user.isResearcher()) {
+                // create video
+                List<String> detectorsNames = new LinkedList<>();
+                IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
+                        videoDTO, user.getVideosPath(),
+                        user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
+                if (feedbackVideo != null) {
+                    // add a graph to the file
+                    List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
+                    List<ISwimmingSkeleton> model = _skeletonLoader.read(feedbackVideo.getMLSkeletonsPath());
+                    List<ISwimmingSkeleton> modelAndInterpolation = feedbackVideo.getSwimmingSkeletons();
+                    IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);
+                    String pdfPath = _reportProvider.generateReport(
+                            raw,
+                            model,
+                            modelAndInterpolation,
+                            user.getReportsPath(),
+                            statistic,
+                            feedbackVideo.getSwimmingPeriodTime(),
+                            feedbackVideo.getSwimmingErrors());
+                    ResearcherReportDTO reportDTO = new ResearcherReportDTO(
+                            feedbackVideo.getPath(),
+                            feedbackVideo.getSkeletonsPath(),
+                            pdfPath);
+                    return new ActionResult<>(Response.SUCCESS, reportDTO);
+                }
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);
     }

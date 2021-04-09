@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface MLConnectionHandler {
 
-    List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width);
+    List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) throws Exception;
 
 }

@@ -18,7 +18,7 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
 
 
     @Override
-    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
+    public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) throws Exception {
         if (mlConnectionHandler != null) {
             System.out.println("Send Skeletons to ML " + LocalDateTime.now());
             List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);

@@ -23,10 +23,10 @@ class Avatar extends StatelessWidget {
       fontWeight = FontWeight.bold;
     }
     return ElevatedButton(
-      onPressed: isSelected() ?
-        ()=> onClick(context):
-        null
-      ,
+      onPressed:
+        isSelected() && onClick == null ? ()=>{}:
+        isSelected() && onClick != null? ()=> onClick(context):
+        null,
       style: ElevatedButton.styleFrom(
           shape: CircleBorder(),
           primary: backgroundColor
