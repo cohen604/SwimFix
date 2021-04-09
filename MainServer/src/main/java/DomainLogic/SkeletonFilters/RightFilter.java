@@ -14,7 +14,8 @@ public class RightFilter implements ISkeletonFilter {
 
     @Override
     public boolean check(ISwimmingSkeleton skeleton) {
-        return skeleton.containsRightElbow()
+        return skeleton!=null
+                && skeleton.containsRightElbow()
                 && skeleton.containsRightWrist();
 //                && skeleton.containsRightShoulder();
 

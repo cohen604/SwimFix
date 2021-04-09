@@ -2,11 +2,10 @@ package DomainLogic.SkeletonFilters;
 
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
-public class RightShoulderFilter implements ISkeletonFilter {
-
+public class HeadFilter implements ISkeletonFilter {
     @Override
     public ISwimmingSkeleton filter(ISwimmingSkeleton skeleton) {
-        if(check(skeleton)) {
+        if (check(skeleton)) {
             return skeleton;
         }
         return null;
@@ -14,6 +13,6 @@ public class RightShoulderFilter implements ISkeletonFilter {
 
     @Override
     public boolean check(ISwimmingSkeleton skeleton) {
-        return skeleton!=null && skeleton.containsRightShoulder();
+        return skeleton!=null && skeleton.containsHead();
     }
 }

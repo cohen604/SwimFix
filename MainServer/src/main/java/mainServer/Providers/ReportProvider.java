@@ -97,14 +97,16 @@ public class ReportProvider implements IReportProvider {
         paragraph.add("\n");
         document.add(paragraph);
         addPercentSummary(document, statistic);
+        addTrueFalseSummary(document, statistic);
+        document.newPage();
         addTimePeriod(document, periodTime);
-        addErrorSummary(document, size, errors);
+        addSwimmingErrorSummary(document, size, errors);
     }
 
     private void addPercentSummary(Document document,
                                    IStatistic statistic) throws DocumentException {
         PdfPTable table = new PdfPTable( 5);
-        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvment");
+        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvement");
         addRowToTable(table, "head",
                 statistic.getHeadModel(),
                 statistic.getHeadRatioModel(),
@@ -159,6 +161,11 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
     }
 
+    private void addTrueFalseSummary(Document document, IStatistic statistic) {
+        PdfPTable table = new PdfPTable( 5);
+        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvement");
+    }
+
     private void addTimePeriod(Document document,
                                ISwimmingPeriodTime periodTime) throws DocumentException {
         Paragraph paragraph = new Paragraph("Time Period Summary");
@@ -194,9 +201,9 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
     }
 
-    private void addErrorSummary(Document document,
-                                 int size,
-                                 Map<Integer, List<SwimmingError>> errors) throws DocumentException {
+    private void addSwimmingErrorSummary(Document document,
+                                         int size,
+                                         Map<Integer, List<SwimmingError>> errors) throws DocumentException {
         Paragraph paragraph = new Paragraph();
         paragraph.setFont(new Font(Font.FontFamily.HELVETICA,12));
         paragraph.add("Error Summary\n");

@@ -1,6 +1,7 @@
 package Domain.StatisticsData;
 
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import DomainLogic.SkeletonFilters.*;
 
 import java.util.List;
 
@@ -44,17 +45,25 @@ public class StatisticsHolder implements IStatistic {
         if(raw.size() != modelSkeletons.size()) {
             throw new IllegalArgumentException("raw list size doesn't match to current list size");
         }
+        ISkeletonFilter headFilter = new HeadFilter();
+        ISkeletonFilter leftElbowFilter = new LeftElbowFilter();
+        ISkeletonFilter rightElbowFilter = new RightElbowFilter();
+        ISkeletonFilter leftShoulderFilter = new LeftShoulderFilter();
+        ISkeletonFilter rightShoulderFilter = new RightShoulderFilter();
+        ISkeletonFilter leftWristFilter = new LeftWristFilter();
+        ISkeletonFilter rightWristFilter = new RightWristFilter();
+
         for(int i=0; i<raw.size(); i++) {
             ISwimmingSkeleton rs = tryGetSkeleton(raw, i);
             ISwimmingSkeleton ms = tryGetSkeleton(modelSkeletons, i);
             ISwimmingSkeleton mis = tryGetSkeleton(modelAndInterpolationSkeletons,i);
-            tryAddHeadToStatistic(rs, ms, mis);
-            tryAddRightShoulderToStatistic(rs, ms, mis);
-            tryAddRightElbowToStatistic(rs, ms, mis);
-            tryAddRightWristToStatistic(rs, ms, mis);
-            tryAddLeftShoulderToStatistic(rs, ms, mis);
-            tryAddLeftElbowToStatistic(rs, ms, mis);
-            tryAddLeftWristToStatistic(rs, ms, mis);
+            tryAddHeadToStatistic(rs, ms, mis, headFilter);
+            tryAddRightShoulderToStatistic(rs, ms, mis, rightShoulderFilter);
+            tryAddRightElbowToStatistic(rs, ms, mis, rightElbowFilter);
+            tryAddRightWristToStatistic(rs, ms, mis, rightWristFilter);
+            tryAddLeftShoulderToStatistic(rs, ms, mis, leftShoulderFilter);
+            tryAddLeftElbowToStatistic(rs, ms, mis, leftElbowFilter);
+            tryAddLeftWristToStatistic(rs, ms, mis, leftWristFilter);
         }
     }
 
@@ -65,131 +74,98 @@ public class StatisticsHolder implements IStatistic {
         return skeletons.get(index);
     }
 
-    private void tryAddHeadToStatistic(ISwimmingSkeleton actual,
-                                       ISwimmingSkeleton model,
-                                       ISwimmingSkeleton modelAndInterpolation) {
-        if(actual != null && actual.containsHead()) {
-            _headRecognizeRatios.addActual();
+    private void tryAddRatioToStatistic(ISwimmingSkeleton actual,
+                                        ISwimmingSkeleton model,
+                                        ISwimmingSkeleton modelAndInterpolation,
+                                        Ratios ratio,
+                                        ISkeletonFilter filter) {
+        if(filter.check(actual)) {
+            ratio.addActual();
         }
-        if(model != null && model.containsHead()) {
-            _headRecognizeRatios.addModel();
+        if(filter.check(model)) {
+            ratio.addModel();
         }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
-            _headRecognizeRatios.addModelAndInterpolation();
+        if(filter.check(modelAndInterpolation)) {
+            ratio.addModelAndInterpolation();
         }
 
-        if (actual != null && actual.containsHead()) {
-            if (model != null && model.containsHead()) {
-                _headRecognizeRatios.addModelCorrect();
+        if (filter.check(actual)) {
+            if (filter.check(model)) {
+                ratio.addModelCorrect();
             }
             else {
-                _headRecognizeRatios.addModelWrong();
+                ratio.addModelWrong();
             }
-            if (modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
-                _headRecognizeRatios.addModelAndInterpolationCorrect();
+            if (filter.check(modelAndInterpolation)) {
+                ratio.addModelAndInterpolationCorrect();
             }
             else {
-                _headRecognizeRatios.addModelAndInterpolationWrong();
+                ratio.addModelAndInterpolationWrong();
             }
         }
         else { // No actual point
-            if (model != null && model.containsHead()) {
-                _headRecognizeRatios.addModelWrong();
+            if (filter.check(model)) {
+                ratio.addModelWrong();
             }
             else {
-                _headRecognizeRatios.addModelCorrect();
+                ratio.addModelCorrect();
             }
-            if (modelAndInterpolation != null && modelAndInterpolation.containsHead()) {
-                _headRecognizeRatios.addModelAndInterpolationWrong();
+            if (filter.check(modelAndInterpolation)) {
+                ratio.addModelAndInterpolationWrong();
             }
             else {
-                _headRecognizeRatios.addModelAndInterpolationCorrect();
+                ratio.addModelAndInterpolationCorrect();
             }
         }
+    }
+
+    private void tryAddHeadToStatistic(ISwimmingSkeleton actual,
+                                       ISwimmingSkeleton model,
+                                       ISwimmingSkeleton modelAndInterpolation,
+                                       ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _headRecognizeRatios, filter);
     }
 
     private void tryAddRightShoulderToStatistic(ISwimmingSkeleton actual,
                                                 ISwimmingSkeleton model,
-                                                ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addModelAndInterpolation();
-        }
+                                                ISwimmingSkeleton modelAndInterpolation,
+                                                ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _rightShoulderRecognizeRatios, filter);
     }
 
     private void tryAddRightElbowToStatistic(ISwimmingSkeleton actual,
                                              ISwimmingSkeleton model,
-                                             ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addModelAndInterpolation();
-        }
+                                             ISwimmingSkeleton modelAndInterpolation,
+                                             ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _rightElbowRecognizeRatios, filter);
     }
 
     private void tryAddRightWristToStatistic(ISwimmingSkeleton actual,
                                              ISwimmingSkeleton model,
-                                             ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightWrist()) {
-            _rightWristRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsRightWrist()) {
-            _rightWristRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightWrist()) {
-            _rightWristRecognizeRatios.addModelAndInterpolation();
-        }
+                                             ISwimmingSkeleton modelAndInterpolation,
+                                             ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _rightWristRecognizeRatios, filter);
     }
 
     private void tryAddLeftShoulderToStatistic(ISwimmingSkeleton actual,
                                                ISwimmingSkeleton model,
-                                               ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addModelAndInterpolation();
-        }
+                                               ISwimmingSkeleton modelAndInterpolation,
+                                               ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _leftShoulderRecognizeRatios, filter);
     }
 
     private void tryAddLeftElbowToStatistic(ISwimmingSkeleton actual,
                                             ISwimmingSkeleton model,
-                                            ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addModelAndInterpolation();
-        }
+                                            ISwimmingSkeleton modelAndInterpolation,
+                                            ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _leftElbowRecognizeRatios, filter);
     }
 
     private void tryAddLeftWristToStatistic(ISwimmingSkeleton actual,
                                             ISwimmingSkeleton model,
-                                            ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addModelAndInterpolation();
-        }
+                                            ISwimmingSkeleton modelAndInterpolation,
+                                            ISkeletonFilter filter) {
+        tryAddRatioToStatistic(actual, model, modelAndInterpolation, _leftWristRecognizeRatios, filter);
     }
 
     @Override
