@@ -100,6 +100,7 @@ public class ReportProvider implements IReportProvider {
         addTrueFalseModelSummary(document, statistic);
         addTrueFalseModelAndInterSummary(document, statistic);
         document.newPage();
+        document.add(paragraph);
         addTimePeriod(document, periodTime);
         addSwimmingErrorSummary(document, size, errors);
     }
@@ -107,55 +108,55 @@ public class ReportProvider implements IReportProvider {
     private void addPercentSummary(Document document,
                                    IStatistic statistic) throws DocumentException {
         PdfPTable table = new PdfPTable( 5);
-        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvement");
+        addRowToPdfTable(table, "Point", "Actual", "Model", "Model & Interpolation", "Improvement");
         addRowToTable(table, "Head",
                 statistic.getHeadModel(),
+                statistic.getHeadActual(),
                 statistic.getHeadRatioModel(),
                 statistic.getHeadModelAndInterpolation(),
                 statistic.getHeadRatioModelAndInterpolation(),
-                statistic.getHeadActual(),
                 statistic.getHeadImprove());
         addRowToTable(table, "Right shoulder",
                 statistic.getRightShoulderModel(),
+                statistic.getRightShoulderActual(),
                 statistic.getRightShoulderRatioModel(),
                 statistic.getRightShoulderModelAndInterpolation(),
                 statistic.getRightShoulderRatioModelAndInterpolation(),
-                statistic.getRightShoulderActual(),
                 statistic.getRightShoulderImprove());
         addRowToTable(table, "Right elbow",
                 statistic.getRightElbowModel(),
+                statistic.getRightElbowActual(),
                 statistic.getRightElbowRatioModel(),
                 statistic.getRightElbowModelAndInterpolation(),
                 statistic.getRightElbowRatioModelAndInterpolation(),
-                statistic.getRightElbowActual(),
                 statistic.getRightElbowImprove());
         addRowToTable(table, "Right wrist",
                 statistic.getRightWristModel(),
+                statistic.getRightWristActual(),
                 statistic.getRightWristRatioModel(),
                 statistic.getRightWristModelAndInterpolation(),
                 statistic.getRightWristRatioModelAndInterpolation(),
-                statistic.getRightWristActual(),
                 statistic.getRightWristImprove());
         addRowToTable(table, "Left shoulder",
                 statistic.getLeftShoulderModel(),
+                statistic.getLeftShoulderActual(),
                 statistic.getLeftShoulderRatioModel(),
                 statistic.getLeftShoulderModelAndInterpolation(),
                 statistic.getLeftShoulderRatioModelAndInterpolation(),
-                statistic.getLeftShoulderActual(),
                 statistic.getLeftShoulderImprove());
         addRowToTable(table, "Left elbow",
                 statistic.getLeftElbowModel(),
+                statistic.getLeftElbowActual(),
                 statistic.getLeftElbowRatioModel(),
                 statistic.getLeftElbowModelAndInterpolation(),
                 statistic.getLeftElbowRatioModelAndInterpolation(),
-                statistic.getLeftElbowActual(),
                 statistic.getLeftElbowImprove());
         addRowToTable(table, "Left wrist",
                 statistic.getLeftWristModel(),
+                statistic.getLeftWristActual(),
                 statistic.getLeftWristRatioModel(),
                 statistic.getLeftWristModelAndInterpolation(),
                 statistic.getLeftWristRatioModelAndInterpolation(),
-                statistic.getLeftWristActual(),
                 statistic.getLeftWristImprove());
         Paragraph paragraph = new Paragraph("Skeletons Summary");
         paragraph.add(table);
@@ -391,14 +392,14 @@ public class ReportProvider implements IReportProvider {
 
     //TODO refactor this to class
     private void addRowToTable(PdfPTable table, String name,
+                               int actual,
                                int count1, double precent1,
                                int count2, double precent2,
-                               int actual,
                                double improvement) {
         table.addCell(name);
+        table.addCell(String.valueOf(actual));
         table.addCell(getCountAndPrecent(count1, precent1));
         table.addCell(getCountAndPrecent(count2, precent2));
-        table.addCell(String.valueOf(actual));
         table.addCell(improvement + "%");
     }
 
