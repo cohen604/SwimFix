@@ -24,9 +24,6 @@ public class StatisticsHolder implements IStatistic {
                             List<ISwimmingSkeleton> modelSkeletons,
                             List<ISwimmingSkeleton> modelAndInterpolationSkeletons) {
         initialize();
-        if(raw.size() != modelSkeletons.size()) {
-            throw new IllegalArgumentException("raw list size dont match to current list size");
-        }
         evalStatistic(raw, modelSkeletons, modelAndInterpolationSkeletons);
     }
 
@@ -43,6 +40,10 @@ public class StatisticsHolder implements IStatistic {
     private void evalStatistic(List<ISwimmingSkeleton> raw,
                                List<ISwimmingSkeleton> modelSkeletons,
                                List<ISwimmingSkeleton> modelAndInterpolationSkeletons) {
+        // TODO: change flow if raw data is null
+        if(raw.size() != modelSkeletons.size()) {
+            throw new IllegalArgumentException("raw list size doesn't match to current list size");
+        }
         for(int i=0; i<raw.size(); i++) {
             ISwimmingSkeleton rs = tryGetSkeleton(raw, i);
             ISwimmingSkeleton ms = tryGetSkeleton(modelSkeletons, i);
@@ -69,23 +70,40 @@ public class StatisticsHolder implements IStatistic {
                                        ISwimmingSkeleton modelAndInterpolation) {
         if(actual != null && actual.containsHead()) {
             _headRecognizeRatios.addActual();
-            if(model != null && model.containsHead()) {
-                _headRecognizeRatios.addModel();
+        }
+        if(model != null && model.containsHead()) {
+            _headRecognizeRatios.addModel();
+        }
+        if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
+            _headRecognizeRatios.addModelAndInterpolation();
+        }
+
+        if (actual != null && actual.containsHead()) {
+            if (model != null && model.containsHead()) {
                 _headRecognizeRatios.addModelCorrect();
             }
-            if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
-                _headRecognizeRatios.addModelAndInterpolation();
-                _headRecognizeRatios.addModelAndInterpolationCorrect();
-            }
-        }
-        else {
-            if (model != null && model.containsHead()) {
-                _headRecognizeRatios.addModel();
+            else {
                 _headRecognizeRatios.addModelWrong();
             }
-            if (modelAndInterpolation != null && modelAndInterpolation.containsHead()) {
-                _headRecognizeRatios.addModelAndInterpolation();
+            if (modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
+                _headRecognizeRatios.addModelAndInterpolationCorrect();
+            }
+            else {
                 _headRecognizeRatios.addModelAndInterpolationWrong();
+            }
+        }
+        else { // No actual point
+            if (model != null && model.containsHead()) {
+                _headRecognizeRatios.addModelWrong();
+            }
+            else {
+                _headRecognizeRatios.addModelCorrect();
+            }
+            if (modelAndInterpolation != null && modelAndInterpolation.containsHead()) {
+                _headRecognizeRatios.addModelAndInterpolationWrong();
+            }
+            else {
+                _headRecognizeRatios.addModelAndInterpolationCorrect();
             }
         }
     }
