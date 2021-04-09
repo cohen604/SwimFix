@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client_application/Components/AvatarChild.dart';
 import 'package:client_application/Components/AvatarTitle.dart';
+import 'package:client_application/Components/MediaPlayer.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
@@ -28,7 +29,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
   ColorsHolder _colorsHolder = new ColorsHolder();
   UploadState _state = UploadState.Select;
-  File _video;
+  PlatformFile _video;
   FeedbackVideoStreamer _streamer;
 
   void onUpload() async{
@@ -37,7 +38,10 @@ class _UploadScreenState extends State<UploadScreen> {
       allowMultiple: false,
     );
     if(result != null) {
-      File file = File(result.files.single.path);
+      PlatformFile file = result.files.single;
+      //TODO add path name validation and video type
+      print(file.path);
+      print(file.name);
       setState(() {
         _video = file;
         _state = UploadState.View;
@@ -57,9 +61,12 @@ class _UploadScreenState extends State<UploadScreen> {
       _state = UploadState.Submit;
     });
     LogicManager logicManager = LogicManager.getInstance();
-    int length = _video.lengthSync();
-    Uint8List bytes = _video.readAsBytesSync();
+    int length = _video.size;
+    Uint8List bytes = new File(_video.path).readAsBytesSync();
     String path = _video.path;
+    print(length);
+    print(bytes);
+    print(path);
     Swimmer swimmer = this.widget.arguments.appUser.swimmer;
     logicManager.postVideoForStreaming(bytes, length, path, swimmer)
       .then((FeedbackVideoStreamer streamer) {
@@ -222,7 +229,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         SizedBox(height: 10,),
                         buildDes(context, '${_video.path.substring(_video.path.lastIndexOf('/'))}'),
                         buildDes(context, 'Type: ${_video.path.substring(_video.path.lastIndexOf('.'))}'),
-                        buildDes(context, 'Size: ${_video.lengthSync()}'),
+                        buildDes(context, 'Size: ${_video.size}'),
                         SizedBox(height: 10,),
                         Align(
                           alignment: Alignment.bottomRight,
@@ -335,6 +342,7 @@ class _UploadScreenState extends State<UploadScreen> {
           child: Card(
             child: Container(
               padding: EdgeInsets.all(10),
+              child: MediaPlayer(_streamer),
             )
           ),
         )
@@ -349,8 +357,6 @@ class _UploadScreenState extends State<UploadScreen> {
         _colorsHolder.getBackgroundForI3()
     );
   }
-
-
 
   Widget buildPipeLine(BuildContext context) {
     return Column(
