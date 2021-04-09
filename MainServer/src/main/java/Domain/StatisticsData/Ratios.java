@@ -2,22 +2,24 @@ package Domain.StatisticsData;
 
 public class Ratios {
 
+    private int _frames;
     private int _actualCount; //Ground truth
     private int _modelCount;
     private int _modelAndInterpolationCount;
-    private int _modelCorrect;
-    private int _modelWrong;
-    private int _modelAndInterCorrect;
-    private int _modelAndInterWrong;
+    private int _modelTP;
+    private int _modelTN;
+    private int _modelFP;
+    private int _modelFN;
 
-    Ratios() {
+    Ratios(int frames) {
+        _frames = frames;
         _actualCount = 0;
         _modelCount = 0;
         _modelAndInterpolationCount = 0;
-        _modelCorrect = 0;
-        _modelWrong = 0;
-        _modelAndInterCorrect = 0;
-        _modelAndInterWrong = 0;
+        _modelTP = 0;
+        _modelTN = 0;
+        _modelFP = 0;
+        _modelFN = 0;
     }
 
     void addActual() {
@@ -32,22 +34,21 @@ public class Ratios {
         _modelAndInterpolationCount++;
     }
 
-    void addModelCorrect() {
-        _modelCorrect++;
+    void addModelTP() {
+        _modelTP++;
     }
 
-    void addModelWrong() {
-        _modelWrong++;
+    void addModelTN() {
+        _modelTN++;
     }
 
-    void addModelAndInterpolationCorrect() {
-        _modelAndInterCorrect++;
+    void addModelFP() {
+        _modelFP++;
     }
 
-    void addModelAndInterpolationWrong() {
-        _modelAndInterWrong++;
+    void addModelFN() {
+        _modelFN++;
     }
-
 
     int getActualCount() {
         return _actualCount;
@@ -61,14 +62,13 @@ public class Ratios {
         return _modelAndInterpolationCount;
     }
 
-    int getModelCorrect() { return _modelCorrect; }
+    int getModelTP() { return _modelTP; }
 
-    int getModelWrong() { return _modelWrong; }
+    int getModelTN() { return _modelTN; }
 
-    int getModelAndInterCorrect() { return _modelAndInterCorrect; }
+    int getModelFP() { return _modelFP; }
 
-    int getModelAndInterWrong() { return _modelAndInterWrong; }
-
+    int getModelFN() { return _modelFN; }
 
     double getRatioModel() {
         return getRatio(_modelCount, _actualCount);
@@ -81,6 +81,22 @@ public class Ratios {
     double getImprovement() {
         double val = getRatioModelAndInterpolation() - getRatioModel();
         return Math.floor(val * 10) / 10;
+    }
+
+    double getRatioModelTP() {
+        return getRatio(_modelTP, _frames);
+    }
+
+    double getRationModelTN() {
+        return getRatio(_modelTN, _frames);
+    }
+
+    double getRationModelFP() {
+        return getRatio(_modelFP, _frames);
+    }
+
+    double getRationModelFN() {
+        return getRatio(_modelFN, _frames);
     }
 
     private double getRatio(double a, double b) {

@@ -15,13 +15,21 @@ public interface IStatistic {
 
     int getHeadActual();
 
-    int getHeadModelCorrect();
+    int getHeadModelTP();
 
-    int getHeadModelWrong();
+    int getHeadModelTN();
 
-    int getHeadModelAndInterCorrect();
+    int getHeadModelFP();
 
-    int getHeadModelAndInterWrong();
+    int getHeadModelFN();
+
+    double getHeadRatioModelTP();
+
+    double getHeadRatioModelTN();
+
+    double getHeadRatioModelFP();
+
+    double getHeadRatioModelFN();
 
     // Right Shoulder
     double getRightShoulderImprove();
@@ -36,13 +44,21 @@ public interface IStatistic {
 
     int getRightShoulderActual();
 
-    int getRightShoulderModelCorrect();
+    int getRightShoulderModelTP();
 
-    int getRightShoulderModelWrong();
+    int getRightShoulderModelTN();
 
-    int getRightShoulderModelAndInterCorrect();
+    int getRightShoulderModelFP();
 
-    int getRightShoulderModelAndInterWrong();
+    int getRightShoulderModelFN();
+
+    double getRightShoulderRatioModelTP();
+
+    double getRightShoulderRatioModelTN();
+
+    double getRightShoulderRatioModelFP();
+
+    double getRightShoulderRatioModelFN();
 
     // Right Elbow
     double getRightElbowImprove();
@@ -57,13 +73,21 @@ public interface IStatistic {
 
     int getRightElbowActual();
 
-    int getRightElbowModelCorrect();
+    int getRightElbowModelTP();
 
-    int getRightElbowModelWrong();
+    int getRightElbowModelTN();
 
-    int getRightElbowModelAndInterCorrect();
+    int getRightElbowModelFP();
 
-    int getRightElbowModelAndInterWrong();
+    int getRightElbowModelFN();
+
+    double getRightElbowRatioModelTP();
+
+    double getRightElbowRatioModelTN();
+
+    double getRightElbowRatioModelFP();
+
+    double getRightElbowRatioModelFN();
 
     // Right Wrist
     double getRightWristImprove();
@@ -78,13 +102,21 @@ public interface IStatistic {
 
     int getRightWristActual();
 
-    int getRightWristModelCorrect();
+    int getRightWristModelTP();
 
-    int getRightWristModelWrong();
+    int getRightWristModelTN();
 
-    int getRightWristModelAndInterCorrect();
+    int getRightWristModelFP();
 
-    int getRightWristModelAndInterWrong();
+    int getRightWristModelFN();
+
+    double getRightWristRatioModelTP();
+
+    double getRightWristRatioModelTN();
+
+    double getRightWristRatioModelFP();
+
+    double getRightWristRatioModelFN();
 
     // Left Shoulder
     double getLeftShoulderImprove();
@@ -99,13 +131,21 @@ public interface IStatistic {
 
     int getLeftShoulderActual();
 
-    int getLeftShoulderModelCorrect();
+    int getLeftShoulderModelTP();
 
-    int getLeftShoulderModelWrong();
+    int getLeftShoulderModelTN();
 
-    int getLeftShoulderModelAndInterCorrect();
+    int getLeftShoulderModelFP();
 
-    int getLeftShoulderModelAndInterWrong();
+    int getLeftShoulderModelFN();
+
+    double getLeftShoulderRatioModelTP();
+
+    double getLeftShoulderRationModelTN();
+
+    double getLeftShoulderRatioModelFP();
+
+    double getLeftShoulderRatioModelFN();
 
     // Left Elbow
     double getLeftElbowImprove();
@@ -120,13 +160,21 @@ public interface IStatistic {
 
     int getLeftElbowActual();
 
-    int getLeftElbowModelCorrect();
+    int getLeftElbowModelTP();
 
-    int getLeftElbowModelWrong();
+    int getLeftElbowModelTN();
 
-    int getLeftElbowModelAndInterCorrect();
+    int getLeftElbowModelFP();
 
-    int getLeftElbowModelAndInterWrong();
+    int getLeftElbowModelFN();
+
+    double getLeftElbowRatioModelTP();
+
+    double getLeftElbowRatioModelTN();
+
+    double getLeftElbowRatioModelFP();
+
+    double getLeftElbowRatioModelFN();
 
     // Left Wrist
     double getLeftWristImprove();
@@ -141,12 +189,20 @@ public interface IStatistic {
 
     int getLeftWristActual();
 
-    int getLeftWristModelCorrect();
+    int getLeftWristModelTP();
 
-    int getLeftWristModelWrong();
+    int getLeftWristModelTN();
 
-    int getLeftWristModelAndInterCorrect();
+    int getLeftWristModelFP();
 
-    int getLeftWristModelAndInterWrong();
+    int getLeftWristModelFN();
+
+    double getLeftWristRatioModelTP();
+
+    double getLeftWristRatioModelTN();
+
+    double getLeftWristRatioModelFP();
+
+    double getLeftWristRatioModelFN();
 
 }
