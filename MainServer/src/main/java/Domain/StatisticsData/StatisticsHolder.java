@@ -69,12 +69,24 @@ public class StatisticsHolder implements IStatistic {
                                        ISwimmingSkeleton modelAndInterpolation) {
         if(actual != null && actual.containsHead()) {
             _headRecognizeRatios.addActual();
+            if(model != null && model.containsHead()) {
+                _headRecognizeRatios.addModel();
+                _headRecognizeRatios.addModelCorrect();
+            }
+            if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
+                _headRecognizeRatios.addModelAndInterpolation();
+                _headRecognizeRatios.addModelAndInterpolationCorrect();
+            }
         }
-        if(model != null && model.containsHead()) {
-            _headRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
-            _headRecognizeRatios.addModelAndInterpolation();
+        else {
+            if (model != null && model.containsHead()) {
+                _headRecognizeRatios.addModel();
+                _headRecognizeRatios.addModelWrong();
+            }
+            if (modelAndInterpolation != null && modelAndInterpolation.containsHead()) {
+                _headRecognizeRatios.addModelAndInterpolation();
+                _headRecognizeRatios.addModelAndInterpolationWrong();
+            }
         }
     }
 
@@ -164,7 +176,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getHeadImprove() {
-        return _headRecognizeRatios.getImprovment();
+        return _headRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -184,7 +196,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getHeadModelAndInterpolation() {
-        return _headRecognizeRatios.getmodelAndInterpolationCount();
+        return _headRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -194,7 +206,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getRightShoulderImprove() {
-        return _rightShoulderRecognizeRatios.getImprovment();
+        return _rightShoulderRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -214,7 +226,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightShoulderModelAndInterpolation() {
-        return _rightShoulderRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightShoulderRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -224,7 +236,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getRightElbowImprove() {
-        return _rightElbowRecognizeRatios.getImprovment();
+        return _rightElbowRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -244,7 +256,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightElbowModelAndInterpolation() {
-        return _rightElbowRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightElbowRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -254,7 +266,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getRightWristImprove() {
-        return _rightWristRecognizeRatios.getImprovment();
+        return _rightWristRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -274,7 +286,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightWristModelAndInterpolation() {
-        return _rightWristRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightWristRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -284,7 +296,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getLeftShoulderImprove() {
-        return _leftShoulderRecognizeRatios.getImprovment();
+        return _leftShoulderRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -304,7 +316,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftShoulderModelAndInterpolation() {
-        return _leftShoulderRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftShoulderRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -314,7 +326,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getLeftElbowImprove() {
-        return _leftElbowRecognizeRatios.getImprovment();
+        return _leftElbowRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -334,7 +346,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftElbowModelAndInterpolation() {
-        return _leftElbowRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftElbowRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -344,7 +356,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public double getLeftWristImprove() {
-        return _leftWristRecognizeRatios.getImprovment();
+        return _leftWristRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -364,7 +376,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftWristModelAndInterpolation() {
-        return _leftWristRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftWristRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override

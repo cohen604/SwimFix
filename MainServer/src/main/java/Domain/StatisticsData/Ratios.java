@@ -2,39 +2,72 @@ package Domain.StatisticsData;
 
 public class Ratios {
 
+    private int _actualCount; //Ground truth
     private int _modelCount;
     private int _modelAndInterpolationCount;
-    private int _actualCount;
+    private int _modelCorrect;
+    private int _modelWrong;
+    private int _modelAndInterCorrect;
+    private int _modelAndInterWrong;
 
     Ratios() {
-        _modelCount = 0;
         _actualCount = 0;
+        _modelCount = 0;
         _modelAndInterpolationCount = 0;
-    }
-
-    void addModel() {
-        _modelCount++;
-    }
-
-    public void addModelAndInterpolation() {
-        _modelAndInterpolationCount++;
+        _modelCorrect = 0;
+        _modelWrong = 0;
+        _modelAndInterCorrect = 0;
+        _modelAndInterWrong = 0;
     }
 
     void addActual() {
         _actualCount++;
     }
 
-    int getModelCount() {
-        return _modelCount;
+    void addModel() {
+        _modelCount++;
     }
 
-    int getmodelAndInterpolationCount() {
-        return _modelAndInterpolationCount;
+    void addModelAndInterpolation() {
+        _modelAndInterpolationCount++;
     }
+
+    void addModelCorrect() {
+        _modelCorrect++;
+    }
+
+    void addModelWrong() {
+        _modelWrong++;
+    }
+
+    void addModelAndInterpolationCorrect() {
+        _modelAndInterCorrect++;
+    }
+
+    void addModelAndInterpolationWrong() {
+        _modelAndInterWrong++;
+    }
+
 
     int getActualCount() {
         return _actualCount;
     }
+
+    int getModelCount() {
+        return _modelCount;
+    }
+
+    int getModelAndInterpolationCount() {
+        return _modelAndInterpolationCount;
+    }
+
+    int getModelCorrect() { return _modelCorrect; }
+
+    int getModelWrong() { return _modelWrong; }
+
+    int getModelAndInterCorrect() { return _modelAndInterCorrect; }
+
+    int getModelAndInterWrong() { return _modelAndInterWrong; }
 
 
     double getRatioModel() {
@@ -45,7 +78,7 @@ public class Ratios {
         return getRatio(_modelAndInterpolationCount, _actualCount);
     }
 
-    double getImprovment() {
+    double getImprovement() {
         double val = getRatioModelAndInterpolation() - getRatioModel();
         return Math.floor(val * 10) / 10;
     }
@@ -56,4 +89,6 @@ public class Ratios {
         }
         return Math.floor(a / b * 1000) / 10;
     }
+
+
 }
