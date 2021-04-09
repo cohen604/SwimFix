@@ -26,6 +26,6 @@ public class RightPalmCrossHeadError extends PalmCrossHeadError {
 
         double additionX = inside ? -20 : 35;
         IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
-        drawArrow(frame, wrist, endArrow);
+        drawArrow(frame, wrist, endArrow, 253, 139, 31);
     }
 }

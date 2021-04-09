@@ -213,6 +213,7 @@ public class VideoHandler implements IVideoHandler {
                         error.drawBefore(frame, skeleton);
                     }
                 }
+                // draw skeleton
                 drawer.drawSwimmer(frame, skeleton);
                 // draw after skeleton error
                 if (errors != null && !errors.isEmpty() && errors.containsKey(i)) {

@@ -18,12 +18,15 @@ public abstract class SwimmingError{
                          double a, int thickness) {
         return drawer.drawLine(frame, s1, s2, r, g, b, a, thickness);
     }
-    protected Mat drawArrow(Mat frame, IPoint a, IPoint b) {
-        return drawer.drawArrow(frame, a, b);
+
+    protected Mat drawArrow(Mat frame, IPoint a, IPoint b, double red, double green, double blue) {
+        return drawer.drawArrow(frame, a, b, red, green, blue);
     }
 
-    protected Mat drawVerticalArrow(Mat frame, IPoint pointA, IPoint pointB, boolean verticalSide) {
-        return drawer.drawVerticalArrow(frame, pointA, pointB, verticalSide);
+    protected Mat drawVerticalArrow(Mat frame, IPoint pointA, IPoint pointB,
+                                    boolean verticalSide,
+                                    double red, double green, double blue) {
+        return drawer.drawVerticalArrow(frame, pointA, pointB, verticalSide, red, green, blue);
     }
 
     public abstract void drawBefore(Mat frame, ISwimmingSkeleton skeleton);

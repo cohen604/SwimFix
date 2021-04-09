@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/login',
+      initialRoute: '/',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
       routes: {
-        '/login': (context) {
-          return _screenHolder.getLoginScreen();
+        '/': (context) {
+          return _screenHolder.getAboutScreen();
         },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
@@ -49,19 +49,6 @@ class MyApp extends StatelessWidget {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
         },
-        //TODO all screen below here need to be changed
-        '/videoPreview': (context) {
-          FeedbackVideoStreamer streamer = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getVideoPreviewScreen(streamer);
-        },
-        '/videos': (context) {
-          VideoScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getVideosScreen(args);
-        },
-        '/camera': (context) {
-          CameraScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getCameraScreen(args);
-        }
       },
       debugShowCheckedModeBanner: false,
     );

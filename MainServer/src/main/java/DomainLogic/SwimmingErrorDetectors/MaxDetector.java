@@ -32,7 +32,6 @@ public class MaxDetector implements ISwimmingTimeErrorDetector {
     private void detectRight(List<ISwimmingSkeleton> skeletons,
                              List<IPeriodTime> rights,
                              Map<Integer, List<SwimmingError>> errorMap) {
-
         int tresholdMax = 4;
         ISkeletonValueFilter filter = new YRightWristFilter();
         detect(skeletons, rights, errorMap, tresholdMax, filter);

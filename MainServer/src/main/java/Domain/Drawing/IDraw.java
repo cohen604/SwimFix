@@ -84,7 +84,18 @@ public interface IDraw {
 
     Mat drawMessage(Mat frame, String message, double x, double y, int thickness);
 
-    Mat drawArrow(Mat frame, IPoint a, IPoint b);
+    Mat drawArrow(Mat frame,
+                  IPoint a,
+                  IPoint b,
+                  double red,
+                  double green,
+                  double blue);
 
-    Mat drawVerticalArrow(Mat frame, IPoint pointA, IPoint pointB, boolean verticalSide);
+    Mat drawVerticalArrow(Mat frame,
+                          IPoint pointA,
+                          IPoint pointB,
+                          boolean verticalSide,
+                          double red,
+                          double green,
+                          double blue);
 }

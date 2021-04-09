@@ -32,16 +32,20 @@ public class RightElbowError extends ElbowError {
         vmin = IPointUtils.addByScalars(elbow, vmin.getX(), vmin.getY());
         vmax = IPointUtils.addByScalars(elbow, -vmax.getX(), -vmax.getY());
 
-        drawLine(frame, elbow, vmin, 10, 10, 10, 1, 1);
-        drawLine(frame, elbow, vmax, 10, 10, 10, 1, 1);
+        drawLine(frame, elbow, vmin, 10, 255, 10, 1, 2);
+        drawLine(frame, elbow, vmax, 10, 255, 10, 1, 2);
     }
 
     @Override
     public void drawAfter(Mat frame, ISwimmingSkeleton skeleton) {
+        IPoint shoulder = skeleton.getRightShoulder();
+        IPoint elbow = skeleton.getRightElbow();
         IPoint wrist = skeleton.getRightWrist();
 
-        double additionX = inside ? -20 : 35;
-        IPoint endArrow = IPointUtils.addByScalars(wrist, additionX, 0);
-        drawArrow(frame, wrist, endArrow);
+        drawLine(frame, shoulder, elbow, 255, 10, 10, 1, 2);
+        drawLine(frame, elbow, wrist, 255, 10, 10, 1, 2);
+
+        // recommendation
+        drawVerticalArrow(frame, elbow, wrist, inside, 10, 217, 27);
     }
 }

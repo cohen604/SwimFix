@@ -1,13 +1,9 @@
-import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
-
-import 'Arguments/CameraScreenArguments.dart';
+import 'package:client/Screens/WebAboutScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
-import 'Arguments/VideoScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
-import 'package:client/Screens/WebLoginScreen.dart';
 import 'package:client/Screens/WebResearcherScreen.dart';
 import 'package:client/Screens/WebSwimmerScreen.dart';
 import 'package:client/Screens/WebUploadScreen.dart';
@@ -19,8 +15,8 @@ import 'package:flutter/cupertino.dart';
 /// }
 class ScreenHolder {
 
-  Widget getLoginScreen() {
-      return new WebLoginScreen();
+  Widget getAboutScreen() {
+    return new WebAboutScreen();
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
@@ -55,18 +51,6 @@ class ScreenHolder {
       args = new UploadScreenArguments(new Swimmer(uid, email, name));
     }
     return new WebUploadScreen(args: args,);
-  }
-
-  Widget getVideoPreviewScreen(FeedbackVideoStreamer streamer) {
-    return null;
-  }
-
-  Widget getVideosScreen(VideoScreenArguments args) {
-    return null;
-  }
-
-  Widget getCameraScreen(CameraScreenArguments args) {
-    return null;
   }
 
 }

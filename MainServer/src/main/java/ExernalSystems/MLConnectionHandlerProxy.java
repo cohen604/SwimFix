@@ -4,6 +4,7 @@ import Domain.Streaming.IVideo;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.nio.file.Files.readAllLines;
@@ -19,14 +20,14 @@ public class MLConnectionHandlerProxy implements MLConnectionHandler{
     @Override
     public List<ISwimmingSkeleton> getSkeletons(IVideo video, int size, int height, int width) {
         if (mlConnectionHandler != null) {
-//            System.out.println("Send Skeletons to ML " + LocalDateTime.now());
-//            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
-//            System.out.println("Received Skeletons to ML " + LocalDateTime.now());
-//            return skeletons;
+            System.out.println("Send Skeletons to ML " + LocalDateTime.now());
+            List<ISwimmingSkeleton> skeletons = mlConnectionHandler.getSkeletons(video, size, height, width);
+            System.out.println("Received Skeletons to ML " + LocalDateTime.now());
+            return skeletons;
             //TODO for testing when ml server down load skeleton from local testing videos from csv
-            String path = "./src/test/java/TestingVideos/example/2021-03-31-19-39-18 - ml.csv";
-            SkeletonsLoader skeletonsLoader = new SkeletonsLoader();
-            return skeletonsLoader.read(path);
+//            String path = "./src/test/java/TestingVideos/example/2021-03-31-19-39-18 - ml.csv";
+//            SkeletonsLoader skeletonsLoader = new SkeletonsLoader();
+//            return skeletonsLoader.read(path);
         }
         return null;
     }

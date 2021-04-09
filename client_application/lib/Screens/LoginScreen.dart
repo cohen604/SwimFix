@@ -1,10 +1,15 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Domain/Users/AppUser.dart';
+import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'PopUps/MessagePopUp.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -16,9 +21,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  ColorsHolder _colorsHolder = new ColorsHolder();
+
+
   void signInWithGoogle() async {
     GoogleAuth googleAuth = new GoogleAuth();
     User user = await googleAuth.signIn();
+    print(user);
     String name = user.displayName;
     String email = user.email;
     String uid = user.uid;
@@ -26,8 +35,20 @@ class _LoginScreenState extends State<LoginScreen> {
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
         this.setState(() {
-          Navigator.pushNamed(context, "/upload");
+          AppUser appUser = new AppUser(swimmer, user.photoURL);
+          Navigator.pushNamed(context, "/welcome",
+              arguments: new WelcomeScreenArguments(appUser));
         });
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new MessagePopUp('Something is broken.\n'
+                'Maybe Your Credentials aren\'t correct or the servers are down.\n'
+                'For more information contact swimAnalytics@gmail.com');
+          },
+        );
       }
     });
   }
@@ -55,24 +76,29 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildLoginMobile(context) {
+  Widget buildLogin(context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(40.0),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [Theme.of(context).primaryColor, Theme.of(context).backgroundColor.withAlpha(80)]
-        // ),
+        image: DecorationImage(
+          image: AssetImage('assets/images/about_screen_background.png'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
+        ),
+        border: Border.all(color: _colorsHolder.getBackgroundForI7(), width: 4),
+        borderRadius: BorderRadius.circular(35.0),
       ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text( "SwimFix",
-              style: TextStyle(fontSize: 80.0, color:Colors.white,
-                fontFamily: "Satisfy")
+            Text( "Swim Analytics",
+              style: TextStyle(
+                fontSize: 50.0,
+                color:Colors.white,
+                fontFamily: "Satisfy",
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -83,67 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildLoginWeb(context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 60.0, left:120.0, right: 120.0),
-      child: Card(
-        color: Theme.of(context).primaryColor.withAlpha(30),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40.0),
-        ),
-        child: Row(
-          children: [
-            Flexible(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0),
-                      bottomLeft: Radius.circular(40.0)),
-                  color: Theme.of(context).primaryColor,
-                ),
-                //width: MediaQuery.of(context).size.width / 3,
-                //height: MediaQuery.of(context).size.height / 2,
-                padding: EdgeInsets.only(left:50, right: 50),
-                child: Center(
-                  child: Text( "SwimFix",
-                      style: TextStyle(fontSize: 80 * MediaQuery.of(context).textScaleFactor, color:Colors.white,
-                          fontFamily: "Satisfy")
-                  ),
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 3,
-              child: Container(
-                //height: MediaQuery.of(context).size.height / 2,
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: buildLoginWithGoogleMobile(context)
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Text(""),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildLogin(context) {
-    if (kIsWeb) {
-      return buildLoginWeb(context);
-    }
-    return buildLoginMobile(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -152,6 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 15,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/about_screen_background.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
             alignment: Alignment.center,
             padding: const EdgeInsets.all(16.0),
             child: buildLogin(context),

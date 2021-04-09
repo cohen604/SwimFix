@@ -1,5 +1,6 @@
 package mainServer.Providers;
 
+import Domain.Errors.Interfaces.SwimmingError;
 import Domain.PeriodTimeData.IPeriodTime;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.StatisticsData.IStatistic;
@@ -22,6 +23,7 @@ import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 public class ReportProvider implements IReportProvider {
 
@@ -44,7 +46,8 @@ public class ReportProvider implements IReportProvider {
             List<ISwimmingSkeleton> modelAndInterpolation,
             String pdfFolderPath,
             IStatistic statistic,
-            ISwimmingPeriodTime periodTime) {
+            ISwimmingPeriodTime periodTime,
+            Map<Integer, List<SwimmingError>> errors) {
 
         try {
             LocalDateTime time = LocalDateTime.now();
@@ -57,7 +60,7 @@ public class ReportProvider implements IReportProvider {
             document.open();
             // write meta on the file
             addMeta(document);
-            addSummary(document, statistic, periodTime);
+            addSummary(document, statistic, periodTime, modelAndInterpolation.size(), errors);
             addHeadGraphs(document, pdfWriter, raw, model, modelAndInterpolation, statistic);
             addRightShoulderGraphs(document, pdfWriter, raw, model, modelAndInterpolation, statistic);
             addRightElbowGraphs(document, pdfWriter, raw, model, modelAndInterpolation, statistic);
@@ -84,7 +87,9 @@ public class ReportProvider implements IReportProvider {
 
     private void addSummary(Document document,
                             IStatistic statistic,
-                            ISwimmingPeriodTime periodTime) throws DocumentException {
+                            ISwimmingPeriodTime periodTime,
+                            int size,
+                            Map<Integer, List<SwimmingError>> errors) throws DocumentException {
         document.newPage();
         Paragraph paragraph = new Paragraph();
         paragraph.setFont(new Font(Font.FontFamily.HELVETICA,24));
@@ -93,6 +98,7 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
         addPercentSummary(document, statistic);
         addTimePeriod(document, periodTime);
+        addErrorSummary(document, size, errors);
     }
 
     private void addPercentSummary(Document document,
@@ -188,6 +194,29 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
     }
 
+    private void addErrorSummary(Document document,
+                                 int size,
+                                 Map<Integer, List<SwimmingError>> errors) throws DocumentException {
+        Paragraph paragraph = new Paragraph();
+        paragraph.setFont(new Font(Font.FontFamily.HELVETICA,12));
+        paragraph.add("Error Summary\n");
+        PdfPTable table = new PdfPTable(2);
+        table.addCell("Frame");
+        table.addCell("Errors");
+        for(int i=0; i<size; i++) {
+            if(errors.containsKey(i)) {
+                table.addCell(String.valueOf(i));
+                String errorsString = "";
+                for(SwimmingError error: errors.get(i)) {
+                    errorsString += error.getTag() + ", ";
+                }
+                table.addCell(errorsString);
+            }
+        }
+        paragraph.add(table);
+        document.add(paragraph);
+    }
+
     //TODO refactor this to class
     private void addRowToPdfTable(PdfPTable table, String c1, String c2, String c3, String c4) {
         table.addCell(c1);
@@ -227,7 +256,7 @@ public class ReportProvider implements IReportProvider {
     }
 
     private String getCountAndPrecent( int count, double precent) {
-        return count +" ( " + precent + "% )";
+        return count +" (" + precent + "%)";
     }
 
     private void addHeadGraphs(Document document,

@@ -156,11 +156,6 @@ class LogicManager {
     return FeedbackVideoStreamer.factory(map);
   }
 
-  /// handle the prediction
-  Future<bool> predictValidFrame(CameraImage img) async {
-    return await mlHandler.predictValidFrame(img);
-  }
-
   bool predictValidFrameBlue(CameraImage img) {
     return mlHandler.predictValidFrameBlue(img);
   }

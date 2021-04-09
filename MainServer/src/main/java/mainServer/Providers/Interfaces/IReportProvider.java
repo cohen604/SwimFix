@@ -1,9 +1,11 @@
 package mainServer.Providers.Interfaces;
+import Domain.Errors.Interfaces.SwimmingError;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.StatisticsData.IStatistic;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IReportProvider {
 
@@ -12,5 +14,6 @@ public interface IReportProvider {
                           List<ISwimmingSkeleton> modelAndInterpolation,
                           String pdfFolderPath,
                           IStatistic statistic,
-                          ISwimmingPeriodTime periodTime);
+                          ISwimmingPeriodTime periodTime,
+                          Map<Integer, List<SwimmingError>> errors);
 }
