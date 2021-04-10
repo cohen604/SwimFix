@@ -185,10 +185,10 @@ class _CameraScreenState extends State<CameraScreen> {
 
   String getCameraName(String name) {
     if(name == '0') {
-      return 'Mobile camera';
+      return 'Back camera';
     }
     else if(name == '1') {
-      return 'Mobile camera';
+      return 'Front camera';
     }
     return name;
   }
