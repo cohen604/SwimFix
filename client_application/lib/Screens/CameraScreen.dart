@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:client_application/Components/Avatar.dart';
 import 'package:client_application/Components/BlinkIcon.dart';
@@ -34,6 +36,8 @@ class _CameraScreenState extends State<CameraScreen> {
   List<CameraDescription> _cameras;
   CameraController _cameraController;
   FilmStates _filmStates;
+  Timer _videoTimer;
+  List<XFile> _xfiles;
 
   _CameraScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -42,6 +46,7 @@ class _CameraScreenState extends State<CameraScreen> {
     _cameras = null;
     _cameraController = null;
     _filmStates = null;
+    _xfiles = [];
   }
 
   @override
@@ -66,6 +71,31 @@ class _CameraScreenState extends State<CameraScreen> {
   void dispose() {
     _cameraController?.dispose();
     super.dispose();
+  }
+
+  void initVideoCutTimer() {
+    Duration duration = Duration(seconds: 1);
+    _videoTimer = Timer.periodic(duration,
+      (Timer timer) {
+        if(_screenState == ScreenStates.Film
+          && _filmStates == FilmStates.Filming
+          && _cameraController.value.isInitialized
+          && _cameraController.value.isRecordingVideo) {
+            print('Added new video from timer');
+          _cameraController.stopVideoRecording().then(
+            (XFile xfile) {
+              _xfiles.add(xfile);
+              _cameraController.startVideoRecording();
+            }
+          );
+        }
+        else if(_filmStates == FilmStates.Finished
+          || _screenState != ScreenStates.Film) {
+          print('Stop timer');
+          _videoTimer.cancel();
+        }
+      }
+    );
   }
 
   void onCameraSelected(int index) {
@@ -96,6 +126,7 @@ class _CameraScreenState extends State<CameraScreen> {
     setState(() {
       _filmStates = FilmStates.Filming;
       _cameraController.startVideoRecording();
+      initVideoCutTimer();
     });
   }
 
@@ -118,7 +149,13 @@ class _CameraScreenState extends State<CameraScreen> {
     //play_arrow_outlined
     setState(() {
       _filmStates = FilmStates.Finished;
-      _cameraController.stopVideoRecording();
+      _cameraController.stopVideoRecording().then(
+        (XFile xfile) {
+          if(xfile != null) {
+            _xfiles.add(xfile);
+          }
+        }
+      );
       _screenState = ScreenStates.View;
     });
   }
