@@ -1,5 +1,6 @@
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
@@ -30,8 +31,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       arguments: new UploadScreenArguments(appUser));
   }
 
-  void onCamera(BuildContext context) {
-
+  void onFilm(BuildContext context) {
+    AppUser appUser = this.widget.arguments.appUser;
+    Navigator.pushNamed(context, "/film",
+        arguments: new CameraScreenArguments(appUser));
   }
   
   Widget buildHi(BuildContext context) {
@@ -151,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         },
                       ),
                     ),
-                    onPressed: ()=>onCamera(context),
+                    onPressed: ()=>onFilm(context),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Center(
@@ -179,37 +182,72 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
+  void onLogout(BuildContext context) {
+    Function onYes = () {
+      LogicManager.getInstance().logout(this.widget.arguments.appUser.swimmer);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    };
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Logout'),
+          content: Text('Do you want to logout?'),
+          actions: [
+            TextButton(
+                onPressed: ()=>Navigator.pop(context),
+                child: Text("No")
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onYes();
+                },
+                child: Text("Yes")
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        drawer: BasicDrawer(
-          this.widget.arguments.appUser
-        ),
-        appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: Text("Swim Analytics",),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: _colorsHolder.getBackgroundForI6(),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                buildHi(context),
-                SizedBox(height: 10,),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      buildUpload(context),
-                      buildCamera(context),
-                    ],
+      child: WillPopScope(
+        onWillPop: () {
+          onLogout(context);
+          return Future.value(false);
+        },
+        child: Scaffold(
+          drawer: BasicDrawer(
+            this.widget.arguments.appUser
+          ),
+          appBar: AppBar(
+            backgroundColor: Colors.blue,
+            title: Text("Swim Analytics",),
+          ),
+          body: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: _colorsHolder.getBackgroundForI6(),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  buildHi(context),
+                  SizedBox(height: 10,),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: <Widget>[
+                        buildUpload(context),
+                        buildCamera(context),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

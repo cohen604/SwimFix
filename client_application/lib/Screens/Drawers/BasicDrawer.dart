@@ -1,5 +1,6 @@
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
@@ -19,7 +20,8 @@ class BasicDrawer extends StatelessWidget {
   }
 
   void onCamera(BuildContext context) {
-
+    Navigator.pushNamed(context, "/film",
+        arguments: new CameraScreenArguments(appUser));
   }
 
   void onUpload(BuildContext context) {

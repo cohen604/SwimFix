@@ -1,3 +1,4 @@
+import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Screens/ScreensHolder.dart';
@@ -40,8 +41,9 @@ class MyApp extends StatelessWidget {
           UploadScreenArguments args =  ModalRoute.of(context).settings.arguments;
           return _screensHolders.getUploadScreen(args);
         },
-        '/camera': (context) {
-          return _screensHolders.getCameraScreen();
+        '/film': (context) {
+          CameraScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getCameraScreen(args);
         },
         '/feedbacks': (context) {
           return _screensHolders.getFeedbacksScreen();

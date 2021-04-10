@@ -3,6 +3,7 @@ import 'package:client_application/Domain/Concurrent/ConcurrentQueue.dart';
 import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
 import 'package:client_application/Domain/Video/VideoListImages.dart';
 import 'package:client_application/Domain/Video/VideoWithoutFeedback.dart';
+import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'Arguments/CameraScreenArguments.dart';
 import 'Arguments/VideoScreenArguments.dart';
+import 'Drawers/BasicDrawer.dart';
 
 class CameraScreen extends StatefulWidget {
 
@@ -23,7 +25,7 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
 
   LogicManager _logicManager;
-  List<CameraDescription> _cameras;
+
   List<VideoWithoutFeedback> _poolWithNoFeedBack;
   List<CameraImage> _pool;
 
@@ -35,6 +37,11 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _cameraStateAvailable;
   //TODO add new state for _recordState that marks the process of the feedback
   bool _recordState;
+
+
+  ColorsHolder _colorsHolder = new ColorsHolder();
+  CameraStates _screenState = CameraStates.Search;
+  List<CameraDescription> _cameras;
 
   _CameraScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -55,21 +62,27 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
     availableCameras().then((cameras) async {
       if (cameras == null || cameras.length < 1) {
+        setState(() {
+          _screenState = CameraStates.NoCameraFound;
+        });
         print('No cameras found! BUG!');
       }
       else {
-        _cameras = cameras;
-        _cameraController = new CameraController(
-          cameras[0],
-          ResolutionPreset.high,
-        );
-        await _cameraController.initialize();
-        if (!mounted) {
-          return;
-        }
         setState(() {
-          _cameraStateAvailable = true;
+          _screenState = CameraStates.Select;
+          _cameras = cameras;
         });
+      //   _cameraController = new CameraController(
+      //     cameras[0],
+      //     ResolutionPreset.high,
+      //   );
+      //   await _cameraController.initialize();
+      //   if (!mounted) {
+      //     return;
+      //   }
+      //   setState(() {
+      //     _cameraStateAvailable = true;
+      //   });
       }
     });
   }
@@ -206,7 +219,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build2(BuildContext context) {
     if (_cameraController == null || !_cameraController.value.isInitialized) {
       return Container(
         child: Text ("No camera found!"),
@@ -245,4 +258,100 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
     );
   }
+
+  Widget buildSearchState(BuildContext context) {
+    return  Container(
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Card(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10.0,),
+                  Text('Searching camera devices'),
+                ],
+              ),
+            ),
+          ),
+          Expanded(child: Container())
+        ],
+      ),
+    );
+  }
+
+  Widget buildNoCameraState(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Card(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(20.0),
+              child: Text('No camera devices'),
+            ),
+          ),
+          Expanded(child: Container())
+        ],
+      ),
+    );
+  }
+
+  Widget buildSelectState(BuildContext context) {
+    return Container(
+        child: Text('Cameras Found')
+    );
+  }
+
+
+  Widget buildScreenState(BuildContext context) {
+    if(_screenState == CameraStates.Search) {
+      return buildSearchState(context);
+    }
+    else if(_screenState == CameraStates.NoCameraFound) {
+      return buildNoCameraState(context);
+    }
+    else if(_screenState == CameraStates.Select) {
+      return buildSelectState(context);
+    }
+    return Container(
+      color: Colors.red,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+      drawer: BasicDrawer(
+        this.widget.args.appUser
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: Text("Film Swimming Video",),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: _colorsHolder.getBackgroundForI6(),
+          padding: const EdgeInsets.all(16.0),
+          child: buildScreenState(context)
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+enum CameraStates {
+  Search,
+  NoCameraFound,
+  Select,
+  Film,
+  View,
 }
