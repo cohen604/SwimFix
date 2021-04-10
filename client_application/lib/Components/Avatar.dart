@@ -17,13 +17,14 @@ class Avatar extends StatelessWidget {
     Color textColor = Colors.black;
     Color backgroundColor = background;
     FontWeight fontWeight = FontWeight.normal;
-    if(isSelected()) {
+    if(isSelected != null && isSelected()) {
       backgroundColor = background;//backgroundSelected;
       textColor = Colors.white;
       fontWeight = FontWeight.bold;
     }
     return ElevatedButton(
       onPressed:
+        isSelected == null ? null :
         isSelected() && onClick == null ? ()=>{}:
         isSelected() && onClick != null? ()=> onClick(context):
         null,

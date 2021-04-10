@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:client_application/Components/Avatar.dart';
 import 'package:client_application/Domain/Concurrent/ConcurrentQueue.dart';
 import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
 import 'package:client_application/Domain/Video/VideoListImages.dart';
@@ -29,74 +30,23 @@ class _CameraScreenState extends State<CameraScreen> {
   List<VideoWithoutFeedback> _poolWithNoFeedBack;
   List<CameraImage> _pool;
 
-  ConcurrentQueue<CameraImage> _queue; //TODO remove this
-  CameraController _cameraController;
   int _thresholdInvalidImages;
   int _counterInvalidImages;
   int _thresholdFrames;
-  bool _cameraStateAvailable;
-  //TODO add new state for _recordState that marks the process of the feedback
-  bool _recordState;
 
-
-  ColorsHolder _colorsHolder = new ColorsHolder();
-  CameraStates _screenState = CameraStates.Search;
-  List<CameraDescription> _cameras;
 
   _CameraScreenState() {
     _logicManager = LogicManager.getInstance();
     _poolWithNoFeedBack = new List();
     _pool = new List();
-    _queue = new ConcurrentQueue();
     _cameraController = null;
     // TODO must remember:  _thresholdFrames > _thresholdInvalidImages
     _thresholdFrames = 1;
     _thresholdInvalidImages = 0;
     _counterInvalidImages = 0;
-    _cameraStateAvailable = false;
-    _recordState = false;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    availableCameras().then((cameras) async {
-      if (cameras == null || cameras.length < 1) {
-        setState(() {
-          _screenState = CameraStates.NoCameraFound;
-        });
-        print('No cameras found! BUG!');
-      }
-      else {
-        setState(() {
-          _screenState = CameraStates.Select;
-          _cameras = cameras;
-        });
-      //   _cameraController = new CameraController(
-      //     cameras[0],
-      //     ResolutionPreset.high,
-      //   );
-      //   await _cameraController.initialize();
-      //   if (!mounted) {
-      //     return;
-      //   }
-      //   setState(() {
-      //     _cameraStateAvailable = true;
-      //   });
-      }
-    });
-  }
-
-  /// Todo delete this
-  /// The function inserts a camera img to the queue
-  /// param img - the camera img
-  Future<void> enqueueCameraImage(CameraImage img) async {
-    bool result = await _queue.enqueue(img);
-    if (result) {
-      print('Added new Img');
-    }
-  }
-
+  //TODO
   VideoListImages createVideoListImageFromCameraImage(List<CameraImage> pool) {
     List<CameraImage> bytes = new List();
     bytes.addAll(pool);
@@ -104,6 +54,7 @@ class _CameraScreenState extends State<CameraScreen> {
     return new VideoListImages(bytes, name);
   }
 
+  //TODO
   /// The function handle an camera img and send him to the ml service
   /// param img - the camera img to predict
   void handleCameraImageBlue(CameraImage img) {
@@ -160,56 +111,31 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-  void onPressRecord() {
-    if(_cameraStateAvailable) {
-      if (!_recordState) {
-        startRecording();
-        _recordState = true;
+  // New Code here
+
+  ColorsHolder _colorsHolder = new ColorsHolder();
+  ScreenStates _screenState = ScreenStates.Search;
+  List<CameraDescription> _cameras;
+  CameraController _cameraController;
+  FilmStates _filmStates;
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    availableCameras().then((cameras) async {
+      if (cameras == null || cameras.length < 1) {
+        setState(() {
+          _screenState = ScreenStates.NoCameraFound;
+        });
       }
       else {
-        stopRecording();
+        setState(() {
+          _screenState = ScreenStates.Select;
+          _cameras = cameras;
+        });
       }
-      setState(() {});
-    }
-  }
-
-  String getPressRecordLabel() {
-    if(_cameraStateAvailable) {
-      if (!_recordState) {
-        return 'Start';
-      }
-      else {
-        return 'Finish';
-      }
-    }
-    return 'X';
-  }
-
-  /// The function build the camera preview if the camera is available
-  Widget buildCameraPreview(BuildContext context) {
-    if(_cameraStateAvailable) {
-      return CameraPreview(_cameraController);
-    }
-    return Container(
-      color: Colors.white,
-      child: Align(
-        alignment: Alignment.center,
-        child: Container(
-          height: 200,
-          child: Column(
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(
-                height: 50,
-              ),
-              Text('Waiting for Camera',
-                style: TextStyle(fontSize: 24.0, color:Colors.black,
-                )),
-            ],
-          ),
-        )
-      ),
-    );
+    });
   }
 
   @override
@@ -218,45 +144,46 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build2(BuildContext context) {
-    if (_cameraController == null || !_cameraController.value.isInitialized) {
-      return Container(
-        child: Text ("No camera found!"),
-      );
-    }
-    return Scaffold(
-      body:
-        Stack(
-            children: [
-              buildCameraPreview(context),
-              //CameraPreview(cameraController),
-              Container(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: 100,
-                    height: 65,
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: FloatingActionButton.extended(
-                      onPressed: onPressRecord,
-                      //     (){
-                      //   createListOfPoolsFromQueue();
-                      //   cameraController.stopImageStream();
-                      // },
-                      backgroundColor: Colors.redAccent,
-                      label: Text(getPressRecordLabel()),
-                    ),
-                    // TitleButton(title: 'Stop', buttonText:'Stop', onPress:() {
-                    //   createListOfPoolsFromQueue();
-                    //   cameraController.stopImageStream();
-                    // }),
-                  ),
-                ),
-              ),
-            ],
-        ),
+  void onCameraSelected(int index) {
+    _cameraController = new CameraController(
+      _cameras[index],
+      ResolutionPreset.high,
     );
+    _cameraController.initialize().then(
+      (value) {
+        setState(() {
+          _screenState = ScreenStates.Film;
+          _filmStates = FilmStates.Ready;
+        });
+      }
+    );
+    setState(() {
+      _screenState = ScreenStates.ConnectingToCamera;
+    });
+  }
+
+  void onCameraPause() {
+    setState(() {
+      _filmStates = FilmStates.Pause;
+      _cameraController.pauseVideoRecording();
+      //TODO
+    });
+  }
+
+  void onCameraResume() {
+    setState(() {
+      _filmStates = FilmStates.Filming;
+      _cameraController.resumeVideoRecording();
+    });
+  }
+
+  void onCameraStop() {
+    //play_arrow_outlined
+    setState(() {
+      _filmStates = FilmStates.Finished;
+      _cameraController.stopVideoRecording();
+      _screenState = ScreenStates.View;
+    });
   }
 
   Widget buildSearchState(BuildContext context) {
@@ -292,7 +219,9 @@ class _CameraScreenState extends State<CameraScreen> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.all(20.0),
-              child: Text('No camera devices'),
+              child: Center(
+                  child: Text('No camera devices')
+              ),
             ),
           ),
           Expanded(child: Container())
@@ -301,22 +230,241 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  Widget buildSelectState(BuildContext context) {
-    return Container(
-        child: Text('Cameras Found')
+  String getCameraName(String name) {
+    if(name == '0') {
+      return 'Mobile camera';
+    }
+    else if(name == '1') {
+      return 'Mobile camera';
+    }
+    return name;
+  }
+
+  String getCameraDirection(CameraLensDirection direction) {
+    if(direction == CameraLensDirection.front) {
+      return 'Camera direction : Front';
+    }
+    else if(direction == CameraLensDirection.back) {
+      return 'Camera direction : Back';
+    }
+    else if(direction == CameraLensDirection.external) {
+      return 'Camera direction : External';
+    }
+    return 'Camera direction : Unknown';
+  }
+
+  Widget buildCameraDeviceItem(BuildContext context, int index) {
+    CameraDescription des = _cameras[index];
+    return Card(
+      child: ListTile(
+        leading:  CircleAvatar(
+          backgroundColor: Colors.grey.shade300,
+          foregroundColor: Colors.black,
+          child: Text('${index + 1}',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+            ),
+          )
+        ),
+        title : Text('${getCameraName(des.name)}'),
+        subtitle: Text('${getCameraDirection(des.lensDirection)}'),
+        trailing: IconButton(
+          color: _colorsHolder.getBackgroundForI1(),
+          onPressed: () => onCameraSelected(index),
+          icon: Icon(
+            Icons.videocam,
+            size: 30,
+          ),
+        ),
+      ),
     );
   }
 
+  Widget buildSelectState(BuildContext context) {
+    return Container(
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.all(10.0),
+              child: Text('Devices',
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (_, index) {
+                  return buildCameraDeviceItem(context, index);
+                },
+                itemCount: _cameras.length,
+              ),
+            ),
+          ],
+        ),
+    );
+  }
+
+  Widget buildConnectingToCamera(BuildContext context) {
+    return  Container(
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Card(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10.0,),
+                  Text('Connecting to camera device'),
+                ],
+              ),
+            ),
+          ),
+          Expanded(child: Container())
+        ],
+      ),
+    );
+  }
+
+  Widget buildFilmStart(BuildContext context) {
+    if(_filmStates == FilmStates.Ready) {
+      return Container(
+          margin: EdgeInsets.all(10.0),
+          alignment: Alignment.bottomCenter,
+          child: FloatingActionButton(
+            backgroundColor: _colorsHolder.getBackgroundForI6().withAlpha(100),
+            child: Icon(
+              Icons.fiber_manual_record_sharp,
+              color: Colors.red,
+              size: 45,
+            ),
+            onPressed: () {
+              setState(() {
+                _filmStates = FilmStates.Filming;
+                _cameraController.startVideoRecording();
+              });
+            },
+          )
+      );
+    }
+    return Container();
+  }
+
+  Widget buildPauseBar(BuildContext context) {
+    if(_filmStates == FilmStates.Filming) {
+      return Container(
+        margin: EdgeInsets.all(10.0),
+        alignment: Alignment.bottomCenter,
+        child: Column(
+          // direction: Axis.vertical,
+          children: [
+            Expanded(
+                child: Container()
+            ),
+            Icon(
+              Icons.fiber_manual_record_sharp,
+              color: Colors.red,
+              size: 30,
+            ),
+            FloatingActionButton(
+              backgroundColor: _colorsHolder.getBackgroundForI6(),
+              child: Icon(
+                Icons.pause,
+                color: Colors.black,
+                size: 35,
+              ),
+              onPressed: onCameraPause,
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildStopBar(BuildContext context) {
+    if(_filmStates == FilmStates.Pause) {
+      return Container(
+        margin: EdgeInsets.all(10.0),
+        alignment: Alignment.bottomCenter,
+        child: Wrap (
+          spacing: 20,
+          // direction: Axis.vertical,
+          children: [
+            FloatingActionButton(
+              backgroundColor: _colorsHolder.getBackgroundForI6().withAlpha(100),
+              child: Icon(
+                Icons.fiber_manual_record,
+                color: Colors.red,
+                size: 35,
+              ),
+              onPressed: onCameraResume,
+            ),
+            FloatingActionButton(
+              backgroundColor: _colorsHolder.getBackgroundForI6(),
+              child: Icon(
+                Icons.stop,
+                color: Colors.black,
+                size: 35,
+              ),
+              onPressed: onCameraStop,
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildFilm(BuildContext context) {
+    return Stack(children: [
+      CameraPreview(_cameraController),
+      Container(
+        margin: EdgeInsets.all(5.0),
+        alignment: Alignment.topLeft,
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              _screenState = ScreenStates.Select;
+              _filmStates = null;
+            });
+          },
+          foregroundColor: Colors.white,
+          backgroundColor: _colorsHolder.getBackgroundForI6().withAlpha(100),
+          child: Icon(
+            Icons.close,
+            size: 20,
+          ),
+        ),
+      ),
+      buildFilmStart(context),
+      buildPauseBar(context),
+      buildStopBar(context),
+      ]
+    );
+  }
 
   Widget buildScreenState(BuildContext context) {
-    if(_screenState == CameraStates.Search) {
-      return buildSearchState(context);
+    if(_screenState == ScreenStates.Search) {
+      return  buildSearchState(context);
     }
-    else if(_screenState == CameraStates.NoCameraFound) {
-      return buildNoCameraState(context);
+    else if(_screenState == ScreenStates.NoCameraFound) {
+      return  buildNoCameraState(context);
     }
-    else if(_screenState == CameraStates.Select) {
+    else if(_screenState == ScreenStates.Select) {
       return buildSelectState(context);
+    }
+    else if(_screenState == ScreenStates.ConnectingToCamera) {
+      return buildConnectingToCamera(context);
+    }
+    // else if(_screenState == ScreenStates.Film) {
+    //   return buildFilm(context);
+    // }
+    else if(_screenState == ScreenStates.View) {
+      //TODO
     }
     return Container(
       color: Colors.red,
@@ -325,6 +473,9 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if(_screenState == ScreenStates.Film) {
+      return buildFilm(context);
+    }
     return SafeArea(
       child: Scaffold(
       drawer: BasicDrawer(
@@ -348,10 +499,18 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 }
 
-enum CameraStates {
+enum ScreenStates {
   Search,
   NoCameraFound,
   Select,
+  ConnectingToCamera,
   Film,
   View,
+}
+
+enum FilmStates {
+  Ready,
+  Filming,
+  Pause,
+  Finished,
 }
