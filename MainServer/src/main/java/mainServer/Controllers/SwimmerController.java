@@ -1,6 +1,7 @@
 package mainServer.Controllers;
 
 import DTO.*;
+import Domain.Streaming.IFeedbackVideo;
 import com.google.gson.Gson;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/swimmer")
@@ -38,4 +40,22 @@ public class SwimmerController {
         }
         return null;
     }
+
+
+//    @PostMapping("/report")
+//    @CrossOrigin(origins = "*")
+//    public String viewHistory(@RequestPart(name = "uid") String uid,
+//                              @RequestPart(name = "email") String email,
+//                              @RequestPart(name = "name") String name) {
+//        try {
+//            System.out.println("request view history");
+//            UserDTO userDTO = new UserDTO(uid, email, name);
+//            ActionResult<List<IFeedbackVideo>> actionResult = swimFixAPI.getSwimmerHistory(userDTO);
+//            return actionResult.toJson();
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }
