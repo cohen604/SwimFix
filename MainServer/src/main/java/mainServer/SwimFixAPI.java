@@ -26,6 +26,9 @@ import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import mainServer.Providers.Interfaces.*;
 
+import java.util.Collection;
+import java.util.List;
+
 public class SwimFixAPI {
 
    private LogicManager logicManager;
@@ -88,6 +91,9 @@ public class SwimFixAPI {
 
    public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
       return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
-   
    }
+
+//   public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistory(UserDTO userDto) {
+//      return logicManager.getSwimmerHistory(userDto);
+//   }
 }

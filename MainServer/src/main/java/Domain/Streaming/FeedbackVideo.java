@@ -43,19 +43,15 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
 
     /**
      * The function generate a feedback video for streaming
-     * @param detectors - list of detectors
      * @return feedback streamer if the video exists
      */
     @Override
-    public FeedbackVideoStreamer generateFeedbackStreamer(List<String> detectors) {
-        if(detectors==null) {
-            return null;
-        }
+    public FeedbackVideoStreamer generateFeedbackStreamer() {
         File file = new File(this.path);
         if(!file.exists()) {
             return null;
         }
-        return new FeedbackVideoStreamer(file, detectors);
+        return new FeedbackVideoStreamer(this.path);
     }
 
     /**
