@@ -6,6 +6,7 @@ import Domain.Streaming.*;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
+import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
 import mainServer.Providers.Interfaces.IReportProvider;
 import mainServer.Providers.Interfaces.IStatisticProvider;
@@ -112,7 +113,7 @@ public class LogicManager {
                         user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
                 if (feedbackVideo != null) {
                     _userProvider.addFeedbackToUser(user, feedbackVideo);
-                    FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer(detectorsNames);
+                    FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
                     if (feedbackVideoStreamer != null) {
                         return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);
                     }
@@ -187,5 +188,15 @@ public class LogicManager {
         }
         return new ActionResult<>(Response.FAIL, null);
     }
+
+//    public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistory(UserDTO userDto) {
+//        IUser user = _userProvider.getUser(userDto);
+//        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
+//        for (IFeedbackVideo v : feedbacks) {
+//            String path = v.getPath();
+//            File file = new File(path);
+//        }
+//        return new ActionResult<>(Response.SUCCESS, history);
+//    }
 }
 

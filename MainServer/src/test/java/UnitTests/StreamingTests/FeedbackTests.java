@@ -79,47 +79,36 @@ public class FeedbackTests  extends TestCase {
 
     public void testGeneratedFeedbackStreamer() {
         setUpFeedback();
-        List<String> detectors = new LinkedList<>();
-        detectors.add("detector0");
-        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(detectors);
+        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer();
         assertNotNull(streamer);
         assertEquals(this.feedbackVideo.getPath(), streamer.getPath());
-        assertEquals(detectors, streamer.getDetectors());
     }
 
     public void testGeneratedFeedbackStreamerVideoNotExists() {
         setUFeedbackVideoNotExits();
-        List<String> detectors = new LinkedList<>();
-        detectors.add("detector0");
-        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(detectors);
+        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer();
         assertNull(streamer);
     }
 
     public void testGeneratedFeedbackStreamerTwice() {
         setUpGeneratedFeedback();
-        List<String> detectors = new LinkedList<>();
-        detectors.add("detector0");
-        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(detectors);
+        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer();
         assertNotNull(streamer);
         assertEquals(this.feedbackVideo.getPath(), streamer.getPath());
-        assertEquals(detectors, streamer.getDetectors());
     }
 
     public void testGeneratedFeedbackStreamerVideoUpdated() {
         setUpGeneratedFeedback();
         this.feedbackVideo.updateVideo();
-        List<String> detectors = new LinkedList<>();
-        detectors.add("detector0");
-        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(detectors);
+        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer();
         assertNotNull(streamer);
         assertEquals(this.feedbackVideo.getPath(), streamer.getPath());
-        assertEquals(detectors, streamer.getDetectors());
         assertFalse(this.feedbackVideo.isFeedbackUpdated());
     }
 
     public void testGeneratedFeedbackStreamerDetectorsNull() {
         setUpFeedback();
-        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer(null);
+        FeedbackVideoStreamer streamer = this.feedbackVideo.generateFeedbackStreamer();
         assertNull(streamer);
     }
 

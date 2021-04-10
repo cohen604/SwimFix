@@ -15,10 +15,9 @@ public interface IFeedbackVideo {
 
     /**
      * The function generate a feedback view link with the given detectors filters
-     * @param detectors - the names of the detectors in the system
      * @return the link to view the feedback
      */
-    FeedbackVideoStreamer generateFeedbackStreamer(List<String> detectors);
+    FeedbackVideoStreamer generateFeedbackStreamer();
 
     /**
      * The function update the video
