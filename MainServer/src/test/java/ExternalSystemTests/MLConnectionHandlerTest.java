@@ -43,8 +43,13 @@ public class MLConnectionHandlerTest extends TestCase {
         int size = frames.size();
         int height = frames.get(0).height();
         int width = frames.get(0).width();
-        List<ISwimmingSkeleton> swimmingSkeletons = this.mlConnectionHandler.getSkeletons(this.video, size, height, width);
-        if(swimmingSkeletons == null) {
+        try {
+            List<ISwimmingSkeleton> swimmingSkeletons = this.mlConnectionHandler.getSkeletons(this.video, size, height, width);
+            if (swimmingSkeletons == null) {
+                fail();
+            }
+        }
+        catch (Exception e) {
             fail();
         }
         //TODO

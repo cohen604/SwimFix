@@ -42,13 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       else {
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return new MessagePopUp('Something is broken.\n'
-                'Maybe Your Credentials aren\'t correct or the servers are down.\n'
-                'For more information contact swimAnalytics@gmail.com');
-          },
-        );
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Something is Broken'),
+                content: Text('Maybe your Credentials aren\'t correct or the server are down.\n'
+                    'For more information please content help@swimanalytics.com' ),
+              );
+            });
+        // print('here');
       }
     });
   }
