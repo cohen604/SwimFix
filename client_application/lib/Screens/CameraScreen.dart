@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:client_application/Components/Avatar.dart';
+import 'package:client_application/Components/BlinkIcon.dart';
+import 'package:client_application/Components/TextTimer.dart';
 import 'package:client_application/Domain/Concurrent/ConcurrentQueue.dart';
 import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
 import 'package:client_application/Domain/Video/VideoListImages.dart';
@@ -27,98 +29,20 @@ class _CameraScreenState extends State<CameraScreen> {
 
   LogicManager _logicManager;
 
-  List<VideoWithoutFeedback> _poolWithNoFeedBack;
-  List<CameraImage> _pool;
-
-  int _thresholdInvalidImages;
-  int _counterInvalidImages;
-  int _thresholdFrames;
-
-
-  _CameraScreenState() {
-    _logicManager = LogicManager.getInstance();
-    _poolWithNoFeedBack = new List();
-    _pool = new List();
-    _cameraController = null;
-    // TODO must remember:  _thresholdFrames > _thresholdInvalidImages
-    _thresholdFrames = 1;
-    _thresholdInvalidImages = 0;
-    _counterInvalidImages = 0;
-  }
-
-  //TODO
-  VideoListImages createVideoListImageFromCameraImage(List<CameraImage> pool) {
-    List<CameraImage> bytes = new List();
-    bytes.addAll(pool);
-    String name = 'pool${_poolWithNoFeedBack.length + 1}';
-    return new VideoListImages(bytes, name);
-  }
-
-  //TODO
-  /// The function handle an camera img and send him to the ml service
-  /// param img - the camera img to predict
-  void handleCameraImageBlue(CameraImage img) {
-    bool valid = _logicManager.predictValidFrameBlue(img);
-    if (valid) {
-      _pool.add(img);
-      _counterInvalidImages = 0;
-    }
-    else {
-      _counterInvalidImages += 1;
-      if(_counterInvalidImages > _thresholdInvalidImages && _pool.length <= _thresholdFrames){
-        _pool = new List();
-      }
-      else if (_counterInvalidImages > _thresholdInvalidImages && _pool.length > _thresholdFrames) {
-        VideoListImages videoListImages = createVideoListImageFromCameraImage(_pool);
-        _poolWithNoFeedBack.add(videoListImages);
-        _pool = new List();
-      }
-      else {
-        _pool.add(img);
-      }
-    }
-    print('pool length ${_pool.length}');
-  }
-
-  void startRecording() {
-    _cameraController.startImageStream(handleCameraImageBlue); // handleCameraImage
-  }
-
-  void stopRecording() {
-    _cameraController.stopImageStream();
-    // maybe there is another last pool to get
-    if(_pool.isNotEmpty && _pool.length > _thresholdFrames) {
-      VideoListImages videoListImages = createVideoListImageFromCameraImage(_pool);
-      _poolWithNoFeedBack.add(videoListImages);
-      _pool = new List();
-    }
-    print('video pools found ${_poolWithNoFeedBack.length}');
-    if(_poolWithNoFeedBack.isNotEmpty) {
-      VideoWithoutFeedback firstPool = _poolWithNoFeedBack.removeAt(0);
-      firstPool.getFeedbackVideo(_logicManager).then((feedbackLink) {
-        print('got feedback for first camera pool video');
-        List<FeedbackVideoStreamer> feedbacks = new List();
-        feedbacks.add(feedbackLink);
-        var args = new VideoScreenArguments(feedbacks, _poolWithNoFeedBack);
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, "/videos", arguments: args);
-        });
-      });
-    }
-    else {
-      // TODO move to error screen
-      //FOUND error no polls
-    }
-  }
-
-  // New Code here
-
-  ColorsHolder _colorsHolder = new ColorsHolder();
-  ScreenStates _screenState = ScreenStates.Search;
+  ColorsHolder _colorsHolder;
+  ScreenStates _screenState;
   List<CameraDescription> _cameras;
   CameraController _cameraController;
   FilmStates _filmStates;
-  AnimationController _animationController;
+
+  _CameraScreenState() {
+    _logicManager = LogicManager.getInstance();
+    _colorsHolder = new ColorsHolder();
+    _screenState = ScreenStates.Search;
+    _cameras = null;
+    _cameraController = null;
+    _filmStates = null;
+  }
 
   @override
   void initState() {
@@ -159,6 +83,19 @@ class _CameraScreenState extends State<CameraScreen> {
     );
     setState(() {
       _screenState = ScreenStates.ConnectingToCamera;
+    });
+  }
+
+  void onCameraStart() {
+    setState(() {
+      _filmStates = FilmStates.CountDown;
+    });
+  }
+
+  void onCountDownEnd() {
+    setState(() {
+      _filmStates = FilmStates.Filming;
+      _cameraController.startVideoRecording();
     });
   }
 
@@ -341,13 +278,19 @@ class _CameraScreenState extends State<CameraScreen> {
               color: Colors.red,
               size: 45,
             ),
-            onPressed: () {
-              setState(() {
-                _filmStates = FilmStates.Filming;
-                _cameraController.startVideoRecording();
-              });
-            },
+            onPressed: onCameraStart,
           )
+      );
+    }
+    return Container();
+  }
+
+  Widget buildFilmCountDown(BuildContext context) {
+    if(_filmStates == FilmStates.CountDown) {
+      return Container(
+        margin: EdgeInsets.all(10.0),
+        alignment: Alignment.center,
+        child: TextTimer(onCountDownEnd),
       );
     }
     return Container();
@@ -364,11 +307,7 @@ class _CameraScreenState extends State<CameraScreen> {
             Expanded(
                 child: Container()
             ),
-            Icon(
-              Icons.fiber_manual_record_sharp,
-              color: Colors.red,
-              size: 30,
-            ),
+            BlinkIcon(Icons.fiber_manual_record_sharp, Colors.red),
             FloatingActionButton(
               backgroundColor: _colorsHolder.getBackgroundForI6(),
               child: Icon(
@@ -441,6 +380,7 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
       ),
       buildFilmStart(context),
+      buildFilmCountDown(context),
       buildPauseBar(context),
       buildStopBar(context),
       ]
@@ -510,6 +450,7 @@ enum ScreenStates {
 
 enum FilmStates {
   Ready,
+  CountDown,
   Filming,
   Pause,
   Finished,
