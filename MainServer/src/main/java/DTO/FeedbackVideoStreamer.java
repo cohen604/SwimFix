@@ -11,7 +11,7 @@ public class FeedbackVideoStreamer {
 
     private String path;
     //TODO need to add here the List of comments because we cant send them in with the streaming video
-        private List<String> detectors;
+    private List<String> detectors;
 
     public FeedbackVideoStreamer(File file, List<String> detectors) {
         this.path = file.getPath();

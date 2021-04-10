@@ -1,4 +1,6 @@
+import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
+import 'package:client_application/Screens/CameraScreen.dart';
 import 'package:client_application/Screens/LoginScreen.dart';
 import 'package:client_application/Screens/UploadScreen.dart';
 import 'package:client_application/Screens/WelcomeScreen.dart';
@@ -16,12 +18,12 @@ class ScreensHolders {
     return new WelcomeScreen(args);
   }
 
-  Widget getUploadScreen(UploadScreenArguments arguments) {
-    return new UploadScreen(arguments);
+  Widget getUploadScreen(UploadScreenArguments args) {
+    return new UploadScreen(args);
   }
 
-  Widget getCameraScreen() {
-    return null;
+  Widget getCameraScreen(CameraScreenArguments args) {
+    return CameraScreen(args);
   }
 
   Widget getFeedbacksScreen() {

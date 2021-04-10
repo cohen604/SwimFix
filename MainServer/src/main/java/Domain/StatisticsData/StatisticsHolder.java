@@ -1,6 +1,7 @@
 package Domain.StatisticsData;
 
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import DomainLogic.SkeletonFilters.*;
 
 import java.util.List;
 
@@ -23,37 +24,46 @@ public class StatisticsHolder implements IStatistic {
     public StatisticsHolder(List<ISwimmingSkeleton> raw,
                             List<ISwimmingSkeleton> modelSkeletons,
                             List<ISwimmingSkeleton> modelAndInterpolationSkeletons) {
-        initialize();
-        if(raw.size() != modelSkeletons.size()) {
-            throw new IllegalArgumentException("raw list size dont match to current list size");
-        }
         evalStatistic(raw, modelSkeletons, modelAndInterpolationSkeletons);
     }
 
-    private void initialize() {
-        _headRecognizeRatios = new Ratios();
-        _rightShoulderRecognizeRatios = new Ratios();
-        _rightElbowRecognizeRatios = new Ratios();
-        _rightWristRecognizeRatios = new Ratios();
-        _leftShoulderRecognizeRatios = new Ratios();
-        _leftElbowRecognizeRatios = new Ratios();
-        _leftWristRecognizeRatios = new Ratios();
+    private void initialize(int frames) {
+        _headRecognizeRatios = new Ratios(frames);
+        _rightShoulderRecognizeRatios = new Ratios(frames);
+        _rightElbowRecognizeRatios = new Ratios(frames);
+        _rightWristRecognizeRatios = new Ratios(frames);
+        _leftShoulderRecognizeRatios = new Ratios(frames);
+        _leftElbowRecognizeRatios = new Ratios(frames);
+        _leftWristRecognizeRatios = new Ratios(frames);
     }
 
     private void evalStatistic(List<ISwimmingSkeleton> raw,
                                List<ISwimmingSkeleton> modelSkeletons,
                                List<ISwimmingSkeleton> modelAndInterpolationSkeletons) {
+        // TODO: change flow if raw data is null
+        if(raw.size() != modelSkeletons.size()) {
+            throw new IllegalArgumentException("raw list size doesn't match to current list size");
+        }
+        initialize(raw.size());
+        ISkeletonFilter headFilter = new HeadFilter();
+        ISkeletonFilter leftElbowFilter = new LeftElbowFilter();
+        ISkeletonFilter rightElbowFilter = new RightElbowFilter();
+        ISkeletonFilter leftShoulderFilter = new LeftShoulderFilter();
+        ISkeletonFilter rightShoulderFilter = new RightShoulderFilter();
+        ISkeletonFilter leftWristFilter = new LeftWristFilter();
+        ISkeletonFilter rightWristFilter = new RightWristFilter();
+
         for(int i=0; i<raw.size(); i++) {
-            ISwimmingSkeleton rs = tryGetSkeleton(raw, i);
-            ISwimmingSkeleton ms = tryGetSkeleton(modelSkeletons, i);
-            ISwimmingSkeleton mis = tryGetSkeleton(modelAndInterpolationSkeletons,i);
-            tryAddHeadToStatistic(rs, ms, mis);
-            tryAddRightShoulderToStatistic(rs, ms, mis);
-            tryAddRightElbowToStatistic(rs, ms, mis);
-            tryAddRightWristToStatistic(rs, ms, mis);
-            tryAddLeftShoulderToStatistic(rs, ms, mis);
-            tryAddLeftElbowToStatistic(rs, ms, mis);
-            tryAddLeftWristToStatistic(rs, ms, mis);
+            ISwimmingSkeleton actual = tryGetSkeleton(raw, i);
+            ISwimmingSkeleton model = tryGetSkeleton(modelSkeletons, i);
+            ISwimmingSkeleton modelInter = tryGetSkeleton(modelAndInterpolationSkeletons,i);
+            tryAddRatioToStatistic(actual, model, modelInter, _headRecognizeRatios, headFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _rightShoulderRecognizeRatios, rightShoulderFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _rightElbowRecognizeRatios, rightElbowFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _rightWristRecognizeRatios, rightWristFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _leftShoulderRecognizeRatios, leftShoulderFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _leftElbowRecognizeRatios, leftElbowFilter);
+            tryAddRatioToStatistic(actual, model, modelInter, _leftWristRecognizeRatios, leftWristFilter);
         }
     }
 
@@ -64,107 +74,58 @@ public class StatisticsHolder implements IStatistic {
         return skeletons.get(index);
     }
 
-    private void tryAddHeadToStatistic(ISwimmingSkeleton actual,
-                                       ISwimmingSkeleton model,
-                                       ISwimmingSkeleton modelAndInterpolation) {
-        if(actual != null && actual.containsHead()) {
-            _headRecognizeRatios.addActual();
+    private void tryAddRatioToStatistic(ISwimmingSkeleton actual,
+                                        ISwimmingSkeleton model,
+                                        ISwimmingSkeleton modelInter,
+                                        Ratios ratio,
+                                        ISkeletonFilter filter) {
+        if(filter.check(actual)) {
+            ratio.addActual();
         }
-        if(model != null && model.containsHead()) {
-            _headRecognizeRatios.addModel();
+        if(filter.check(model)) {
+            ratio.addModel();
         }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsHead()) {
-            _headRecognizeRatios.addModelAndInterpolation();
+        if(filter.check(modelInter)) {
+            ratio.addModelAndInterpolation();
         }
-    }
+        //true positive -> actual=true model=true
+        if (filter.check(actual) && filter.check(model)) {
+            ratio.addModelTP();
+        }
+        // true negative -> actual=false model=false
+        else if(!filter.check(actual) && !filter.check(model)) {
+            ratio.addModelTN();
+        }
+        // false positive -> actual=false model=true
+        else if(!filter.check(actual) && filter.check(model)) {
+            ratio.addModelFP();
+        }
+        // false negative -> actual=true model==false
+        else if(filter.check(actual) && !filter.check(model)) {
+            ratio.addModelFN();
+        }
 
-    private void tryAddRightShoulderToStatistic(ISwimmingSkeleton actual,
-                                                ISwimmingSkeleton model,
-                                                ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addActual();
+        // true positive -> actual=true modelAndInter=true
+        if (filter.check(actual) && filter.check(modelInter)) {
+            ratio.addModelAndInterTP();
         }
-        if(model!=null && model.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addModel();
+        // true negative -> actual=false modelAndInter=false
+        else if(!filter.check(actual) && !filter.check(modelInter)) {
+            ratio.addModelAndInterTN();
         }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightShoulder()) {
-            _rightShoulderRecognizeRatios.addModelAndInterpolation();
+        // false positive -> actual=false modelAndInter=true
+        else if(!filter.check(actual) && filter.check(modelInter)) {
+            ratio.addModelAndInterFP();
         }
-    }
-
-    private void tryAddRightElbowToStatistic(ISwimmingSkeleton actual,
-                                             ISwimmingSkeleton model,
-                                             ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightElbow()) {
-            _rightElbowRecognizeRatios.addModelAndInterpolation();
-        }
-    }
-
-    private void tryAddRightWristToStatistic(ISwimmingSkeleton actual,
-                                             ISwimmingSkeleton model,
-                                             ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsRightWrist()) {
-            _rightWristRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsRightWrist()) {
-            _rightWristRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsRightWrist()) {
-            _rightWristRecognizeRatios.addModelAndInterpolation();
-        }
-    }
-
-    private void tryAddLeftShoulderToStatistic(ISwimmingSkeleton actual,
-                                               ISwimmingSkeleton model,
-                                               ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftShoulder()) {
-            _leftShoulderRecognizeRatios.addModelAndInterpolation();
-        }
-    }
-
-    private void tryAddLeftElbowToStatistic(ISwimmingSkeleton actual,
-                                            ISwimmingSkeleton model,
-                                            ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftElbow()) {
-            _leftElbowRecognizeRatios.addModelAndInterpolation();
-        }
-    }
-
-    private void tryAddLeftWristToStatistic(ISwimmingSkeleton actual,
-                                            ISwimmingSkeleton model,
-                                            ISwimmingSkeleton modelAndInterpolation) {
-        if(actual!=null && actual.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addActual();
-        }
-        if(model!=null && model.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addModel();
-        }
-        if(modelAndInterpolation!=null && modelAndInterpolation.containsLeftWrist()) {
-            _leftWristRecognizeRatios.addModelAndInterpolation();
+        // false negative -> actual=true modelAndInter=false
+        else if(filter.check(actual) && !filter.check(modelInter)) {
+            ratio.addModelAndInterFN();
         }
     }
 
     @Override
     public double getHeadImprove() {
-        return _headRecognizeRatios.getImprovment();
+        return _headRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -184,7 +145,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getHeadModelAndInterpolation() {
-        return _headRecognizeRatios.getmodelAndInterpolationCount();
+        return _headRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -193,8 +154,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getHeadModelTP() {
+        return _headRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getHeadModelTN() {
+        return _headRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getHeadModelFP() {
+        return _headRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getHeadModelFN() {
+        return _headRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getHeadRatioModelTP() {
+        return _headRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getHeadRatioModelTN() {
+        return _headRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getHeadRatioModelFP() {
+        return _headRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getHeadRatioModelFN() {
+        return _headRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getHeadModelAndInterTP() {
+        return _headRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getHeadModelAndInterTN() {
+        return _headRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getHeadModelAndInterFP() {
+        return _headRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getHeadModelAndInterFN() {
+        return _headRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getHeadRatioModelAndInterTP() {
+        return _headRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getHeadRatioModelAndInterTN() {
+        return _headRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getHeadRatioModelAndInterFP() {
+        return _headRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getHeadRatioModelAndInterFN() {
+        return _headRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getRightShoulderImprove() {
-        return _rightShoulderRecognizeRatios.getImprovment();
+        return _rightShoulderRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -214,7 +255,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightShoulderModelAndInterpolation() {
-        return _rightShoulderRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightShoulderRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -223,8 +264,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getRightShoulderModelTP() {
+        return _rightShoulderRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getRightShoulderModelTN() {
+        return _rightShoulderRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getRightShoulderModelFP() {
+        return _rightShoulderRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getRightShoulderModelFN() {
+        return _rightShoulderRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelTP() {
+        return _rightShoulderRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelTN() {
+        return _rightShoulderRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelFP() {
+        return _rightShoulderRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelFN() {
+        return _rightShoulderRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterTP() {
+        return _rightShoulderRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterTN() {
+        return _rightShoulderRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterFP() {
+        return _rightShoulderRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getRightShoulderModelAndInterFN() {
+        return _rightShoulderRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelAndInterTP() {
+        return _rightShoulderRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelAndInterTN() {
+        return _rightShoulderRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelAndInterFP() {
+        return _rightShoulderRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getRightShoulderRatioModelAndInterFN() {
+        return _rightShoulderRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getRightElbowImprove() {
-        return _rightElbowRecognizeRatios.getImprovment();
+        return _rightElbowRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -244,7 +365,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightElbowModelAndInterpolation() {
-        return _rightElbowRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightElbowRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -253,8 +374,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getRightElbowModelTP() {
+        return _rightElbowRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getRightElbowModelTN() {
+        return _rightElbowRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getRightElbowModelFP() {
+        return _rightElbowRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getRightElbowModelFN() {
+        return _rightElbowRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getRightElbowRatioModelTP() {
+        return _rightElbowRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getRightElbowRatioModelTN() {
+        return _rightElbowRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getRightElbowRatioModelFP() {
+        return _rightElbowRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getRightElbowRatioModelFN() {
+        return _rightElbowRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterTP() {
+        return _rightElbowRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterTN() {
+        return _rightElbowRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterFP() {
+        return _rightElbowRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getRightElbowModelAndInterFN() {
+        return _rightElbowRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getRightElbowRatioModelAndInterTP() {
+        return _rightElbowRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getRightElbowRatioModelAndInterTN() {
+        return _rightElbowRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getRightElbowRatioModelAndInterFP() {
+        return _rightElbowRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getRightElbowRatioModelAndInterFN() {
+        return _rightElbowRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getRightWristImprove() {
-        return _rightWristRecognizeRatios.getImprovment();
+        return _rightWristRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -274,7 +475,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getRightWristModelAndInterpolation() {
-        return _rightWristRecognizeRatios.getmodelAndInterpolationCount();
+        return _rightWristRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -283,8 +484,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getRightWristModelTP() {
+        return _rightWristRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getRightWristModelTN() {
+        return _rightWristRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getRightWristModelFP() {
+        return _rightWristRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getRightWristModelFN() {
+        return _rightWristRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getRightWristRatioModelTP() {
+        return _rightWristRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getRightWristRatioModelTN() {
+        return _rightWristRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getRightWristRatioModelFP() {
+        return _rightWristRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getRightWristRatioModelFN() {
+        return _rightWristRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getRightWristModelAndInterTP() {
+        return _rightWristRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getRightWristModelAndInterTN() {
+        return _rightWristRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getRightWristModelAndInterFP() {
+        return _rightWristRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getRightWristModelAndInterFN() {
+        return _rightWristRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getRightWristRatioModelAndInterTP() {
+        return _rightWristRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getRightWristRatioModelAndInterTN() {
+        return _rightWristRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getRightWristRatioModelAndInterFP() {
+        return _rightWristRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getRightWristRatioModelAndInterFN() {
+        return _rightWristRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getLeftShoulderImprove() {
-        return _leftShoulderRecognizeRatios.getImprovment();
+        return _leftShoulderRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -304,7 +585,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftShoulderModelAndInterpolation() {
-        return _leftShoulderRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftShoulderRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -313,8 +594,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getLeftShoulderModelTP() {
+        return _leftShoulderRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getLeftShoulderModelTN() {
+        return _leftShoulderRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getLeftShoulderModelFP() {
+        return _leftShoulderRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getLeftShoulderModelFN() {
+        return _leftShoulderRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelTP() {
+        return _leftShoulderRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelTN() {
+        return _leftShoulderRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelFP() {
+        return _leftShoulderRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelFN() {
+        return _leftShoulderRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterTP() {
+        return _leftShoulderRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterTN() {
+        return _leftShoulderRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterFP() {
+        return _leftShoulderRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getLeftShoulderModelAndInterFN() {
+        return _leftShoulderRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelAndInterTP() {
+        return _leftShoulderRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelAndInterTN() {
+        return _leftShoulderRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelAndInterFP() {
+        return _leftShoulderRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getLeftShoulderRatioModelAndInterFN() {
+        return _leftShoulderRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getLeftElbowImprove() {
-        return _leftElbowRecognizeRatios.getImprovment();
+        return _leftElbowRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -334,7 +695,7 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftElbowModelAndInterpolation() {
-        return _leftElbowRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftElbowRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
@@ -343,8 +704,88 @@ public class StatisticsHolder implements IStatistic {
     }
 
     @Override
+    public int getLeftElbowModelTP() {
+        return _leftElbowRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getLeftElbowModelTN() {
+        return _leftElbowRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getLeftElbowModelFP() {
+        return _leftElbowRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getLeftElbowModelFN() {
+        return _leftElbowRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelTP() {
+        return _leftElbowRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelTN() {
+        return _leftElbowRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelFP() {
+        return _leftElbowRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelFN() {
+        return _leftElbowRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterTP() {
+        return _leftElbowRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterTN() {
+        return _leftElbowRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterFP() {
+        return _leftElbowRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getLeftElbowModelAndInterFN() {
+        return _leftElbowRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelAndInterTP() {
+        return _leftElbowRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelAndInterTN() {
+        return _leftElbowRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelAndInterFP() {
+        return _leftElbowRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getLeftElbowRatioModelAndInterFN() {
+        return _leftElbowRecognizeRatios.getRatioModelAndInterFN();
+    }
+
+    @Override
     public double getLeftWristImprove() {
-        return _leftWristRecognizeRatios.getImprovment();
+        return _leftWristRecognizeRatios.getImprovement();
     }
 
     @Override
@@ -364,11 +805,91 @@ public class StatisticsHolder implements IStatistic {
 
     @Override
     public int getLeftWristModelAndInterpolation() {
-        return _leftWristRecognizeRatios.getmodelAndInterpolationCount();
+        return _leftWristRecognizeRatios.getModelAndInterpolationCount();
     }
 
     @Override
     public int getLeftWristActual() {
         return _leftWristRecognizeRatios.getActualCount();
+    }
+
+    @Override
+    public int getLeftWristModelTP() {
+        return _leftWristRecognizeRatios.getModelTP();
+    }
+
+    @Override
+    public int getLeftWristModelTN() {
+        return _leftWristRecognizeRatios.getModelTN();
+    }
+
+    @Override
+    public int getLeftWristModelFP() {
+        return _leftWristRecognizeRatios.getModelFP();
+    }
+
+    @Override
+    public int getLeftWristModelFN() {
+        return _leftWristRecognizeRatios.getModelFN();
+    }
+
+    @Override
+    public double getLeftWristRatioModelTP() {
+        return _leftWristRecognizeRatios.getRatioModelTP();
+    }
+
+    @Override
+    public double getLeftWristRatioModelTN() {
+        return _leftWristRecognizeRatios.getRatioModelTN();
+    }
+
+    @Override
+    public double getLeftWristRatioModelFP() {
+        return _leftWristRecognizeRatios.getRatioModelFP();
+    }
+
+    @Override
+    public double getLeftWristRatioModelFN() {
+        return _leftWristRecognizeRatios.getRatioModelFN();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterTP() {
+        return _leftWristRecognizeRatios.getModelAndInterTP();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterTN() {
+        return _leftWristRecognizeRatios.getModelAndInterTN();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterFP() {
+        return _leftWristRecognizeRatios.getModelAndInterFP();
+    }
+
+    @Override
+    public int getLeftWristModelAndInterFN() {
+        return _leftWristRecognizeRatios.getModelAndInterFN();
+    }
+
+    @Override
+    public double getLeftWristRatioModelAndInterTP() {
+        return _leftWristRecognizeRatios.getRatioModelAndInterTP();
+    }
+
+    @Override
+    public double getLeftWristRatioModelAndInterTN() {
+        return _leftWristRecognizeRatios.getRatioModelAndInterTN();
+    }
+
+    @Override
+    public double getLeftWristRatioModelAndInterFP() {
+        return _leftWristRecognizeRatios.getRatioModelAndInterFP();
+    }
+
+    @Override
+    public double getLeftWristRatioModelAndInterFN() {
+        return _leftWristRecognizeRatios.getRatioModelAndInterFN();
     }
 }

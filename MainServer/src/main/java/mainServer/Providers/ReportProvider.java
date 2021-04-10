@@ -97,71 +97,219 @@ public class ReportProvider implements IReportProvider {
         paragraph.add("\n");
         document.add(paragraph);
         addPercentSummary(document, statistic);
+        addTrueFalseModelSummary(document, statistic);
+        addTrueFalseModelAndInterSummary(document, statistic);
+        document.newPage();
+        document.add(paragraph);
         addTimePeriod(document, periodTime);
-        addErrorSummary(document, size, errors);
+        addSwimmingErrorSummary(document, size, errors);
     }
 
     private void addPercentSummary(Document document,
                                    IStatistic statistic) throws DocumentException {
         PdfPTable table = new PdfPTable( 5);
-        addRowToPdfTable(table, "Point", "Model", "Model & Interpolation", "Actual", "Improvment");
-        addRowToTable(table, "head",
+        addRowToPdfTable(table, "Point", "Actual", "Model", "Model & Interpolation", "Improvement");
+        addRowToTable(table, "Head",
+                statistic.getHeadActual(),
                 statistic.getHeadModel(),
                 statistic.getHeadRatioModel(),
                 statistic.getHeadModelAndInterpolation(),
                 statistic.getHeadRatioModelAndInterpolation(),
-                statistic.getHeadActual(),
                 statistic.getHeadImprove());
         addRowToTable(table, "Right shoulder",
+                statistic.getRightShoulderActual(),
                 statistic.getRightShoulderModel(),
                 statistic.getRightShoulderRatioModel(),
                 statistic.getRightShoulderModelAndInterpolation(),
                 statistic.getRightShoulderRatioModelAndInterpolation(),
-                statistic.getRightShoulderActual(),
                 statistic.getRightShoulderImprove());
         addRowToTable(table, "Right elbow",
+                statistic.getRightElbowActual(),
                 statistic.getRightElbowModel(),
                 statistic.getRightElbowRatioModel(),
                 statistic.getRightElbowModelAndInterpolation(),
                 statistic.getRightElbowRatioModelAndInterpolation(),
-                statistic.getRightElbowActual(),
                 statistic.getRightElbowImprove());
         addRowToTable(table, "Right wrist",
+                statistic.getRightWristActual(),
                 statistic.getRightWristModel(),
                 statistic.getRightWristRatioModel(),
                 statistic.getRightWristModelAndInterpolation(),
                 statistic.getRightWristRatioModelAndInterpolation(),
-                statistic.getRightWristActual(),
                 statistic.getRightWristImprove());
         addRowToTable(table, "Left shoulder",
+                statistic.getLeftShoulderActual(),
                 statistic.getLeftShoulderModel(),
                 statistic.getLeftShoulderRatioModel(),
                 statistic.getLeftShoulderModelAndInterpolation(),
                 statistic.getLeftShoulderRatioModelAndInterpolation(),
-                statistic.getLeftShoulderActual(),
                 statistic.getLeftShoulderImprove());
         addRowToTable(table, "Left elbow",
+                statistic.getLeftElbowActual(),
                 statistic.getLeftElbowModel(),
                 statistic.getLeftElbowRatioModel(),
                 statistic.getLeftElbowModelAndInterpolation(),
                 statistic.getLeftElbowRatioModelAndInterpolation(),
-                statistic.getLeftElbowActual(),
                 statistic.getLeftElbowImprove());
         addRowToTable(table, "Left wrist",
+                statistic.getLeftWristActual(),
                 statistic.getLeftWristModel(),
                 statistic.getLeftWristRatioModel(),
                 statistic.getLeftWristModelAndInterpolation(),
                 statistic.getLeftWristRatioModelAndInterpolation(),
-                statistic.getLeftWristActual(),
                 statistic.getLeftWristImprove());
         Paragraph paragraph = new Paragraph("Skeletons Summary");
         paragraph.add(table);
         document.add(paragraph);
     }
 
+    private void addTrueFalseModelSummary(Document document, IStatistic statistic) throws DocumentException {
+        PdfPTable table = new PdfPTable( 5);
+        addRowToPdfTable(table, "Point", "True Positive", "True Negative",
+                "False Positive", "False Negative");
+        addRowToTable(table, "Head",
+                statistic.getHeadModelTP(),
+                statistic.getHeadRatioModelTP(),
+                statistic.getHeadModelTN(),
+                statistic.getHeadRatioModelTN(),
+                statistic.getHeadModelFP(),
+                statistic.getHeadRatioModelFP(),
+                statistic.getHeadModelFN(),
+                statistic.getHeadRatioModelFN());
+        addRowToTable(table, "Right shoulder",
+                statistic.getRightShoulderModelTP(),
+                statistic.getRightShoulderRatioModelTP(),
+                statistic.getRightShoulderModelTN(),
+                statistic.getRightShoulderRatioModelTN(),
+                statistic.getRightShoulderModelFP(),
+                statistic.getRightShoulderRatioModelFP(),
+                statistic.getRightShoulderModelFN(),
+                statistic.getRightShoulderRatioModelFN());
+        addRowToTable(table, "Right elbow",
+                statistic.getRightElbowModelTP(),
+                statistic.getRightElbowRatioModelTP(),
+                statistic.getRightElbowModelTN(),
+                statistic.getRightElbowRatioModelTN(),
+                statistic.getRightElbowModelFP(),
+                statistic.getRightElbowRatioModelFP(),
+                statistic.getRightElbowModelFN(),
+                statistic.getRightElbowRatioModelFN());
+        addRowToTable(table, "Right wrist",
+                statistic.getRightWristModelTP(),
+                statistic.getRightWristRatioModelTP(),
+                statistic.getRightWristModelTN(),
+                statistic.getRightWristRatioModelTN(),
+                statistic.getRightWristModelFP(),
+                statistic.getRightWristRatioModelFP(),
+                statistic.getRightWristModelFN(),
+                statistic.getRightWristRatioModelFN());
+        addRowToTable(table, "Left shoulder",
+                statistic.getLeftShoulderModelTP(),
+                statistic.getLeftShoulderRatioModelTP(),
+                statistic.getLeftShoulderModelTN(),
+                statistic.getLeftShoulderRatioModelTN(),
+                statistic.getLeftShoulderModelFP(),
+                statistic.getLeftShoulderRatioModelFP(),
+                statistic.getLeftShoulderModelFN(),
+                statistic.getLeftShoulderRatioModelFN());
+        addRowToTable(table, "Left elbow",
+                statistic.getLeftElbowModelTP(),
+                statistic.getLeftElbowRatioModelTP(),
+                statistic.getLeftElbowModelTN(),
+                statistic.getLeftElbowRatioModelTN(),
+                statistic.getLeftElbowModelFP(),
+                statistic.getLeftElbowRatioModelFP(),
+                statistic.getLeftElbowModelFN(),
+                statistic.getLeftElbowRatioModelFN());
+        addRowToTable(table, "Left wrist",
+                statistic.getLeftWristModelTP(),
+                statistic.getLeftWristRatioModelTP(),
+                statistic.getLeftWristModelTN(),
+                statistic.getLeftWristRatioModelTN(),
+                statistic.getLeftWristModelFP(),
+                statistic.getLeftWristRatioModelFP(),
+                statistic.getLeftWristModelFN(),
+                statistic.getLeftWristRatioModelFN());
+        Paragraph paragraph = new Paragraph("Model Confusion Summary");
+        paragraph.add(table);
+        document.add(paragraph);
+    }
+
+    private void addTrueFalseModelAndInterSummary(Document document, IStatistic statistic) throws DocumentException {
+        PdfPTable table = new PdfPTable( 5);
+        addRowToPdfTable(table, "Point", "True Positive", "True Negative",
+                "False Positive", "False Negative");
+        addRowToTable(table, "Head",
+                statistic.getHeadModelAndInterTP(),
+                statistic.getHeadRatioModelAndInterTP(),
+                statistic.getHeadModelAndInterTN(),
+                statistic.getHeadRatioModelAndInterTN(),
+                statistic.getHeadModelAndInterFP(),
+                statistic.getHeadRatioModelAndInterFP(),
+                statistic.getHeadModelAndInterFN(),
+                statistic.getHeadRatioModelAndInterFN());
+        addRowToTable(table, "Right shoulder",
+                statistic.getRightShoulderModelAndInterTP(),
+                statistic.getRightShoulderRatioModelAndInterTP(),
+                statistic.getRightShoulderModelAndInterTN(),
+                statistic.getRightShoulderRatioModelAndInterTN(),
+                statistic.getRightShoulderModelAndInterFP(),
+                statistic.getRightShoulderRatioModelAndInterFP(),
+                statistic.getRightShoulderModelAndInterFN(),
+                statistic.getRightShoulderRatioModelAndInterFN());
+        addRowToTable(table, "Right elbow",
+                statistic.getRightElbowModelAndInterTP(),
+                statistic.getRightElbowRatioModelAndInterTP(),
+                statistic.getRightElbowModelAndInterTN(),
+                statistic.getRightElbowRatioModelAndInterTN(),
+                statistic.getRightElbowModelAndInterFP(),
+                statistic.getRightElbowRatioModelAndInterFP(),
+                statistic.getRightElbowModelAndInterFN(),
+                statistic.getRightElbowRatioModelAndInterFN());
+        addRowToTable(table, "Right wrist",
+                statistic.getRightWristModelAndInterTP(),
+                statistic.getRightWristRatioModelAndInterTP(),
+                statistic.getRightWristModelAndInterTN(),
+                statistic.getRightWristRatioModelAndInterTN(),
+                statistic.getRightWristModelAndInterFP(),
+                statistic.getRightWristRatioModelAndInterFP(),
+                statistic.getRightWristModelAndInterFN(),
+                statistic.getRightWristRatioModelAndInterFN());
+        addRowToTable(table, "Left shoulder",
+                statistic.getLeftShoulderModelAndInterTP(),
+                statistic.getLeftShoulderRatioModelAndInterTP(),
+                statistic.getLeftShoulderModelAndInterTN(),
+                statistic.getLeftShoulderRatioModelAndInterTN(),
+                statistic.getLeftShoulderModelAndInterFP(),
+                statistic.getLeftShoulderRatioModelAndInterFP(),
+                statistic.getLeftShoulderModelAndInterFN(),
+                statistic.getLeftShoulderRatioModelAndInterFN());
+        addRowToTable(table, "Left elbow",
+                statistic.getLeftElbowModelAndInterTP(),
+                statistic.getLeftElbowRatioModelAndInterTP(),
+                statistic.getLeftElbowModelAndInterTN(),
+                statistic.getLeftElbowRatioModelAndInterTN(),
+                statistic.getLeftElbowModelAndInterFP(),
+                statistic.getLeftElbowRatioModelAndInterFP(),
+                statistic.getLeftElbowModelAndInterFN(),
+                statistic.getLeftElbowRatioModelAndInterFN());
+        addRowToTable(table, "Left wrist",
+                statistic.getLeftWristModelAndInterTP(),
+                statistic.getLeftWristRatioModelAndInterTP(),
+                statistic.getLeftWristModelAndInterTN(),
+                statistic.getLeftWristRatioModelAndInterTN(),
+                statistic.getLeftWristModelAndInterFP(),
+                statistic.getLeftWristRatioModelAndInterFP(),
+                statistic.getLeftWristModelAndInterFN(),
+                statistic.getLeftWristRatioModelAndInterFN());
+        Paragraph paragraph = new Paragraph("Model And Interpolation Confusion Summary");
+        paragraph.add(table);
+        document.add(paragraph);
+    }
+
     private void addTimePeriod(Document document,
                                ISwimmingPeriodTime periodTime) throws DocumentException {
-        Paragraph paragraph = new Paragraph("Time Period Summary");
+        Paragraph paragraph = new Paragraph("Recognition Time Summary");
         List<IPeriodTime> rights = periodTime.getRightTimes();
         List<IPeriodTime> lefts = periodTime.getLeftTimes();
         PdfPTable table = new PdfPTable(4);
@@ -194,9 +342,9 @@ public class ReportProvider implements IReportProvider {
         document.add(paragraph);
     }
 
-    private void addErrorSummary(Document document,
-                                 int size,
-                                 Map<Integer, List<SwimmingError>> errors) throws DocumentException {
+    private void addSwimmingErrorSummary(Document document,
+                                         int size,
+                                         Map<Integer, List<SwimmingError>> errors) throws DocumentException {
         Paragraph paragraph = new Paragraph();
         paragraph.setFont(new Font(Font.FontFamily.HELVETICA,12));
         paragraph.add("Error Summary\n");
@@ -244,15 +392,28 @@ public class ReportProvider implements IReportProvider {
 
     //TODO refactor this to class
     private void addRowToTable(PdfPTable table, String name,
+                               int actual,
                                int count1, double precent1,
                                int count2, double precent2,
-                               int actual,
                                double improvement) {
+        table.addCell(name);
+        table.addCell(String.valueOf(actual));
+        table.addCell(getCountAndPrecent(count1, precent1));
+        table.addCell(getCountAndPrecent(count2, precent2));
+        table.addCell(improvement + "%");
+    }
+
+    //TODO refactor this to class
+    private void addRowToTable(PdfPTable table, String name,
+                               int count1, double precent1,
+                               int count2, double precent2,
+                               int count3, double precent3,
+                               int count4, double precent4) {
         table.addCell(name);
         table.addCell(getCountAndPrecent(count1, precent1));
         table.addCell(getCountAndPrecent(count2, precent2));
-        table.addCell(String.valueOf(actual));
-        table.addCell(improvement + "%");
+        table.addCell(getCountAndPrecent(count3, precent3));
+        table.addCell(getCountAndPrecent(count4, precent4));
     }
 
     private String getCountAndPrecent( int count, double precent) {

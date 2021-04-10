@@ -6,7 +6,7 @@ public class LeftElbowFilter implements ISkeletonFilter {
 
     @Override
     public ISwimmingSkeleton filter(ISwimmingSkeleton skeleton) {
-        if(skeleton.containsLeftElbow()) {
+        if(check(skeleton)) {
             return skeleton;
         }
         return null;
@@ -14,6 +14,6 @@ public class LeftElbowFilter implements ISkeletonFilter {
 
     @Override
     public boolean check(ISwimmingSkeleton skeleton) {
-        return skeleton.containsLeftElbow();
+        return skeleton!=null && skeleton.containsLeftElbow();
     }
 }

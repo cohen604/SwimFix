@@ -32,7 +32,7 @@ public interface IFeedbackProvider {
                                     String skeletonsPath,
                                     String mlSkeletonsPath,
                                     List<String> detectorsNames,
-                                    LocalDateTime time);
+                                    LocalDateTime time) throws Exception;
 
     /**
      * TODO - add comments
@@ -46,6 +46,6 @@ public interface IFeedbackProvider {
                                          String feedbackFolderPath,
                                          String feedbackSkeletonsFolderPath,
                                          String mlSkeletonsFolderPath,
-                                         List<String> detectorsNames);
+                                         List<String> detectorsNames) throws Exception;
 
 }
