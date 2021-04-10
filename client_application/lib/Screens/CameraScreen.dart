@@ -36,8 +36,7 @@ class _CameraScreenState extends State<CameraScreen> {
   List<CameraDescription> _cameras;
   CameraController _cameraController;
   FilmStates _filmStates;
-  Timer _videoTimer;
-  List<XFile> _xfiles;
+  XFile video;
 
   _CameraScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -46,7 +45,7 @@ class _CameraScreenState extends State<CameraScreen> {
     _cameras = null;
     _cameraController = null;
     _filmStates = null;
-    _xfiles = [];
+    video = null;
   }
 
   @override
@@ -73,31 +72,6 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  void initVideoCutTimer() {
-    Duration duration = Duration(seconds: 1);
-    _videoTimer = Timer.periodic(duration,
-      (Timer timer) {
-        if(_screenState == ScreenStates.Film
-          && _filmStates == FilmStates.Filming
-          && _cameraController.value.isInitialized
-          && _cameraController.value.isRecordingVideo) {
-            print('Added new video from timer');
-          _cameraController.stopVideoRecording().then(
-            (XFile xfile) {
-              _xfiles.add(xfile);
-              _cameraController.startVideoRecording();
-            }
-          );
-        }
-        else if(_filmStates == FilmStates.Finished
-          || _screenState != ScreenStates.Film) {
-          print('Stop timer');
-          _videoTimer.cancel();
-        }
-      }
-    );
-  }
-
   void onCameraSelected(int index) {
     _cameraController = new CameraController(
       _cameras[index],
@@ -113,6 +87,8 @@ class _CameraScreenState extends State<CameraScreen> {
     );
     setState(() {
       _screenState = ScreenStates.ConnectingToCamera;
+      _screenState = ScreenStates.Film;
+      _filmStates = FilmStates.Ready;
     });
   }
 
@@ -123,41 +99,44 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void onCountDownEnd() {
-    setState(() {
-      _filmStates = FilmStates.Filming;
-      _cameraController.startVideoRecording();
-      initVideoCutTimer();
-    });
+    // await _cameraController.initialize();
+    _cameraController.startVideoRecording().then(
+      (_) {
+        setState(() {
+          _filmStates = FilmStates.Filming;
+        });
+      }
+    );
   }
 
   void onCameraPause() {
-    setState(() {
-      _filmStates = FilmStates.Pause;
-      _cameraController.pauseVideoRecording();
-      //TODO
+    _cameraController.pauseVideoRecording().then((value) {
+      setState(() {
+        _filmStates = FilmStates.Pause;
+      });
     });
   }
 
   void onCameraResume() {
-    setState(() {
-      _filmStates = FilmStates.Filming;
-      _cameraController.resumeVideoRecording();
+    _cameraController.resumeVideoRecording().then((_) {
+      setState(() {
+        _filmStates = FilmStates.Filming;
+      });
     });
   }
 
   void onCameraStop() {
-    //play_arrow_outlined
-    setState(() {
-      _filmStates = FilmStates.Finished;
-      _cameraController.stopVideoRecording().then(
-        (XFile xfile) {
-          if(xfile != null) {
-            _xfiles.add(xfile);
-          }
+    _cameraController.stopVideoRecording()
+      .then((XFile xfile) {
+        if(xfile != null) {
+          video = xfile;
         }
-      );
-      _screenState = ScreenStates.View;
-    });
+        setState(() {
+          _filmStates = FilmStates.Finished;
+          _screenState = ScreenStates.View;
+        });
+      }
+    );
   }
 
   Widget buildSearchState(BuildContext context) {
@@ -424,6 +403,56 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
+  Widget buildText(String title, {double size = 18, Color color = Colors.black}) {
+    return Text(title,
+      style: TextStyle(
+        fontSize: size * MediaQuery.of(context).textScaleFactor,
+        color: color,
+        fontWeight: FontWeight.normal,
+        decoration: TextDecoration.none,
+      ),
+    );
+  }
+
+  Widget buildView(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  buildText('Swimming Video', size: 24),
+                  SizedBox(height: 5,),
+                  buildText(video.name, color: Colors.grey),
+                  buildText(video.path, color: Colors.grey),
+                  SizedBox(height: 5,),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Wrap(
+                      children: [
+                        TextButton(
+                          child: Text('Remove'),
+                        ),
+                        ElevatedButton(
+                          child: Text('Analyze'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
+        ),
+        Expanded(
+            child: Container()
+        ),
+      ],
+    );
+  }
+
   Widget buildScreenState(BuildContext context) {
     if(_screenState == ScreenStates.Search) {
       return  buildSearchState(context);
@@ -441,7 +470,7 @@ class _CameraScreenState extends State<CameraScreen> {
     //   return buildFilm(context);
     // }
     else if(_screenState == ScreenStates.View) {
-      //TODO
+      return buildView(context);
     }
     return Container(
       color: Colors.red,
