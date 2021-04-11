@@ -1,21 +1,15 @@
-import 'dart:async';
-
 import 'package:camera/camera.dart';
-import 'package:client_application/Components/Avatar.dart';
 import 'package:client_application/Components/BlinkIcon.dart';
 import 'package:client_application/Components/TextTimer.dart';
-import 'package:client_application/Domain/Concurrent/ConcurrentQueue.dart';
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
-import 'package:client_application/Domain/Video/VideoListImages.dart';
-import 'package:client_application/Domain/Video/VideoWithoutFeedback.dart';
+import 'package:client_application/Domain/Pair.dart';
+import 'package:client_application/Domain/Users/AppUser.dart';
+import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'Arguments/CameraScreenArguments.dart';
-import 'Arguments/VideoScreenArguments.dart';
 import 'Drawers/BasicDrawer.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -37,6 +31,7 @@ class _CameraScreenState extends State<CameraScreen> {
   CameraController _cameraController;
   FilmStates _filmStates;
   XFile video;
+
 
   _CameraScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -137,6 +132,24 @@ class _CameraScreenState extends State<CameraScreen> {
         });
       }
     );
+  }
+
+  void onRemove() {
+    setState(() {
+      _screenState = ScreenStates.Select;
+      _cameraController = null;
+      _filmStates = null;
+      video = null;
+    });
+  }
+
+  void onAnalyze() {
+    _logicManager.getSwimmingVideoTimes(video.path).then(
+      (pools) {
+        AppUser appUser = this.widget.args.appUser;
+        Navigator.pushNamed(context, "/pools",
+            arguments: new PoolsScreenArguments(appUser, pools));
+    });
   }
 
   Widget buildSearchState(BuildContext context) {
@@ -413,7 +426,7 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
     );
   }
-
+  
   Widget buildView(BuildContext context) {
     return Column(
       children: [
@@ -424,9 +437,8 @@ class _CameraScreenState extends State<CameraScreen> {
               child: Column(
                 children: [
                   buildText('Swimming Video', size: 24),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 10,),
                   buildText(video.name, color: Colors.grey),
-                  buildText(video.path, color: Colors.grey),
                   SizedBox(height: 5,),
                   Align(
                     alignment: Alignment.bottomRight,
@@ -434,9 +446,11 @@ class _CameraScreenState extends State<CameraScreen> {
                       children: [
                         TextButton(
                           child: Text('Remove'),
+                          onPressed: onRemove,
                         ),
                         ElevatedButton(
                           child: Text('Analyze'),
+                          onPressed: onAnalyze,
                         ),
                       ],
                     ),

@@ -34,11 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
     Swimmer swimmer = new Swimmer(uid, email, name);
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
-        this.setState(() {
-          AppUser appUser = new AppUser(swimmer, user.photoURL);
-          Navigator.pushNamed(context, "/welcome",
-              arguments: new WelcomeScreenArguments(appUser));
-        });
+        AppUser appUser = new AppUser(swimmer, user.photoURL);
+        Navigator.pushNamed(context, "/welcome",
+            arguments: new WelcomeScreenArguments(appUser));
       }
       else {
         showDialog(

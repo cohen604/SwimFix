@@ -1,4 +1,5 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Screens/ScreensHolder.dart';
@@ -45,12 +46,11 @@ class MyApp extends StatelessWidget {
           CameraScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getCameraScreen(args);
         },
-        '/feedbacks': (context) {
-          return _screensHolders.getFeedbacksScreen();
-        },
-        'feedback': (context) {
-          return _screensHolders.getFeedbackScreen();
+        '/pools': (context) {
+          PoolsScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getPoolsScreen(args);
         }
+
       },
       debugShowCheckedModeBanner: false,
     );
