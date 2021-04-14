@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Services/FileHandler.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
-import 'package:image/image.dart';
 import 'package:media_info/media_info.dart';
+import 'package:image/image.dart';
 
 class VideoHandler {
 
