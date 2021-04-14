@@ -11,7 +11,6 @@ class VideoHandler {
   FlutterFFmpeg ffmpeg;
   FileHandler fileHandler;
 
-
   VideoHandler() {
     fileHandler = new FileHandler();
     ffmpeg = new FlutterFFmpeg();

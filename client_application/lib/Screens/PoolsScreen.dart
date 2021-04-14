@@ -31,8 +31,8 @@ class _PoolsScreenState extends State<PoolsScreen> {
   Swimmer swimmer;
   String videoPath;
   List<Pool> pools;
-
   int currentPool;
+  TimeOfDay poolTime;
 
   _PoolsScreenState(Swimmer swimmer, String videoPath, List<Pair<int,int>> times, ) {
     _logicManager = LogicManager.getInstance();
@@ -45,6 +45,7 @@ class _PoolsScreenState extends State<PoolsScreen> {
     }
     currentPool = 0;
     nextPool();
+    poolTime = TimeOfDay.now();
   }
 
   void nextPool() {
@@ -70,11 +71,26 @@ class _PoolsScreenState extends State<PoolsScreen> {
   }
 
   String getTime() {
-    TimeOfDay now = TimeOfDay.now();
+    TimeOfDay now = poolTime; //TimeOfDay.now();
     if(now.minute < 10) {
       return '${now.hour}:0${now.minute}';
     }
     return '${now.hour}:${now.minute}';
+  }
+
+  void onViewFeedback(int index) {
+    AppUser appUser = this.widget.args.appUser;
+    Pool pool = pools[index];
+    Navigator.pushNamed(context, "/feedback",
+      arguments: new FeedbackScreenArguments(
+        appUser,
+        pool.link,
+        poolTime,
+        index + 1,
+        pool.start,
+        pool.end
+      ),
+    );
   }
 
   Widget buildNumber(BuildContext context, int index) {
@@ -165,19 +181,11 @@ class _PoolsScreenState extends State<PoolsScreen> {
     );
   }
 
-  void onPoolDone(int index) {
-    AppUser appUser = this.widget.args.appUser;
-    FeedbackLink link = pools[index].link;
-    Navigator.pushNamed(context, "/feedback",
-        arguments: new FeedbackScreenArguments(appUser, link),
-    );
-  }
-
   Widget buildPoolDone(BuildContext context, int index) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child:  ElevatedButton(
-        onPressed: ()=>onPoolDone(index),
+        onPressed: ()=>onViewFeedback(index),
         child: Text('View feedback'),
       ),
     );

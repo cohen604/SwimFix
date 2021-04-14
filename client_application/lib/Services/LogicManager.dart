@@ -5,7 +5,7 @@ import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
-import 'package:client_application/Services/VideoHanadler.dart';
+import 'package:client_application/Services/VideoHandler.dart';
 import 'package:http/http.dart' as http;
 import 'ConnectionHandler.dart';
 
