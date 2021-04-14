@@ -1,6 +1,11 @@
 import 'package:client_application/Domain/Pair.dart';
+import 'package:client_application/Domain/Users/AppUser.dart';
+import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
+import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
+import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,21 +18,55 @@ class PoolsScreen extends StatefulWidget {
   PoolsScreen(this.args);
 
   @override
-  _PoolsScreenState createState() => _PoolsScreenState(args.poolTimes);
+  _PoolsScreenState createState() => _PoolsScreenState(
+    args.appUser.swimmer,
+    args.videoPath,
+    args.poolTimes);
 }
 
 class _PoolsScreenState extends State<PoolsScreen> {
 
+  LogicManager _logicManager;
   ColorsHolder _colorsHolder;
+  Swimmer swimmer;
+  String videoPath;
   List<Pool> pools;
 
-  _PoolsScreenState(List<Pair<int,int>> times) {
+  int currentPool;
+
+  _PoolsScreenState(Swimmer swimmer, String videoPath, List<Pair<int,int>> times, ) {
+    _logicManager = LogicManager.getInstance();
     _colorsHolder = new ColorsHolder();
     pools = [];
+    this.swimmer = swimmer;
+    this.videoPath = videoPath;
     for(Pair<int , int> item in times) {
       pools.add(new Pool(item.key, item.value));
     }
-    pools[0].state = PoolState.Analyzing;
+    currentPool = 0;
+    nextPool();
+  }
+
+  void nextPool() {
+    if(currentPool < pools.length) {
+      Pool pool = pools[currentPool];
+      pool.state = PoolState.Analyzing;
+      _logicManager.getFeedbackFromTimes(
+          this.swimmer, this.videoPath, pool.start, pool.end)
+          .then((feedback) {
+        if (feedback != null) {
+          pool.state = PoolState.Done;
+          pool.link = feedback;
+        }
+        else {
+          pool.state = PoolState.Error;
+        }
+        this.setState(() {
+          currentPool++;
+          nextPool();
+        });
+      });
+    }
   }
 
   String getTime() {
@@ -47,6 +86,10 @@ class _PoolsScreenState extends State<PoolsScreen> {
     }
     else if(pool.state == PoolState.Done) {
       backColor = _colorsHolder.getBackgroundForI1();
+    }
+    else if(pool.state == PoolState.Error) {
+      backColor = Colors.yellow;
+      textColor = Colors.black;
     }
     return CircleAvatar(
       backgroundColor: backColor,
@@ -104,37 +147,77 @@ class _PoolsScreenState extends State<PoolsScreen> {
     );
   }
 
+  Widget buildPoolPending(BuildContext context, int index) {
+    return Container();
+  }
+
+  Widget buildPoolAnalyzing(BuildContext context, int index) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 15, bottom: 10),
+      child: Column(
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 5,),
+          Text('Analyzing pool'),
+        ],
+      ),
+    );
+  }
+
+  void onPoolDone(int index) {
+    AppUser appUser = this.widget.args.appUser;
+    FeedbackLink link = pools[index].link;
+    Navigator.pushNamed(context, "/feedback",
+        arguments: new FeedbackScreenArguments(appUser, link),
+    );
+  }
+
+  Widget buildPoolDone(BuildContext context, int index) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child:  ElevatedButton(
+        onPressed: ()=>onPoolDone(index),
+        child: Text('View feedback'),
+      ),
+    );
+  }
+
+  Widget buildPoolError(BuildContext context, int index) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(5.0),
+      child: Row(
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 35,
+              color: Colors.red,
+            ),
+            Text('Error while trying to receive feedback'),
+          ],
+      ),
+    );
+  }
+
   Widget buildPoolState(BuildContext context, int index) {
     Pool pool = pools[index];
     if(pool.state == PoolState.Pending) {
-      return Container();
+      buildPoolPending(context, index);
     }
     else if(pool.state == PoolState.Analyzing) {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.only(top: 15, bottom: 10),
-        child: Column(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 5,),
-            Text('Analyzing pool'),
-          ],
-        ),
-      );
+      return buildPoolAnalyzing(context, index);
     }
     else if(pool.state == PoolState.Done) {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        child:  ElevatedButton(
-          child: Text('View feedback'),
-        ),
-      );
+      return buildPoolDone(context, index);
+    }
+    else if(pool.state == PoolState.Error) {
+      return buildPoolError(context, index);
     }
     return Container();
   }
 
   Widget buildPool(BuildContext context, int index) {
-    Pool pool = pools[index];
     return Card(
       child: Container(
         padding: EdgeInsets.all(15),
@@ -151,6 +234,7 @@ class _PoolsScreenState extends State<PoolsScreen> {
     print(pools.length);
     return ListView.builder(
       itemCount: pools.length,
+      shrinkWrap: true,
       itemBuilder: (context, index) {
         return buildPool(context, index);
       }
@@ -168,14 +252,12 @@ class _PoolsScreenState extends State<PoolsScreen> {
           backgroundColor: Colors.blue,
           title: Text("Pools ${getTime()}",),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: _colorsHolder.getBackgroundForI6(),
-            padding: const EdgeInsets.all(16.0),
-            child: buildPoolList(context)
-          ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: _colorsHolder.getBackgroundForI6(),
+          padding: const EdgeInsets.all(16.0),
+          child: buildPoolList(context),
         ),
       ),
     );
@@ -187,6 +269,7 @@ class Pool {
   PoolState state;
   int start;
   int end;
+  FeedbackLink link;
 
   Pool(this.start, this.end) {
     state = PoolState.Pending;

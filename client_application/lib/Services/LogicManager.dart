@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Services/VideoHanadler.dart';
 import 'package:http/http.dart' as http;
 import 'ConnectionHandler.dart';
@@ -61,10 +61,11 @@ class LogicManager {
   /// length -
   /// filePath -
   /// return
-  Future<FeedbackVideoStreamer> postVideoForStreaming(Uint8List fileBytes,
+  Future<FeedbackLink> getFeedback(
+      Swimmer swimmer,
+      Uint8List fileBytes,
       int length,
-      String filePath,
-      Swimmer swimmer) async {
+      String filePath) async {
     try {
       String path = "/swimmer/feedback/link";
       http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
@@ -78,7 +79,7 @@ class LogicManager {
           swimmer.uid, swimmer.email, swimmer.name);
       //TODO check if response is valid
       Map map = response.value as Map;
-      return FeedbackVideoStreamer.factory(map);
+      return FeedbackLink.factory(map);
     }
     catch (e) {
       print('error in post video for stream ${e.toString()}');
@@ -92,6 +93,28 @@ class LogicManager {
 
   Future<List<Pair<int, int>>> getSwimmingVideoTimes(String path) async{
     return await _videoHandler.splitVideoToTimes(path);
+  }
+
+  Future<FeedbackLink> getFeedbackFromTimes(
+      Swimmer swimmer,
+      String videoPath,
+      int startTime,
+      int endTime) async {
+    try {
+      String newPath = 'feedback.mp4';
+      File file = await _videoHandler.splitVideo(
+          videoPath, newPath, startTime, endTime);
+      Uint8List fileBytes = file.readAsBytesSync();
+      int length = file.lengthSync();
+      String filePath = file.path;
+      FeedbackLink output = await getFeedback(swimmer, fileBytes, length, filePath);
+      _videoHandler.deleteVideo(newPath);
+      return output;
+    }
+    catch(e) {
+      print('error in feedbackFromTimes ${e.toString()}');
+    }
+    return null;
   }
 
 }

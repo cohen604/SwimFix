@@ -148,7 +148,10 @@ class _CameraScreenState extends State<CameraScreen> {
       (pools) {
         AppUser appUser = this.widget.args.appUser;
         Navigator.pushNamed(context, "/pools",
-            arguments: new PoolsScreenArguments(appUser, pools));
+            arguments: new PoolsScreenArguments(
+                appUser,
+                video.path,
+                pools));
     });
   }
 

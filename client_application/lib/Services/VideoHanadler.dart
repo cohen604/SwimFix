@@ -89,4 +89,10 @@ class VideoHandler {
     return output;
   }
 
+  void deleteVideo(String newPath) {
+    String folderPath = fileHandler.getFolderPath();
+    String path = "$folderPath/$newPath";
+    fileHandler.deleteFile(path);
+  }
+
 }

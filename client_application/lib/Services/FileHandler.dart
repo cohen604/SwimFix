@@ -1,11 +1,18 @@
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+
 class FileHandler {
 
   Directory _folder;
 
   FileHandler() {
-    _folder = _createDirectory("swimAnalytics");
+    getTemporaryDirectory().then((value) {
+      if(value == null || !value.existsSync()) {
+        throw Exception('Not create swimming dir');
+      }
+      _folder = value;
+    }); //_createDirectory("swimAnalytics");
   }
 
   Directory _createDirectory(String path) {
@@ -14,6 +21,9 @@ class FileHandler {
     dir.create(recursive: true);
     if(dir.existsSync()) {
       print('created dir');
+    }
+    else {
+      throw Exception('Not create swimming dir');
     }
     return dir;
   }
@@ -42,14 +52,15 @@ class FileHandler {
     return null;
   }
 
-  bool deleteFile(String path) {
+  void deleteFile(String path) {
     File file = getFile(path);
     if(file!=null) {
       file.deleteSync();
       // print('file is exists: ${file.existsSync()}');
-      return true;
     }
-    return false;
+    else {
+      throw new Exception('error in Delete File');
+    }
   }
 
 }
