@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Services/FileHandler.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
@@ -19,14 +18,16 @@ class VideoHandler {
   Future<List<Pair<int, int>>> splitVideoToTimes(String path,
       {int seconds=0, int milliseconds=0}) async {
     int duration = await getTotalTime(path);
-    int delta = 1;
-    List<Pair<int,int>> output = [];
-    for(int i=0; i<duration; i+=delta) {
-      if(i + delta <= duration) {
-        output.add(new Pair<int, int>(i, i + delta));
-      }
-    }
-    return output;
+    //TODO change here to the desired pool algorithm
+    // int delta = 1;
+    // List<Pair<int,int>> output = [];
+    // for(int i=0; i<duration; i+=delta) {
+    //   if(i + delta <= duration) {
+    //     output.add(new Pair<int, int>(i, i + delta));
+    //   }
+    // }
+    // return output;
+    return [new Pair(0, duration)];
   }
 
   /// The function return the duration time of the video
