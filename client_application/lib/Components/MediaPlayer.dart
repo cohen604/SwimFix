@@ -2,12 +2,12 @@ import 'package:chewie/chewie.dart';
 import 'package:client_application/Services/ConnectionHandler.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:flutter/cupertino.dart';
 
 class MediaPlayer extends StatefulWidget {
 
-  FeedbackVideoStreamer streamer;
+  FeedbackLink streamer;
 
   MediaPlayer(this.streamer);
 

@@ -1,46 +1,42 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:camera/camera.dart';
-import 'package:client_application/Domain/Files/FileDonwloaded.dart';
+import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
-import 'package:client_application/Domain/Video/FeedbackFilters.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
+import 'package:client_application/Services/VideoHandler.dart';
 import 'package:http/http.dart' as http;
 import 'ConnectionHandler.dart';
-import 'MlHandler.dart';
-
 
 class LogicManager {
 
   static LogicManager logicManager;
-  ConnectionHandler connectionHandler;
-  MlHandler mlHandler;
+  ConnectionHandler _connectionHandler;
+  VideoHandler _videoHandler;
 
   LogicManager() {
-    this.connectionHandler = new ConnectionHandler();
-    this.mlHandler = new MlHandler();
+    _connectionHandler = new ConnectionHandler();
+    _videoHandler = new VideoHandler();
   }
 
   static LogicManager getInstance() {
-    if(logicManager == null) {
+    if (logicManager == null) {
       logicManager = new LogicManager();
     }
     return logicManager;
   }
 
-  Future<bool> login(Swimmer swimmer) async{
+  Future<bool> login(Swimmer swimmer) async {
     String path = "/login";
     try {
-      ServerResponse response = await connectionHandler.postMessage(
+      ServerResponse response = await _connectionHandler.postMessage(
           path, swimmer.toJson());
       if (response != null && response.isSuccess()) {
         // Map map = response.value as Map;
         return true;
       }
-    } catch(e) {
+    } catch (e) {
       print('error in login ${e.toString()}');
     }
     return false;
@@ -49,12 +45,12 @@ class LogicManager {
   Future<bool> logout(Swimmer swimmer) async {
     String path = '/logout';
     try {
-      ServerResponse response = await connectionHandler.postMessage(
+      ServerResponse response = await _connectionHandler.postMessage(
           path, swimmer.toJson());
       if (response != null && response.isSuccess() && response.value) {
-          return true;
+        return true;
       }
-    } catch(e) {
+    } catch (e) {
       print('error in logout ${e.toString()}');
     }
     return false;
@@ -65,11 +61,11 @@ class LogicManager {
   /// length -
   /// filePath -
   /// return
-  Future<FeedbackVideoStreamer> postVideoForStreaming(
+  Future<FeedbackLink> getFeedback(
+      Swimmer swimmer,
       Uint8List fileBytes,
       int length,
-      String filePath,
-      Swimmer swimmer) async {
+      String filePath) async {
     try {
       String path = "/swimmer/feedback/link";
       http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
@@ -78,92 +74,47 @@ class LogicManager {
         filename: filePath,
       );
       //ServerResponse response = await this.connectionHandler.postMultiPartFile(path, multipartFile);
-      ServerResponse response = await this.connectionHandler
+      ServerResponse response = await _connectionHandler
           .postMultiPartFileWithID(path, multipartFile,
           swimmer.uid, swimmer.email, swimmer.name);
       //TODO check if response is valid
       Map map = response.value as Map;
-      return FeedbackVideoStreamer.factory(map);
+      return FeedbackLink.factory(map);
     }
-    catch(e) {
+    catch (e) {
       print('error in post video for stream ${e.toString()}');
     }
     return null;
   }
 
   String getStreamUrl() {
-    return connectionHandler.getStreamUrl();
+    return _connectionHandler.getStreamUrl();
   }
 
-  // TODO delete this
-  Future<String> combineListElements(List <Uint8List> imagesBytes) async {
-    Directory appDocDirectory = await getTemporaryDirectory();
-    File file = new File(appDocDirectory.path + '/CombinedBytes');
-    await file.create();
-    for(Uint8List img in imagesBytes) {
-      file.writeAsBytesSync(img);
+  Future<List<Pair<int, int>>> getSwimmingVideoTimes(String path) async{
+    return await _videoHandler.splitVideoToTimes(path);
+  }
+
+  Future<FeedbackLink> getFeedbackFromTimes(
+      Swimmer swimmer,
+      String videoPath,
+      int startTime,
+      int endTime) async {
+    try {
+      String newPath = 'feedback.mp4';
+      File file = await _videoHandler.splitVideo(
+          videoPath, newPath, startTime, endTime);
+      Uint8List fileBytes = file.readAsBytesSync();
+      int length = file.lengthSync();
+      String filePath = file.path;
+      FeedbackLink output = await getFeedback(swimmer, fileBytes, length, filePath);
+      _videoHandler.deleteVideo(newPath);
+      return output;
     }
-    print('file bytes ${file.lengthSync()}');
-    return file.absolute.path;
-  }
-
-  // Note: Don't use it
-  Future<FeedbackVideoStreamer> postListImagesForStreaming(
-      List <Uint8List> imagesBytes,
-      String type,
-      String fileName,
-      Swimmer swimmer) async {
-    String path = "/uploadListForStream";
-    // combine all the list of images bytes to one image list
-    // create the multi part file images
-    print('number of frames ${imagesBytes.length}');
-    //data.codeUnits
-    print('start preprocessing list of images bytes ${DateTime.now()}');
-    http.MultipartFile images = await http.MultipartFile.fromPath(
-      'data',
-      await combineListElements(imagesBytes),
-      filename: "Data",
-    );
-    // create meta file
-    Map map = new Map();
-    map['imageType'] = type;
-    String metaData = json.encode(map);
-    //metaData.codeUnits
-    http.MultipartFile meta = http.MultipartFile.fromBytes(
-      'meta',
-      [],
-      filename: 'metaData',
-    );
-    print('end preprocessing list of images bytes ${DateTime.now()}');
-    print('send to server ${DateTime.now()}');
-    ServerResponse response = await this.connectionHandler.postMultiPartFiles(
-        path, meta, images, swimmer.uid, swimmer.email, swimmer.name,);
-    //TODO check if response is valid
-    Map mapResponse = response.value as Map;
-    print(mapResponse);
-    return FeedbackVideoStreamer.factory(mapResponse);
-  }
-
-
-  Future<FeedbackVideoStreamer> filterFeedback(
-      FeedbackFilters filter,
-      Swimmer swimmer) async {
-    String path = "/swimmer/feedback/filter";
-    ServerResponse response = await this.connectionHandler.postMessageWithID(path, filter.toMap(),
-        swimmer.uid, swimmer.email, swimmer.name);
-    //TODO check if response is valid
-    Map map = response.value as Map;
-    return FeedbackVideoStreamer.factory(map);
-  }
-
-  bool predictValidFrameBlue(CameraImage img) {
-    return mlHandler.predictValidFrameBlue(img);
-  }
-
-  Future<FileDownloaded> getFileForDownload(String uid, String email, String name, String fileLink) async {
-    String path = "/researcher/$fileLink";
-    return await this.connectionHandler.downloadFile(
-      path, uid, email, name);
+    catch(e) {
+      print('error in feedbackFromTimes ${e.toString()}');
+    }
+    return null;
   }
 
 }

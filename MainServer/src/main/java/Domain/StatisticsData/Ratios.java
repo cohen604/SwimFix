@@ -116,35 +116,35 @@ public class Ratios {
     }
 
     double getRatioModelTP() {
-        return getRatio(_modelTP, _frames);
+        return getRatio(_modelTP, _actualCount);
     }
 
     double getRatioModelTN() {
-        return getRatio(_modelTN, _frames);
+        return getRatio(_modelTN, _frames - _actualCount);
     }
 
     double getRatioModelFP() {
-        return getRatio(_modelFP, _frames);
+        return getRatio(_modelFP, _frames - _actualCount);
     }
 
     double getRatioModelFN() {
-        return getRatio(_modelFN, _frames);
+        return getRatio(_modelFN, _actualCount);
     }
 
     double getRatioModelAndInterTP() {
-        return getRatio(_modelAndInterTP, _frames);
+        return getRatio(_modelAndInterTP, _actualCount);
     }
 
     double getRatioModelAndInterTN() {
-        return getRatio(_modelAndInterTN, _frames);
+        return getRatio(_modelAndInterTN, _frames - _actualCount);
     }
 
     double getRatioModelAndInterFP() {
-        return getRatio(_modelAndInterFP, _frames);
+        return getRatio(_modelAndInterFP, _frames - _actualCount);
     }
 
     double getRatioModelAndInterFN() {
-        return getRatio(_modelAndInterFN, _frames);
+        return getRatio(_modelAndInterFN, _actualCount);
     }
 
     private double getRatio(double a, double b) {
