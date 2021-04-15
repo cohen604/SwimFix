@@ -34,13 +34,10 @@ dependencies:
   video_player: ^1.0.0 #last version is 2.0.0
   file: ^5.2.1
   universal_html: ^1.2.3
-  flutter_ffmpeg: ^0.3.0
   media_info: ^0.6.4
   firebase_core: ^0.5.0
   google_sign_in: ^4.5.0
   firebase_auth: ^0.18.4+1
-  tflite: ^1.1.1 #TODO delete this
-  camera: ^0.7.0+2
   image: ^2.1.19
   synchronized: ^2.2.0+2
   path_provider: ^1.6.27

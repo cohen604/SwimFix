@@ -115,7 +115,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
   Widget buildLeftLoginArea(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      // width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.only(left: 30),
       child: Column(
@@ -148,11 +148,15 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
 
   Widget buildRightLoginArea(BuildContext context) {
-    return AnimatedCrossFade(
-      crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
-      duration: Duration(seconds: 1),
-      firstChild: buildRightLoginArea1(context),
-      secondChild: buildRightLoginArea2(context),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: AnimatedCrossFade(
+        crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
+        duration: Duration(seconds: 1),
+        firstChild: buildRightLoginArea1(context),
+        secondChild: buildRightLoginArea2(context),
+      ),
     );
   }
 
@@ -202,21 +206,27 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   }
 
   Widget buildLoginWithGoogle(context) {
-    return Card(
-      color: _webColors.getBackgroundForI7(),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20.0),
-        splashColor: Theme.of(context).splashColor,
-        onTap: signInWithGoogle,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListTile(
-            title: buildText(context, "Sign In with Google", 21,
-                color: Colors.black),
-            leading: Image(image: AssetImage("assets/google_logo.png")),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Card(
+          color: _webColors.getBackgroundForI7(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20.0),
+            splashColor: Theme.of(context).splashColor,
+            onTap: signInWithGoogle,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListTile(
+                title: buildText(context, "Sign In with Google", 21,
+                    color: Colors.black),
+                leading: Image(image: AssetImage("assets/google_logo.png")),
+              ),
+            ),
           ),
         ),
       ),
