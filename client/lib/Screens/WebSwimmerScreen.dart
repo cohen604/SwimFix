@@ -22,7 +22,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
   WebColors _webColors = new WebColors();
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
-      return Text('Welcome ${this.widget.arguments.swimmer.name}',
+      return Text('Welcome ${this.widget.arguments.user.swimmer.name}',
         style: TextStyle(
             fontSize: 32 * MediaQuery.of(context).textScaleFactor,
             color: Colors.black,
@@ -36,7 +36,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     this.setState(() {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/upload',
-          arguments: new UploadScreenArguments(this.widget.arguments.swimmer));
+          arguments: new UploadScreenArguments(this.widget.arguments.user));
       });
     });
   }
@@ -71,7 +71,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         child: Column(
           children: [
             MenuBar(
-              swimmer: this.widget.arguments.swimmer,
+              user: this.widget.arguments.user,
             ),
             Flexible(
                 child: buildBottomSide(context)

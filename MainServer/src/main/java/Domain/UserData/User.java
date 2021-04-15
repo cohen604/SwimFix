@@ -94,8 +94,23 @@ public class User implements IUser {
     }
 
     @Override
+    public boolean isSwimmer() {
+        return _swimmer != null;
+    }
+
+    @Override
     public boolean isResearcher() {
         return _researcher != null;
+    }
+
+    @Override
+    public boolean isCoach() {
+        return _coach != null;
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return _admin != null;
     }
 
     @Override

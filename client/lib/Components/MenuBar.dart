@@ -1,4 +1,6 @@
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/UserPermissions.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
@@ -10,9 +12,9 @@ import 'package:flutter/scheduler.dart';
 
 class MenuBar extends StatefulWidget {
 
-  Swimmer swimmer;
+  WebUser user;
 
-  MenuBar({this.swimmer});
+  MenuBar({this.user});
 
   @override
   _MenuBarState createState() => _MenuBarState();
@@ -43,7 +45,7 @@ class _MenuBarState extends State<MenuBar> {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, '/welcome',
-            arguments: new WelcomeScreenArguments(this.widget.swimmer));
+            arguments: new WelcomeScreenArguments(this.widget.user));
         });
       });
     };
@@ -51,7 +53,7 @@ class _MenuBarState extends State<MenuBar> {
 
   Function onLogout(BuildContext context) {
     return () {
-      _logicManager.logout(this.widget.swimmer).then(
+      _logicManager.logout(this.widget.user.swimmer).then(
               (value) {
             if (value) {
               this.setState(() {
@@ -80,7 +82,7 @@ class _MenuBarState extends State<MenuBar> {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, '/swimmer',
-              arguments: new SwimmerScreenArguments(this.widget.swimmer));
+              arguments: new SwimmerScreenArguments(this.widget.user));
         });
       });
     };
@@ -91,7 +93,7 @@ class _MenuBarState extends State<MenuBar> {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, '/researcher',
-              arguments: new ResearcherScreenArguments(this.widget.swimmer));
+              arguments: new ResearcherScreenArguments(this.widget.user));
         });
       });
     };
@@ -128,6 +130,34 @@ class _MenuBarState extends State<MenuBar> {
     );
   }
 
+  buildSwimmer(BuildContext context, int index) {
+    if(this.widget.user.permissions.isSwimmer) {
+      return buildOption(context, "Swimmer", index, onSwimmer(context));
+    }
+    return Container();
+  }
+
+  buildCoach(BuildContext context, int index) {
+    if(this.widget.user.permissions.isCoach) {
+      return buildOption(context, "Coach", index, onCoach);
+    }
+    return Container();
+  }
+
+  buildAdmin(BuildContext context, int index) {
+    if(this.widget.user.permissions.isAdmin) {
+      return buildOption(context, "Admin", index, onAdmin);
+    }
+    return Container();
+  }
+
+  buildResearcher(BuildContext context, int index) {
+    if(this.widget.user.permissions.isResearcher) {
+      return buildOption(context, "Researcher", index, onResearcher(context));
+    }
+    return Container();
+  }
+
   Widget buildLinks(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
@@ -141,10 +171,10 @@ class _MenuBarState extends State<MenuBar> {
                 color: _webColors.getBackgroundForI1(),
               ),
             ),
-            buildOption(context, "Swimmer", 0, onSwimmer(context)),
-            buildOption(context, "Coach", 1, onCoach),
-            buildOption(context, "Admin", 2, onAdmin),
-            buildOption(context, "Researcher", 3, onResearcher(context)),
+            buildSwimmer(context, 0),
+            buildCoach(context, 1),
+            buildAdmin(context, 2),
+            buildResearcher(context, 3),
             buildOption(context, "Logout", 4, onLogout(context)),
           ],
           //scrollDirection: Axis.horizontal,

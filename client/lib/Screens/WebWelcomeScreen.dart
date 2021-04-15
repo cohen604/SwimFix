@@ -11,8 +11,8 @@ import 'package:flutter/scheduler.dart';
 
 class WebWelcomeScreen extends StatefulWidget {
 
-  WelcomeScreenArguments arguments;
-  WebWelcomeScreen({Key key, this.arguments}) : super(key: key);
+  WelcomeScreenArguments args;
+  WebWelcomeScreen({Key key, this.args}) : super(key: key);
 
   @override
   _WebWelcomeScreenState createState() => _WebWelcomeScreenState();
@@ -28,12 +28,12 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     return Flexible(
       flex: flex,
       fit: FlexFit.tight,
-      child: MenuBar(swimmer: this.widget.arguments.swimmer,),
+      child: MenuBar(user: this.widget.args.user,),
     );
   }
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
-      return Text('Welcome ${this.widget.arguments.swimmer.name}',
+      return Text('Welcome ${this.widget.args.user.swimmer.name}',
         style: TextStyle(
             fontSize: 32 * MediaQuery.of(context).textScaleFactor,
             color: Colors.black,
@@ -76,23 +76,52 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     };
   }
 
+  Widget buildSwimmer(BuildContext context) {
+    if(this.widget.args.user.permissions.isSwimmer) {
+      return buildMainButton(
+          context, 1, "Swimmer",
+          onClick('/swimmer',
+              arguments: new SwimmerScreenArguments(this.widget.args.user)),
+          'images/swimmer_image.png');
+    }
+    return Container();
+  }
+
+  Widget buildCoach(BuildContext context) {
+    if(this.widget.args.user.permissions.isCoach) {
+      return buildMainButton(context, 1, "Coach",
+          null, 'images/coach_image.png');
+    }
+    return Container();
+  }
+
+  Widget buildAdmin(BuildContext context) {
+    if(this.widget.args.user.permissions.isAdmin) {
+      return buildMainButton(context, 1, "Admin",
+          null, 'images/admin_image.png');
+    }
+    return Container();
+  }
+
+  Widget buildResearcher(BuildContext context) {
+    if(this.widget.args.user.permissions.isResearcher) {
+      return buildMainButton(context, 1, "Researcher",
+          onClick('/researcher',
+              arguments: new ResearcherScreenArguments(this.widget.args.user)),
+          'images/researcher_image.png');
+    }
+    return Container();
+  }
+
   Widget buildMainButtons(BuildContext context, int flex) {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
       child: Row(
           children: [
-            buildMainButton(context, 1, "Swimmer",
-                onClick('/swimmer',
-                    arguments: new SwimmerScreenArguments(this.widget.arguments.swimmer)),
-                'images/swimmer_image.png'),
-            buildMainButton(context, 1, "Coach",
-                null, 'images/coach_image.png'),
-            buildMainButton(context, 1, "Admin",
-                null,  'images/admin_image.png'),
-            buildMainButton(context, 1, "Researcher",
-                onClick('/researcher',
-                    arguments: new ResearcherScreenArguments(this.widget.arguments.swimmer)),
-                'images/researcher_image.png'),
+            buildSwimmer(context),
+            buildCoach(context),
+            buildAdmin(context),
+            buildResearcher(context),
           ],
       ),
     );

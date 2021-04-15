@@ -1,7 +1,8 @@
-import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 
 class WelcomeScreenArguments {
 
-  Swimmer swimmer;
-  WelcomeScreenArguments(this.swimmer);
+  WebUser user;
+  WelcomeScreenArguments(this.user);
+
 }

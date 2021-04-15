@@ -1,6 +1,7 @@
 import 'package:client/Components/AboutScreenMenuBar.dart';
 import 'package:client/Components/SimpleVideoPlayer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/WebColors.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -62,11 +63,26 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     String email = user.email;
     String uid = user.uid;
     Swimmer swimmer = new Swimmer(uid, email, name);
-    LogicManager.getInstance().login(swimmer).then((logged) {
+    LogicManager logicManager = LogicManager.getInstance();
+    logicManager.login(swimmer).then((logged) {
       if (logged) {
-        this.setState(() {
-          WelcomeScreenArguments args = new WelcomeScreenArguments(swimmer);
-          Navigator.pushNamed(context, "/welcome",  arguments: args);
+        logicManager.getPermissions(swimmer).then((permissions) {
+          if(permissions != null) {
+            this.setState(() {
+              WelcomeScreenArguments args = new WelcomeScreenArguments(
+                  new WebUser(swimmer, permissions));
+              Navigator.pushNamed(context, "/welcome",  arguments: args);
+            });
+          }
+          else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return new MessagePopUp('User don\'t have permissions.\n'
+                    'For more information please contact help@swimanalytics.com');
+              },
+            );
+          }
         });
       }
       else {

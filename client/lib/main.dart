@@ -1,12 +1,10 @@
-import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
-import 'Screens/Arguments/CameraScreenArguments.dart';
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Screens/Arguments/VideoScreenArguments.dart';
 import 'Screens/ScreensHolder.dart';
 
 /// if running from web:localhost add to project arguments --web-host 5000

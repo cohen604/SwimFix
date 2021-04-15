@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
-import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Feedback/FeedbackFilters.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Services/MlHandler.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
@@ -35,7 +36,8 @@ class LogicManager {
     String path = "/login";
     try {
       ServerResponse response = await connectionHandler.postMessage(
-          path, swimmer.toJson());
+          path,
+          swimmer.toJson());
       if (response != null && response.isSuccess()) {
         // Map map = response.value as Map;
         return true;
@@ -50,7 +52,8 @@ class LogicManager {
     String path = '/logout';
     try {
       ServerResponse response = await connectionHandler.postMessage(
-          path, swimmer.toJson());
+          path,
+          swimmer.toJson());
       if (response != null && response.isSuccess() && response.value) {
           return true;
       }
@@ -60,12 +63,28 @@ class LogicManager {
     return false;
   }
 
+  Future<UserPermissions> getPermissions(Swimmer swimmer) async {
+    String path = '/permissions';
+    try {
+      ServerResponse response = await connectionHandler.postMessage(
+          path,
+          swimmer.toJson());
+      if (response != null && response.isSuccess() && response.value) {
+        Map map = response.value as Map;
+        return UserPermissions.factory(map);
+      }
+    } catch(e) {
+      print('error in permissions ${e.toString()}');
+    }
+    return null;
+  }
+
   /// The function send a post request for receiving a feedback link
   /// fileBytes -
   /// length -
   /// filePath -
   /// return
-  Future<FeedbackVideoStreamer> postVideoForStreaming(
+  Future<FeedBackLink> postVideoForStreaming(
       Uint8List fileBytes,
       int length,
       String filePath,
@@ -83,7 +102,7 @@ class LogicManager {
           swimmer.uid, swimmer.email, swimmer.name);
       //TODO check if response is valid
       Map map = response.value as Map;
-      return FeedbackVideoStreamer.factory(map);
+      return FeedBackLink.factory(map);
     }
     catch(e) {
       print('error in post video for stream ${e.toString()}');
@@ -132,7 +151,7 @@ class LogicManager {
   }
 
   // Note: Don't use it
-  Future<FeedbackVideoStreamer> postListImagesForStreaming(
+  Future<FeedBackLink> postListImagesForStreaming(
       List <Uint8List> imagesBytes,
       String type,
       String fileName,
@@ -165,11 +184,11 @@ class LogicManager {
     //TODO check if response is valid
     Map mapResponse = response.value as Map;
     print(mapResponse);
-    return FeedbackVideoStreamer.factory(mapResponse);
+    return FeedBackLink.factory(mapResponse);
   }
 
 
-  Future<FeedbackVideoStreamer> filterFeedback(
+  Future<FeedBackLink> filterFeedback(
       FeedbackFilters filter,
       Swimmer swimmer) async {
     String path = "/swimmer/feedback/filter";
@@ -177,7 +196,7 @@ class LogicManager {
         swimmer.uid, swimmer.email, swimmer.name);
     //TODO check if response is valid
     Map map = response.value as Map;
-    return FeedbackVideoStreamer.factory(map);
+    return FeedBackLink.factory(map);
   }
 
   /// handle the prediction

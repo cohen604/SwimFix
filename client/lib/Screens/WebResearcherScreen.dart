@@ -40,7 +40,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   ResearcherReport _report;
 
   void onLogout() {
-    _logicManager.logout(this.widget.args.swimmer).then(
+    _logicManager.logout(this.widget.args.user.swimmer).then(
             (value) {
           if(value) {
             this.setState(() {
@@ -145,7 +145,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
             videoBytes,
             _labels.name,
             labelsBytes,
-            this.widget.args.swimmer)
+            this.widget.args.user.swimmer)
           .then( (result) {
             if(result!=null) {
               this.setState(() {
@@ -571,7 +571,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
   }
 
   void onFileClick(String fileLink) {
-    Swimmer swimmer = this.widget.args.swimmer;
+    Swimmer swimmer = this.widget.args.user.swimmer;
     _logicManager.getFileForDownload(
         swimmer.uid,
         swimmer.email,
@@ -731,7 +731,7 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            MenuBar(swimmer: this.widget.args.swimmer,),
+            MenuBar(user: this.widget.args.user,),
             Flexible(
                 child: buildBottomSide(context)
             ),
