@@ -27,6 +27,13 @@ class LogicManager {
     return logicManager;
   }
 
+  /// Only in debug mode.
+  void setIPConnection(String address, String port) {
+    _connectionHandler = new ConnectionHandler(
+      address: address,
+      port: port);
+  }
+
   Future<bool> login(Swimmer swimmer) async {
     String path = "/login";
     try {
