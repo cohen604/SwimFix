@@ -69,8 +69,9 @@ class LogicManager {
       ServerResponse response = await connectionHandler.postMessage(
           path,
           swimmer.toJson());
-      if (response != null && response.isSuccess() && response.value) {
+      if (response != null && response.isSuccess()) {
         Map map = response.value as Map;
+        print(map);
         return UserPermissions.factory(map);
       }
     } catch(e) {
