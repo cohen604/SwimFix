@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
           SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerScreen(args);
         },
-        '/researcher': (context) {
-          ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getResearcherScreen(args);
+        '/researcher/report': (context) {
+          ReprotScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getReportScreen(args);
         },
         '/upload': (context) {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;

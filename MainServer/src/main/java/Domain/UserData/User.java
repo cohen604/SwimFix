@@ -32,7 +32,7 @@ public class User implements IUser {
         _swimmer = new Swimmer();
         _coach = new Coach();
         _researcher = new Researcher();
-        _admin = new Admin();
+        _admin = new Admin();   
         _pathManager = new PathManager(email, true);
     }
 

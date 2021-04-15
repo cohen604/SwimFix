@@ -1,8 +1,8 @@
 import 'package:client/Domain/Users/WebUser.dart';
 
-class ResearcherScreenArguments {
+class ReprotScreenArguments {
 
   WebUser user;
 
-  ResearcherScreenArguments(this.user);
+  ReprotScreenArguments(this.user);
 }

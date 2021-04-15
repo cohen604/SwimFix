@@ -106,8 +106,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget buildResearcher(BuildContext context) {
     if(this.widget.args.user.permissions.isResearcher) {
       return buildMainButton(context, 1, "Researcher",
-          onClick('/researcher',
-              arguments: new ResearcherScreenArguments(this.widget.args.user)),
+          onClick('/researcher/report',
+              arguments: new ReprotScreenArguments(this.widget.args.user)),
           'images/researcher_image.png');
     }
     return Container();

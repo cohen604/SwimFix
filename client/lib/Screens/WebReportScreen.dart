@@ -15,16 +15,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 
-class WebResearcherScreen extends StatefulWidget {
+class WebReportScreen extends StatefulWidget {
 
-  ResearcherScreenArguments args;
-  WebResearcherScreen({this.args, Key key}) : super(key: key);
+  ReprotScreenArguments args;
+  WebReportScreen({this.args, Key key}) : super(key: key);
 
   @override
-  _WebResearcherScreenState createState() => _WebResearcherScreenState();
+  _WebReportScreenState createState() => _WebReportScreenState();
 }
 
-class _WebResearcherScreenState extends State<WebResearcherScreen> {
+class _WebReportScreenState extends State<WebReportScreen> {
 
   LogicManager _logicManager = LogicManager.getInstance();
   WebColors _webColors = new WebColors();

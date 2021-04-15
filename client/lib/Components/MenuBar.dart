@@ -92,8 +92,8 @@ class _MenuBarState extends State<MenuBar> {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/researcher',
-              arguments: new ResearcherScreenArguments(this.widget.user));
+          Navigator.pushNamed(context, '/researcher/report',
+              arguments: new ReprotScreenArguments(this.widget.user));
         });
       });
     };
