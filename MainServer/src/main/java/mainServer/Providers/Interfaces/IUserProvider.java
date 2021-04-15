@@ -1,8 +1,12 @@
 package mainServer.Providers.Interfaces;
 
+import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IUserProvider {
 
@@ -15,5 +19,8 @@ public interface IUserProvider {
     boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo);
 
     boolean reload();
+
+    Map<String, Map<String, FeedbackVideoStreamer>> filter_history
+            (List<FeedbackVideoStreamer> history);
 
 }

@@ -49,6 +49,10 @@ class MyApp extends StatelessWidget {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
         },
+        '/history': (context) {
+          SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerHistoryScreen(args);
+        },
       },
       debugShowCheckedModeBanner: false,
     );

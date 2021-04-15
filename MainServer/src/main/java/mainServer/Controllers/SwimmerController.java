@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/swimmer")
@@ -42,20 +43,18 @@ public class SwimmerController {
     }
 
 
-//    @PostMapping("/report")
-//    @CrossOrigin(origins = "*")
-//    public String viewHistory(@RequestPart(name = "uid") String uid,
-//                              @RequestPart(name = "email") String email,
-//                              @RequestPart(name = "name") String name) {
-//        try {
-//            System.out.println("request view history");
-//            UserDTO userDTO = new UserDTO(uid, email, name);
-//            ActionResult<List<IFeedbackVideo>> actionResult = swimFixAPI.getSwimmerHistory(userDTO);
-//            return actionResult.toJson();
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    @PostMapping("/history")
+    @CrossOrigin(origins = "*")
+    public String viewHistory(@RequestBody UserDTO user) {
+        try {
+            System.out.println("request view history");
+            UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
+            ActionResult<Map<String, Map<String, FeedbackVideoStreamer>>> actionResult = swimFixAPI.getSwimmerHistory(userDTO);
+            return actionResult.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -189,14 +189,18 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
-//    public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistory(UserDTO userDto) {
-//        IUser user = _userProvider.getUser(userDto);
-//        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
-//        for (IFeedbackVideo v : feedbacks) {
-//            String path = v.getPath();
-//            File file = new File(path);
-//        }
-//        return new ActionResult<>(Response.SUCCESS, history);
-//    }
+    public ActionResult<Map<String, Map<String, FeedbackVideoStreamer>>> getSwimmerHistory(UserDTO userDto) {
+        List<FeedbackVideoStreamer> history = new LinkedList<>();
+        IUser user = _userProvider.getUser(userDto);
+        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
+        for (IFeedbackVideo v : feedbacks) {
+            String path = v.getPath();
+            FeedbackVideoStreamer feedbackVideoStreamer = new FeedbackVideoStreamer(path);
+            history.add(feedbackVideoStreamer);
+        }
+        Map<String, Map<String, FeedbackVideoStreamer>> history_filter = _userProvider.filter_history(history);
+        System.out.println(history_filter.keySet());
+        return new ActionResult<>(Response.SUCCESS, history_filter);
+    }
 }
 

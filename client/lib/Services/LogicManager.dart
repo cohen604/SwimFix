@@ -195,4 +195,20 @@ class LogicManager {
       path, uid, email, name);
   }
 
+  Future<Map> getSwimmerHistory(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/history";
+      ServerResponse response = await this.connectionHandler
+          .postMessage(path, swimmer.toJson());
+      //TODO check if response is valid
+      Map map = response.value as Map;
+      return map;
+      // return FeedbackVideoStreamer.factory(map);
+    }
+    catch(e) {
+      print('error in post video for stream ${e.toString()}');
+    }
+    return null;
+  }
+
 }

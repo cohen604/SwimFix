@@ -1,4 +1,5 @@
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/SwimmerHistoryScreen.dart';
 import 'package:client/Screens/WebAboutScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
@@ -51,6 +52,18 @@ class ScreenHolder {
       args = new UploadScreenArguments(new Swimmer(uid, email, name));
     }
     return new WebUploadScreen(args: args,);
+  }
+
+
+  Widget getSwimmerHistoryScreen(SwimmerScreenArguments args) {
+    //TODO delete this
+    if(args == null) {
+      String uid = "MZogz1uG95TCkIhDCoAiyYg9QnH2";
+      String email = "avrahamcalev2@gmail.com";
+      String name = "אברהם כלב";
+      args = new SwimmerScreenArguments(new Swimmer(uid, email, name));
+    }
+    return new SwimmerHistoryScreen(arguments: args,);
   }
 
 }

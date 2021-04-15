@@ -1,5 +1,6 @@
 package mainServer.Providers;
 
+import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
@@ -7,8 +8,11 @@ import Domain.UserData.User;
 import Storage.User.IUserDao;
 import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
+import org.apache.tomcat.util.buf.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserProvider implements IUserProvider {
@@ -91,4 +95,33 @@ public class UserProvider implements IUserProvider {
         }
         return true;
     }
+
+
+    /**
+     * filter list of FeedbackVideoStreamer to a map.
+     * Map is type of <String: date of swim, Map<String: hour of swim, FeedbackVideoStreamer>>
+     * Example: path: TestingVideos/example/2021-03-31-19-39-18.mov
+     *          date: 2021-03-31
+     *          hour: 19
+     * @param history - list of FeedbackVideoStreamer
+     * @return - map of FeedbackVideoStreamer by date and hour
+     */
+    @Override
+    public Map<String, Map<String, FeedbackVideoStreamer>> filter_history
+            (List<FeedbackVideoStreamer> history ) {
+        Map<String, Map<String, FeedbackVideoStreamer>> history_filter = new HashMap<>();
+        Map <String, FeedbackVideoStreamer> hour_map = new HashMap<>();
+        for (FeedbackVideoStreamer feedbackVideoStreamer : history) {
+            String path = feedbackVideoStreamer.getPath();
+            int index_of_dot = path.lastIndexOf('.');
+            String date = path.substring(index_of_dot - 19, index_of_dot - 9);
+            String hour = path.substring(index_of_dot - 8, index_of_dot - 6);
+            System.out.println(date);
+            hour_map.put(hour, feedbackVideoStreamer);
+            history_filter.put(date, hour_map);
+        }
+
+        return history_filter;
+    }
+
 }

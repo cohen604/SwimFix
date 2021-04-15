@@ -28,6 +28,7 @@ import mainServer.Providers.Interfaces.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class SwimFixAPI {
 
@@ -93,7 +94,7 @@ public class SwimFixAPI {
       return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
    }
 
-//   public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistory(UserDTO userDto) {
-//      return logicManager.getSwimmerHistory(userDto);
-//   }
+   public ActionResult<Map<String, Map<String, FeedbackVideoStreamer>>> getSwimmerHistory(UserDTO userDto) {
+      return logicManager.getSwimmerHistory(userDto);
+   }
 }
