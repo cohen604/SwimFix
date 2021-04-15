@@ -20,6 +20,8 @@ class ConnectionHandler {
   }) {
     this.address = 'http://$address'; //'http://132.72.96.31';
     this.port = port;
+    print(this.address);
+    print(this.port);
   }
 
   /// The function receives a String body and generate form him a server response
