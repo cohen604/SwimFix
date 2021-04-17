@@ -33,7 +33,7 @@ public class EmailSenderProvider implements IEmailSenderProvider {
                 "<h2>Hi, " + userName +
                 " invited you to join Swim Analytics." +
                 "</h2>\n" +
-                "<p>Swim analytucs, is the best platform to improve your swimming abilities.</p>\n" +
+                "<p>Swim analytics, is the best platform to improve your swimming abilities.</p>\n" +
                 "<p>The platform allows any swimmer to record, view, train, receive swimming videos, feedback's and many more.</p>\n" +
                 "<p>You are welcome to join our swimming platform via swim analytics web site or mobile application.</p>\n" +
                 "<p>web site:&nbsp;<a href=\"https://swimanalytics.web.app/\">https://swimanalytics.web.app/</a></p>\n" +
@@ -52,7 +52,7 @@ public class EmailSenderProvider implements IEmailSenderProvider {
     private Properties getEmailProperties() {
         Properties properties = System.getProperties();
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.prot", "587");
+        properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.user", SWIM_ANALYTICS_EMAIL);
         properties.put("mail.password", SWIM_ANALYTICS_PASSWORD);
