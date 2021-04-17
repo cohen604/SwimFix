@@ -57,14 +57,14 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
   }
 
   void onDownloadAndroidArm32() async{
-    html.window.open('assets/releases/app-armeabi-v7a-release.apk', "apk");
+    html.window.open('/assets/releases/app-armeabi-v7a-release.apk', "apk");
   }
 
   void onDownloadAndroidArm64() async{
-    html.window.open('assets/releases/app-arm64-v8a-release.apk', "apk");
+    html.window.open('/assets/releases/app-arm64-v8a-release.apk', "apk");
   }
   void onDownloadAndroidx86_64() async{
-    html.window.open('assets/releases/app-x86_64-release.apk', "apk");
+    html.window.open('/assets/releases/app-x86_64-release.apk', "apk");
   }
 
   Widget buildTitle(BuildContext context, String text) {

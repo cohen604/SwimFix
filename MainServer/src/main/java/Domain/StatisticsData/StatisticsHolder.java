@@ -40,11 +40,11 @@ public class StatisticsHolder implements IStatistic {
     private void evalStatistic(List<ISwimmingSkeleton> raw,
                                List<ISwimmingSkeleton> modelSkeletons,
                                List<ISwimmingSkeleton> modelAndInterpolationSkeletons) {
-        // TODO: change flow if raw data is null
-        if(raw.size() != modelSkeletons.size()) {
-            throw new IllegalArgumentException("raw list size doesn't match to current list size");
+        int size = modelSkeletons.size();
+        if(raw != null) {
+            size = raw.size();
         }
-        initialize(raw.size());
+        initialize(size);
         ISkeletonFilter headFilter = new HeadFilter();
         ISkeletonFilter leftElbowFilter = new LeftElbowFilter();
         ISkeletonFilter rightElbowFilter = new RightElbowFilter();
@@ -53,7 +53,7 @@ public class StatisticsHolder implements IStatistic {
         ISkeletonFilter leftWristFilter = new LeftWristFilter();
         ISkeletonFilter rightWristFilter = new RightWristFilter();
 
-        for(int i=0; i<raw.size(); i++) {
+        for(int i=0; i<size; i++) {
             ISwimmingSkeleton actual = tryGetSkeleton(raw, i);
             ISwimmingSkeleton model = tryGetSkeleton(modelSkeletons, i);
             ISwimmingSkeleton modelInter = tryGetSkeleton(modelAndInterpolationSkeletons,i);

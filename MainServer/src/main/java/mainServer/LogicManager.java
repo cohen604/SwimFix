@@ -187,7 +187,10 @@ public class LogicManager {
                         user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
                 if (feedbackVideo != null) {
                     // add a graph to the file
-                    List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
+                    List<ISwimmingSkeleton> raw = null;
+                    if(fileDTO != null) {
+                        raw = _skeletonLoader.read(fileDTO.getBytes());
+                    }
                     List<ISwimmingSkeleton> model = _skeletonLoader.read(feedbackVideo.getMLSkeletonsPath());
                     List<ISwimmingSkeleton> modelAndInterpolation = feedbackVideo.getSwimmingSkeletons();
                     IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);

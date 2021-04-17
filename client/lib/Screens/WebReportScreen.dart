@@ -3,7 +3,6 @@ import 'dart:html';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
-
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Components/MenuBar.dart';
@@ -137,31 +136,63 @@ class _WebReportScreenState extends State<WebReportScreen> {
     });
   }
 
+  void postVideoWithCsv(videoBytes) {
+    readFile(_labels, (labelsBytes) {
+      _logicManager.postVideoAndCsvForAnalyze(
+          _video.name,
+          videoBytes,
+          _labels.name,
+          labelsBytes,
+          this.widget.args.user.swimmer)
+          .then((result) {
+        if (result != null) {
+          this.setState(() {
+            _hasResults = true;
+            _report = result;
+            nextState();
+          });
+        }
+        else {
+          this.setState(() {
+            _step = ResearcherStep.Error;
+          });
+        }
+      }
+      );
+    });
+  }
+
+  void postVideoWithOutCsv(videoBytes) {
+    _logicManager.postVideoAndCsvForAnalyze(
+        _video.name,
+        videoBytes,
+        null,
+        null,
+        this.widget.args.user.swimmer)
+        .then((result) {
+      if (result != null) {
+        this.setState(() {
+          _hasResults = true;
+          _report = result;
+          nextState();
+        });
+      }
+      else {
+        this.setState(() {
+          _step = ResearcherStep.Error;
+        });
+      }
+    });
+  }
+
   void postVideoAndCsv() {
     readFile(_video, (videoBytes) {
-      readFile(_labels, (labelsBytes) {
-        _logicManager.postVideoAndCsvForAnalyze(
-            _video.name,
-            videoBytes,
-            _labels.name,
-            labelsBytes,
-            this.widget.args.user.swimmer)
-          .then( (result) {
-            if(result!=null) {
-              this.setState(() {
-                _hasResults = true;
-                _report = result;
-                nextState();
-              });
-            }
-            else {
-              this.setState(() {
-                _step = ResearcherStep.Error;
-              });
-            }
-          }
-        );
-      });
+      if(_labels!=null) {
+        postVideoWithCsv(videoBytes);
+      }
+      else {
+        postVideoWithOutCsv(videoBytes);
+      }
     });
     // _logicManager.postVideoAndCsvForAnalyze()
   }
@@ -196,6 +227,28 @@ class _WebReportScreenState extends State<WebReportScreen> {
     });
   }
 
+  void uploadLabelsFunctionButton() {
+    this.setState(() {
+      _step = ResearcherStep.Upload_Csv;
+    });
+  }
+
+  void getReportFunctionButton() {
+    this.setState(() {
+      _step = ResearcherStep.Submit;
+    });
+  }
+
+  void viewFunctionButton() {
+    this.setState(() {
+      _step = ResearcherStep.WaitingResults;
+    });
+  }
+
+  void onDownloadLabelsExampleFile() {
+    window.open('/assets/files/LabelsExample.csv', "csv");
+  }
+
   Widget buildUploadVideoButton(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
@@ -215,12 +268,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
         ),
       ),
     );
-  }
-
-  void uploadLabelsFunctionButton() {
-    this.setState(() {
-      _step = ResearcherStep.Upload_Csv;
-    });
   }
 
   Widget buildUploadLabelsButton(BuildContext context, int flex) {
@@ -244,12 +291,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
     );
   }
 
-  void getReportFunctionButton() {
-    this.setState(() {
-        _step = ResearcherStep.Submit;
-      });
-  }
-
   Widget buildGetReportButton(BuildContext context, int flex) {
     return Flexible(
       flex: flex,
@@ -269,12 +310,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
         ),
       ),
     );
-  }
-
-  void viewFunctionButton() {
-    this.setState(() {
-        _step = ResearcherStep.WaitingResults;
-      });
   }
 
   Widget buildViewResultsButton(BuildContext context, int flex) {
@@ -392,39 +427,77 @@ class _WebReportScreenState extends State<WebReportScreen> {
     );
   }
 
-  Widget buildSelectedFile(BuildContext context, File file,
-    {int flex = 1, bool createFlex = true}) {
-    Widget child = Container(
+  Widget buildNoFileSelected(BuildContext context, {String des}) {
+    return Container(
       padding: EdgeInsets.all(10.0),
-      child: Card(
-        child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              buildTitle(context, file.name,
-                fontSize: 23,
-                createFlex: false,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          des == null ? Container() : buildDescription(context, des),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Card(
+              child: Container(
+                padding: EdgeInsets.all(20.0),
+                child: Text('No file selected',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
-              buildDivider(),
-              buildDescription(context, 'Size: ${file.size}',
-                  fontSize: 21,
-                  createFlex: false),
-              buildDescription(context, 'Created : ${file.lastModifiedDate}',
-                  fontSize: 19,
-                  createFlex: false),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
-    if(createFlex) {
-      return Flexible(
-          flex: flex,
-          fit: FlexFit.tight,
-          child: child
+  }
+
+  Widget buildSelectedFile(BuildContext context, File file,
+    {int flex = 1, bool createFlex = true, String des}) {
+    Widget child;
+    if(file == null) {
+      return buildNoFileSelected(context, des:des);
+    }
+    else {
+      return Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            des == null ? Container() : buildDescription(context, des),
+            Card(
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    buildTitle(context, file.name,
+                      fontSize: 23,
+                      createFlex: false,
+                    ),
+                    buildDivider(),
+                    buildDescription(context, 'Size: ${file.size}',
+                        fontSize: 21,
+                        createFlex: false),
+                    buildDescription(
+                        context, 'Created : ${file.lastModifiedDate}',
+                        fontSize: 19,
+                        createFlex: false),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
-    return child;
+    // if(createFlex) {
+    //   return Flexible(
+    //       flex: flex,
+    //       fit: FlexFit.tight,
+    //       child: child
+    //   );
+    // }
+    // return child;
   }
 
   Widget buildVideoStep(BuildContext context) {
@@ -465,6 +538,18 @@ class _WebReportScreenState extends State<WebReportScreen> {
     );
   }
 
+  Widget buildLabelsExampleFile(BuildContext context) {
+    //onDownloadLabelsExampleFile
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Image.asset(
+        'images/csv_example.png',
+        height: 140.0,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
   Widget buildLabelsStep(BuildContext context) {
     return Column(
       children: [
@@ -479,22 +564,24 @@ class _WebReportScreenState extends State<WebReportScreen> {
                   createFlex: false,
                   fontSize: 20,),
                 buildDescription(context, 'Head, Right Shoulder, Right Elbow, Right Wrist,'
-                    ' Left Shoulder, Left Elbow, Left Wrist.'
-                    '\nExample for Csv:',
+                    ' Left Shoulder, Left Elbow, Left Wrist.',
                     fontSize: 20,
                     createFlex: false),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    'images/csv_example.png',
-                    height: 140.0,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                // buildLabelsExampleFile(context),
                 SizedBox(height: 5.0,),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: buildTextButton(context, 'Select', uploadLabelsWeb),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      buildTextButton(context, 'Example labels Csv',
+                          onDownloadLabelsExampleFile),
+                      SizedBox(width: 10,),
+                      buildTextButton(context, 'Select', uploadLabelsWeb),
+                      SizedBox(width: 10,),
+                      buildTextButton(context, 'Skip', nextState),
+                    ],
+                  ),
                 ),
               ],
             )
@@ -520,6 +607,7 @@ class _WebReportScreenState extends State<WebReportScreen> {
 
   Widget buildSubmitStep(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
             margin: EdgeInsets.all(20.0),
@@ -533,21 +621,8 @@ class _WebReportScreenState extends State<WebReportScreen> {
               ],
             )
         ),
-        Container(
-          padding: EdgeInsets.only(top:5.0, right: 20.0 ,left: 20.0),
-          child: Row(
-            children: [
-              buildDescription(context, 'Video'),
-              buildDescription(context, 'Labels')
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            buildSelectedFile(context, _video),
-            buildSelectedFile(context, _labels),
-          ],
-        ),
+        buildSelectedFile(context, _video, des:'Video'),
+        buildSelectedFile(context, _labels, des:'Labels'),
         Container(
           margin: EdgeInsets.only(right: 10.0, left:10.0),
           child: Row(
@@ -588,10 +663,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
   }
 
   void onFeedbackClick() {
-    // _report = new ResearcherReport(
-    //     "clients/avrahamcalev2@gmail.com/feedbacks/2021-03-19-17-03-00.mp4",
-    //     "clients/avrahamcalev2@gmail.com/mlSkeletons/2021-03-19-17-03-00.csv",
-    //     "link 3");
     if(_report.videoLink!=null) {
       onFileClick(_report.videoLink);
     }

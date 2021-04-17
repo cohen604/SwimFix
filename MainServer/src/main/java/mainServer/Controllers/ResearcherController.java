@@ -36,9 +36,12 @@ public class ResearcherController {
             ConvertedVideoDTO videoDTO = new ConvertedVideoDTO(
                     videoFile.getOriginalFilename(),
                     videoFile.getBytes());
-            FileDTO fileDTO = new FileDTO(
+            FileDTO fileDTO = null;
+            if(labelsFile != null) {
+                fileDTO = new FileDTO(
                     labelsFile.getOriginalFilename(),
                     labelsFile.getBytes());
+            }
             ActionResult<ResearcherReportDTO> result = _swimFixAPI.getResearcherReport(
                     userDTO,
                     videoDTO,
