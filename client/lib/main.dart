@@ -1,4 +1,5 @@
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
@@ -47,6 +48,10 @@ class MyApp extends StatelessWidget {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
         },
+        '/coach': (context) {
+          CoachScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getCoachScreen(args);
+        }
       },
       debugShowCheckedModeBanner: false,
     );

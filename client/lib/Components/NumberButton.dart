@@ -28,7 +28,8 @@ class _NumberButtonState extends State<NumberButton> {
       fit: FlexFit.tight,
       child: Center(
         child: Container(
-          padding: EdgeInsets.only(top:8.0, bottom: 12, right: 12, left: 12),
+          padding: EdgeInsets.all(12),
+          // padding: EdgeInsets.only(top:8.0, bottom: 12, right: 12, left: 12),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: this.widget.selected ?
@@ -36,13 +37,14 @@ class _NumberButtonState extends State<NumberButton> {
               Colors.grey
           ),
           child: Text('${this.widget.number}',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: this.widget.fontSize * MediaQuery.of(context).textScaleFactor,
-                  color: Colors.white,
-                  fontWeight: this.widget.selected ?
-                    FontWeight.bold :
-                    FontWeight.normal,
-                  decoration: TextDecoration.none
+                fontSize: this.widget.fontSize * MediaQuery.of(context).textScaleFactor,
+                color: Colors.white,
+                fontWeight: this.widget.selected ?
+                  FontWeight.bold :
+                  FontWeight.normal,
+                decoration: TextDecoration.none,
               )
             ),
           ),

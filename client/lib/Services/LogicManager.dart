@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
-import 'package:client/Domain/Feedback/FeedbackFilters.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
@@ -10,7 +7,6 @@ import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LogicManager {
 
@@ -139,6 +135,24 @@ class LogicManager {
     String path = "/researcher/$fileLink";
     return await this.connectionHandler.downloadFile(
       path, uid, email, name);
+  }
+
+  Future<bool> sendInvitationEmail(Swimmer swimmer, String email) async {
+    String path = '/coach/invite';
+    Map<String, dynamic> map = swimmer.toJson();
+    map['to'] = email;
+    try {
+      ServerResponse response = await connectionHandler.postMessage(
+          path, map);
+      if (response != null && response.isSuccess() && response.value) {
+        return true;
+      }
+    }
+    catch(e) {
+      print(e);
+      print('error in $path with ${e.toString()}');
+    }
+    return false;
   }
 
 }

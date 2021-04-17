@@ -1,7 +1,9 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/WebAboutScreen.dart';
+import 'package:client/Screens/WebCoachScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
@@ -23,10 +25,6 @@ class ScreenHolder {
   }
 
   Widget getSwimmerScreen(SwimmerScreenArguments args) {
-    args = new SwimmerScreenArguments(
-        new WebUser(
-            new Swimmer('uid', 'email', 'name'),
-            new UserPermissions(true, true, true, true)));
     return new WebSwimmerScreen(arguments: args,);
   }
 
@@ -36,6 +34,16 @@ class ScreenHolder {
 
   Widget getUploadScreen(UploadScreenArguments args) {
     return new WebUploadScreen(args: args,);
+  }
+
+  Widget getCoachScreen(CoachScreenArguments args) {
+    // args = new CoachScreenArguments(
+    //   new WebUser(
+    //     new Swimmer('uid', 'email', 'name'),
+    //     new UserPermissions(true, true, true, true)),
+    //   'Team Name'
+    // );
+    return new WebCoachScreen(args);
   }
 
 }

@@ -1,6 +1,7 @@
 package mainServer.Controllers;
 
 import DTO.ActionResult;
+import DTO.SendEmailInvitiationDTO;
 import DTO.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
@@ -14,13 +15,13 @@ public class CoachController {
 
     @PostMapping(value = "/invite")
     @CrossOrigin(origins = "*")
-    public String loginSwimmer(@RequestPart(name = "uid") String uid,
-                               @RequestPart(name = "email") String email,
-                               @RequestPart(name = "name") String name,
-                               @RequestPart(name = "to") String to) {
-        System.out.println("Received invite request from "+ email + " to " + to);
-        UserDTO userDTO = new UserDTO(uid, email, name);
-        ActionResult<Boolean> actionResult = swimFixAPI.invite(userDTO, to);
+    public String loginSwimmer(@RequestBody SendEmailInvitiationDTO invitation) {
+        System.out.println("Received invite request from "+ invitation.email + " to " + invitation.to);
+        UserDTO userDTO = new UserDTO(
+                invitation.uid,
+                invitation.email,
+                invitation.name);
+        ActionResult<Boolean> actionResult = swimFixAPI.invite(userDTO, invitation.to);
         System.out.println("Send invite response");
         return actionResult.toJson();
     }

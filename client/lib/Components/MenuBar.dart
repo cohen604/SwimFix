@@ -1,6 +1,7 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
@@ -23,7 +24,6 @@ class MenuBar extends StatefulWidget {
 class _MenuBarState extends State<MenuBar> {
 
   LogicManager _logicManager = LogicManager.getInstance();
-  Function onCoach;
   Function onAdmin;
 
   WebColors _webColors = new WebColors();
@@ -99,6 +99,18 @@ class _MenuBarState extends State<MenuBar> {
     };
   }
 
+  Function onCoach(BuildContext context) {
+    //TODO get the coach team info from logic manger
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/coach',
+              arguments: new CoachScreenArguments(this.widget.user, 'Team Name'));
+        });
+      });
+    };
+  }
+
   Widget buildOption(BuildContext context, String optionName, int index,
       Function onClick) {
     return Flexible(
@@ -139,7 +151,7 @@ class _MenuBarState extends State<MenuBar> {
 
   buildCoach(BuildContext context, int index) {
     if(this.widget.user.permissions.isCoach) {
-      return buildOption(context, "Coach", index, onCoach);
+      return buildOption(context, "Coach", index, onCoach(context));
     }
     return Container();
   }

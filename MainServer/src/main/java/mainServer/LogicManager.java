@@ -234,11 +234,11 @@ public class LogicManager {
         IUser user = _userProvider.getUser(userDTO);
         try {
             if (user != null
-                && user.isLogged()
+//                && user.isLogged()
 //                && user.isCoach()
                 && !to.isEmpty()
                 && to.contains("@")) {
-                if(_emailSenderProvider.sendInvetaionEmail(user.getEmail(), to)) {
+                if(_emailSenderProvider.sendInvitationEmail(user.getEmail(), to)) {
                     return new ActionResult<>(Response.SUCCESS, true);
                 }
             }

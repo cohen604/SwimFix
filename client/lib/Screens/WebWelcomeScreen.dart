@@ -1,3 +1,5 @@
+import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
@@ -88,9 +90,12 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   }
 
   Widget buildCoach(BuildContext context) {
+    //TODO add call to logic manger get the coach team info
     if(this.widget.args.user.permissions.isCoach) {
       return buildMainButton(context, 1, "Coach",
-          null, 'images/coach_image.png');
+      onClick('/coach',
+          arguments: new CoachScreenArguments(this.widget.args.user, 'Team Name')),
+          'images/coach_image.png');
     }
     return Container();
   }
