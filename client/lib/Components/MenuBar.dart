@@ -2,6 +2,7 @@ import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
@@ -92,8 +93,8 @@ class _MenuBarState extends State<MenuBar> {
     return () {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/researcher/report',
-              arguments: new ReprotScreenArguments(this.widget.user));
+          Navigator.pushNamed(context, '/researcher',
+              arguments: new ResearcherScreenArguments(this.widget.user));
         });
       });
     };

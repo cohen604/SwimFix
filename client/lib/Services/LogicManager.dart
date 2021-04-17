@@ -111,13 +111,16 @@ class LogicManager {
       String videoPath, videoBytes, String labelPath, labelsBytes,
       Swimmer swimmer) async {
     String path = "/researcher/report";
-    http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
-      'video', videoBytes, filename: videoPath,
-    );
-    http.MultipartFile multipartLabels = http.MultipartFile.fromBytes(
-      'labels', labelsBytes, filename: labelPath,
-    );
     try {
+      http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
+        'video', videoBytes, filename: videoPath,
+      );
+      http.MultipartFile multipartLabels;
+      if(labelsBytes != null && labelPath != null) {
+        multipartLabels = http.MultipartFile.fromBytes(
+          'labels', labelsBytes, filename: labelPath,
+        );
+      }
       ServerResponse response = await this.connectionHandler.postMultiPartFiles(path,
           multipartVideo, multipartLabels, swimmer.uid, swimmer.email, swimmer.name);
       if (response.value != null) {

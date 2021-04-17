@@ -1,7 +1,9 @@
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'Screens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
+import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
+import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/',
+      initialRoute: '/researcher/multireport',
       theme: ThemeData(
         primarySwatch: Colors.blue, //main color (defualt color).
       ),
@@ -45,13 +47,21 @@ class MyApp extends StatelessWidget {
           SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerScreen(args);
         },
-        '/researcher/report': (context) {
-          ReprotScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getReportScreen(args);
-        },
         '/upload': (context) {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
+        },
+        '/researcher': (context) {
+          ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getResearcherScreen(args);
+        },
+        '/researcher/report': (context) {
+          ReportScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getReportScreen(args);
+        },
+        '/researcher/multireport': (context) {
+          MultiReportScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getMultiReportScreen(args);
         },
         '/coach': (context) {
           CoachScreenArguments args = ModalRoute.of(context).settings.arguments;

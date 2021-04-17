@@ -3,7 +3,7 @@ import 'dart:html';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
-import 'Arguments/ResearcherScreenArguments.dart';
+import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Components/MenuBar.dart';
 import 'package:client/Components/NumberButton.dart';
@@ -16,7 +16,7 @@ import 'package:flutter/scheduler.dart';
 
 class WebReportScreen extends StatefulWidget {
 
-  ReprotScreenArguments args;
+  ReportScreenArguments args;
   WebReportScreen({this.args, Key key}) : super(key: key);
 
   @override
@@ -490,14 +490,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
         ),
       );
     }
-    // if(createFlex) {
-    //   return Flexible(
-    //       flex: flex,
-    //       fit: FlexFit.tight,
-    //       child: child
-    //   );
-    // }
-    // return child;
   }
 
   Widget buildVideoStep(BuildContext context) {

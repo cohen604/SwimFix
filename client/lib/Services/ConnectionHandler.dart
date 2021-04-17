@@ -107,8 +107,12 @@ class ConnectionHandler {
     print('post to server 2 multipart files');
     String url = getUrl() + path;
     var request = new http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(firstFile);
-    request.files.add(secondFile);
+    if(firstFile!=null) {
+      request.files.add(firstFile);
+    }
+    if(secondFile!=null) {
+      request.files.add(secondFile);
+    }
     request.fields['uid'] = uid;
     request.fields['email'] = email;
     request.fields['name'] = name;

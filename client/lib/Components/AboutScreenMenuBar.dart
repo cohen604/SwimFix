@@ -1,5 +1,5 @@
 import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
