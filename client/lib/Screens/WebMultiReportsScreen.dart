@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:html';
 
 import 'package:client/Components/BetterNumberButton.dart';
 import 'package:client/Components/MenuBar.dart';
@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Arguments/MultiReportScreenArguments.dart';
+import 'PopUps/MessagePopUp.dart';
 
 class WebMultiReportsScreen extends StatefulWidget {
 
@@ -25,10 +26,6 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
   LogicManager logicManager;
   WebColors webColors;
   ScreenState screenState;
-  // Folder picking vars
-  String videoFolderPath;
-  String labelFolderPath;
-  String downloadingFolderPath;
   // Searching Files vars
   List<File> videos;
   List<File> labels;
@@ -86,16 +83,53 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
     });
   }
 
-  void onClickSelectedVideoFolder() {
-
+  void uploadFiles(String fileType, Function updateFiles) {
+    InputElement uploadInput = FileUploadInputElement();
+    uploadInput.multiple = true;
+    uploadInput.draggable = true;
+    uploadInput.accept = fileType;
+    uploadInput.click();
+    document.body.append(uploadInput);
+    uploadInput.onChange.listen((e) {
+      updateFiles(uploadInput.size, uploadInput.files);
+    });
+    uploadInput.remove();
   }
 
-  void onClickSelectLabelsFolder() {
-
+  void onSelectVideoFolder() {
+    uploadFiles('video/*', (int size, List<File> files) {
+      if(size > 0) {
+        this.setState(() {
+          videos = files;
+        });
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new MessagePopUp('Select at least one video');
+          },
+        );
+      }
+    });
   }
 
-  void onSelectDownloadingFolder() {
-
+  void onSelectLabelsFolder() {
+    uploadFiles('.csv', (int size, List<File> files) {
+      if(size > 0) {
+        this.setState(() {
+          labels = files;
+        });
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return new MessagePopUp('Select at least one csv');
+          },
+        );
+      }
+    });
   }
 
   void onClickRemoveReportFile(int index) {
@@ -112,9 +146,6 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
   void onClickAgain() {
     this.setState(() {
       screenState = ScreenState.FolderPicking;
-      videoFolderPath = null;
-      labelFolderPath = null;
-      downloadingFolderPath = null;
       // Searching Files vars
       videos = [];
       labels = [];
@@ -123,12 +154,38 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
     });
   }
 
+  Widget buildTitle(BuildContext context, String title) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      child: Text(title,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 46 * MediaQuery.of(context).textScaleFactor,
+          decoration: TextDecoration.none,
+        ),
+      ),
+    );
+  }
+
   Widget buildTextButton(BuildContext context, String text, Function onPressed) {
     return TextButton(
       onPressed: onPressed,
       child: Text(text,
         style: TextStyle(
           fontSize: 22 * MediaQuery.of(context).textScaleFactor,
+        ),
+      ));
+  }
+
+  Widget buildElevatedButton(BuildContext context, String text, Function onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Text(text,
+          style: TextStyle(
+            fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+          ),
         ),
       ));
   }
@@ -187,16 +244,85 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
     );
   }
 
-  Widget buildFolderPicking(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-
-        ],
+  Widget buildFolderSelected(BuildContext context, String title, String folderPath) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26 * MediaQuery.of(context).textScaleFactor
+              ),
+            ),
+            Text(folderPath,
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 24 * MediaQuery.of(context).textScaleFactor
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget buildWarningFiles(BuildContext context, String title, List files) {
+    if(files!=null) {
+      return Container();
+    }
+    else {
+      return Card(
+        child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.warning_amber_rounded,
+                size: 25,
+                color: Colors.yellow,
+              ),
+              SizedBox(width: 10,),
+              Text("Didn't selected $title folder yet",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 21 * MediaQuery.of(context).textScaleFactor
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget buildNextButtonFolderPicking(BuildContext context) {
+    if(videos != null) {
+      return Align(
+          alignment: Alignment.bottomRight,
+          child: buildElevatedButton(context, 'Next', onNextStep)
+      );
+    }
+    return Container();
+  }
+
+  Widget buildFolderPicking(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildTitle(context, 'Files selection'),
+        buildTextButton(context, 'Select videos', onSelectVideoFolder),
+        buildTextButton(context, 'Select labels', onSelectLabelsFolder),
+        SizedBox(height: 10,),
+        buildWarningFiles(context, 'Videos', videos),
+        buildWarningFiles(context, 'Labels', labels),
+        SizedBox(height: 10,),
+        buildNextButtonFolderPicking(context),
+      ],
     );
   }
 
@@ -261,14 +387,20 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
           children: [
             MenuBar(user: this.widget.args.user,),
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildRoadMap(context),
-                  Expanded(
-                    child: buildStep(context),
-                  ),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildRoadMap(context),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: buildStep(context),
+                      ),
+                    ),
+                  ],
+                ),
               )
             )
           ],

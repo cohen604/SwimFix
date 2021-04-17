@@ -3,6 +3,7 @@ import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/WebColors.dart';
 import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
@@ -21,6 +22,7 @@ void main() async {
 class MyApp extends StatelessWidget {
 
   ScreenHolder _screenHolder = new ScreenHolder();
+  WebColors _webColors = new WebColors();
 
   // This widget is the root of your application.
   @override
@@ -29,7 +31,9 @@ class MyApp extends StatelessWidget {
       title: 'SwimFix',
       initialRoute: '/researcher/multireport',
       theme: ThemeData(
-        primarySwatch: Colors.blue, //main color (defualt color).
+        primarySwatch: _webColors.createMaterialColor(
+            _webColors.getBackgroundForI1()
+        ),
       ),
       routes: {
         '/': (context) {

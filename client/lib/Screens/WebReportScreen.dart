@@ -38,29 +38,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
   bool _hasResults = false;
   ResearcherReport _report;
 
-  void onLogout() {
-    _logicManager.logout(this.widget.args.user.swimmer).then(
-            (value) {
-          if(value) {
-            this.setState(() {
-              SchedulerBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamed(context, '/login');
-              });
-            });
-          }
-          else {
-            showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  content: Text('Cant Logout, Please Try again later',
-                    textAlign: TextAlign.center,),
-                )
-            );
-          }
-        }
-    );
-  }
-
   Function onClick(String path) {
     return () {
       this.setState(() {
