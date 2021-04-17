@@ -58,7 +58,14 @@ public class UserProvider implements IUserProvider {
 
     @Override
     public IUser getUser(UserDTO userDTO) {
-        return _users.get(userDTO.getUid());
+        User user = _users.get(userDTO.getUid());
+        if(user == null) {
+            user = _dao.find(userDTO.getUid());
+            if(user != null) {
+                _users.putIfAbsent(user.getUid(), user);
+            }
+        }
+        return user;
     }
 
     @Override

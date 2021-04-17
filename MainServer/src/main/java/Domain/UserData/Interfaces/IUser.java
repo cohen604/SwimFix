@@ -13,7 +13,13 @@ public interface IUser {
 
     boolean isLogged();
 
+    boolean isSwimmer();
+
     boolean isResearcher();
+
+    boolean isCoach();
+
+    boolean isAdmin();
 
     boolean login();
 
@@ -30,5 +36,4 @@ public interface IUser {
     String getReportsPath();
 
     Collection<IFeedbackVideo> getFeedbacks();
-
 }

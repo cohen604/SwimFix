@@ -6,12 +6,9 @@ class IconCardButton extends StatefulWidget {
   String title;
   String description;
   Function onClick;
+  IconData icon;
 
-  IconCardButton(String title, String description, Function onClick) {
-    this.title = title;
-    this.description = description;
-    this.onClick = onClick;
-  }
+  IconCardButton(this.title, this.description, this.onClick, this.icon);
 
   @override
   _IconCardButtonState createState() => _IconCardButtonState();
@@ -21,7 +18,11 @@ class _IconCardButtonState extends State<IconCardButton> {
 
   Widget buildTop(BuildContext context) {
     return ListTile(
-      leading: FlutterLogo(size:70),
+      leading: Icon(
+        this.widget.icon,
+        color: Colors.blueAccent,
+        size: 75,
+      ),
       title: Text( this.widget.title,
         style: TextStyle(
           fontSize: 22 * MediaQuery.of(context).textScaleFactor,

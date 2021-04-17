@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
 import 'package:chewie/chewie.dart';
-import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:video_player/video_player.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -34,7 +34,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
   File _video;
 
   bool _hasFeedback = false;
-  FeedbackVideoStreamer _feedbackLink;
+  FeedBackLink _feedbackLink;
   VideoPlayerController _controller;
   ChewieController _chewieController;
 
@@ -47,7 +47,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
   }
 
   void onLogout() {
-    _logicManager.logout(this.widget.args.swimmer).then(
+    _logicManager.logout(this.widget.args.user.swimmer).then(
             (value) {
           if(value) {
             this.setState(() {
@@ -149,7 +149,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
           videoBytes,
           videoBytes.length,
           _video.name,
-          this.widget.args.swimmer).then((feedbackLink) {
+          this.widget.args.user.swimmer).then((feedbackLink) {
             if(feedbackLink != null) {
               _feedbackLink = feedbackLink;
               setController().then((bool value) {
@@ -510,7 +510,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            MenuBar(swimmer: this.widget.args.swimmer,),
+            MenuBar(user: this.widget.args.user,),
             Flexible(
                 child: buildBottomSide(context)
             ),

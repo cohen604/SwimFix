@@ -22,7 +22,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
   WebColors _webColors = new WebColors();
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
-      return Text('Welcome ${this.widget.arguments.swimmer.name}',
+      return Text('Welcome ${this.widget.arguments.user.swimmer.name}',
         style: TextStyle(
             fontSize: 32 * MediaQuery.of(context).textScaleFactor,
             color: Colors.black,
@@ -36,7 +36,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     this.setState(() {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/upload',
-          arguments: new UploadScreenArguments(this.widget.arguments.swimmer));
+          arguments: new UploadScreenArguments(this.widget.arguments.user));
       });
     });
   }
@@ -48,15 +48,15 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         scrollDirection: Axis.vertical,
         children: [
           IconCardButton("Upload",
-              "Upload a swimming Video", onClickUpload),
+              "Upload a swimming Video", onClickUpload, Icons.upload_file),
           IconCardButton("History",
-              "View feedback history", null),
+              "View feedback history", null, Icons.history),
           IconCardButton("Open a team",
-              'Create a new team and become a Coach', null),
+              'Create a new team and become a Coach', null, Icons.group_add),
           IconCardButton("Team invitations",
-              'View your swimming team invitations', null),
+              'View your swimming team invitations', null, Icons.insert_invitation),
           IconCardButton("My Teams",
-              'View your teams, you are part of', null), // buildMainButtons(context, 6),
+              'View your teams, you are part of', null, Icons.group), // buildMainButtons(context, 6),
         ],
       ),
     );
@@ -71,7 +71,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         child: Column(
           children: [
             MenuBar(
-              swimmer: this.widget.arguments.swimmer,
+              user: this.widget.arguments.user,
             ),
             Flexible(
                 child: buildBottomSide(context)
