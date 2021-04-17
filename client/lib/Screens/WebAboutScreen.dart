@@ -8,19 +8,38 @@ import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
+import 'Arguments/AboutScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'PopUps/MessagePopUp.dart';
 
 class WebAboutScreen extends StatefulWidget {
+
+  AboutScreenArguments args;
+
+  WebAboutScreen(this.args);
+
   @override
-  _WebAboutScreenState createState() => _WebAboutScreenState();
+  _WebAboutScreenState createState() => _WebAboutScreenState(
+    args.videoOn, args.loginOn, args.aboutOn);
+
 }
 
 class _WebAboutScreenState extends State<WebAboutScreen> {
 
-  WebColors _webColors = new WebColors();
-  bool _signUpClicked = false;
+  WebColors _webColors;
+  ScreenState state;
+
+  _WebAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
+    _webColors = new WebColors();
+    if(videoOn && !loginOn) {
+      state = ScreenState.Video;
+    }
+    else {
+      state = ScreenState.Login;
+    }
+  }
 
   @override
   void initState() {
@@ -37,23 +56,32 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     // _animationController.dispose();
   }
 
-
   void onSignUp() {
     this.setState(() {
-      _signUpClicked = true;
+      state = ScreenState.Login;
     });
   }
 
   void onLogo() {
     this.setState(() {
-      _signUpClicked = false;
+      state = ScreenState.Video;
     });
   }
 
   void onLogin() {
     this.setState(() {
-      _signUpClicked = true;
+      state = ScreenState.Login;
     });
+  }
+
+  Function onDownload(BuildContext context) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/downloads',);
+        });
+      });
+    };
   }
 
   void signInWithGoogle() async {
@@ -153,7 +181,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: AnimatedCrossFade(
-        crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
+        crossFadeState: state == ScreenState.Login ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
         duration: Duration(seconds: 1),
         firstChild: buildRightLoginArea1(context),
         secondChild: buildRightLoginArea2(context),
@@ -162,7 +190,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   }
 
   Widget buildSignUpButton(BuildContext context) {
-    if(_signUpClicked) {
+    if(state == ScreenState.Login) {
       return Container();
     }
     return Container(
@@ -323,6 +351,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
             AboutScreenMenuBar(
               onLogo: onLogo,
               onLogin: onSignUp,
+              onDownload: onDownload(context),
             ),
             Expanded(
                 child: buildAreas(context)
@@ -333,4 +362,10 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     );
   }
 
+}
+
+enum ScreenState {
+  Video,
+  Login,
+  About,
 }

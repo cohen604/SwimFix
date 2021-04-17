@@ -1,4 +1,5 @@
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
@@ -30,7 +31,11 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) {
-          return _screenHolder.getAboutScreen();
+          AboutScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getAboutScreen(args);
+        },
+        '/downloads': (context) {
+          return _screenHolder.getDownloadsScreen();
         },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
