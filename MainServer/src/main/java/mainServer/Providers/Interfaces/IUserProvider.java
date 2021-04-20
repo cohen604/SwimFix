@@ -4,6 +4,7 @@ import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
+import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ public interface IUserProvider {
 
     boolean reload();
 
-    Map<String, Map<String, FeedbackVideoStreamer>> filter_history
-            (List<FeedbackVideoStreamer> history);
+    List<String> filterHistoryByDay(List<FeedbackVideoStreamer> history);
+
+    Map<String, FeedbackVideoStreamer> filterHistoryByPool
+            (List<FeedbackVideoStreamer> history, String day);
 
 }

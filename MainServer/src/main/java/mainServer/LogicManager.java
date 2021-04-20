@@ -7,6 +7,7 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import Storage.User.UserDao;
+import javafx.util.Pair;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
 import mainServer.Providers.Interfaces.IReportProvider;
 import mainServer.Providers.Interfaces.IStatisticProvider;
@@ -189,7 +190,36 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
-    public ActionResult<Map<String, Map<String, FeedbackVideoStreamer>>> getSwimmerHistory(UserDTO userDto) {
+    /***
+     * get the days the swimmer swim
+     * @param userDto - userdto
+     * @return - list of days
+     */
+    public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
+        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
+        List<String> history_filter = _userProvider.filterHistoryByDay(history);
+        return new ActionResult<>(Response.SUCCESS, history_filter);
+    }
+
+
+    /**
+     * get the hours of a swimmer by day
+     * @param userDto - userdto
+     * @return - map of <String: hour of the swim, FeedbackVideoStreamer>
+     */
+    public ActionResult<Map<String, FeedbackVideoStreamer>>
+            getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
+        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
+        Map<String, FeedbackVideoStreamer> history_filter = _userProvider.filterHistoryByPool(history, day);
+        return new ActionResult<>(Response.SUCCESS, history_filter);
+    }
+
+    /**
+     * get a list of FeedbackVideoStreamer
+     * @param userDto - userdto
+     * @return - list of FeedbackVideoStreamer
+     */
+    private List<FeedbackVideoStreamer> getFeedbackVideoStreamerList(UserDTO userDto) {
         List<FeedbackVideoStreamer> history = new LinkedList<>();
         IUser user = _userProvider.getUser(userDto);
         Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
@@ -198,9 +228,7 @@ public class LogicManager {
             FeedbackVideoStreamer feedbackVideoStreamer = new FeedbackVideoStreamer(path);
             history.add(feedbackVideoStreamer);
         }
-        Map<String, Map<String, FeedbackVideoStreamer>> history_filter = _userProvider.filter_history(history);
-        System.out.println(history_filter.keySet());
-        return new ActionResult<>(Response.SUCCESS, history_filter);
+        return history;
     }
 }
 

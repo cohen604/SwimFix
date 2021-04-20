@@ -1,0 +1,103 @@
+import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Services/LogicManager.dart';
+
+import 'Arguments/SwimmerScreenArguments.dart';
+import 'Arguments/UploadScreenArguments.dart';
+import 'package:client/Components/IconCardButton.dart';
+import 'package:client/Components/MenuBar.dart';
+import 'package:client/Screens/WebColors.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+
+
+class WebSwimmerHistoryDayScreen extends StatefulWidget {
+
+  final SwimmerHistoryPoolsArguments arguments;
+  WebSwimmerHistoryDayScreen({Key key, this.arguments}) : super(key: key);
+
+  @override
+  _WebSwimmerHistoryScreenState createState() => _WebSwimmerHistoryScreenState();
+}
+
+
+class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
+
+  LogicManager _logicManager = LogicManager.getInstance();
+
+  Future<Map<String, dynamic>> getSwimmerHistoryMap(String day) async {
+    Swimmer swimmer = this.widget.arguments.swimmer;
+    Map pools = await _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day);
+    return pools;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return SafeArea(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+            children: [
+              MenuBar(
+                swimmer: this.widget.arguments.swimmer,
+              ),
+              new Expanded
+                (child: FutureBuilder(
+                future: getSwimmerHistoryMap(this.widget.arguments.date),
+                builder: (context, swimmerSnap) {
+                  if (swimmerSnap.connectionState == ConnectionState.none &&
+                      swimmerSnap.hasData == null) {
+                    return Container();
+                  }
+                  else {
+                    // Map<String, dynamic> pools = Map.from(swimmerSnap.data);
+                    // print(pools);
+                    return ListView.builder(
+                      itemCount: swimmerSnap.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String hour = swimmerSnap.data.keys.elementAt(index);
+                        return new PoolHourTile(hour: hour,);
+                      },
+                    );
+                  }
+                },
+              ),
+              ),
+            ]
+        ),
+      ),
+    );
+  }
+
+}
+
+
+class PoolHourTile extends StatelessWidget {
+
+  final String hour;
+  PoolHourTile({ this.hour });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Card(
+        margin: EdgeInsets.fromLTRB(110.0, 6.0, 110.0, 0.0),
+        child: ListTile(
+          leading: Icon(
+              Icons.pool
+          ),
+          title: Text(hour),
+          tileColor: Colors.blueGrey[50],
+          subtitle: Text('See the pools from $hour'),
+          onTap: () {
+          },
+        ),
+      ),
+    );
+  }
+}

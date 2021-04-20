@@ -20,6 +20,7 @@ import DomainLogic.Completions.SkeletonsCompletionBefore;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 import DomainLogic.Interpolations.*;
+import javafx.util.Pair;
 import mainServer.Providers.*;
 import Domain.Drawing.FactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
@@ -94,7 +95,12 @@ public class SwimFixAPI {
       return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
    }
 
-   public ActionResult<Map<String, Map<String, FeedbackVideoStreamer>>> getSwimmerHistory(UserDTO userDto) {
-      return logicManager.getSwimmerHistory(userDto);
+   public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
+      return logicManager.getSwimmerHistoryDays(userDto);
+   }
+
+   public ActionResult<Map<String, FeedbackVideoStreamer>>
+            getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
+      return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
    }
 }

@@ -8,6 +8,7 @@ import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Services/MlHandler.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
@@ -195,18 +196,38 @@ class LogicManager {
       path, uid, email, name);
   }
 
-  Future<Map> getSwimmerHistory(Swimmer swimmer) async {
+  /// get the days a swimmer swim
+  Future<List<String>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
-      String path = "/swimmer/history";
+      String path = "/swimmer/historyDays";
       ServerResponse response = await this.connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
-      Map map = response.value as Map;
-      return map;
-      // return FeedbackVideoStreamer.factory(map);
+      List<dynamic> daysMap = response.value as List<dynamic>;
+      List<String> days = daysMap.map((el) => el.toString()).toList();
+      return days;
     }
     catch(e) {
-      print('error in post video for stream ${e.toString()}');
+      print('error in get swimmer history days ${e.toString()}');
+    }
+    return null;
+  }
+
+
+  /// get the days a swimmer swim
+  Future<Map> getSwimmerHistoryPoolsByDay(Swimmer swimmer, String day) async {
+    try {
+      String path = "/swimmer/historyByDay";
+      Map swimmerMap = swimmer.toJson();
+      // swimmerMap['day'] = day;
+      ServerResponse response = await this.connectionHandler
+          .postMessage(path, swimmerMap);
+      //TODO check if response is valid
+      Map map = response.value as Map;
+      return map;
+    }
+    catch(e) {
+      print('error in get swimmer history pools by day ${e.toString()}');
     }
     return null;
   }
