@@ -46,10 +46,6 @@ class ScreenHolder {
   }
 
   Widget getResearcherScreen(ResearcherScreenArguments args) {
-    // args = new ResearcherScreenArguments(
-    //     new WebUser(
-    //         new Swimmer('uid', 'email', 'name'),
-    //         new UserPermissions(true, true, true, true)));
     return new WebResearcherScreen(args);
   }
 
@@ -58,10 +54,10 @@ class ScreenHolder {
   }
 
   Widget getMultiReportScreen(MultiReportScreenArguments args) {
-    args = new MultiReportScreenArguments(
-        new WebUser(
-            new Swimmer('uid', 'email', 'name'),
-            new UserPermissions(true, true, true, true)));
+    // args = new MultiReportScreenArguments(
+    //     new WebUser(
+    //         new Swimmer('uid', 'email', 'name'),
+    //         new UserPermissions(true, true, true, true)));
     return new WebMultiReportsScreen(args);
   }
 

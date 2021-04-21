@@ -617,10 +617,8 @@ class _WebReportScreenState extends State<WebReportScreen> {
   void onFileClick(String fileLink) {
     Swimmer swimmer = this.widget.args.user.swimmer;
     _logicManager.getFileForDownload(
-        swimmer.uid,
-        swimmer.email,
-        swimmer.name,
-      fileLink,
+      swimmer,
+      fileLink
     ).then((FileDownloaded fileDownloaded) {
           String content = base64Encode(fileDownloaded.bytes);
           AnchorElement(

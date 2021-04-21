@@ -1,12 +1,6 @@
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
-import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
-import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
-import 'package:client/Services/LogicManager.dart';
 import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class AboutScreenMenuBar extends StatefulWidget {
 

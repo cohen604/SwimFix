@@ -141,6 +141,11 @@ public class User implements IUser {
     }
 
     @Override
+    public String getDownloadsPath() {
+        return _pathManager.getDownloadsPath();
+    }
+
+    @Override
     public Collection<IFeedbackVideo> getFeedbacks() {
         return _swimmer.getFeedbacks();
     }

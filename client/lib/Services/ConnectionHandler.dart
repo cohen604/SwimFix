@@ -134,16 +134,16 @@ class ConnectionHandler {
     return getUrl() + "/stream";
   }
 
-  Future<FileDownloaded> downloadFile(String path, String uid, String email, String name) async {
+  Future<FileDownloaded> downloadFile(String path, Map<String, dynamic> map) async {
     // print('get file from $path');
     String url = getUrl() + path;
-    var request = new http.MultipartRequest('GET', Uri.parse(url));
-    print('request $request');
     Map<String,String> headers = {
       'Accept' : '*',
       'Access-Control-Allow-Origin': "*",
+      'Content-type' : 'application/json',
     };
-    http.Response response = await http.get(Uri.parse(url), headers: headers);
+    http.Response response = await http.post(Uri.parse(url),
+        body: json.encode(map), headers: headers);
     if (response.statusCode == 200) {
       String headerValue = response.headers['content-type'];
       int start = headerValue.indexOf("/");

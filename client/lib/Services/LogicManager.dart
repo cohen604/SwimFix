@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
+import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
@@ -134,10 +135,22 @@ class LogicManager {
     return null;
   }
 
-  Future<FileDownloaded> getFileForDownload(String uid, String email, String name, String fileLink) async {
+  Future<FileDownloaded> getFileForDownload(
+      Swimmer swimmer,
+      String fileLink) async {
     String path = "/researcher/$fileLink";
-    return await this.connectionHandler.downloadFile(
-      path, uid, email, name);
+    Map<String, dynamic> map = swimmer.toJson();
+    return await this.connectionHandler.downloadFile(path, map);
+  }
+
+  Future<FileDownloaded> getZipFileForDownload(
+      Swimmer swimmer,
+      List<String> files) async {
+    String path = "/researcher/files/zip";
+    FilesDownloadRequest request = new FilesDownloadRequest(swimmer, files);
+    Map<String, dynamic> map = request.toJson();
+    print(map);
+    return await this.connectionHandler.downloadFile(path, map);
   }
 
   Future<bool> sendInvitationEmail(Swimmer swimmer, String email) async {

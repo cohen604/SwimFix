@@ -1,4 +1,5 @@
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 
 import 'Arguments/ReportScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
@@ -111,8 +112,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget buildResearcher(BuildContext context) {
     if(this.widget.args.user.permissions.isResearcher) {
       return buildMainButton(context, 1, "Researcher",
-          onClick('/researcher/report',
-              arguments: new ReportScreenArguments(this.widget.args.user)),
+          onClick('/researcher',
+              arguments: new ResearcherScreenArguments(this.widget.args.user)),
           'images/researcher_image.png');
     }
     return Container();
