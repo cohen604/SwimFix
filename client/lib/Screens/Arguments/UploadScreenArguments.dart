@@ -1,10 +1,6 @@
-import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 
 class UploadScreenArguments {
-  Swimmer swimmer;
-
-  UploadScreenArguments(Swimmer swimmer) {
-    this.swimmer = swimmer;
-  }
-
+  WebUser user;
+  UploadScreenArguments(this.user);
 }

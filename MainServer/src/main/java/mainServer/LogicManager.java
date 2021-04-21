@@ -6,12 +6,7 @@ import Domain.Streaming.*;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
-import Storage.User.UserDao;
-import javafx.util.Pair;
-import mainServer.Providers.Interfaces.IFeedbackProvider;
-import mainServer.Providers.Interfaces.IReportProvider;
-import mainServer.Providers.Interfaces.IStatisticProvider;
-import mainServer.Providers.Interfaces.IUserProvider;
+import mainServer.Providers.Interfaces.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
@@ -30,17 +25,20 @@ public class LogicManager {
     private ISkeletonsLoader _skeletonLoader;
     private IStatisticProvider _statisticProvider;
     private IReportProvider _reportProvider;
+    private IEmailSenderProvider _emailSenderProvider;
 
     public LogicManager(IUserProvider userProvider,
                         IFeedbackProvider streamProvider,
                         ISkeletonsLoader skeletonLoader,
                         IStatisticProvider statisticProvider,
-                        IReportProvider reportProvider) {
+                        IReportProvider reportProvider,
+                        IEmailSenderProvider emailSenderProvider) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
         _skeletonLoader = skeletonLoader;
         _statisticProvider = statisticProvider;
         _reportProvider = reportProvider;
+        _emailSenderProvider = emailSenderProvider;
         createClientsDir();
         _userProvider.reload();
     }
@@ -95,6 +93,30 @@ public class LogicManager {
             return new ActionResult<>(Response.SUCCESS, true);
         }
         return new ActionResult<>(Response.FAIL,null);
+    }
+
+    /***
+     * The function return the users permissions
+     * @param userDTO - the user
+     * @return the user permissions if the user registered
+     */
+    public ActionResult<UserPermissionsDTO> getPermissions(UserDTO userDTO) {
+        try {
+            IUser user = _userProvider.getUser(userDTO);
+            if (user != null && user.isLogged()) {
+                UserPermissionsDTO permissionsDTO = new UserPermissionsDTO(
+                    user.isSwimmer(),
+                    user.isCoach(),
+                    user.isAdmin(),
+                    user.isResearcher()
+                );
+                return new ActionResult<>(Response.SUCCESS, permissionsDTO);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
     }
 
     /**

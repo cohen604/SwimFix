@@ -4,7 +4,7 @@ import 'package:client_application/Components/AvatarChild.dart';
 import 'package:client_application/Components/AvatarTitle.dart';
 import 'package:client_application/Components/MediaPlayer.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
@@ -30,7 +30,7 @@ class _UploadScreenState extends State<UploadScreen> {
   ColorsHolder _colorsHolder = new ColorsHolder();
   UploadState _state = UploadState.Select;
   PlatformFile _video;
-  FeedbackVideoStreamer _streamer;
+  FeedbackLink _streamer;
 
   void onUpload() async{
     FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -68,8 +68,8 @@ class _UploadScreenState extends State<UploadScreen> {
     // print(bytes);
     // print(path);
     Swimmer swimmer = this.widget.arguments.appUser.swimmer;
-    logicManager.postVideoForStreaming(bytes, length, path, swimmer)
-      .then((FeedbackVideoStreamer streamer) {
+    logicManager.getFeedback(swimmer, bytes, length, path)
+      .then((FeedbackLink streamer) {
         if(streamer!=null) {
           setState(() {
             _state = UploadState.Feedback;

@@ -25,4 +25,19 @@ class MlHandler {
     return false;
   }
 
+  double getBlueRate(CameraImage img) {
+    Uint8List yChannel = img.planes[0].bytes; // y'
+    Uint8List blueChannel = img.planes[1].bytes; // u
+    Uint8List redChannel = img.planes[2].bytes; // v
+    int thresholdValidBlue = 90; // 0 - 255
+    int validBlueCounter = 0;
+    double percentageBlue = 0.4;
+    for(int i=0; i<blueChannel.length; i++) {
+      if(blueChannel[i] > thresholdValidBlue) {
+        validBlueCounter ++;
+      }
+    }
+    return validBlueCounter / blueChannel.length;
+  }
+
 }

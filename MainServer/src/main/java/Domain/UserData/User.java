@@ -30,7 +30,9 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
+        _coach = new Coach();
         _researcher = new Researcher();
+        _admin = new Admin();   
         _pathManager = new PathManager(email, true);
     }
 
@@ -94,8 +96,23 @@ public class User implements IUser {
     }
 
     @Override
+    public boolean isSwimmer() {
+        return _swimmer != null;
+    }
+
+    @Override
     public boolean isResearcher() {
         return _researcher != null;
+    }
+
+    @Override
+    public boolean isCoach() {
+        return _coach != null;
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return _admin != null;
     }
 
     @Override

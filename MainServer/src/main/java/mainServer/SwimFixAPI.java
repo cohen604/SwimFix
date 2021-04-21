@@ -20,7 +20,6 @@ import DomainLogic.Completions.SkeletonsCompletionBefore;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 import DomainLogic.Interpolations.*;
-import javafx.util.Pair;
 import mainServer.Providers.*;
 import Domain.Drawing.FactoryDraw;
 import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
@@ -66,12 +65,15 @@ public class SwimFixAPI {
       IPdfDrawer graphDrawer = new PdfDrawer();
       IReportProvider reportProvider = new ReportProvider(graphDrawer);
 
+      IEmailSenderProvider emailSenderProvider = new EmailSenderProvider();
+
       this.logicManager = new LogicManager(
               userProvider,
               feedbackProvider,
               skeletonsLoaderLogic,
               statisticProvider,
-              reportProvider);
+              reportProvider,
+              emailSenderProvider );
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
@@ -80,7 +82,12 @@ public class SwimFixAPI {
 
 
    public ActionResult<Boolean> logout(UserDTO user) {
-      return  this.logicManager.logout(user);
+      return this.logicManager.logout(user);
+   }
+
+
+   public ActionResult<UserPermissionsDTO> getPermissions(UserDTO user) {
+      return this.logicManager.getPermissions(user);
    }
 
    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(UserDTO userDTO, ConvertedVideoDTO convertedVideoDTO) {
@@ -94,6 +101,11 @@ public class SwimFixAPI {
    public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
       return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
    }
+
+    public ActionResult<Boolean> invite(UserDTO userDTO, String to) {
+      return logicManager.invite(userDTO, to);
+   }
+
 
    public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
       return logicManager.getSwimmerHistoryDays(userDto);

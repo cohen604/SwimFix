@@ -2,6 +2,7 @@ package mainServer.Controllers;
 
 import DTO.ActionResult;
 import DTO.UserDTO;
+import DTO.UserPermissionsDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,4 +33,12 @@ public class UserController {
         return actionResult.toJson();
     }
 
+    @PostMapping(value = "/permissions")
+    @CrossOrigin(origins = "*")
+    public String userPermissions(@RequestBody UserDTO user) {
+        System.out.println("Received user permissions request from "+user.getEmail());
+        ActionResult<UserPermissionsDTO> actionResult = swimFixAPI.getPermissions(user);
+        System.out.println("Send user permissions response");
+        return actionResult.toJson();
+    }
 }

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "swimfix21",
+    "site": "swimanalytics",
     "public": "build\\web",
     "ignore": [
       "firebase.json",

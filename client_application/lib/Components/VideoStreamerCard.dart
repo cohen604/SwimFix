@@ -1,11 +1,11 @@
-import 'package:client_application/Domain/Video/FeedBackVideoStreamer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoStreamerCard extends StatelessWidget {
 
-  final FeedbackVideoStreamer link;
+  final FeedbackLink link;
   final int number;
   VideoStreamerCard({this.link, this.number}): super();
 

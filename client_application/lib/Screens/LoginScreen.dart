@@ -34,11 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
     Swimmer swimmer = new Swimmer(uid, email, name);
     LogicManager.getInstance().login(swimmer).then((logged) {
       if (logged) {
-        this.setState(() {
-          AppUser appUser = new AppUser(swimmer, user.photoURL);
-          Navigator.pushNamed(context, "/welcome",
-              arguments: new WelcomeScreenArguments(appUser));
-        });
+        AppUser appUser = new AppUser(swimmer, user.photoURL);
+        Navigator.pushNamed(context, "/welcome",
+            arguments: new WelcomeScreenArguments(appUser));
       }
       else {
         showDialog(
@@ -111,23 +109,98 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void onPressedDebug(BuildContext context) {
+    TextEditingController _textIpController = TextEditingController();
+    TextEditingController _textPortController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Debug mode'),
+          actions: [
+            TextButton(
+                onPressed: ()=>Navigator.pop(context),
+                child: Text("Cancle")
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  LogicManager.getInstance().setIPConnection(
+                    _textIpController.text,
+                    _textPortController.text,
+                  );
+                },
+                child: Text("Update")
+            ),
+          ],
+          content: Container(
+            child: Wrap(
+              direction: Axis.horizontal,
+              children: [
+                Text('Insert your server ip'),
+                TextField(
+                  controller: _textIpController,
+                  decoration: InputDecoration(hintText: "255.255.255.255"),
+                ),
+                Text('Insert your server port'),
+                TextField(
+                  controller: _textPortController,
+                  decoration: InputDecoration(hintText: "8080"),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+  }
+
+  Widget buildDebugMode(BuildContext context) {
+    Function onPressed = () {
+      onPressedDebug(context);
+    };
+    return Container(
+      // width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(5.0),
+      alignment: Alignment.topRight,
+      child: CircleAvatar(
+        backgroundColor: Colors.lightGreenAccent.withAlpha(220),
+        radius: 30,
+        child: TextButton(
+          onPressed: onPressed,
+          child: Text('Debug',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 15,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/about_screen_background.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(16.0),
-            child: buildLogin(context),
+          child: Stack(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - 15,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/about_screen_background.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(16.0),
+                child: buildLogin(context),
+                ),
+                buildDebugMode(context),
+              ]
             ),
           ),
         ),

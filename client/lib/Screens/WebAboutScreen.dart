@@ -1,6 +1,7 @@
 import 'package:client/Components/AboutScreenMenuBar.dart';
 import 'package:client/Components/SimpleVideoPlayer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/WebColors.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -62,11 +63,27 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
     String email = user.email;
     String uid = user.uid;
     Swimmer swimmer = new Swimmer(uid, email, name);
-    LogicManager.getInstance().login(swimmer).then((logged) {
+    LogicManager logicManager = LogicManager.getInstance();
+    logicManager.login(swimmer).then((logged) {
       if (logged) {
-        this.setState(() {
-          WelcomeScreenArguments args = new WelcomeScreenArguments(swimmer);
-          Navigator.pushNamed(context, "/welcome",  arguments: args);
+        logicManager.getPermissions(swimmer).then((permissions) {
+          if(permissions != null) {
+            this.setState(() {
+              WelcomeScreenArguments args = new WelcomeScreenArguments(
+                  new WebUser(swimmer, permissions));
+              Navigator.pushNamed(context, "/welcome",  arguments: args);
+            });
+          }
+          else {
+
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return new MessagePopUp('User don\'t have permissions.\n'
+                    'For more information please contact help@swimanalytics.com');
+              },
+            );
+          }
         });
       }
       else {
@@ -99,7 +116,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
   Widget buildLeftLoginArea(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      // width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.only(left: 30),
       child: Column(
@@ -132,11 +149,15 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
 
   Widget buildRightLoginArea(BuildContext context) {
-    return AnimatedCrossFade(
-      crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
-      duration: Duration(seconds: 1),
-      firstChild: buildRightLoginArea1(context),
-      secondChild: buildRightLoginArea2(context),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: AnimatedCrossFade(
+        crossFadeState: _signUpClicked ? CrossFadeState.showSecond:  CrossFadeState.showFirst,
+        duration: Duration(seconds: 1),
+        firstChild: buildRightLoginArea1(context),
+        secondChild: buildRightLoginArea2(context),
+      ),
     );
   }
 
@@ -186,21 +207,27 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   }
 
   Widget buildLoginWithGoogle(context) {
-    return Card(
-      color: _webColors.getBackgroundForI7(),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20.0),
-        splashColor: Theme.of(context).splashColor,
-        onTap: signInWithGoogle,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListTile(
-            title: buildText(context, "Sign In with Google", 21,
-                color: Colors.black),
-            leading: Image(image: AssetImage("assets/google_logo.png")),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Card(
+          color: _webColors.getBackgroundForI7(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20.0),
+            splashColor: Theme.of(context).splashColor,
+            onTap: signInWithGoogle,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListTile(
+                title: buildText(context, "Sign In with Google", 21,
+                    color: Colors.black),
+                leading: Image(image: AssetImage("assets/google_logo.png")),
+              ),
+            ),
           ),
         ),
       ),
