@@ -53,6 +53,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
             ),
             new Expanded
               (child: FutureBuilder(
+              initialData: [],
               future: this.getSwimmerDays,
               builder: (context, swimmerSnap) {
                 if (swimmerSnap == null || swimmerSnap.connectionState == ConnectionState.none ||

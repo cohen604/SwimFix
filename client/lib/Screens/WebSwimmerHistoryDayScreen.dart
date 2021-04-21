@@ -47,6 +47,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
               ),
               new Expanded
                 (child: FutureBuilder(
+                initialData: [],
                 future: getSwimmerHistoryMap(this.widget.arguments.date),
                 builder: (context, swimmerSnap) {
                   if (swimmerSnap.connectionState == ConnectionState.none &&
@@ -54,8 +55,6 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                     return Container();
                   }
                   else {
-                    // Map<String, dynamic> pools = Map.from(swimmerSnap.data);
-                    // print(pools);
                     return ListView.builder(
                       itemCount: swimmerSnap.data.length,
                       itemBuilder: (BuildContext context, int index) {

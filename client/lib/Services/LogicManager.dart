@@ -199,7 +199,7 @@ class LogicManager {
   /// get the days a swimmer swim
   Future<List<String>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
-      String path = "/swimmer/historyDays";
+      String path = "/swimmer/history";
       ServerResponse response = await this.connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
@@ -217,11 +217,10 @@ class LogicManager {
   /// get the days a swimmer swim
   Future<Map> getSwimmerHistoryPoolsByDay(Swimmer swimmer, String day) async {
     try {
-      String path = "/swimmer/historyByDay";
+      String path = "/swimmer/history";
       Map swimmerMap = swimmer.toJson();
-      // swimmerMap['day'] = day;
       ServerResponse response = await this.connectionHandler
-          .postMessage(path, swimmerMap);
+          .postMessageWithParams(path, [day], swimmerMap);
       //TODO check if response is valid
       Map map = response.value as Map;
       return map;

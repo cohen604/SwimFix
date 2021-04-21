@@ -49,7 +49,7 @@ public class SwimmerController {
      * @param user - the user that swim
      * @return - the days
      */
-    @PostMapping("/historyDays")
+    @PostMapping("/history")
     @CrossOrigin(origins = "*")
     public String viewHistoryDays(@RequestBody UserDTO user) {
         try {
@@ -64,16 +64,15 @@ public class SwimmerController {
     }
 
 
-    @PostMapping("/historyByDay")
+    @PostMapping("/history/{day}")
     @CrossOrigin(origins = "*")
-    public String viewHistoryByDay(@RequestBody UserDTO user
-//                                   ,@RequestParam String day
-    ) {
+    public String viewHistoryByDay(@PathVariable String day,
+                                   @RequestBody UserDTO user) {
         try {
             System.out.println("request view history pools by day");
             UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
             ActionResult<Map<String, FeedbackVideoStreamer>> actionResult =
-                    swimFixAPI.getSwimmerHistoryPoolsBy(userDTO, "2021-04-09");
+                    swimFixAPI.getSwimmerHistoryPoolsBy(userDTO, day);
             return actionResult.toJson();
         } catch (Exception e) {
             e.printStackTrace();
