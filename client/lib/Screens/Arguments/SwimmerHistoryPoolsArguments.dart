@@ -1,9 +1,9 @@
-import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 
 class SwimmerHistoryPoolsArguments {
 
-  Swimmer swimmer;
+  WebUser webUser;
   String date;
-  SwimmerHistoryPoolsArguments(this.swimmer, this.date);
+  SwimmerHistoryPoolsArguments(this.webUser, this.date);
 
 }

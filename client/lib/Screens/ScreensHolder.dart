@@ -1,8 +1,8 @@
 import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/WebAboutScreen.dart';
 import 'package:client/Screens/WebCoachScreen.dart';
@@ -51,7 +51,9 @@ class ScreenHolder {
       String uid = "L0kjX9wZlsXJctETI9AzRfoej2s2";
       String email = "nivshir@post.bgu.ac.il";
       String name = "Niv Shirazi";
-      args = new SwimmerScreenArguments(new Swimmer(uid, email, name));
+      args = new SwimmerScreenArguments(new WebUser(
+          new Swimmer(uid, email, name),
+          new UserPermissions(true, false, false, false)));
     }
     return new WebSwimmerHistoryScreen(arguments: args,);
   }
@@ -63,7 +65,9 @@ class ScreenHolder {
       String email = "nivshir@post.bgu.ac.il";
       String name = "Niv Shirazi";
       String date = '2021-04-09';
-      args = new SwimmerHistoryPoolsArguments(new Swimmer(uid, email, name), date);
+      args = new SwimmerHistoryPoolsArguments(new WebUser(
+          new Swimmer(uid, email, name),
+          new UserPermissions(true, false, false, false)), date);
     }
     return new WebSwimmerHistoryDayScreen(arguments: args,);
   }

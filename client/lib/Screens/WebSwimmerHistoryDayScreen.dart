@@ -1,13 +1,7 @@
-import 'package:client/Domain/Feedback/FeedBackVideoStreamer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-
-import 'Arguments/SwimmerScreenArguments.dart';
-import 'Arguments/UploadScreenArguments.dart';
-import 'package:client/Components/IconCardButton.dart';
 import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +22,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   LogicManager _logicManager = LogicManager.getInstance();
 
   Future<Map<String, dynamic>> getSwimmerHistoryMap(String day) async {
-    Swimmer swimmer = this.widget.arguments.swimmer;
+    Swimmer swimmer = this.widget.arguments.webUser.swimmer;
     Map pools = await _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day);
     return pools;
   }
@@ -43,7 +37,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
         child: Column(
             children: [
               MenuBar(
-                swimmer: this.widget.arguments.swimmer,
+                user: this.widget.arguments.webUser,
               ),
               new Expanded
                 (child: FutureBuilder(

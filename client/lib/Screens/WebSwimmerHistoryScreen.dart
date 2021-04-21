@@ -1,12 +1,8 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-
 import 'Arguments/SwimmerScreenArguments.dart';
-import 'Arguments/UploadScreenArguments.dart';
-import 'package:client/Components/IconCardButton.dart';
 import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +24,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
   Future<List<String>> getSwimmerDays;
 
   Future<List<String>> getSwimmerHistoryMap() async {
-    Swimmer swimmer = this.widget.arguments.swimmer;
+    Swimmer swimmer = this.widget.arguments.user.swimmer;
     List<String> days = await _logicManager.getSwimmerHistoryDays(swimmer);
     return days;
   }
@@ -49,7 +45,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
         child: Column(
           children: [
             MenuBar(
-              swimmer: this.widget.arguments.swimmer,
+              user: this.widget.arguments.user,
             ),
             new Expanded
               (child: FutureBuilder(
@@ -104,7 +100,7 @@ class PoolDateTile extends StatelessWidget {
           subtitle: Text('See the pools from $date'),
           onTap: () {
             Navigator.pushNamed(context, '/historyDay',
-                arguments: new SwimmerHistoryPoolsArguments(this.arguments.swimmer, date));
+                arguments: new SwimmerHistoryPoolsArguments(this.arguments.user, date));
           },
         ),
       ),

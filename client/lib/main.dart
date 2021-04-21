@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         '/coach': (context) {
           CoachScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getCoachScreen(args);
-        }
+        },
         '/history': (context) {
           SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryScreen(args);
