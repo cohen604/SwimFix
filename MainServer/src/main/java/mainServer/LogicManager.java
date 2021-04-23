@@ -252,5 +252,40 @@ public class LogicManager {
         }
         return history;
     }
+
+    /***
+     * The function send an invitation email
+     * @param userDTO - the user who want to send the email
+     * @param to - the email to send the invitation
+     * @return true if the email send, other wise false
+     */
+    public ActionResult<Boolean> invite(UserDTO userDTO, String to) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if (user != null
+//                && user.isLogged()
+//                && user.isCoach()
+                    && !to.isEmpty()
+                    && to.contains("@")) {
+                if(_emailSenderProvider.sendInvitationEmail(user.getEmail(), to)) {
+                    return new ActionResult<>(Response.SUCCESS, true);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+//    /***
+//     * delete a feedback of a user
+//     * @param userDTO - the user who own the feedback
+//     * @param feedbackID - the id of the feedback to delete
+//     * @return - true if deleted, false if not
+//     */
+//    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
+//        return _userProvider.deleteFeedbackByID(userDTO, feedbackID);
+//    }
 }
 

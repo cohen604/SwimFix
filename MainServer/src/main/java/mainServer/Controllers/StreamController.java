@@ -37,4 +37,18 @@ public class StreamController {
                 .body(videoDTO.getBytes());
     }
 
+    @GetMapping("/{path}")
+    public ResponseEntity streamFile(@PathVariable String path) {
+        System.out.println("Received file request for streaming ");
+        ActionResult<FeedbackVideoDTO> actionResult = swimFixAPI.streamFile(path);
+        //TODO check here if the action result is ok
+        FeedbackVideoDTO videoDTO = actionResult.getValue();
+        System.out.println(videoDTO.getBytes().length);
+        System.out.println("File opened, send file");
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Accept-Ranges","bytes")
+                .contentType(MediaTypeFactory.getMediaType(videoDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(videoDTO.getBytes());
+    }
+
 }

@@ -26,7 +26,6 @@ import DomainLogic.SwimmingErrorDetectors.FactoryErrorDetectors;
 import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import mainServer.Providers.Interfaces.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -111,8 +110,13 @@ public class SwimFixAPI {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
+   // TODO - change to DTO object
    public ActionResult<Map<String, FeedbackVideoStreamer>>
             getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
       return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
    }
+
+//   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {
+//      return logicManager.deleteFeedbackByID(userDTO, feedbackID);
+//   }
 }

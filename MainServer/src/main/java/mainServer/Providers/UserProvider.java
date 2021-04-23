@@ -8,10 +8,8 @@ import Domain.UserData.User;
 import Storage.User.IUserDao;
 import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserProvider implements IUserProvider {
@@ -150,5 +148,22 @@ public class UserProvider implements IUserProvider {
         }
         return hour_map;
     }
+
+    /***
+     * delete a feedback of a user
+     * @param userDTO - the user who own the feedback
+     * @param feedbackID - the id of the feedback to delete
+     * @return - true if deleted, false if not
+     */
+    @Override
+    public boolean deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
+//        IUser user = getUser(userDTO);
+//        if (user == null || !user.isLogged()) {
+//            return false;
+//        }
+//        user.deleteFeedback()
+        return false;
+    }
+
 
 }

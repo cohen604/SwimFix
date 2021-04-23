@@ -26,4 +26,6 @@ public interface IUserProvider {
     Map<String, FeedbackVideoStreamer> filterHistoryByPool
             (List<FeedbackVideoStreamer> history, String day);
 
+    boolean deleteFeedbackByID(UserDTO userDTO, String feedbackID);
+
 }

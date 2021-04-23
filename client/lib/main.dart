@@ -1,6 +1,6 @@
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
@@ -60,6 +60,10 @@ class MyApp extends StatelessWidget {
         '/historyDay': (context) {
           SwimmerHistoryPoolsArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryDayScreen(args);
+        },
+        '/viewFeedback': (context) {
+          ViewFeedBackArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getViewFeedbackScreen(args);
         },
       },
       debugShowCheckedModeBanner: false,

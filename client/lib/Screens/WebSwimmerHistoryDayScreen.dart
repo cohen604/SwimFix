@@ -1,5 +1,8 @@
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Components/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,36 +34,65 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   Widget build(BuildContext context) {
 
     return SafeArea(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-            children: [
-              MenuBar(
-                user: this.widget.arguments.webUser,
-              ),
-              new Expanded
-                (child: FutureBuilder(
-                initialData: [],
-                future: getSwimmerHistoryMap(this.widget.arguments.date),
-                builder: (context, swimmerSnap) {
-                  if (swimmerSnap.connectionState == ConnectionState.none &&
-                      swimmerSnap.hasData == null) {
-                    return Container();
-                  }
-                  else {
-                    return ListView.builder(
-                      itemCount: swimmerSnap.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String hour = swimmerSnap.data.keys.elementAt(index);
-                        return new PoolHourTile(hour: hour,);
+      child: Scaffold(
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+              children: [
+                MenuBar(
+                  user: this.widget.arguments.webUser,
+                ),
+                SizedBox(height: 10.0),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Ink(
+                    decoration: const ShapeDecoration(
+                      color: Colors.lightBlue,
+                      shape: CircleBorder(),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
-                    );
-                  }
-                },
-              ),
-              ),
-            ]
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      iconSize: 20.0,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                new Expanded
+                  (child: FutureBuilder(
+                  initialData: [],
+                  future: getSwimmerHistoryMap(this.widget.arguments.date),
+                  builder: (context, swimmerSnap) {
+                    if (swimmerSnap.connectionState == ConnectionState.none &&
+                        swimmerSnap.hasData == null) {
+                      return Container();
+                    }
+                    else {
+                      return ListView.builder(
+                        itemCount: swimmerSnap.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String hour = swimmerSnap.data.keys.elementAt(index);
+                          FeedBackLink feedbackLink =
+                            new FeedBackLink.fromJson(swimmerSnap.data[hour]);
+                          String path = feedbackLink.getPath();
+                          print('feedback link is ' + path);
+                          return new PoolHourTile
+                          // "\\clients\\nivshir@post.bgu.ac.il\\feedbacks\\2021-04-09-17-57-48.mp4"
+                            (hour: hour, path: path, user: this.widget.arguments.webUser);
+                        },
+                      );
+                    }
+                  },
+                ),
+                ),
+              ]
+          ),
         ),
       ),
     );
@@ -72,7 +104,9 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 class PoolHourTile extends StatelessWidget {
 
   final String hour;
-  PoolHourTile({ this.hour });
+  final String path;
+  final WebUser user;
+  PoolHourTile({ this.hour, this.path, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +122,8 @@ class PoolHourTile extends StatelessWidget {
           tileColor: Colors.blueGrey[50],
           subtitle: Text('See the pools from $hour'),
           onTap: () {
+            Navigator.pushNamed(context, '/viewFeedback',
+                arguments: new ViewFeedBackArguments(user, path));
           },
         ),
       ),
