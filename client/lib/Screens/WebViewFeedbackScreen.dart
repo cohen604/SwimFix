@@ -1,6 +1,5 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Components/MenuBar.dart';
-import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,6 @@ class WebViewFeedbackScreen extends StatefulWidget {
 
 class _WebViewFeedbackScreenState extends State<WebViewFeedbackScreen> {
 
-  FeedBackLink _feedbackLink;
   VideoPlayerController _controller;
   ChewieController _chewieController;
   LogicManager _logicManager;
@@ -41,6 +39,7 @@ class _WebViewFeedbackScreenState extends State<WebViewFeedbackScreen> {
       allowFullScreen: false,
       fullScreenByDefault: false,
       allowMuting: false,
+      playbackSpeeds: [0.1, 0.25, 0.5, 1],
     );
   }
 
