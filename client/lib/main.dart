@@ -1,9 +1,12 @@
 import 'package:client/Screens/WebColors.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'Screens/Arguments/AboutScreenArguments.dart';
+import 'Screens/Arguments/CoachScreenArguments.dart';
+import 'Screens/Arguments/MultiReportScreenArguments.dart';
 import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
+import 'Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
