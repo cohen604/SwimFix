@@ -38,13 +38,34 @@ class ConnectionHandler {
   /// value - the object json to send to the server
   Future<ServerResponse> postMessage (String path, Map<String, dynamic> map) async {
     String url = getUrl() + path;
-    //TODO change this value to json(value)
     Map<String,String> headers = {
       'Content-type' : 'application/json',
       'Accept': 'application/json',
     };
     print('$url json ${json.encode(map)}');
     final response = await http.post(url, body: json.encode(map), headers: headers);
+    if (response.statusCode == 200) {
+      return toServerResponse(response.body);
+    } else {
+      throw Exception('Error: post message send to $path');
+    }
+  }
+
+  /// function that post response from the server in the address [path]
+  /// path - the path to send the post message in the server
+  /// value - the object json to send to the server
+  Future<ServerResponse> postMessageWithParams
+      (String path, List<String> params, Map<String, dynamic> body) async {
+    String url = getUrl() + path;
+    for (String param in params) {
+      url += '/$param';
+    }
+    Map<String,String> headers = {
+      'Content-type' : 'application/json',
+      'Accept': 'application/json',
+    };
+    print('$url json of body ${json.encode(body)}');
+    final response = await http.post(url, body: json.encode(body), headers: headers);
     if (response.statusCode == 200) {
       return toServerResponse(response.body);
     } else {

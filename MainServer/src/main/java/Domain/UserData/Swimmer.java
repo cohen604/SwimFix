@@ -35,4 +35,8 @@ public class Swimmer {
     public Collection<IFeedbackVideo> getFeedbacks() {
         return _feedbacks.values();
     }
+
+    public IFeedbackVideo get(String path) {
+        return _feedbacks.get(path);
+    }
 }

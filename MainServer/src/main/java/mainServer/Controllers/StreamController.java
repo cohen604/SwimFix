@@ -36,5 +36,6 @@ public class StreamController {
                 .contentType(MediaTypeFactory.getMediaType(videoDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .body(videoDTO.getBytes());
     }
+    
 
 }

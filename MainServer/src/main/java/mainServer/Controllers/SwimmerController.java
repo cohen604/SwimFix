@@ -3,6 +3,7 @@ package mainServer.Controllers;
 import DTO.*;
 import Domain.Streaming.IFeedbackVideo;
 import com.google.gson.Gson;
+import javafx.util.Pair;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/swimmer")
@@ -42,20 +44,39 @@ public class SwimmerController {
     }
 
 
-//    @PostMapping("/report")
-//    @CrossOrigin(origins = "*")
-//    public String viewHistory(@RequestPart(name = "uid") String uid,
-//                              @RequestPart(name = "email") String email,
-//                              @RequestPart(name = "name") String name) {
-//        try {
-//            System.out.println("request view history");
-//            UserDTO userDTO = new UserDTO(uid, email, name);
-//            ActionResult<List<IFeedbackVideo>> actionResult = swimFixAPI.getSwimmerHistory(userDTO);
-//            return actionResult.toJson();
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    /**
+     * return the days when a swimmer swim
+     * @param user - the user that swim
+     * @return - the days
+     */
+    @PostMapping("/history")
+    @CrossOrigin(origins = "*")
+    public String viewHistoryDays(@RequestBody UserDTO user) {
+        try {
+            System.out.println("request view history days");
+            UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
+            ActionResult<List<String>> actionResult = swimFixAPI.getSwimmerHistoryDays(userDTO);
+            return actionResult.toJson();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @PostMapping("/history/{day}")
+    @CrossOrigin(origins = "*")
+    public String viewHistoryByDay(@PathVariable String day,
+                                   @RequestBody UserDTO user) {
+        try {
+            System.out.println("request view history pools by day");
+            UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
+            ActionResult<Map<String, FeedbackVideoStreamer>> actionResult =
+                    swimFixAPI.getSwimmerHistoryPoolsBy(userDTO, day);
+            return actionResult.toJson();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
