@@ -26,19 +26,22 @@ public class LogicManager {
     private IStatisticProvider _statisticProvider;
     private IReportProvider _reportProvider;
     private IEmailSenderProvider _emailSenderProvider;
+    private IZipProvider _zipProvider;
 
     public LogicManager(IUserProvider userProvider,
                         IFeedbackProvider streamProvider,
                         ISkeletonsLoader skeletonLoader,
                         IStatisticProvider statisticProvider,
                         IReportProvider reportProvider,
-                        IEmailSenderProvider emailSenderProvider) {
+                        IEmailSenderProvider emailSenderProvider,
+                        IZipProvider zipProvider) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
         _skeletonLoader = skeletonLoader;
         _statisticProvider = statisticProvider;
         _reportProvider = reportProvider;
         _emailSenderProvider = emailSenderProvider;
+        _zipProvider = zipProvider;
         createClientsDir();
         _userProvider.reload();
     }
@@ -186,7 +189,10 @@ public class LogicManager {
                         user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
                 if (feedbackVideo != null) {
                     // add a graph to the file
-                    List<ISwimmingSkeleton> raw = _skeletonLoader.read(fileDTO.getBytes());
+                    List<ISwimmingSkeleton> raw = null;
+                    if(fileDTO != null) {
+                        raw = _skeletonLoader.read(fileDTO.getBytes());
+                    }
                     List<ISwimmingSkeleton> model = _skeletonLoader.read(feedbackVideo.getMLSkeletonsPath());
                     List<ISwimmingSkeleton> modelAndInterpolation = feedbackVideo.getSwimmingSkeletons();
                     IStatistic statistic = _statisticProvider.analyze(raw, model, modelAndInterpolation);
@@ -265,8 +271,8 @@ public class LogicManager {
             if (user != null
 //                && user.isLogged()
 //                && user.isCoach()
-                    && !to.isEmpty()
-                    && to.contains("@")) {
+                && !to.isEmpty()
+                && to.contains("@")) {
                 if(_emailSenderProvider.sendInvitationEmail(user.getEmail(), to)) {
                     return new ActionResult<>(Response.SUCCESS, true);
                 }
@@ -278,14 +284,46 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
-//    /***
-//     * delete a feedback of a user
-//     * @param userDTO - the user who own the feedback
-//     * @param feedbackID - the id of the feedback to delete
-//     * @return - true if deleted, false if not
-//     */
-//    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
-//        return _userProvider.deleteFeedbackByID(userDTO, feedbackID);
-//    }
+    public ActionResult<FileDownloadDTO> downloadFile(UserDTO userDTO, String root, String email, String folder, String fileName) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user != null
+                && user.isLogged()
+                && user.isResearcher()) {
+                String path = root + "\\" + email + "\\" + folder + "\\" + fileName;
+                File file = new File(path);
+                if (file.exists()) {
+                    byte[] data = Files.readAllBytes(file.toPath());
+                    FileDownloadDTO fileDownloadDTO = new FileDownloadDTO(file.getName(), file.getPath(), data);
+                    return new ActionResult<>(Response.SUCCESS, fileDownloadDTO);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    public ActionResult<FileDownloadDTO> downloadFilesAsZip(UserDTO userDTO, String[] files) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user != null
+                && user.isLogged()
+                && user.isResearcher()) {
+                String path = user.getDownloadsPath();
+                File zip = _zipProvider.createZip(path, files);
+                if (zip.exists()) {
+                    byte[] data = Files.readAllBytes(zip.toPath());
+                    FileDownloadDTO fileDownloadDTO = new FileDownloadDTO(zip.getName(), zip.getPath(), data);
+                    return new ActionResult<>(Response.SUCCESS, fileDownloadDTO);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 

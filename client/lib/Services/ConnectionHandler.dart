@@ -128,8 +128,12 @@ class ConnectionHandler {
     print('post to server 2 multipart files');
     String url = getUrl() + path;
     var request = new http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(firstFile);
-    request.files.add(secondFile);
+    if(firstFile!=null) {
+      request.files.add(firstFile);
+    }
+    if(secondFile!=null) {
+      request.files.add(secondFile);
+    }
     request.fields['uid'] = uid;
     request.fields['email'] = email;
     request.fields['name'] = name;
@@ -151,16 +155,16 @@ class ConnectionHandler {
     return getUrl() + "/stream";
   }
 
-  Future<FileDownloaded> downloadFile(String path, String uid, String email, String name) async {
+  Future<FileDownloaded> downloadFile(String path, Map<String, dynamic> map) async {
     // print('get file from $path');
     String url = getUrl() + path;
-    var request = new http.MultipartRequest('GET', Uri.parse(url));
-    print('request $request');
     Map<String,String> headers = {
       'Accept' : '*',
       'Access-Control-Allow-Origin': "*",
+      'Content-type' : 'application/json',
     };
-    http.Response response = await http.get(Uri.parse(url), headers: headers);
+    http.Response response = await http.post(Uri.parse(url),
+        body: json.encode(map), headers: headers);
     if (response.statusCode == 200) {
       String headerValue = response.headers['content-type'];
       int start = headerValue.indexOf("/");

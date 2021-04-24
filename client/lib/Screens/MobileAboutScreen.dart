@@ -14,24 +14,24 @@ import 'Arguments/AboutScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'PopUps/MessagePopUp.dart';
 
-class WebAboutScreen extends StatefulWidget {
+class MobileAboutScreen extends StatefulWidget {
 
   AboutScreenArguments args;
 
-  WebAboutScreen(this.args);
+  MobileAboutScreen(this.args);
 
   @override
-  _WebAboutScreenState createState() => _WebAboutScreenState(
-    args.videoOn, args.loginOn, args.aboutOn);
+  _MobileAboutScreenState createState() => _MobileAboutScreenState(
+      args.videoOn, args.loginOn, args.aboutOn);
 
 }
 
-class _WebAboutScreenState extends State<WebAboutScreen> {
+class _MobileAboutScreenState extends State<MobileAboutScreen> {
 
   WebColors _webColors;
   ScreenState state;
 
-  _WebAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
+  _MobileAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
     _webColors = new WebColors();
     if(videoOn && !loginOn) {
       state = ScreenState.Video;
@@ -129,16 +129,16 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   Widget buildText(BuildContext context,
       String text,
       double fontSize,
-    { Color color = Colors.white,
-      FontWeight fontWeight = FontWeight.normal}) {
+      { Color color = Colors.white,
+        FontWeight fontWeight = FontWeight.normal}) {
     return Text(text,
-      textAlign: TextAlign.left,
-      style: TextStyle(
-          fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
-          color: color,
-          fontWeight: fontWeight,
-          decoration: TextDecoration.none
-      ));
+        textAlign: TextAlign.left,
+        style: TextStyle(
+            fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
+            color: color,
+            fontWeight: fontWeight,
+            decoration: TextDecoration.none
+        ));
   }
 
   Widget buildLeftLoginArea(BuildContext context) {
@@ -149,16 +149,16 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       child: Column(
         children: [
           Flexible(
-            fit: FlexFit.tight,
-            child: Container(
-              alignment: Alignment.bottomLeft,
-              child: buildText(context, "Swim Analytics", 84,
-                  fontWeight: FontWeight.bold))
+              fit: FlexFit.tight,
+              child: Container(
+                  alignment: Alignment.bottomLeft,
+                  child: buildText(context, "Swim Analytics", 84,
+                      fontWeight: FontWeight.bold))
           ),
           Container(
               alignment: Alignment.centerLeft,
               child: buildText(
-                  context, "Swimming training solutions", 36,
+                context, "Swimming training solutions", 36,
               )
           ),
           Expanded(
@@ -222,8 +222,8 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
           Flexible(
             flex: 4,
             child: Container(
-              margin: EdgeInsets.all(20.0),
-              child: SimpleVideoPlayer('assets/videos/intro.mp4')),
+                margin: EdgeInsets.all(20.0),
+                child: SimpleVideoPlayer('assets/videos/intro.mp4')),
           ),
           Flexible(
             child: buildSignUpButton(context),
@@ -283,7 +283,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       child: Row(
         children: [
           Flexible(
-            child: buildLeftLoginArea(context)
+              child: buildLeftLoginArea(context)
           ),
           Flexible(
             child: buildRightLoginArea(context),
@@ -301,20 +301,20 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       child: Row(
         children: [
           Flexible(
-            fit: FlexFit.tight,
-            child: Center(
-                child: buildText(context, "Web", 36,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)
-            )
+              fit: FlexFit.tight,
+              child: Center(
+                  child: buildText(context, "Web", 36,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)
+              )
           ),
           Flexible(
-            fit: FlexFit.tight,
-            child: Center(
-                child: buildText(context, "Mobile", 36,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold)
-            )
+              fit: FlexFit.tight,
+              child: Center(
+                  child: buildText(context, "Mobile", 36,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)
+              )
           ),
         ],
       ),
@@ -323,19 +323,19 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
   Widget buildAreas(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: _webColors.getBackgroundForI6(),
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Column(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: _webColors.getBackgroundForI6(),
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            child: Column(
               children: [
                 buildLoginArea(context),
                 buildSupportArea(context),
               ],
+            ),
           ),
-        ),
-      )
+        )
     );
   }
 

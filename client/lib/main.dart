@@ -1,7 +1,12 @@
-import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/WebColors.dart';
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'Screens/Arguments/AboutScreenArguments.dart';
+import 'Screens/Arguments/CoachScreenArguments.dart';
+import 'Screens/Arguments/MultiReportScreenArguments.dart';
+import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
+import 'Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'Screens/Arguments/SwimmerScreenArguments.dart';
 import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
@@ -19,6 +24,7 @@ void main() async {
 class MyApp extends StatelessWidget {
 
   ScreenHolder _screenHolder = new ScreenHolder();
+  WebColors _webColors = new WebColors();
 
   // This widget is the root of your application.
   @override
@@ -27,11 +33,17 @@ class MyApp extends StatelessWidget {
       title: 'SwimFix',
       initialRoute: '/',
       theme: ThemeData(
-        primarySwatch: Colors.blue, //main color (defualt color).
+        primarySwatch: _webColors.createMaterialColor(
+            _webColors.getBackgroundForI1()
+        ),
       ),
       routes: {
         '/': (context) {
-          return _screenHolder.getAboutScreen();
+          AboutScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getAboutScreen(args);
+        },
+        '/downloads': (context) {
+          return _screenHolder.getDownloadsScreen();
         },
         '/welcome': (context) {
           WelcomeScreenArguments args = ModalRoute.of(context).settings.arguments;
@@ -41,13 +53,21 @@ class MyApp extends StatelessWidget {
           SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerScreen(args);
         },
-        '/researcher/report': (context) {
-          ReprotScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getReportScreen(args);
-        },
         '/upload': (context) {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
+        },
+        '/researcher': (context) {
+          ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getResearcherScreen(args);
+        },
+        '/researcher/report': (context) {
+          ReportScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getReportScreen(args);
+        },
+        '/researcher/multireport': (context) {
+          MultiReportScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getMultiReportScreen(args);
         },
         '/coach': (context) {
           CoachScreenArguments args = ModalRoute.of(context).settings.arguments;

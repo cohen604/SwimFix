@@ -66,13 +66,16 @@ public class SwimFixAPI {
 
       IEmailSenderProvider emailSenderProvider = new EmailSenderProvider();
 
+      IZipProvider zipProvider = new ZipProvider();
+
       this.logicManager = new LogicManager(
               userProvider,
               feedbackProvider,
               skeletonsLoaderLogic,
               statisticProvider,
               reportProvider,
-              emailSenderProvider );
+              emailSenderProvider,
+              zipProvider);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
@@ -105,6 +108,14 @@ public class SwimFixAPI {
       return logicManager.invite(userDTO, to);
    }
 
+   public ActionResult<FileDownloadDTO> downloadFile(UserDTO userDTO, String root, String email, String folder, String fileName) {
+      return logicManager.downloadFile(userDTO, root, email, folder, fileName);
+   }
+
+   public ActionResult<FileDownloadDTO> downloadFilesAsZip(UserDTO user, String[] files) {
+      return logicManager.downloadFilesAsZip(user, files);
+   }
+
 
    public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
       return logicManager.getSwimmerHistoryDays(userDto);
@@ -116,7 +127,4 @@ public class SwimFixAPI {
       return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
    }
 
-//   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {
-//      return logicManager.deleteFeedbackByID(userDTO, feedbackID);
-//   }
 }

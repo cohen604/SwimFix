@@ -21,4 +21,7 @@ public class ActionResult<T> {
         return this.value;
     }
 
+    public Response getResponse() {
+        return response;
+    }
 }

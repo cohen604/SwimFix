@@ -1,7 +1,6 @@
 package mainServer.Controllers;
 
 import DTO.*;
-import com.google.gson.Gson;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -12,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/researcher")
@@ -36,9 +33,12 @@ public class ResearcherController {
             ConvertedVideoDTO videoDTO = new ConvertedVideoDTO(
                     videoFile.getOriginalFilename(),
                     videoFile.getBytes());
-            FileDTO fileDTO = new FileDTO(
+            FileDTO fileDTO = null;
+            if(labelsFile != null) {
+                fileDTO = new FileDTO(
                     labelsFile.getOriginalFilename(),
                     labelsFile.getBytes());
+            }
             ActionResult<ResearcherReportDTO> result = _swimFixAPI.getResearcherReport(
                     userDTO,
                     videoDTO,
@@ -53,26 +53,46 @@ public class ResearcherController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/{root}/{email}/{folder}/{fileName}")
+    @PostMapping("/{root}/{email}/{folder}/{fileName}")
     public ResponseEntity getFile(
             @PathVariable String root,
             @PathVariable String email,
             @PathVariable String folder,
-            @PathVariable String fileName) {
+            @PathVariable String fileName,
+            @RequestBody UserDTO userDTO) {
         System.out.println("Received file request for download ");
-        String path = root + "\\" + email + "\\" + folder + "\\" + fileName;
-        File file = new File(path);
-        if (file.exists()) {
-            try {
-                byte[] data = Files.readAllBytes(file.toPath());
-                return ResponseEntity.status(HttpStatus.OK)
-                        .header("Content-Disposition","attachment; filename=\"" + file.getName() + "\"")
-                        .contentType(MediaTypeFactory.getMediaType(file.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
-                        .body(data);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            ActionResult<FileDownloadDTO> result =
+                    _swimFixAPI.downloadFile(userDTO, root, email, folder, fileName);
+            return returnResponseEntity(result);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/files/zip")
+    public ResponseEntity getFilesAsZip(@RequestBody FilesDownloadRequest request) {
+        System.out.println("Received files request for download as zip");
+        try {
+            ActionResult<FileDownloadDTO> result = _swimFixAPI.downloadFilesAsZip(request.getUser(), request.getFiles());
+            return returnResponseEntity(result);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ResponseEntity returnResponseEntity(ActionResult<FileDownloadDTO> result) {
+        if(result != null &&  result.getResponse() == Response.SUCCESS) {
+            FileDownloadDTO fileDTO = result.getValue();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header("Content-Disposition","attachment; filename=\"" + fileDTO.getName() + "\"")
+                    .contentType(MediaTypeFactory.getMediaType(fileDTO.getPath()).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                    .body(fileDTO.getBytes());
         }
         return null;
     }

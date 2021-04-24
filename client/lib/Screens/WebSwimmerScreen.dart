@@ -64,8 +64,8 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
               'Create a new team and become a Coach', null, Icons.group_add),
           IconCardButton("Team invitations",
               'View your swimming team invitations', null, Icons.insert_invitation),
-          IconCardButton("My Teams",
-              'View your teams, you are part of', null, Icons.group), // buildMainButtons(context, 6),
+          IconCardButton("My Team",
+              'View your team, you are part of', null, Icons.group), // buildMainButtons(context, 6),
         ],
       ),
     );
