@@ -137,8 +137,7 @@ public class LogicManager {
                 IFeedbackVideo feedbackVideo = _feedbackProvider.generateFeedbackVideo(
                         convertedVideoDTO, user.getVideosPath(),
                         user.getFeedbacksPath(), user.getSkeletonsPath(), user.getMLSkeletonsPath(), detectorsNames);
-                if (feedbackVideo != null) {
-                    _userProvider.addFeedbackToUser(user, feedbackVideo);
+                if (feedbackVideo != null && _userProvider.addFeedbackToUser(user, feedbackVideo)) {
                     FeedbackVideoStreamer feedbackVideoStreamer = feedbackVideo.generateFeedbackStreamer();
                     if (feedbackVideoStreamer != null) {
                         return new ActionResult<>(Response.SUCCESS, feedbackVideoStreamer);

@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
       PathManagerTests.class,
+        SwimmerTests.class,
 })
 
 public class UsersTests {
