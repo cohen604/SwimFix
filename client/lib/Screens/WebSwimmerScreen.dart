@@ -41,6 +41,15 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     });
   }
 
+  void onClickHistory() {
+    this.setState(() {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, '/history',
+            arguments: new SwimmerScreenArguments(this.widget.arguments.user));
+      });
+    });
+  }
+
   Widget buildBottomSide(BuildContext context) {
     return Container(
       color: _webColors.getBackgroundForI7(),
@@ -50,7 +59,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
           IconCardButton("Upload",
               "Upload a swimming Video", onClickUpload, Icons.upload_file),
           IconCardButton("History",
-              "View feedback history", null, Icons.history),
+              "View feedback history", onClickHistory, Icons.history),
           IconCardButton("Open a team",
               'Create a new team and become a Coach', null, Icons.group_add),
           IconCardButton("Team invitations",

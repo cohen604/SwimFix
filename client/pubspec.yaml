@@ -39,6 +39,7 @@ dependencies:
   synchronized: ^2.2.0+2
   path_provider: ^1.6.27
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

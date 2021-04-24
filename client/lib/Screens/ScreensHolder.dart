@@ -2,6 +2,9 @@ import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
+import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
@@ -11,6 +14,8 @@ import 'package:client/Screens/WebDownloadScreen.dart';
 import 'package:client/Screens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/WebResearcherScreen.dart';
 import 'Arguments/ReportScreenArguments.dart';
+import 'package:client/Screens/WebViewFeedbackScreen.dart';
+import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
@@ -19,6 +24,8 @@ import 'package:client/Screens/WebSwimmerScreen.dart';
 import 'package:client/Screens/WebUploadScreen.dart';
 import 'package:client/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
+import 'WebSwimmerHistoryDayScreen.dart';
+
 
 class ScreenHolder {
 
@@ -54,14 +61,24 @@ class ScreenHolder {
   }
 
   Widget getMultiReportScreen(MultiReportScreenArguments args) {
-    // args = new MultiReportScreenArguments(
-    //     new WebUser(
-    //         new Swimmer('uid', 'email', 'name'),
-    //         new UserPermissions(true, true, true, true)));
-    return new WebMultiReportsScreen(args);
+     return new WebMultiReportsScreen(args);
   }
 
   Widget getCoachScreen(CoachScreenArguments args) {
     return new WebCoachScreen(args);
   }
+
+
+  Widget getSwimmerHistoryScreen(SwimmerScreenArguments args) {
+    return new WebSwimmerHistoryScreen(arguments: args,);
+  }
+
+  Widget getSwimmerHistoryDayScreen(SwimmerHistoryPoolsArguments args) {
+    return new WebSwimmerHistoryDayScreen(arguments: args,);
+  }
+
+  Widget getViewFeedbackScreen(ViewFeedBackArguments args) {
+    return new WebViewFeedbackScreen(arguments: args,);
+  }
+
 }

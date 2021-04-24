@@ -38,4 +38,8 @@ public interface IUser {
     String getDownloadsPath();
 
     Collection<IFeedbackVideo> getFeedbacks();
+
+    boolean addFeedback(IFeedbackVideo feedbackVideo);
+
+    boolean deleteFeedback(IFeedbackVideo feedbackVideo);
 }

@@ -167,19 +167,21 @@ public class User implements IUser {
     }
 
     /**
-     * todo - add comments
-     * @param feedbackVideo
-     * @return
+     * add a feedback to user
+     * @param feedbackVideo - the feedback to add
+     * @return - true if added, false if not
      */
+    @Override
     public boolean addFeedback(IFeedbackVideo feedbackVideo) {
         return _swimmer.addFeedback(feedbackVideo);
     }
 
     /**
-     * todo - add comments
-     * @param feedbackVideo
-     * @return
+     * delete a feedback from a user
+     * @param feedbackVideo - the feedback to delete
+     * @return - true if deleted, false if not
      */
+    @Override
     public boolean deleteFeedback(IFeedbackVideo feedbackVideo) {
         return _swimmer.deleteFeedback(feedbackVideo);
     }

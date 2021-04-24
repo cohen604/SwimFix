@@ -81,7 +81,6 @@ public class LogicManager {
      */
     public ActionResult<UserDTO> login(UserDTO userDTO) {
         if(_userProvider.login(userDTO)) {
-
             return new ActionResult<>(Response.SUCCESS, userDTO);
         }
         return new ActionResult<>(Response.FAIL,null);
@@ -219,16 +218,46 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
-//    public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistory(UserDTO userDto) {
-//        IUser user = _userProvider.getUser(userDto);
-//        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
-//        for (IFeedbackVideo v : feedbacks) {
-//            String path = v.getPath();
-//            File file = new File(path);
-//        }
-//        return new ActionResult<>(Response.SUCCESS, history);
-//    }
+    /***
+     * get the days the swimmer swim
+     * @param userDto - userdto
+     * @return - list of days
+     */
+    public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
+        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
+        List<String> history_filter = _userProvider.filterHistoryByDay(history);
+        return new ActionResult<>(Response.SUCCESS, history_filter);
+    }
 
+
+    /**
+     * get the hours of a swimmer by day
+     * @param userDto - userdto
+     * @return - map of <String: hour of the swim, FeedbackVideoStreamer>
+     */
+    public ActionResult<Map<String, FeedbackVideoStreamer>>
+            getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
+        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
+        Map<String, FeedbackVideoStreamer> history_filter = _userProvider.filterHistoryByPool(history, day);
+        return new ActionResult<>(Response.SUCCESS, history_filter);
+    }
+
+    /**
+     * get a list of FeedbackVideoStreamer
+     * @param userDto - userdto
+     * @return - list of FeedbackVideoStreamer
+     */
+    private List<FeedbackVideoStreamer> getFeedbackVideoStreamerList(UserDTO userDto) {
+        List<FeedbackVideoStreamer> history = new LinkedList<>();
+        IUser user = _userProvider.getUser(userDto);
+        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
+        for (IFeedbackVideo v : feedbacks) {
+            String path = v.getPath();
+            FeedbackVideoStreamer feedbackVideoStreamer = new FeedbackVideoStreamer(path);
+            history.add(feedbackVideoStreamer);
+        }
+        return history;
+    }
 
     /***
      * The function send an invitation email
