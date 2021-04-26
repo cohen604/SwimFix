@@ -1,19 +1,14 @@
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
-import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
-import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
-import 'package:client/Services/LogicManager.dart';
 import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class AboutScreenMenuBar extends StatefulWidget {
 
   Function onLogo;
   Function onAbout;
+  Function onDownload;
   Function onLogin;
-  AboutScreenMenuBar({this.onLogo, this.onAbout, this.onLogin});
+  AboutScreenMenuBar({this.onLogo, this.onAbout, this.onDownload, this.onLogin});
 
   @override
   _AboutScreenMenuBarState createState() => _AboutScreenMenuBarState();
@@ -22,8 +17,8 @@ class AboutScreenMenuBar extends StatefulWidget {
 class _AboutScreenMenuBarState extends State<AboutScreenMenuBar> {
 
   WebColors _webColors = new WebColors();
-  List<bool> _onHover = List.generate(2, (index) => false);
-  List<bool> _selected = List.generate(2, (index) => false);
+  List<bool> _onHover = List.generate(3, (index) => false);
+  List<bool> _selected = List.generate(3, (index) => false);
 
   Function buildFutureDialogSupport(BuildContext context) {
     return () => showDialog(
@@ -80,7 +75,8 @@ class _AboutScreenMenuBarState extends State<AboutScreenMenuBar> {
               ),
             ),
             buildOption(context, "About", 0, this.widget.onAbout),
-            buildOption(context, "Login", 1, this.widget.onLogin),
+            buildOption(context, "Downloads", 1, this.widget.onDownload),
+            buildOption(context, "Login", 2, this.widget.onLogin),
           ],
           //scrollDirection: Axis.horizontal,
         ),

@@ -72,14 +72,14 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo) {
         User current = _users.get(user.getUid());
-        if (current != null && current.isLogged()) {
-            current.addFeedback(feedbackVideo);
+        if (current != null && current.isLogged() && current.addFeedback(feedbackVideo)) {
             if (_dao.update(current) == null) {
                 current.deleteFeedback(feedbackVideo.getPath());
             }
             else {
                 return true;
             }
+
         }
         return false;
     }

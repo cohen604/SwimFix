@@ -25,6 +25,9 @@ public class Swimmer {
 
 
     public boolean addFeedback(IFeedbackVideo feedbackVideo) {
+        if (feedbackVideo == null) {
+            return false;
+        }
         return _feedbacks.putIfAbsent(feedbackVideo.getPath(), feedbackVideo) == null;
     }
 

@@ -66,13 +66,16 @@ public class SwimFixAPI {
 
       IEmailSenderProvider emailSenderProvider = new EmailSenderProvider();
 
+      IZipProvider zipProvider = new ZipProvider();
+
       this.logicManager = new LogicManager(
               userProvider,
               feedbackProvider,
               skeletonsLoaderLogic,
               statisticProvider,
               reportProvider,
-              emailSenderProvider );
+              emailSenderProvider,
+              zipProvider);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
@@ -103,6 +106,14 @@ public class SwimFixAPI {
 
     public ActionResult<Boolean> invite(UserDTO userDTO, String to) {
       return logicManager.invite(userDTO, to);
+   }
+
+   public ActionResult<FileDownloadDTO> downloadFile(UserDTO userDTO, String root, String email, String folder, String fileName) {
+      return logicManager.downloadFile(userDTO, root, email, folder, fileName);
+   }
+
+   public ActionResult<FileDownloadDTO> downloadFilesAsZip(UserDTO user, String[] files) {
+      return logicManager.downloadFilesAsZip(user, files);
    }
 
 

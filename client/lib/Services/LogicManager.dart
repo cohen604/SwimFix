@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
+import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:http/http.dart' as http;
@@ -112,13 +113,16 @@ class LogicManager {
       String videoPath, videoBytes, String labelPath, labelsBytes,
       Swimmer swimmer) async {
     String path = "/researcher/report";
-    http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
-      'video', videoBytes, filename: videoPath,
-    );
-    http.MultipartFile multipartLabels = http.MultipartFile.fromBytes(
-      'labels', labelsBytes, filename: labelPath,
-    );
     try {
+      http.MultipartFile multipartVideo = http.MultipartFile.fromBytes(
+        'video', videoBytes, filename: videoPath,
+      );
+      http.MultipartFile multipartLabels;
+      if(labelsBytes != null && labelPath != null) {
+        multipartLabels = http.MultipartFile.fromBytes(
+          'labels', labelsBytes, filename: labelPath,
+        );
+      }
       ServerResponse response = await this.connectionHandler.postMultiPartFiles(path,
           multipartVideo, multipartLabels, swimmer.uid, swimmer.email, swimmer.name);
       if (response.value != null) {
@@ -132,10 +136,22 @@ class LogicManager {
     return null;
   }
 
-  Future<FileDownloaded> getFileForDownload(String uid, String email, String name, String fileLink) async {
+  Future<FileDownloaded> getFileForDownload(
+      Swimmer swimmer,
+      String fileLink) async {
     String path = "/researcher/$fileLink";
-    return await this.connectionHandler.downloadFile(
-      path, uid, email, name);
+    Map<String, dynamic> map = swimmer.toJson();
+    return await this.connectionHandler.downloadFile(path, map);
+  }
+
+  Future<FileDownloaded> getZipFileForDownload(
+      Swimmer swimmer,
+      List<String> files) async {
+    String path = "/researcher/files/zip";
+    FilesDownloadRequest request = new FilesDownloadRequest(swimmer, files);
+    Map<String, dynamic> map = request.toJson();
+    print(map);
+    return await this.connectionHandler.downloadFile(path, map);
   }
 
   Future<bool> sendInvitationEmail(Swimmer swimmer, String email) async {

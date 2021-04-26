@@ -36,7 +36,7 @@ public class PdfDrawer implements IPdfDrawer {
         PdfContentByte canvas = pdfWriter.getDirectContent();
         canvas.beginText();
         y = drawText(canvas, subject, x, y, 18);
-        y = drawText(canvas, "Number of frames: " + raw.size(), x, y, 14);
+        y = drawText(canvas, "Number of frames: " + model.size(), x, y, 14);
         y = drawText(canvas, "Model: " + modelCount
                 + " , Model And Interpolation: " + modelAndInterpolationCount
                 + " , Actual: " + actualCount, x, y, 14);
@@ -178,7 +178,7 @@ public class PdfDrawer implements IPdfDrawer {
                                 List<ISwimmingSkeleton> modelAndInterpolation,
                                 ISkeletonValueFilter filter) {
         double yMax = 200;
-        for(int i=0; i<raw.size(); i++) {
+        for(int i=0; i<model.size(); i++) {
             yMax = findMax(raw, i, filter, yMax);
             yMax = findMax(model, i, filter, yMax);
             yMax = findMax(modelAndInterpolation, i, filter, yMax);

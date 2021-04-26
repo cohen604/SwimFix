@@ -1,12 +1,19 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
+import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/WebAboutScreen.dart';
 import 'package:client/Screens/WebCoachScreen.dart';
+import 'package:client/Screens/WebDownloadScreen.dart';
+import 'package:client/Screens/WebMultiReportsScreen.dart';
+import 'package:client/Screens/WebResearcherScreen.dart';
+import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/WebViewFeedbackScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
@@ -22,8 +29,15 @@ import 'WebSwimmerHistoryDayScreen.dart';
 
 class ScreenHolder {
 
-  Widget getAboutScreen() {
-    return new WebAboutScreen();
+  Widget getAboutScreen(AboutScreenArguments args) {
+    if(args == null) {
+      args = new AboutScreenArguments();
+    }
+    return new WebAboutScreen(args);
+  }
+
+  Widget getDownloadsScreen() {
+    return new WebDownloadScreen();
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
@@ -34,12 +48,20 @@ class ScreenHolder {
     return new WebSwimmerScreen(arguments: args,);
   }
 
-  Widget getReportScreen(ReprotScreenArguments args) {
+  Widget getUploadScreen(UploadScreenArguments args) {
+    return new WebUploadScreen(args: args,);
+  }
+
+  Widget getResearcherScreen(ResearcherScreenArguments args) {
+    return new WebResearcherScreen(args);
+  }
+
+  Widget getReportScreen(ReportScreenArguments args) {
     return new WebReportScreen(args: args);
   }
 
-  Widget getUploadScreen(UploadScreenArguments args) {
-    return new WebUploadScreen(args: args,);
+  Widget getMultiReportScreen(MultiReportScreenArguments args) {
+     return new WebMultiReportsScreen(args);
   }
 
   Widget getCoachScreen(CoachScreenArguments args) {
@@ -48,43 +70,14 @@ class ScreenHolder {
 
 
   Widget getSwimmerHistoryScreen(SwimmerScreenArguments args) {
-    //TODO delete this
-    if(args == null) {
-      String uid = "L0kjX9wZlsXJctETI9AzRfoej2s2";
-      String email = "nivshir@post.bgu.ac.il";
-      String name = "Niv Shirazi";
-      args = new SwimmerScreenArguments(new WebUser(
-          new Swimmer(uid, email, name),
-          new UserPermissions(true, false, false, false)));
-    }
     return new WebSwimmerHistoryScreen(arguments: args,);
   }
 
   Widget getSwimmerHistoryDayScreen(SwimmerHistoryPoolsArguments args) {
-    //TODO delete this
-    if(args == null) {
-      String uid = "L0kjX9wZlsXJctETI9AzRfoej2s2";
-      String email = "nivshir@post.bgu.ac.il";
-      String name = "Niv Shirazi";
-      String date = '2021-04-09';
-      args = new SwimmerHistoryPoolsArguments(new WebUser(
-          new Swimmer(uid, email, name),
-          new UserPermissions(true, false, false, false)), date);
-    }
     return new WebSwimmerHistoryDayScreen(arguments: args,);
   }
 
   Widget getViewFeedbackScreen(ViewFeedBackArguments args) {
-    //TODO delete this
-    if(args == null) {
-      String uid = "L0kjX9wZlsXJctETI9AzRfoej2s2";
-      String email = "nivshir@post.bgu.ac.il";
-      String name = "Niv Shirazi";
-      String path = "clients\\nivshir@post.bgu.ac.il\\feedbacks\\2021-04-09-17-57-48.mp4";
-      args = new ViewFeedBackArguments(new WebUser(
-          new Swimmer(uid, email, name),
-          new UserPermissions(true, false, false, false)), path);
-    }
     return new WebViewFeedbackScreen(arguments: args,);
   }
 

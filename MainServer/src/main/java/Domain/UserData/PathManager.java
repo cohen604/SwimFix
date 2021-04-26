@@ -12,7 +12,7 @@ public class PathManager {
     public PathManager(String folderName, boolean build) {
         _root = "clients";
         _mainFolder = combinePaths(_root, folderName);
-        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons", "reports"};
+        _folders = new String[]{"videos", "feedbacks", "feedbacksSkeletons", "mlSkeletons", "reports", "downloads"};
         if(build) {
             createDirs();
         }
@@ -35,7 +35,7 @@ public class PathManager {
             }
         }
         catch (Exception e) {
-            //TODO write to loogger
+            //TODO write to logger
             e.printStackTrace();
         }
     }
@@ -59,6 +59,8 @@ public class PathManager {
     public String getReportsPath() {
         return combinePaths(_mainFolder, "reports");
     }
+
+    public String getDownloadsPath() { return combinePaths(_mainFolder, "downloads");}
 
     private String combinePaths(String prefix, String suffix) {
         return prefix + "\\" + suffix;

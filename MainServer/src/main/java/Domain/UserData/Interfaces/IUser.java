@@ -35,6 +35,8 @@ public interface IUser {
 
     String getReportsPath();
 
+    String getDownloadsPath();
+
     Collection<IFeedbackVideo> getFeedbacks();
 
     boolean addFeedback(IFeedbackVideo feedbackVideo);
