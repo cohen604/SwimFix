@@ -3,9 +3,6 @@ import os
 from detectron2 import model_zoo
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
-from detectron2.structures import Keypoints
-from detectron2.utils.visualizer import Visualizer
-from detectron2.data import MetadataCatalog, DatasetCatalog, build_detection_test_loader
 
 def get_model(trained: bool=True, load_path: str="model_final.pth", score_tresh: int=0.75):
     
