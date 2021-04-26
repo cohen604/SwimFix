@@ -75,7 +75,7 @@ public class UserProvider implements IUserProvider {
         if (current != null && current.isLogged()) {
             current.addFeedback(feedbackVideo);
             if (_dao.update(current) == null) {
-                current.deleteFeedback(feedbackVideo);
+                current.deleteFeedback(feedbackVideo.getPath());
             }
             else {
                 return true;
@@ -152,16 +152,19 @@ public class UserProvider implements IUserProvider {
     /***
      * delete a feedback of a user
      * @param userDTO - the user who own the feedback
-     * @param feedbackID - the id of the feedback to delete
+     * @param feedbackPath - the path of the feedback to delete
      * @return - true if deleted, false if not
      */
     @Override
-    public boolean deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
-//        IUser user = getUser(userDTO);
-//        if (user == null || !user.isLogged()) {
-//            return false;
-//        }
-//        user.deleteFeedback()
+    public boolean deleteFeedbackByID(UserDTO userDTO, String feedbackPath) {
+        IUser user = getUser(userDTO);
+        User current = _users.get(user.getUid());
+        if (current == null || !current.isLogged()) {
+            return false;
+        }
+        if (current.deleteFeedback(feedbackPath)) {
+            return (_dao.update(current) != null);
+        }
         return false;
     }
 

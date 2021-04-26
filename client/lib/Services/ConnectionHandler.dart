@@ -58,6 +58,7 @@ class ConnectionHandler {
       (String path, List<String> params, Map<String, dynamic> body) async {
     String url = getUrl() + path;
     for (String param in params) {
+      print('param is ' + param);
       url += '/$param';
     }
     Map<String,String> headers = {

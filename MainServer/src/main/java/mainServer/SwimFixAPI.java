@@ -116,7 +116,8 @@ public class SwimFixAPI {
       return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
    }
 
-//   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {
-//      return logicManager.deleteFeedbackByID(userDTO, feedbackID);
-//   }
+   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {
+      return logicManager.deleteFeedbackByID(userDTO, feedbackID);
+   }
+
 }

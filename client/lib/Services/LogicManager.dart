@@ -191,4 +191,18 @@ class LogicManager {
     return null;
   }
 
+  Future<bool> deleteFeedback(Swimmer swimmer, List<String> params) async {
+    try {
+      String path = "/swimmer/delete_feedback";
+      Map swimmerMap = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessageWithParams(
+          path, params, swimmerMap);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in delete feedback ${e.toString()}');
+    }
+    return null;
+  }
+
 }

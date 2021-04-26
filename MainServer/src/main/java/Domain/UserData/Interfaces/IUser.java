@@ -39,5 +39,5 @@ public interface IUser {
 
     boolean addFeedback(IFeedbackVideo feedbackVideo);
 
-    boolean deleteFeedback(IFeedbackVideo feedbackVideo);
+    boolean deleteFeedback(String feedbackPath);
 }
