@@ -199,7 +199,7 @@ class LogicManager {
           .postMessageWithParams(path, [day], swimmerMap);
       //TODO check if response is valid
       Map map = response.value as Map;
-      return map;
+      return map["pools"];
     }
     catch(e) {
       print('error in get swimmer history pools by day ${e.toString()}');

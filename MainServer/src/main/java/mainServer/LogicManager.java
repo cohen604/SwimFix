@@ -234,11 +234,12 @@ public class LogicManager {
      * @param userDto - userdto
      * @return - map of <String: hour of the swim, FeedbackVideoStreamer>
      */
-    public ActionResult<Map<String, FeedbackVideoStreamer>>
+    public ActionResult<HistoryPoolsDTO>
             getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
         List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
         Map<String, FeedbackVideoStreamer> history_filter = _userProvider.filterHistoryByPool(history, day);
-        return new ActionResult<>(Response.SUCCESS, history_filter);
+        HistoryPoolsDTO pools = new HistoryPoolsDTO(history_filter);
+        return new ActionResult<>(Response.SUCCESS, pools);
     }
 
     /**

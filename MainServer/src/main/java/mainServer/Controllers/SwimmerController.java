@@ -71,7 +71,7 @@ public class SwimmerController {
         try {
             System.out.println("request view history pools by day");
             UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
-            ActionResult<Map<String, FeedbackVideoStreamer>> actionResult =
+            ActionResult<HistoryPoolsDTO> actionResult =
                     swimFixAPI.getSwimmerHistoryPoolsBy(userDTO, day);
             return actionResult.toJson();
         } catch (Exception e) {

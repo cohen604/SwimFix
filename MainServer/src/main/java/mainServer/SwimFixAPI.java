@@ -121,8 +121,7 @@ public class SwimFixAPI {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
-   // TODO - change to DTO object
-   public ActionResult<Map<String, FeedbackVideoStreamer>>
+   public ActionResult<HistoryPoolsDTO>
             getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
       return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
    }
