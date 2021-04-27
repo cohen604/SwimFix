@@ -1,12 +1,12 @@
 package Storage.User;
 import Domain.UserData.User;
 import Storage.SwimmingErrors.*;
-import Storage.User.Providers.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -114,5 +114,20 @@ public class UserDao implements IUserDao{
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    @Override
+    public boolean removeUser(String id) {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Document query = new Document("_id", id);
+            DeleteResult result = collection.deleteOne(query);
+            return result.wasAcknowledged();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

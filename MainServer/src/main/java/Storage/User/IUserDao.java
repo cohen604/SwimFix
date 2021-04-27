@@ -12,4 +12,6 @@ public interface IUserDao {
     User find(String id);
 
     User update(User value);
+
+    boolean removeUser(String id);
 }

@@ -1,5 +1,6 @@
 package UnitTests;
 
+import UnitTests.InterpolationTests.InterpolationTests;
 import UnitTests.StreamingTests.*;
 import UnitTests.SwimmingErrorDetectorsTests.SwimmingErrorDetectorsTests;
 import UnitTests.SwimmingTests.SwimmingTests;
@@ -15,6 +16,7 @@ import org.junit.runners.Suite;
         SwimmingErrorDetectorsTests.class,
         SwimmingTests.class,
         UsersTests.class,
+        InterpolationTests.class,
 })
 
 public class AllUnitTests {
