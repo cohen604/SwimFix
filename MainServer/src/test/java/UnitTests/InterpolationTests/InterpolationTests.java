@@ -1,6 +1,5 @@
 package UnitTests.InterpolationTests;
 
-import DomainLogic.Interpolations.SplineInterpolation;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
