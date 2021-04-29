@@ -27,6 +27,11 @@ public class SwimmerTests extends TestCase {
     public void tearDown() {
     }
 
+    public void setUpDelete(String path) {
+        when(feedbackVideo_1.getPath()).thenReturn(path);
+        assertTrue(swimmer.addFeedback(feedbackVideo_1));
+    }
+
     public void testAddNullFeedback() {
         assertFalse(swimmer.addFeedback(null));
     }
@@ -51,5 +56,20 @@ public class SwimmerTests extends TestCase {
         assertTrue(swimmer.addFeedback(feedbackVideo_2));
         assertEquals(2, swimmer.getFeedbacks().size());
     }
+
+    public void testDeleteFeedback() {
+        String path = "test_path";
+        setUpDelete(path);
+        assertTrue(swimmer.deleteFeedback(path));
+        assertEquals(swimmer.getFeedbacks().size(), 0);
+    }
+
+    public void testDeleteWrongPath() {
+        String path = "test_path";
+        setUpDelete(path);
+        assertFalse(swimmer.deleteFeedback("wrong_path"));
+        assertEquals(swimmer.getFeedbacks().size(), 1);
+    }
+
 
 }

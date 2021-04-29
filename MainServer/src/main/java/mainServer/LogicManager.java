@@ -234,11 +234,12 @@ public class LogicManager {
      * @param userDto - userdto
      * @return - map of <String: hour of the swim, FeedbackVideoStreamer>
      */
-    public ActionResult<Map<String, FeedbackVideoStreamer>>
+    public ActionResult<HistoryPoolsDTO>
             getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
         List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
         Map<String, FeedbackVideoStreamer> history_filter = _userProvider.filterHistoryByPool(history, day);
-        return new ActionResult<>(Response.SUCCESS, history_filter);
+        HistoryPoolsDTO pools = new HistoryPoolsDTO(history_filter);
+        return new ActionResult<>(Response.SUCCESS, pools);
     }
 
     /**
@@ -324,5 +325,24 @@ public class LogicManager {
         }
         return new ActionResult<>(Response.FAIL, null);
     }
+    /***
+     * delete a feedback of a user
+     * @param userDTO - the user who own the feedback
+     * @param feedbackID - the id of the feedback to delete
+     * @return - true if deleted, false if not
+     */
+    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
+        try {
+            boolean deleted = _userProvider.deleteFeedbackByID(userDTO, feedbackID);
+            if (deleted) {
+                return new ActionResult<>(Response.SUCCESS, true);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, false);
+    }
+
 }
 

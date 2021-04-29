@@ -30,6 +30,11 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
     return pools;
   }
 
+  void removeTile() {
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -83,8 +88,11 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                           String path = feedbackLink.getPath();
                           print('feedback link is ' + path);
                           return new PoolHourTile
-                          // "\\clients\\nivshir@post.bgu.ac.il\\feedbacks\\2021-04-09-17-57-48.mp4"
-                            (hour: hour, path: path, user: this.widget.arguments.webUser);
+                            (hour: hour,
+                            path: path,
+                            user: this.widget.arguments.webUser,
+                            logicManager: _logicManager,
+                            remove: removeTile);
                         },
                       );
                     }
@@ -106,7 +114,9 @@ class PoolHourTile extends StatelessWidget {
   final String hour;
   final String path;
   final WebUser user;
-  PoolHourTile({ this.hour, this.path, this.user});
+  final LogicManager logicManager;
+  final Function() remove;
+  PoolHourTile({ this.hour, this.path, this.user, this.logicManager, this.remove});
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +135,16 @@ class PoolHourTile extends StatelessWidget {
             Navigator.pushNamed(context, '/viewFeedback',
                 arguments: new ViewFeedBackArguments(user, path));
           },
+          trailing: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () async {
+              bool deleted = await logicManager.deleteFeedback(
+                  user.swimmer, path.substring(1).split('/'));
+              if(deleted) {
+                remove();
+              }
+            }
+          ),
         ),
       ),
     );

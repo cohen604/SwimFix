@@ -199,10 +199,24 @@ class LogicManager {
           .postMessageWithParams(path, [day], swimmerMap);
       //TODO check if response is valid
       Map map = response.value as Map;
-      return map;
+      return map["pools"];
     }
     catch(e) {
       print('error in get swimmer history pools by day ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> deleteFeedback(Swimmer swimmer, List<String> params) async {
+    try {
+      String path = "/swimmer/delete_feedback";
+      Map swimmerMap = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessageWithParams(
+          path, params, swimmerMap);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in delete feedback ${e.toString()}');
     }
     return null;
   }
