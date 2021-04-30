@@ -29,7 +29,7 @@ public class Draw implements IDraw {
     }
 
     @Override
-    public Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
+    public Mat drawEclipse(Mat frame, double radius, double angle, double startAngle,
                            double endAngle, IPoint center, double r, double g,
                            double b, double a) {
         Point centerPoint = new Point(center.getX(), center.getY());
@@ -86,6 +86,7 @@ public class Draw implements IDraw {
      */
     @Override
     public Mat drawLogo(Mat frame) {
+        //TODO refactor this to receive an input logo
         String logo = "Swim Analytics";
         double x = 10;
         double y = 30;
@@ -155,6 +156,7 @@ public class Draw implements IDraw {
         return drawArrow(frame, pointB, vec, red, green, blue);
     }
 
+    //TODO delete this
     private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b) {
         drawLine(frame, a, x, y, r, g, b, 2);
     }
