@@ -1,4 +1,4 @@
-package UnitTests.SwimmingTests;
+package UnitTests.PointsTests;
 
 import Domain.Points.IPoint;
 import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.SkeletonPoint;
@@ -15,6 +15,22 @@ public class IPointUtilsTests extends TestCase {
         double expected = Math.sqrt(8);
         double result =  calcDistance(a,b);
         assertEquals(expected, result);
+    }
+
+    public void testCalcDistancePoints() {
+        //TODO
+    }
+
+    public void testCalcDistanceValues() {
+        //TODO
+    }
+
+    public void testCalcDistancePointsZero() {
+        //TODO
+    }
+
+    public void testCalcDistanceValuesZero() {
+        //TODO
     }
 
     public void testCalcSlope() {
