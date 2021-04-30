@@ -178,11 +178,11 @@ public class User implements IUser {
 
     /**
      * delete a feedback from a user
-     * @param feedbackVideo - the feedback to delete
+     * @param feedbackPath- the path of the feedback to delete
      * @return - true if deleted, false if not
      */
     @Override
-    public boolean deleteFeedback(IFeedbackVideo feedbackVideo) {
-        return _swimmer.deleteFeedback(feedbackVideo);
+    public boolean deleteFeedback(String feedbackPath) {
+        return _swimmer.deleteFeedback(feedbackPath);
     }
 }

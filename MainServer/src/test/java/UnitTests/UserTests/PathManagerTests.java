@@ -25,6 +25,7 @@ public class PathManagerTests  extends TestCase {
         _paths.add(ROOT_PATH + "\\" + FOLDER_PATH + "\\" + "feedbacks");
         _paths.add(ROOT_PATH + "\\" + FOLDER_PATH + "\\" + "feedbacksSkeletons");
         _paths.add(ROOT_PATH + "\\" + FOLDER_PATH + "\\" + "mlSkeletons");
+        _paths.add(ROOT_PATH + "\\" + FOLDER_PATH + "\\" + "reports");
         _paths.add(ROOT_PATH + "\\" + FOLDER_PATH);
         _paths.add(ROOT_PATH);
         try {
@@ -54,4 +55,25 @@ public class PathManagerTests  extends TestCase {
             assertTrue(Files.isDirectory(Paths.get(path)));
         }
     }
+
+    public void testGetVideoPath() {
+        assertEquals(_paths.get(0), _pathManager.getVideosPath());
+    }
+
+    public void testGetFeedbacksPath() {
+        assertEquals(_paths.get(1), _pathManager.getFeedbacksPath());
+    }
+
+    public void testGetSkeletonsPath() {
+        assertEquals(_paths.get(2), _pathManager.getSkeletonsPath());
+    }
+
+    public void testGetMLSkeletonsPath() {
+        assertEquals(_paths.get(3), _pathManager.getMLSkeletonsPath());
+    }
+
+    public void testGetReportsPath() {
+        assertEquals(_paths.get(4), _pathManager.getReportsPath());
+    }
+
 }

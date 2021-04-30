@@ -121,10 +121,13 @@ public class SwimFixAPI {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
-   // TODO - change to DTO object
-   public ActionResult<Map<String, FeedbackVideoStreamer>>
+   public ActionResult<HistoryPoolsDTO>
             getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
       return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
+   }
+
+   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {
+      return logicManager.deleteFeedbackByID(userDTO, feedbackID);
    }
 
 }

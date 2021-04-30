@@ -71,7 +71,7 @@ public class SwimmerController {
         try {
             System.out.println("request view history pools by day");
             UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
-            ActionResult<Map<String, FeedbackVideoStreamer>> actionResult =
+            ActionResult<HistoryPoolsDTO> actionResult =
                     swimFixAPI.getSwimmerHistoryPoolsBy(userDTO, day);
             return actionResult.toJson();
         } catch (Exception e) {
@@ -79,4 +79,25 @@ public class SwimmerController {
         }
         return null;
     }
+
+
+    @PostMapping("/delete_feedback/{root}/{email}/{folder}/{date}")
+    @CrossOrigin(origins = "*")
+    public String deleteFeedback(@PathVariable String root,
+                                 @PathVariable String email,
+                                 @PathVariable String folder,
+                                 @PathVariable String date,
+                                  @RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("request delete feedback");
+            String path = root + "\\" + email + "\\" + folder + "\\" + date;
+            ActionResult<Boolean> deleted = swimFixAPI.deleteFeedback(userDTO, path);
+            return deleted.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

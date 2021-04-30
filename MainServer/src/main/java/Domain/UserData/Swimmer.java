@@ -31,8 +31,8 @@ public class Swimmer {
         return _feedbacks.putIfAbsent(feedbackVideo.getPath(), feedbackVideo) == null;
     }
 
-    public boolean deleteFeedback(IFeedbackVideo feedbackVideo) {
-        return _feedbacks.remove(feedbackVideo.getPath()) != null;
+    public boolean deleteFeedback(String feedbackPath) {
+        return _feedbacks.remove(feedbackPath) != null;
     }
 
     public Collection<IFeedbackVideo> getFeedbacks() {
