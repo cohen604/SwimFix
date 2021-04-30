@@ -70,6 +70,30 @@ public class RegularDetectorTests extends TestCase {
         return skeletonList;
     }
 
+    private List<ISwimmingSkeleton> getSkeletonsListRightPalmError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListNoErrors();
+        ISwimmingSkeleton skeleton = skeletonsForTests.getSkeletonPalmRightError();
+        skeletonList.add(skeleton);
+        return skeletonList;
+    }
+
+    private List<ISwimmingSkeleton> getSkeletonsListLeftPalmError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListNoErrors();
+        ISwimmingSkeleton skeleton = skeletonsForTests.getSkeletonPalmLeftError();
+        skeletonList.add(skeleton);
+        return skeletonList;
+    }
+
+    private List<ISwimmingSkeleton> getSkeletonsListRightElbowError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListNoErrors();
+        ISwimmingSkeleton skeleton = skeletonsForTests.getSkeletonElbowRightError();
+        skeletonList.add(skeleton);
+        return skeletonList;
+    }
+    
+    /**
+     ********************** tests *****************
+     */
 
     public void testDetectNoErrors() {
         List<ISwimmingSkeleton> skeletonList = getSkeletonsListNoErrors();
@@ -78,6 +102,35 @@ public class RegularDetectorTests extends TestCase {
             assertEquals(0,listOfErrors.size());
         }
     }
+
+    public void testDetectRightPalmError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListRightPalmError();
+        Map<Integer, List<SwimmingError>> errorMap = regularDetector.detect(skeletonList);
+        for (List<SwimmingError> listOfErrors: errorMap.values()) {
+            assertEquals(1, listOfErrors.size());
+            assertSame("Right Palm Error", listOfErrors.get(0).getTag());
+        }
+    }
+
+    public void testDetectLeftPalmError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListLeftPalmError();
+        Map<Integer, List<SwimmingError>> errorMap = regularDetector.detect(skeletonList);
+        for (List<SwimmingError> listOfErrors: errorMap.values()) {
+            assertEquals(1, listOfErrors.size());
+            assertSame("Left Palm Error", listOfErrors.get(0).getTag());
+        }
+    }
+
+    public void testDetectRightElbowError() {
+        List<ISwimmingSkeleton> skeletonList = getSkeletonsListRightElbowError();
+        Map<Integer, List<SwimmingError>> errorMap = regularDetector.detect(skeletonList);
+        for (List<SwimmingError> listOfErrors: errorMap.values()) {
+            assertEquals(1, listOfErrors.size());
+            assertSame("Right Elbow Error", listOfErrors.get(0).getTag());
+        }
+    }
+
+
 
     // TODO - add more test for other errors
 
