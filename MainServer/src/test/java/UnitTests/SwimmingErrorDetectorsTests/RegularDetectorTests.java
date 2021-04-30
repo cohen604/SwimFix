@@ -90,7 +90,7 @@ public class RegularDetectorTests extends TestCase {
         skeletonList.add(skeleton);
         return skeletonList;
     }
-    
+
     /**
      ********************** tests *****************
      */
