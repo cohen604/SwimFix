@@ -120,7 +120,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
   Widget buildDesArea(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.only(left: 30),
       decoration: BoxDecoration(
         image: DecorationImage(
