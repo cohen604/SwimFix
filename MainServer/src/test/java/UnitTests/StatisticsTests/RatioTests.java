@@ -13,7 +13,7 @@ public class RatioTests extends TestCase {
         int frames = 100;
         ratios = new Ratios(frames);
     }
-    
+
     public void testGetModelTP() {
         assertEquals(0, ratios.getModelTP());
     }
