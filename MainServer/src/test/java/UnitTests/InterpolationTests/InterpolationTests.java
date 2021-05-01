@@ -1,5 +1,6 @@
 package UnitTests.InterpolationTests;
 
+import UnitTests.InterpolationTests.TimeSkeletonInterpolationTests.TimeInterpolationTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -9,6 +10,7 @@ import org.junit.runners.Suite;
         LinearInterpolationTests.class,
         MedianInterpolationTests.class,
         SpilneInterpolationTests.class,
+        TimeInterpolationTests.class,
 })
 
 public class InterpolationTests {
