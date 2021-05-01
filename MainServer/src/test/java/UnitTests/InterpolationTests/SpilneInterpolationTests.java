@@ -16,9 +16,11 @@ public class SpilneInterpolationTests extends TestCase {
     private List<IPoint> pointListAfter;
     private List<IPoint> pointListBefore;
     private SplineInterpolation splineInterpolation;
+    private double epsilon;     // how much the interpolation is far from the right value
 
     @BeforeClass
     public void setUp() {
+        epsilon = 0.1;
         pointListAfter = new LinkedList<>();
         pointListBefore = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
@@ -39,17 +41,20 @@ public class SpilneInterpolationTests extends TestCase {
 
     }
 
+    private boolean variance(double interpolationValue, double realValue) {
+        return(Math.abs(interpolationValue - realValue) <= epsilon * realValue);
+    }
+
     public void testInterpolation() {
         List<IPoint> after = splineInterpolation.interpolate(pointListBefore);
         for (int i = 0; i < after.size() - 1; i++) {
-            assertEquals(after.get(i).getX(), pointListAfter.get(i).getX());
-            assertEquals(after.get(i).getY(), pointListAfter.get(i).getY());
+            assertTrue(variance(after.get(i).getY(), pointListAfter.get(i).getY()));
         }
     }
 
     public void testInterpolation2() {
         int k = 10;
-        for (int i = 10; i > 0; i--) {
+        for (int i = 10; i >= 0; i--) {
             IPoint point = new SkeletonPoint(k, i * i);
             k++;
             pointListAfter.add(point);
@@ -62,8 +67,7 @@ public class SpilneInterpolationTests extends TestCase {
         }
         List<IPoint> after = splineInterpolation.interpolate(pointListBefore);
         for (int i = 0; i < after.size() - 1; i++) {
-            assertEquals(after.get(i).getX(), pointListAfter.get(i).getX());
-            assertEquals(after.get(i).getY(), pointListAfter.get(i).getY());
+            assertTrue(variance(after.get(i).getY(), pointListAfter.get(i).getY()));
         }
     }
 

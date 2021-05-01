@@ -15,7 +15,7 @@ public class Ratios {
     private int _modelAndInterFP;
     private int _modelAndInterFN;
 
-    Ratios(int frames) {
+    public Ratios(int frames) {
         _frames = frames;
         _actualCount = 0;
         _modelCount = 0;
@@ -30,120 +30,120 @@ public class Ratios {
         _modelAndInterFN = 0;
     }
 
-    void addActual() {
+    public void addActual() {
         _actualCount++;
     }
 
-    void addModel() {
+    public void addModel() {
         _modelCount++;
     }
 
-    void addModelAndInterpolation() {
+    public void addModelAndInterpolation() {
         _modelAndInterpolationCount++;
     }
 
-    void addModelTP() {
+    public void addModelTP() {
         _modelTP++;
     }
 
-    void addModelTN() {
+    public void addModelTN() {
         _modelTN++;
     }
 
-    void addModelFP() {
+    public void addModelFP() {
         _modelFP++;
     }
 
-    void addModelFN() {
+    public void addModelFN() {
         _modelFN++;
     }
 
-    void addModelAndInterTP() {
+    public void addModelAndInterTP() {
         _modelAndInterTP++;
     }
 
-    void addModelAndInterTN() {
+    public void addModelAndInterTN() {
         _modelAndInterTN++;
     }
 
-    void addModelAndInterFP() {
+    public void addModelAndInterFP() {
         _modelAndInterFP++;
     }
 
-    void addModelAndInterFN() {
+    public void addModelAndInterFN() {
         _modelAndInterFN++;
     }
 
-    int getActualCount() {
+    public int getActualCount() {
         return _actualCount;
     }
 
-    int getModelCount() {
+    public int getModelCount() {
         return _modelCount;
     }
 
-    int getModelAndInterpolationCount() {
+    public int getModelAndInterpolationCount() {
         return _modelAndInterpolationCount;
     }
 
-    int getModelTP() { return _modelTP; }
+    public int getModelTP() { return _modelTP; }
 
-    int getModelTN() { return _modelTN; }
+    public int getModelTN() { return _modelTN; }
 
-    int getModelFP() { return _modelFP; }
+    public int getModelFP() { return _modelFP; }
 
-    int getModelFN() { return _modelFN; }
+    public int getModelFN() { return _modelFN; }
 
-    int getModelAndInterTP() { return _modelAndInterTP; }
+    public int getModelAndInterTP() { return _modelAndInterTP; }
 
-    int getModelAndInterTN() { return _modelAndInterTN; }
+    public int getModelAndInterTN() { return _modelAndInterTN; }
 
-    int getModelAndInterFP() { return _modelAndInterFP; }
+    public int getModelAndInterFP() { return _modelAndInterFP; }
 
-    int getModelAndInterFN() { return _modelAndInterFN; }
+    public int getModelAndInterFN() { return _modelAndInterFN; }
 
-    double getRatioModel() {
+    public double getRatioModel() {
         return getRatio(_modelCount, _actualCount);
     }
 
-    double getRatioModelAndInterpolation() {
+    public double getRatioModelAndInterpolation() {
         return getRatio(_modelAndInterpolationCount, _actualCount);
     }
 
-    double getImprovement() {
+    public double getImprovement() {
         double val = getRatioModelAndInterpolation() - getRatioModel();
         return Math.floor(val * 10) / 10;
     }
 
-    double getRatioModelTP() {
+    public double getRatioModelTP() {
         return getRatio(_modelTP, _actualCount);
     }
 
-    double getRatioModelTN() {
+    public double getRatioModelTN() {
         return getRatio(_modelTN, _frames - _actualCount);
     }
 
-    double getRatioModelFP() {
+    public double getRatioModelFP() {
         return getRatio(_modelFP, _frames - _actualCount);
     }
 
-    double getRatioModelFN() {
+    public double getRatioModelFN() {
         return getRatio(_modelFN, _actualCount);
     }
 
-    double getRatioModelAndInterTP() {
+    public double getRatioModelAndInterTP() {
         return getRatio(_modelAndInterTP, _actualCount);
     }
 
-    double getRatioModelAndInterTN() {
+    public double getRatioModelAndInterTN() {
         return getRatio(_modelAndInterTN, _frames - _actualCount);
     }
 
-    double getRatioModelAndInterFP() {
+    public double getRatioModelAndInterFP() {
         return getRatio(_modelAndInterFP, _frames - _actualCount);
     }
 
-    double getRatioModelAndInterFN() {
+    public double getRatioModelAndInterFN() {
         return getRatio(_modelAndInterFN, _actualCount);
     }
 

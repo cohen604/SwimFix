@@ -1,5 +1,4 @@
 package Domain.UserData;
-import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
 
 import java.util.Collection;
