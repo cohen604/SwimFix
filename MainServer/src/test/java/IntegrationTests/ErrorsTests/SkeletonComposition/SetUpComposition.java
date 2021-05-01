@@ -1,20 +1,17 @@
-package IntegrationTests.DrawingTests;
+package IntegrationTests.ErrorsTests.SkeletonComposition;
 
 import Domain.Points.IPoint;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SkeletonPoint;
 import Domain.SwimmingSkeletonsData.SwimmingSkeletonComposition.SwimmingSkeleton;
-import UnitTests.DrawingTests.DrawTests;
 
-public class DrawTestsCompositionSkeleton extends DrawTests {
+public class SetUpComposition {
 
-    @Override
-    protected IPoint setUpPoint(double x, double y) {
+    public IPoint setUpPoint(double x, double y) {
         return new SkeletonPoint(x, y);
     }
 
-    @Override
-    protected ISwimmingSkeleton setUpSwimmingSkeleton(
+    public ISwimmingSkeleton setUpSwimmingSkeleton(
             double xHead, double yHead,
             double xRightShoulder, double yRightShoulder,
             double xRightElbow, double yRightElbow,
