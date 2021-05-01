@@ -55,25 +55,13 @@ class _MenuBarState extends State<MenuBar> {
   Function onLogout(BuildContext context) {
     return () {
       _logicManager.logout(this.widget.user.swimmer).then(
-              (value) {
-            if (value) {
-              this.setState(() {
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamed(context, '/');
-                });
-              });
-            }
-            else {
-              showDialog(
-                context: context,
-                builder: (_) =>
-                  AlertDialog(
-                    content: Text('Cant Logout, Please Try again later',
-                      textAlign: TextAlign.center,),
-                  )
-              );
-            }
-          }
+            (value) {
+          this.setState(() {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamed(context, '/');
+            });
+          });
+        }
       );
     };
   }
