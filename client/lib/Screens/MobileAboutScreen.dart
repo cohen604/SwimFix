@@ -135,7 +135,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
               fit: FlexFit.tight,
               child: Container(
                   alignment: Alignment.bottomLeft,
-                  child: buildText(context, "Swim Analytics", 64,
+                  child: buildText(context, "Swim Analytics", 54,
                       fontWeight: FontWeight.bold))
           ),
           Container(
