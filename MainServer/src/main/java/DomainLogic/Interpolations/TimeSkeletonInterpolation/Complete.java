@@ -1,6 +1,6 @@
 package DomainLogic.Interpolations.TimeSkeletonInterpolation;
 
-class Complete {
+public class Complete {
     private boolean head;
     private boolean rightShoulder;
     private boolean rightElbow;
@@ -9,7 +9,7 @@ class Complete {
     private boolean leftElbow;
     private boolean leftWrist;
 
-    Complete() {
+    public Complete() {
         this.head = false;
         this.rightShoulder = false;
         this.rightElbow = false;
