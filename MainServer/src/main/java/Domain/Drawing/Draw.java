@@ -86,7 +86,7 @@ public class Draw implements IDraw {
      */
     @Override
     public Mat drawLogo(Mat frame) {
-        //TODO refactor this to receive an input logo
+        //TODO refactor this to receive an input logo and x,y
         String logo = "Swim Analytics";
         double x = 10;
         double y = 30;
