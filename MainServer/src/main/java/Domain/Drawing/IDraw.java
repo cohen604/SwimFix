@@ -46,9 +46,9 @@ public interface IDraw {
      * @param b
      * @param a
      */
-    Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
-                           double endAngle, IPoint center, double r, double g,
-                           double b, double a);
+    Mat drawEclipse(Mat frame, double radius, double angle, double startAngle,
+                    double endAngle, IPoint center, double r, double g,
+                    double b, double a);
 
     /**
      * The function drawBefore line

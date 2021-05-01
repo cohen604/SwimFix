@@ -5,7 +5,6 @@ import UnitTests.ProvidersTests.ProvidersTests;
 import UnitTests.SkeletonTesting.SkeletonTests;
 import UnitTests.PeriodTimeTests.AllPeriodTimeTests;
 import UnitTests.PointsTests.IPointUtilsTests;
-import UnitTests.SkeletonFiltersTests.SkeletonFiltersTests;
 import UnitTests.StreamingTests.*;
 import UnitTests.SwimmingErrorDetectorsTests.SwimmingErrorDetectorsTests;
 import UnitTests.SwimmingTests.SwimmingTests;
@@ -19,7 +18,6 @@ import org.junit.runners.Suite;
     AllPeriodTimeTests.class,
     IPointUtilsTests.class,
     ProvidersTests.class,
-    SkeletonFiltersTests.class,
     StreamingTests.class,
     SwimmingErrorDetectorsTests.class,
     SwimmingTests.class,

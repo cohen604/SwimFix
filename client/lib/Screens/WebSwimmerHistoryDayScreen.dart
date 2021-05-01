@@ -69,7 +69,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                   ),
                 ),
                 SizedBox(height: 5.0),
-                new Expanded
+                new Expanded  
                   (child: FutureBuilder(
                   initialData: [],
                   future: getSwimmerHistoryMap(this.widget.arguments.date),
