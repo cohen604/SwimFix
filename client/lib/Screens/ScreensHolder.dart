@@ -4,6 +4,8 @@ import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/MobileAboutScreen.dart';
+import 'package:client/Screens/MobileDownloadScreen.dart';
 import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
@@ -13,6 +15,7 @@ import 'package:client/Screens/WebCoachScreen.dart';
 import 'package:client/Screens/WebDownloadScreen.dart';
 import 'package:client/Screens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/WebResearcherScreen.dart';
+import 'package:flutter/foundation.dart';
 import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/WebViewFeedbackScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
@@ -33,10 +36,16 @@ class ScreenHolder {
     if(args == null) {
       args = new AboutScreenArguments();
     }
+    if(isUserViewWebFromMobile()) {
+      return new MobileAboutScreen(args);
+    }
     return new WebAboutScreen(args);
   }
 
   Widget getDownloadsScreen() {
+    if(isUserViewWebFromMobile()) {
+      return new MobileDownloadScreen();
+    }
     return new WebDownloadScreen();
   }
 
@@ -79,6 +88,11 @@ class ScreenHolder {
 
   Widget getViewFeedbackScreen(ViewFeedBackArguments args) {
     return new WebViewFeedbackScreen(arguments: args,);
+  }
+
+  bool isUserViewWebFromMobile() {
+    return (defaultTargetPlatform == TargetPlatform.iOS
+        || defaultTargetPlatform == TargetPlatform.android);
   }
 
 }

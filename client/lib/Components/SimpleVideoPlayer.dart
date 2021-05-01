@@ -76,26 +76,20 @@ class _SimpleVideoPlayerState extends State<SimpleVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     if(_controller.value.initialized) {
-      return MouseRegion(
-        onEnter: onEnterVideo,
-        onExit: onLeaveVideo,
-        child: Stack(
-          children: [
-            VideoPlayer(_controller),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2,
-                  )
-              ),
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller,),
-              ),
+      return Container(
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: MouseRegion(
+            onEnter: onEnterVideo,
+            onExit: onLeaveVideo,
+            child: Stack(
+              children: [
+                Container(
+                  child: VideoPlayer(_controller,)),
+                buildVideoButtons(context),
+              ],
             ),
-            buildVideoButtons(context),
-          ]
+          ),
         ),
       );
     }

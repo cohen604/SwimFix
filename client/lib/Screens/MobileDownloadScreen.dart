@@ -1,22 +1,23 @@
 import 'dart:html' as html;
 import 'dart:html';
 import 'package:client/Components/AboutScreenMenuBar.dart';
+import 'package:client/Components/MobileAboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class WebDownloadScreen extends StatefulWidget {
+class MobileDownloadScreen extends StatefulWidget {
   @override
-  _WebDownloadScreenState createState() => _WebDownloadScreenState();
+  _MobileDownloadScreenState createState() => _MobileDownloadScreenState();
 }
 
-class _WebDownloadScreenState extends State<WebDownloadScreen> {
+class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
 
   WebColors webColors;
 
-  _WebDownloadScreenState() {
+  _MobileDownloadScreenState() {
     webColors = new WebColors();
   }
 
@@ -44,17 +45,6 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
 
   Function onDownload(BuildContext context) {
     return ()=>{};
-  }
-
-  Function onLogin(BuildContext context) {
-    return () {
-      this.setState(() {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamed(context, '/',
-              arguments: new AboutScreenArguments(loginOn: true));
-        });
-      });
-    };
   }
 
   void onClickHref(String href) {
@@ -128,33 +118,27 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
   }
 
   Widget buildDownloadArea(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(child: Container()),
-        Flexible(
-          child: buildDownload(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: ARM 32 bit',
               onDownloadAndroidArm32),
-        ),
-        Flexible(
-          child: buildDownload(
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: ARM 64 bit',
               onDownloadAndroidArm64),
-        ),
-        Flexible(
-          child: buildDownload(
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: x86 64 bit',
               onDownloadAndroidArm64),
-        ),
-        Flexible(child: Container()),
-      ]
+        ]
+      ),
     );
   }
 
@@ -168,11 +152,10 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
         color: webColors.getBackgroundForI6(),
         child: Column(
           children: [
-            AboutScreenMenuBar(
+            MobileAboutScreenMenuBar(
               onLogo: onLogo(context),
               onAbout: onAbout(context),
               onDownload: onDownload(context),
-              onLogin: onLogin(context),
             ),
             Expanded(
                 child: buildDownloadArea(context)

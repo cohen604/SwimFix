@@ -296,24 +296,32 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   Widget buildSupportArea(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 4,
+      height: MediaQuery.of(context).size.height / 6,
       color: _webColors.getBackgroundForI3(),
       child: Row(
         children: [
           Flexible(
             fit: FlexFit.tight,
-            child: Center(
-                child: buildText(context, "Web", 36,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.web_outlined),
+                buildText(context, "Web", 24,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold)
+                    fontWeight: FontWeight.bold),
+              ],
             )
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Center(
-                child: buildText(context, "Mobile", 36,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.mobile_friendly),
+                buildText(context, "Mobile", 24,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold)
+                    fontWeight: FontWeight.bold),
+              ],
             )
           ),
         ],
