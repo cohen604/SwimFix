@@ -1,5 +1,6 @@
 package UnitTests.SwimmingTests;
 
+import UnitTests.PointsTests.IPointUtilsTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -10,7 +11,6 @@ import org.junit.runners.Suite;
         SkeletonPointGraphTests.class,
         SkeletonPointCompositionTests.class,
         SwimmingSkeletonCompositionTests.class,
-        IPointUtilsTests.class,
 })
 
 public class SwimmingTests {

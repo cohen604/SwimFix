@@ -51,11 +51,9 @@ public class TaggedVideo {
         return _tags.add(tag);
     }
 
-
     public void setTags(List<ISwimmingSkeleton> tags) {
         _tags = tags;
     }
-
 
     public List<ISwimmingSkeleton> getTags() {
         return _tags;

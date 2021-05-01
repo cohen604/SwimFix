@@ -58,12 +58,14 @@ public class IPointUtils {
         return new SkeletonPoint(a.getX() + scalarX, a.getY() + scalarY);
     }
 
+    //TODO delete this
     public static IPoint getMiddlePoint(IPoint a, IPoint b) {
         double x = (a.getX() + b.getX()) / 2;
         double y = (a.getY() + b.getY()) / 2;
         return new SkeletonPoint( x, y);
     }
 
+    //TODO delete this
     public static IPoint calcPointOnLinearLineLowerThenDistance(double slop, IPoint point, double y) {
         double distance = -1;
         double x = -1;
@@ -84,6 +86,7 @@ public class IPointUtils {
         return new SkeletonPoint(x, y);
     }
 
+    //TODO delete this
     public static IPoint calcPointOnLinearForGivenX(double slope, IPoint point, double x) {
         double y = point.getY() + slope * (x - point.getX());
         return new SkeletonPoint(x, y);
