@@ -1,5 +1,7 @@
 package UnitTests;
 
+import UnitTests.DrawingTests.DrawingTests;
+import UnitTests.Erros.ErrorTests;
 import UnitTests.InterpolationTests.InterpolationTests;
 import UnitTests.ProvidersTests.ProvidersTests;
 import UnitTests.SkeletonTesting.SkeletonTests;
@@ -15,6 +17,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
+    DrawingTests.class,
+    ErrorTests.class,
     AllPeriodTimeTests.class,
     IPointUtilsTests.class,
     ProvidersTests.class,

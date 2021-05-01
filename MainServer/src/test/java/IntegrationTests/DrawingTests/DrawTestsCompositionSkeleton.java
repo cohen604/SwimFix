@@ -26,7 +26,7 @@ public class DrawTestsCompositionSkeleton extends DrawTests {
         IPoint rightShoulder = new SkeletonPoint(xRightShoulder, yRightShoulder);
         IPoint rightElbow = new SkeletonPoint(xRightElbow, yRightElbow);
         IPoint rightWrist = new SkeletonPoint(xRightWrist, yRightWrist);
-        IPoint leftShoulder = new SkeletonPoint(xLeftShoulder, yRightShoulder);
+        IPoint leftShoulder = new SkeletonPoint(xLeftShoulder, yLeftShoulder);
         IPoint leftElbow = new SkeletonPoint(xLeftElbow, yLeftElbow);
         IPoint leftWrist = new SkeletonPoint(xLeftWrist, yLeftWrist);
         return new SwimmingSkeleton(head,
