@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:client/Components/AboutScreenMenuBar.dart';
 import 'package:client/Components/MobileAboutScreenMenuBar.dart';
 import 'package:client/Components/SimpleVideoPlayer.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:video_player/video_player.dart';
 
 import 'Arguments/AboutScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
@@ -31,6 +33,8 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
 
   WebColors _webColors;
   ScreenState state;
+  VideoPlayerController _controller;
+  ChewieController _chewieController;
 
   _MobileAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
     _webColors = new WebColors();
@@ -45,16 +49,29 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
   @override
   void initState() {
     super.initState();
-    // _animationController = new AnimationController(
-    //   duration: Duration(seconds: 2, milliseconds: 30),
-    //   vsync: this,
-    // );
+    _controller = VideoPlayerController.asset('assets/videos/intro.mp4');
+    _controller.initialize().then((_) {
+      _chewieController = ChewieController(
+        videoPlayerController: _controller,
+        aspectRatio: _controller.value.aspectRatio,
+        autoPlay: false,
+        looping: false,
+        //note: this muse be false cause chewiew having problem in full screen
+        allowFullScreen: false,
+        allowedScreenSleep: false,
+        fullScreenByDefault: false,
+        allowMuting: false,
+        playbackSpeeds: [0.1, 0.25, 0.5, 1, 1.5],
+      );
+      this.setState(() { });
+    });
   }
 
   @override
   void dispose() {
+    _chewieController.dispose();
+    _controller.dispose();
     super.dispose();
-    // _animationController.dispose();
   }
 
   void onSignUp() {
@@ -103,7 +120,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
   Widget buildDesArea(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height / 1.5,
       padding: EdgeInsets.only(left: 30),
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -118,21 +135,21 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
               fit: FlexFit.tight,
               child: Container(
                   alignment: Alignment.bottomLeft,
-                  child: buildText(context, "Swim Analytics", 84,
+                  child: buildText(context, "Swim Analytics", 64,
                       fontWeight: FontWeight.bold))
           ),
           Container(
               alignment: Alignment.centerLeft,
               child: buildText(
-                context, "Swimming training solutions", 36,
+                context, "Swimming training solutions", 24,
               )
           ),
           Expanded(
             child: Container(
               alignment: Alignment.topLeft,
               child: buildText(context,"The best platform to improve your swimming abilities.\n"
-                  "The platform allows any swimmer to record, view, train,\n"
-                  "receive swimming videos, feedback's and many more.\n", 21,),
+                  "The platform allows any swimmer to record, view, train, receive swimming videos,"
+                  "feedback's and many more.\n", 21,),
             ),
           ),
         ],
@@ -140,10 +157,31 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
     );
   }
 
+  Widget buildVideo(BuildContext context) {
+    if(_controller == null || !_controller.value.initialized
+        || _chewieController == null) {
+      return Center(
+          child: CircularProgressIndicator()
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Material(
+        color: Colors.black.withAlpha(120),
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Chewie(
+            controller: _chewieController
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildVideoArea(BuildContext context) {
     return Container(
       // width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height / 2,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/about_screen_background.png'),
@@ -151,34 +189,40 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),
       ),
-      child: Container(
-        margin: EdgeInsets.all(20.0),
-        child: SimpleVideoPlayer('assets/videos/intro.mp4')),
+      child: buildVideo(context),
     );
   }
 
   Widget buildSupportArea(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 4,
+      height: MediaQuery.of(context).size.height / 6,
       color: _webColors.getBackgroundForI3(),
       child: Row(
         children: [
           Flexible(
-              fit: FlexFit.tight,
-              child: Center(
-                  child: buildText(context, "Web", 36,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)
-              )
+            fit: FlexFit.tight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.web_outlined),
+                buildText(context, "Web", 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+              ],
+            )
           ),
           Flexible(
-              fit: FlexFit.tight,
-              child: Center(
-                  child: buildText(context, "Mobile", 36,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)
-              )
+            fit: FlexFit.tight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.mobile_friendly),
+                buildText(context, "Mobile", 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+              ],
+            )
           ),
         ],
       ),

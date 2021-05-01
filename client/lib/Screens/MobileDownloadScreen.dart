@@ -110,31 +110,27 @@ class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
   }
 
   Widget buildDownloadArea(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: buildDownload(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: ARM 32 bit',
               onDownloadAndroidArm32),
-        ),
-        Flexible(
-          child: buildDownload(
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: ARM 64 bit',
               onDownloadAndroidArm64),
-        ),
-        Flexible(
-          child: buildDownload(
+          buildDownload(
               context,
               'Android',
               'Min SDK: 27\nSystem: x86 64 bit',
               onDownloadAndroidArm64),
-        ),
-      ]
+        ]
+      ),
     );
   }
 
