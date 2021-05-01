@@ -5,6 +5,7 @@ import UnitTests.ProvidersTests.ProvidersTests;
 import UnitTests.SkeletonTesting.SkeletonTests;
 import UnitTests.PeriodTimeTests.AllPeriodTimeTests;
 import UnitTests.PointsTests.IPointUtilsTests;
+import UnitTests.StatisticsTests.StatisticsTests;
 import UnitTests.StreamingTests.*;
 import UnitTests.SwimmingErrorDetectorsTests.SwimmingErrorDetectorsTests;
 import UnitTests.SwimmingTests.SwimmingTests;
@@ -24,6 +25,7 @@ import org.junit.runners.Suite;
     UsersTests.class,
     InterpolationTests.class,
     SkeletonTests.class,
+    StatisticsTests.class,
 })
 
 public class AllUnitTests {
