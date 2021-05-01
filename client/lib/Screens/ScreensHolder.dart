@@ -2,10 +2,14 @@ import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
+import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';
+import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/MobileAboutScreen.dart';
 import 'package:client/Screens/MobileDownloadScreen.dart';
+import 'package:client/Screens/WebNoPermissionScreen.dart';
+import 'package:client/Screens/WebReLoginScreen.dart';
 import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
@@ -50,44 +54,110 @@ class ScreenHolder {
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/welcome');
+    }
     return new WebWelcomeScreen(args: args);
   }
 
   Widget getSwimmerScreen(SwimmerScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebSwimmerScreen(arguments: args,);
   }
 
   Widget getUploadScreen(UploadScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/upload');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebUploadScreen(args: args,);
   }
 
   Widget getResearcherScreen(ResearcherScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/researcher');
+    }
+    if(!args.user.permissions.isResearcher) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebResearcherScreen(args);
   }
 
   Widget getReportScreen(ReportScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/researcher/report');
+    }
+    if(!args.user.permissions.isResearcher) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebReportScreen(args: args);
   }
 
   Widget getMultiReportScreen(MultiReportScreenArguments args) {
-     return new WebMultiReportsScreen(args);
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/researcher/multireport');
+    }
+    if(!args.user.permissions.isResearcher) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebMultiReportsScreen(args);
   }
 
   Widget getCoachScreen(CoachScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/coach');
+    }
+    if(!args.user.permissions.isCoach) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebCoachScreen(args);
   }
 
-
   Widget getSwimmerHistoryScreen(SwimmerScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/history');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebSwimmerHistoryScreen(arguments: args,);
   }
 
   Widget getSwimmerHistoryDayScreen(SwimmerHistoryPoolsArguments args) {
+    if(args == null || args.webUser == null || args.webUser.swimmer == null) {
+      return getReLoginScreen('/history');
+    }
+    if(!args.webUser.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.webUser);
+    }
     return new WebSwimmerHistoryDayScreen(arguments: args,);
   }
 
   Widget getViewFeedbackScreen(ViewFeedBackArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/history');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
     return new WebViewFeedbackScreen(arguments: args,);
+  }
+
+  Widget getReLoginScreen(String desPath) {
+    ReLoginScreenArguments args = new ReLoginScreenArguments(desPath);
+    return new WebReLoginScreen(args: args);
+  }
+
+  Widget getNoPermissionScreen(WebUser user) {
+    NoPermissionScreenArguments args = new NoPermissionScreenArguments(user);
+    return new WebNoPermissionScreen(args: args,);
   }
 
   bool isUserViewWebFromMobile() {
