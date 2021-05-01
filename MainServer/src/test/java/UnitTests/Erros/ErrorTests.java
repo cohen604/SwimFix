@@ -10,6 +10,12 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
     ErrorFactoriesTests.class,
+    LeftElbowErrorTests.class,
+    LeftForearmErrorTests.class,
+    LeftPalmCrossHeadErrorTests.class,
+    RightElbowErrorTests.class,
+    RightForearmErrorTests.class,
+    RightPalmCrossHeadErrorTests.class,
 })
 
 public class ErrorTests {
