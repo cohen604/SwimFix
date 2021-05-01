@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:html';
 import 'package:client/Components/AboutScreenMenuBar.dart';
 import 'package:client/Components/MobileAboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
@@ -46,15 +47,22 @@ class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
     return ()=>{};
   }
 
-  void onDownloadAndroidArm32() async{
-    html.window.open('/assets/releases/app-armeabi-v7a-release.apk', "apk");
+  void onClickHref(String href) {
+    AnchorElement(
+        href: href)
+      ..setAttribute("download", 'swimAnalytics.apk')
+      ..click();
   }
 
-  void onDownloadAndroidArm64() async{
-    html.window.open('/assets/releases/app-arm64-v8a-release.apk', "apk");
+  void onDownloadAndroidArm32() {
+    onClickHref('/assets/assets/releases/app-armeabi-v7a-release.apk');
   }
-  void onDownloadAndroidx86_64() async{
-    html.window.open('/assets/releases/app-x86_64-release.apk', "apk");
+
+  void onDownloadAndroidArm64() {
+    onClickHref('/assets/assets/releases/app-arm64-v8a-release.apk');
+  }
+  void onDownloadAndroidx86_64() {
+    onClickHref('/assets/assets/releases/app-x86_64-release.apk');
   }
 
   Widget buildTitle(BuildContext context, String text) {
