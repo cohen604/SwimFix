@@ -1,5 +1,15 @@
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/UserPermissions.dart';
+import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
+import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
+import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
+import 'package:client/Screens/Arguments/UploadScreenArguments.dart';
+import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/WebSwimmerScreen.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,10 +31,41 @@ class WebReLoginScreen extends StatefulWidget {
 
 class _WebReLoginScreenState extends State<WebReLoginScreen> {
 
-  void navigation() {
-    WelcomeScreenArguments args = new WelcomeScreenArguments(
-        new WebUser(swimmer, permissions));
-    Navigator.pushNamed(context, "/welcome",  arguments: args);
+  //TODO better solution is to refactor this to class arguments maker
+  void navigation(Swimmer swimmer, UserPermissions permissions) {
+    dynamic args;
+    String prefix = this.widget.args.desPath;
+    WebUser user = new WebUser(swimmer, permissions);
+    if(prefix == '/welcome') {
+      args = new WelcomeScreenArguments(user);
+    }
+    else if(prefix == '/swimmer') {
+      args = new SwimmerScreenArguments(user);
+    }
+    else if(prefix == '/upload') {
+      args = new UploadScreenArguments(user);
+    }
+    else if(prefix == '/researcher') {
+      args = new ResearcherScreenArguments(user);
+    }
+    else if(prefix == '/researcher/report') {
+      args = new ReportScreenArguments(user);
+    }
+    else if(prefix == '/researcher/multireport') {
+      args = new MultiReportScreenArguments(user);
+    }
+    else if(prefix == '/coach') {
+      // TODO get a team name
+      String teamName = 'Need to get team name from relogin screen';
+      args = new CoachScreenArguments(user, teamName);
+    }
+    else if(prefix == '/history') {
+
+    }
+    else if(prefix == '') {
+
+    }
+    Navigator.pushNamed(context, prefix, arguments: args);
   }
 
   void signInWithGoogle() async {
@@ -40,7 +81,7 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
         logicManager.getPermissions(swimmer).then((permissions) {
           if(permissions != null) {
             this.setState(() {
-              navigation();
+              navigation(swimmer, permissions);
             });
           }
           else {

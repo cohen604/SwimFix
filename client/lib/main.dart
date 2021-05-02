@@ -3,6 +3,7 @@ import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
 import 'Screens/Arguments/CoachScreenArguments.dart';
+import 'Screens/Arguments/HistoryScreenArguments.dart';
 import 'Screens/Arguments/MultiReportScreenArguments.dart';
 import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
           return _screenHolder.getCoachScreen(args);
         },
         '/history': (context) {
-          SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
+          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryScreen(args);
         },
         '/historyDay': (context) {

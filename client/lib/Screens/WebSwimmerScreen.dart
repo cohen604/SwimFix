@@ -1,3 +1,4 @@
+import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Components/IconCardButton.dart';
@@ -45,7 +46,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     this.setState(() {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/history',
-            arguments: new SwimmerScreenArguments(this.widget.arguments.user));
+            arguments: new HistoryScreenArguments(this.widget.arguments.user));
       });
     });
   }

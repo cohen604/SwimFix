@@ -1,6 +1,7 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Services/LogicManager.dart';
+import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Components/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class WebSwimmerHistoryScreen extends StatefulWidget {
 
-  final SwimmerScreenArguments arguments;
+  final HistoryScreenArguments arguments;
   WebSwimmerHistoryScreen({Key key, this.arguments}) : super(key: key);
 
   @override
@@ -82,7 +83,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
 class PoolDateTile extends StatelessWidget {
 
   final String date;
-  final SwimmerScreenArguments arguments;
+  final HistoryScreenArguments arguments;
   PoolDateTile({ this.date, this.arguments });
 
   @override

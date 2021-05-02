@@ -20,6 +20,7 @@ import 'package:client/Screens/WebDownloadScreen.dart';
 import 'package:client/Screens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/WebResearcherScreen.dart';
 import 'package:flutter/foundation.dart';
+import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/WebViewFeedbackScreen.dart';
 import 'Arguments/ResearcherScreenArguments.dart';
@@ -120,7 +121,7 @@ class ScreenHolder {
     return new WebCoachScreen(args);
   }
 
-  Widget getSwimmerHistoryScreen(SwimmerScreenArguments args) {
+  Widget getSwimmerHistoryScreen(HistoryScreenArguments args) {
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/history');
     }
