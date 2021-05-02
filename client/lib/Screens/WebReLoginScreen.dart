@@ -16,7 +16,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'Arguments/HistoryScreenArguments.dart';
 import 'PopUps/MessagePopUp.dart';
+import 'WebColors.dart';
 
 class WebReLoginScreen extends StatefulWidget {
 
@@ -30,6 +32,13 @@ class WebReLoginScreen extends StatefulWidget {
 }
 
 class _WebReLoginScreenState extends State<WebReLoginScreen> {
+
+  WebColors _webColors;
+
+  _WebReLoginScreenState() {
+    _webColors = new WebColors();
+  }
+
 
   //TODO better solution is to refactor this to class arguments maker
   void navigation(Swimmer swimmer, UserPermissions permissions) {
@@ -55,15 +64,11 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
       args = new MultiReportScreenArguments(user);
     }
     else if(prefix == '/coach') {
-      // TODO get a team name
-      String teamName = 'Need to get team name from relogin screen';
-      args = new CoachScreenArguments(user, teamName);
+      //TODO add support to coach screen when receive no team name
+      args = new CoachScreenArguments(user, null);
     }
     else if(prefix == '/history') {
-
-    }
-    else if(prefix == '') {
-
+      args = new HistoryScreenArguments(user);
     }
     Navigator.pushNamed(context, prefix, arguments: args);
   }
@@ -108,12 +113,78 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
     });
   }
 
+  Widget buildText(BuildContext context,
+      String text,
+      double fontSize,
+      { Color color = Colors.white,
+        FontWeight fontWeight = FontWeight.normal,
+        TextAlign textAlign = TextAlign.left}) {
+    return Text(text,
+        textAlign: textAlign,
+        style: TextStyle(
+            fontSize: fontSize * MediaQuery.of(context).textScaleFactor,
+            color: color,
+            fontWeight: fontWeight,
+            decoration: TextDecoration.none,
+        ));
+  }
+
   Widget buildLogo(BuildContext context) {
-    return Container();
+    return Container(
+      padding: EdgeInsets.only(top:10, bottom: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildText(context, 'Swim Analytics', 45,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            textAlign: TextAlign.center,
+          ),
+          buildText(context, 'For access this page, please sign in.', 21,
+            color: Colors.white,
+            textAlign: TextAlign.center,
+          )
+        ],
+      )
+    );
+  }
+
+  Widget buildLoginWithGoogle(context) {
+    return Center(
+      child: Card(
+          color: _webColors.getBackgroundForI7(),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20.0),
+            splashColor: Theme.of(context).splashColor,
+            onTap: signInWithGoogle,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListTile(
+                title: buildText(context, "Sign In with Google", 21,
+                    color: Colors.black),
+                leading: Image(image: AssetImage("assets/google_logo.png")),
+              ),
+            ),
+          ),
+        ),
+    );
   }
 
   Widget buildLoginArea(BuildContext context) {
-    return Container();
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: _webColors.getBackgroundForI3(),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        )
+      ),
+      child: buildLoginWithGoogle(context),
+    );
   }
 
   @override
@@ -121,17 +192,32 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+          image: AssetImage('assets/images/about_screen_background.png'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
+        ),
+      ),
+      padding: EdgeInsets.all(10),
       child: Center(
-        child: Card(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildLogo(context),
-                buildLoginArea(context),
-              ],
-            ),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 2,
+          height: MediaQuery.of(context).size.height / 2,
+          decoration: BoxDecoration(
+            color: _webColors.getBackgroundForI2().withAlpha(150),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            border: Border.all(color: Colors.black, width: 3)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildLogo(context),
+              Expanded(
+                  child: buildLoginArea(context)
+              ),
+            ],
           ),
         ),
       ),
