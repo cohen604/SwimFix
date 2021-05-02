@@ -30,9 +30,9 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer();
-        _coach = new Coach();
-        _researcher = new Researcher();
-        _admin = new Admin();   
+//        _coach = new Coach();
+//        _researcher = new Researcher();
+//        _admin = new Admin();
         _pathManager = new PathManager(email, true);
     }
 

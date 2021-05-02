@@ -33,12 +33,13 @@ class WebReLoginScreen extends StatefulWidget {
 
 class _WebReLoginScreenState extends State<WebReLoginScreen> {
 
+  LogicManager _logicManager;
   WebColors _webColors;
 
   _WebReLoginScreenState() {
+    _logicManager = LogicManager.getInstance();
     _webColors = new WebColors();
   }
-
 
   //TODO better solution is to refactor this to class arguments maker
   void navigation(Swimmer swimmer, UserPermissions permissions) {
@@ -74,43 +75,44 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
   }
 
   void signInWithGoogle() async {
-    GoogleAuth googleAuth = new GoogleAuth();
-    User user = await googleAuth.signIn();
-    String name = user.displayName;
-    String email = user.email;
-    String uid = user.uid;
-    Swimmer swimmer = new Swimmer(uid, email, name);
-    LogicManager logicManager = LogicManager.getInstance();
-    logicManager.login(swimmer).then((logged) {
-      if (logged) {
-        logicManager.getPermissions(swimmer).then((permissions) {
-          if(permissions != null) {
-            this.setState(() {
-              navigation(swimmer, permissions);
-            });
-          }
-          else {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return new MessagePopUp('User don\'t have permissions.\n'
-                    'For more information please contact help@swimanalytics.com');
-              },
-            );
-          }
-        });
-      }
-      else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return new MessagePopUp('Something is broken.\n'
-                'Maybe Your Credentials aren\'t correct or the servers are down.\n'
-                'For more information contact swimAnalytics@gmail.com');
-          },
-        );
-      }
-    });
+    User user = await _logicManager.signInWithGoogle();
+    if(user!=null) {
+      String name = user.displayName;
+      String email = user.email;
+      String uid = user.uid;
+      Swimmer swimmer = new Swimmer(uid, email, name);
+      LogicManager logicManager = LogicManager.getInstance();
+      logicManager.login(swimmer).then((logged) {
+        if (logged) {
+          logicManager.getPermissions(swimmer).then((permissions) {
+            if (permissions != null) {
+              this.setState(() {
+                navigation(swimmer, permissions);
+              });
+            }
+            else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return new MessagePopUp('User don\'t have permissions.\n'
+                      'For more information please contact help@swimanalytics.com');
+                },
+              );
+            }
+          });
+        }
+        else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return new MessagePopUp('Something is broken.\n'
+                  'Maybe Your Credentials aren\'t correct or the servers are down.\n'
+                  'For more information contact swimAnalytics@gmail.com');
+            },
+          );
+        }
+      });
+    }
   }
 
   Widget buildText(BuildContext context,

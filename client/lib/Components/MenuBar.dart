@@ -55,10 +55,12 @@ class _MenuBarState extends State<MenuBar> {
   Function onLogout(BuildContext context) {
     return () {
       _logicManager.logout(this.widget.user.swimmer).then(
-            (value) {
-          this.setState(() {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, '/');
+        (serverLogout) {
+          _logicManager.signOutWithGoogle().then( (googleLogout) {
+            this.setState(() {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamed(context, '/');
+              });
             });
           });
         }

@@ -6,16 +6,18 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleAuth extends Authentication {
 
   GoogleSignIn googleSignIn;
-  GoogleAuth() {
+  GoogleSignInAccount account;
 
+  GoogleAuth() {
     this.googleSignIn = GoogleSignIn();
+    this.account = null;
   }
 
   @override
   Future<User> signIn() async{
     try {
-      await Firebase.initializeApp();
-      final GoogleSignInAccount account = await this.googleSignIn.signIn();
+      // await Firebase.initializeApp();
+      this.account = await this.googleSignIn.signIn();
       final GoogleSignInAuthentication authentication = await account.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authentication.accessToken,
@@ -32,8 +34,10 @@ class GoogleAuth extends Authentication {
   }
 
   @override
-  void signOut() async {
-    this.googleSignIn.signOut();
+  Future<bool> signOut() async {
+    await this.account.clearAuthCache();
+    GoogleSignInAccount account = await this.googleSignIn.signOut();
+    return account != null;
   }
 
 }

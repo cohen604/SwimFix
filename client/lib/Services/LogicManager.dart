@@ -5,18 +5,23 @@ import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 
+import 'GoogleAuth.dart';
+
 class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
+  GoogleAuth googleAuth;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
+    this.googleAuth = new GoogleAuth();
   }
 
   static LogicManager getInstance() {
@@ -24,6 +29,14 @@ class LogicManager {
       logicManager = new LogicManager();
     }
     return logicManager;
+  }
+
+  Future<User> signInWithGoogle() async {
+    return await googleAuth.signIn();
+  }
+
+  Future<bool> signOutWithGoogle() async {
+    return await googleAuth.signOut();
   }
 
   Future<bool> login(Swimmer swimmer) async{
