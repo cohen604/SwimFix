@@ -122,6 +122,14 @@ class ScreenHolder {
   }
 
   Widget getSwimmerHistoryScreen(HistoryScreenArguments args) {
+    args = new HistoryScreenArguments(
+      new WebUser(
+          new Swimmer(
+              'MZogz1uG95TCkIhDCoAiyYg9QnH2',
+              'avrahamcalev2@gmail.com',
+              'אברהם כלב'),
+          new UserPermissions(true, true, true, true))
+    );
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/history');
     }

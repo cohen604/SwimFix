@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/',
+      initialRoute: '/history',
       theme: ThemeData(
         primarySwatch: _webColors.createMaterialColor(
             _webColors.getBackgroundForI1()
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
           HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryScreen(args);
         },
-        '/historyDay': (context) {
+        '/history/day': (context) {
           SwimmerHistoryPoolsArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryDayScreen(args);
         },

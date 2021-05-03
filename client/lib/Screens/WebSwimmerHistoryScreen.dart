@@ -1,13 +1,13 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
+import 'package:universal_html/html.dart';
 import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Components/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
 
 class WebSwimmerHistoryScreen extends StatefulWidget {
 
@@ -21,8 +21,36 @@ class WebSwimmerHistoryScreen extends StatefulWidget {
 
 class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
 
-  LogicManager _logicManager = LogicManager.getInstance();
-  Future<List<String>> getSwimmerDays;
+  LogicManager _logicManager;
+  ScreenState _screenState;
+  WebColors _webColors;
+  List<String> days;
+
+  _WebSwimmerHistoryScreenState() {
+    _logicManager = LogicManager.getInstance();
+    _screenState = ScreenState.LoadingHistory;
+    _webColors = new WebColors();
+    days= ['a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'a'];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSwimmerHistoryMap().then((days) {
+        if(days != null) {
+          this.setState(() {
+            _screenState = ScreenState.ViewHistory;
+            // this.days = days;
+          });
+        }
+        else {
+          this.setState(() {
+            _screenState = ScreenState.Error;
+          });
+        }
+      }
+    );
+  }
 
   Future<List<String>> getSwimmerHistoryMap() async {
     Swimmer swimmer = this.widget.arguments.user.swimmer;
@@ -30,46 +58,135 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
     return days;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    this.getSwimmerDays = getSwimmerHistoryMap();
+  void onTapDay(int index) {
+    Navigator.pushNamed(context, '/history/day',
+        arguments: new SwimmerHistoryPoolsArguments(
+            this.widget.arguments.user, this.days[index]));
   }
+
+  Widget buildLoadingHistory(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            Text( 'Loading History...',
+              style: TextStyle(
+                fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildHistoryListEmpty(BuildContext context) {
+    return Center(
+      child: Text('There is no swimming feedbacks. \n'
+          'Try uploading a swimming video or film with Swim Analytics mobile application.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none
+          )
+      ),
+    );
+  }
+
+  Widget buildHistoryList(BuildContext context) {
+    if(this.days.length == 0) {
+      return buildHistoryListEmpty(context);
+    }
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text('History',
+              style: TextStyle(
+                fontSize: 32 * MediaQuery.of(context).textScaleFactor,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: this.days.length,
+              itemBuilder: (BuildContext context, int index) {
+                return PoolDateTile(
+                  date: this.days[index],
+                  onTap: () => onTapDay(index),
+                  color: _webColors.getBackgroundForI3(),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildError(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.error,
+            color:Colors.yellow,
+            size: 45,
+          ),
+          Text( 'Error as accrued, please try again later.',
+            style: TextStyle(
+              fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none
+            ),
+          )
+        ],
+      )
+    );
+  }
+
+  Widget buildScreenStates(BuildContext context) {
+    if(_screenState == ScreenState.LoadingHistory) {
+      return buildLoadingHistory(context);
+    }
+    else if(_screenState == ScreenState.ViewHistory) {
+      return buildHistoryList(context);
+    }
+    else if(_screenState == ScreenState.Error) {
+      return buildError(context);
+    }
+    return Container();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
+        color: _webColors.getBackgroundForI6(),
         child: Column(
           children: [
             MenuBar(
               user: this.widget.arguments.user,
             ),
-            new Expanded
-              (child: FutureBuilder(
-              initialData: [],
-              future: this.getSwimmerDays,
-              builder: (context, swimmerSnap) {
-                if (swimmerSnap == null || swimmerSnap.connectionState == ConnectionState.none ||
-                    swimmerSnap.hasData == null) {
-                  return Container();
-                }
-                else {
-                  // List<String> days = swimmerSnap.data as List<String>;
-                  return ListView.builder(
-                    itemCount: swimmerSnap.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String date = swimmerSnap.data.elementAt(index);
-                      return new PoolDateTile(
-                        date: date, arguments: this.widget.arguments,);
-                    },
-                  );
-                }
-              },
-            ),
+            new Expanded(
+              child: buildScreenStates(context),
             ),
           ]
         ),
@@ -83,28 +200,68 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
 class PoolDateTile extends StatelessWidget {
 
   final String date;
-  final HistoryScreenArguments arguments;
-  PoolDateTile({ this.date, this.arguments });
+  final Function onTap;
+  final Color color;
+
+  PoolDateTile({ this.date, this.onTap, this.color });
+
+  Widget buildTitle(BuildContext context) {
+    return Text('$date',
+      style: TextStyle(
+          fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
+      ),
+    );
+    return Text('See the pools from $date');
+  }
+
+  Widget buildDes(BuildContext context) {
+    return Text('See the pools from $date',
+      style: TextStyle(
+          fontSize: 16 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black54,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Card(
-        margin: EdgeInsets.fromLTRB(110.0, 6.0, 110.0, 0.0),
+      padding: EdgeInsets.all(10),
+      child: Material(
         child: ListTile(
-          leading: Icon(
-            Icons.view_array
+          shape:RoundedRectangleBorder(
+            side: BorderSide(color: Colors.green, width: 1),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(20.0),
+            ),
           ),
-          title: Text(date),
-          tileColor: Colors.blueGrey[50],
-          subtitle: Text('See the pools from $date'),
-          onTap: () {
-            Navigator.pushNamed(context, '/historyDay',
-                arguments: new SwimmerHistoryPoolsArguments(this.arguments.user, date));
-          },
+          leading: Icon(
+            Icons.video_collection_outlined,
+            color: Colors.black,
+            size: 35,
+          ),
+          trailing: Icon(
+            Icons.list,
+            color: Colors.black,
+            size: 35,
+          ),
+          tileColor: color.withAlpha(120),
+          title: buildTitle(context),
+          subtitle: buildDes(context),
+          onTap: onTap
         ),
       ),
     );
   }
+}
+
+enum ScreenState {
+  LoadingHistory,
+  ViewHistory,
+  Error,
 }
