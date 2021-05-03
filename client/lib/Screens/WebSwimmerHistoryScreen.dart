@@ -30,7 +30,6 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
     _logicManager = LogicManager.getInstance();
     _screenState = ScreenState.LoadingHistory;
     _webColors = new WebColors();
-    days= ['a', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'a'];
   }
 
   @override
@@ -40,7 +39,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
         if(days != null) {
           this.setState(() {
             _screenState = ScreenState.ViewHistory;
-            // this.days = days;
+            this.days = days;
           });
         }
         else {
