@@ -82,8 +82,8 @@ class _CameraScreenState extends State<CameraScreen> {
     );
     setState(() {
       _screenState = ScreenStates.ConnectingToCamera;
-      _screenState = ScreenStates.Film;
-      _filmStates = FilmStates.Ready;
+      // _screenState = ScreenStates.Film;
+      // _filmStates = FilmStates.Ready;
     });
   }
 
