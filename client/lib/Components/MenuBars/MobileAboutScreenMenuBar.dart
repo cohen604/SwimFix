@@ -16,8 +16,8 @@ class MobileAboutScreenMenuBar extends StatefulWidget {
 class _MobileAboutScreenMenuBarState extends State<MobileAboutScreenMenuBar> {
 
   WebColors _webColors;
-  List<bool> _onHover = List.generate(2, (index) => false);
-  List<bool> _selected = List.generate(2, (index) => false);
+  List<bool> _onHover;
+  List<bool> _selected;
 
   _MobileAboutScreenMenuBarState() {
     _webColors = WebColors.getInstance();

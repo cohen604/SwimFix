@@ -1,9 +1,8 @@
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/AboutScreenMenuBar.dart';
+import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Components/SimpleVideoPlayer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
-import 'package:client/Services/GoogleAuth.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/scheduler.dart';
 
 import 'Arguments/AboutScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
+import 'Holders/WebColors.dart';
 import 'PopUps/MessagePopUp.dart';
 
 class WebAboutScreen extends StatefulWidget {
@@ -31,10 +31,12 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   WebColors _webColors;
   ScreenState state;
   LogicManager _logicManager;
+  AssetsHolder _assetsHolder;
 
   _WebAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     if(videoOn && !loginOn) {
       state = ScreenState.Video;
     }
@@ -46,10 +48,6 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
   @override
   void initState() {
     super.initState();
-    // _animationController = new AnimationController(
-    //   duration: Duration(seconds: 2, milliseconds: 30),
-    //   vsync: this,
-    // );
   }
 
   @override
@@ -230,7 +228,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
             flex: 4,
             child: Container(
               margin: EdgeInsets.all(20.0),
-              child: SimpleVideoPlayer('assets/videos/intro.mp4')),
+              child: SimpleVideoPlayer(_assetsHolder.getIntroVideo())),
           ),
           Flexible(
             child: buildSignUpButton(context),
@@ -259,7 +257,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
               child: ListTile(
                 title: buildText(context, "Sign In with Google", 21,
                     color: Colors.black),
-                leading: Image(image: AssetImage("assets/google_logo.png")),
+                leading: Image(image: AssetImage(_assetsHolder.getGoogleIcon())),
               ),
             ),
           ),
@@ -282,7 +280,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/about_screen_background.png'),
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),

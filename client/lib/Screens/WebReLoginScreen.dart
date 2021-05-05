@@ -9,8 +9,7 @@ import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
-import 'package:client/Screens/WebSwimmerScreen.dart';
-import 'package:client/Services/GoogleAuth.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,10 +34,12 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
 
   LogicManager _logicManager;
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
 
   _WebReLoginScreenState() {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   //TODO better solution is to refactor this to class arguments maker
@@ -167,7 +168,7 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
               child: ListTile(
                 title: buildText(context, "Sign In with Google", 21,
                     color: Colors.black),
-                leading: Image(image: AssetImage("assets/google_logo.png")),
+                leading: Image(image: AssetImage(_assetsHolder.getGoogleIcon())),
               ),
             ),
           ),
@@ -196,7 +197,7 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
           image: DecorationImage(
-          image: AssetImage('assets/images/about_screen_background.png'),
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),
