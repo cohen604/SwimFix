@@ -1,12 +1,14 @@
+import 'package:client/Components/Buttons/IconCardButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
+
 import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
-import 'package:client/Components/IconCardButton.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'Holders/WebColors.dart';
 
 class WebSwimmerScreen extends StatefulWidget {
 
@@ -21,7 +23,6 @@ class WebSwimmerScreen extends StatefulWidget {
 class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
   WebColors _webColors;
-
 
   _WebSwimmerScreenState() {
     _webColors = WebColors.getInstance();

@@ -1,11 +1,10 @@
-import 'dart:html' as html;
 import 'dart:html';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/AboutScreenMenuBar.dart';
+import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'Holders/WebColors.dart';
 
 class WebDownloadScreen extends StatefulWidget {
   @override

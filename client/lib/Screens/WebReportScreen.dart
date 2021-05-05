@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:html';
+import 'package:client/Components/Buttons/NumberButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
-import 'package:client/Components/NumberButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

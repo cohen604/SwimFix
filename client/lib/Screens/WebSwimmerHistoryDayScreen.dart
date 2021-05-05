@@ -1,14 +1,12 @@
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
 
 class WebSwimmerHistoryDayScreen extends StatefulWidget {
 

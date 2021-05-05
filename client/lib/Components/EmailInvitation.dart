@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';

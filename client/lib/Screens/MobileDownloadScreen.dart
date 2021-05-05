@@ -5,7 +5,6 @@ import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
 import 'Holders/WebColors.dart';
 
 class MobileDownloadScreen extends StatefulWidget {

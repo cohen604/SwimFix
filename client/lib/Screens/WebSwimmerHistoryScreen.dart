@@ -1,11 +1,10 @@
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:universal_html/html.dart';
 import 'Arguments/HistoryScreenArguments.dart';
-import 'Arguments/SwimmerScreenArguments.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -194,7 +193,6 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
   }
 
 }
-
 
 class PoolDateTile extends StatelessWidget {
 

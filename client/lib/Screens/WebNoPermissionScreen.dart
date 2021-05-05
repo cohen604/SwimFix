@@ -1,4 +1,4 @@
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Arguments/NoPermissionScreenArguments.dart';

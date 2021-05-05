@@ -1,5 +1,5 @@
 import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
-import 'package:client/Components/SimpleVideoPlayer.dart';
+import 'package:client/Components/VideoPlayers/SimpleVideoPlayer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
 import 'Arguments/AboutScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'Holders/WebColors.dart';

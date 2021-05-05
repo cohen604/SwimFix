@@ -1,6 +1,5 @@
-import 'package:client/Components/IconCardButton.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
-import 'package:client/Domain/Users/ResearcherReport.dart';
+import 'package:client/Components/Buttons/IconCardButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';

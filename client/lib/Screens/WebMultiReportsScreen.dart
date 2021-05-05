@@ -1,18 +1,15 @@
 import 'dart:convert';
 import 'dart:html';
-
-import 'package:client/Components/BetterNumberButton.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
-import 'package:client/Components/NumberButton.dart';
+import 'package:client/Components/Buttons/BetterNumberButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'Arguments/MultiReportScreenArguments.dart';
+import 'Holders/WebColors.dart';
 import 'PopUps/MessagePopUp.dart';
 
 class WebMultiReportsScreen extends StatefulWidget {
