@@ -1,4 +1,5 @@
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
@@ -25,14 +26,14 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   Map<String, List<dynamic>> _feedbacks;
 
  _WebSwimmerHistoryScreenState() {
-    _logicManager = LogicManager.getInstance()
+    _logicManager = LogicManager.getInstance();
     _screenState = ScreenState.LoadingDayHistory;
     getSwimmerHistoryMap();
  }
 
   void getSwimmerHistoryMap() {
     Swimmer swimmer = this.widget.arguments.webUser.swimmer;
-    String day = this.widget.arguments.date;
+    DateTimeDTO day = this.widget.arguments.date;
     _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day).then(
         (feedbacks) {
           if(feedbacks == null) {
