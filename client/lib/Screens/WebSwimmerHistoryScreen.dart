@@ -1,4 +1,5 @@
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
@@ -23,7 +24,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
   LogicManager _logicManager;
   ScreenState _screenState;
   WebColors _webColors;
-  List<String> days;
+  List<DateTimeDTO> days;
 
   _WebSwimmerHistoryScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -50,10 +51,9 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
     );
   }
 
-  Future<List<String>> getSwimmerHistoryMap() async {
+  Future<List<DateTimeDTO>> getSwimmerHistoryMap() async {
     Swimmer swimmer = this.widget.arguments.user.swimmer;
-    List<String> days = await _logicManager.getSwimmerHistoryDays(swimmer);
-    return days;
+    return await _logicManager.getSwimmerHistoryDays(swimmer);
   }
 
   void onTapDay(int index) {
@@ -207,7 +207,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
 
 class PoolDateTile extends StatelessWidget {
 
-  final String date;
+  final DateTimeDTO date;
   final Function onTap;
   final Color color;
 

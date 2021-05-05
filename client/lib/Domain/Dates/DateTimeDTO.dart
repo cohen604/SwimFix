@@ -26,4 +26,9 @@ class DateTimeDTO {
     return new DateTimeDTO(map['year'], map['month'], map['day']);
   }
 
+  @override
+  String toString() {
+    return '$day.$month.$year';
+  }
+
 }
