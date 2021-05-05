@@ -1,4 +1,4 @@
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';

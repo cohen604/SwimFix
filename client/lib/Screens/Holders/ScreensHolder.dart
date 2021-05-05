@@ -20,19 +20,19 @@ import 'package:client/Screens/WebDownloadScreen.dart';
 import 'package:client/Screens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/WebResearcherScreen.dart';
 import 'package:flutter/foundation.dart';
-import 'Arguments/HistoryScreenArguments.dart';
-import 'Arguments/ReportScreenArguments.dart';
+import '../Arguments/HistoryScreenArguments.dart';
+import '../Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/WebViewFeedbackScreen.dart';
-import 'Arguments/ResearcherScreenArguments.dart';
-import 'Arguments/SwimmerScreenArguments.dart';
-import 'Arguments/UploadScreenArguments.dart';
-import 'Arguments/WelcomeScreenArguments.dart';
+import '../Arguments/ResearcherScreenArguments.dart';
+import '../Arguments/SwimmerScreenArguments.dart';
+import '../Arguments/UploadScreenArguments.dart';
+import '../Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Screens/WebReportScreen.dart';
 import 'package:client/Screens/WebSwimmerScreen.dart';
 import 'package:client/Screens/WebUploadScreen.dart';
 import 'package:client/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
-import 'WebSwimmerHistoryDayScreen.dart';
+import '../WebSwimmerHistoryDayScreen.dart';
 
 
 class ScreenHolder {

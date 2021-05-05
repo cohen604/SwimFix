@@ -62,8 +62,8 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   @override
-  void dispose() {
-    _cameraController?.dispose();
+  Future<void> dispose() async {
+    await _cameraController?.dispose();
     super.dispose();
   }
 
@@ -73,11 +73,13 @@ class _CameraScreenState extends State<CameraScreen> {
       ResolutionPreset.high,
     );
     _cameraController.initialize().then(
-      (value) {
-        setState(() {
-          _screenState = ScreenStates.Film;
-          _filmStates = FilmStates.Ready;
-        });
+      (_) {
+        if(_cameraController.value.isInitialized) {
+          setState(() {
+            _screenState = ScreenStates.Film;
+            _filmStates = FilmStates.Ready;
+          });
+        }
       }
     );
     setState(() {
@@ -93,15 +95,18 @@ class _CameraScreenState extends State<CameraScreen> {
     });
   }
 
-  void onCountDownEnd() {
+  void onCountDownEnd() async {
     // await _cameraController.initialize();
-    _cameraController.startVideoRecording().then(
-      (_) {
-        setState(() {
-          _filmStates = FilmStates.Filming;
-        });
-      }
-    );
+    if(!_cameraController.value.isInitialized) {
+      await _cameraController.initialize();
+    }
+    await _cameraController.startVideoRecording();
+    if(!_cameraController.value.isRecordingVideo) {
+      onCountDownEnd();
+    }
+    setState(() {
+    _filmStates  = FilmStates.Filming;
+    });
   }
 
   void onCameraPause() {
@@ -135,11 +140,13 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void onRemove() {
-    setState(() {
-      _screenState = ScreenStates.Select;
-      _cameraController = null;
-      _filmStates = null;
-      video = null;
+    _cameraController.dispose().then((_) {
+      setState(() {
+        _screenState = ScreenStates.Select;
+        _cameraController = null;
+        _filmStates = null;
+        video = null;
+      });
     });
   }
 
@@ -152,6 +159,14 @@ class _CameraScreenState extends State<CameraScreen> {
                 appUser,
                 video.path,
                 pools));
+    });
+  }
+
+  void onClose() async {
+    await _cameraController.dispose();
+    setState(() {
+      _screenState = ScreenStates.Select;
+      _filmStates = null;
     });
   }
 
@@ -397,12 +412,7 @@ class _CameraScreenState extends State<CameraScreen> {
         margin: EdgeInsets.all(5.0),
         alignment: Alignment.topLeft,
         child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _screenState = ScreenStates.Select;
-              _filmStates = null;
-            });
-          },
+          onPressed: onClose,
           foregroundColor: Colors.white,
           backgroundColor: _colorsHolder.getBackgroundForI6().withAlpha(100),
           child: Icon(

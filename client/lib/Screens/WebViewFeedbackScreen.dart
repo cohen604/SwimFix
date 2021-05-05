@@ -1,5 +1,5 @@
 import 'package:chewie/chewie.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';

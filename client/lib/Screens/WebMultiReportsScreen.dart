@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:client/Components/BetterNumberButton.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:client/Components/NumberButton.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
 
   _WebMultiReportsScreenState() {
     logicManager = LogicManager.getInstance();
-    webColors = new WebColors();
+    webColors = WebColors.getInstance();
     screenState = ScreenState.FolderPicking;
   }
 

@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 
 import 'Arguments/HistoryScreenArguments.dart';
 import 'PopUps/MessagePopUp.dart';
-import 'WebColors.dart';
+import 'Holders/WebColors.dart';
 
 class WebReLoginScreen extends StatefulWidget {
 
@@ -38,7 +38,7 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
 
   _WebReLoginScreenState() {
     _logicManager = LogicManager.getInstance();
-    _webColors = new WebColors();
+    _webColors = WebColors.getInstance();
   }
 
   //TODO better solution is to refactor this to class arguments maker

@@ -2,8 +2,8 @@ import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Components/IconCardButton.dart';
-import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -20,7 +20,12 @@ class WebSwimmerScreen extends StatefulWidget {
 
 class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
-  WebColors _webColors = new WebColors();
+  WebColors _webColors;
+
+
+  _WebSwimmerScreenState() {
+    _webColors = WebColors.getInstance();
+  }
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
       return Text('Welcome ${this.widget.arguments.user.swimmer.name}',

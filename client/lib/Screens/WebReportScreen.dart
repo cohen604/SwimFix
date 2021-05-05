@@ -3,11 +3,11 @@ import 'dart:html';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Holders/WebColors.dart';
 import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:client/Components/NumberButton.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +25,16 @@ class WebReportScreen extends StatefulWidget {
 
 class _WebReportScreenState extends State<WebReportScreen> {
 
-  LogicManager _logicManager = LogicManager.getInstance();
-  WebColors _webColors = new WebColors();
-  ResearcherStep _step = ResearcherStep.Upload_Video;
+  LogicManager _logicManager;
+  WebColors _webColors;
+  ResearcherStep _step;
+
+
+  _WebReportScreenState() {
+    _logicManager = LogicManager.getInstance();
+    _webColors = WebColors.getInstance();
+    _step = ResearcherStep.Upload_Video;
+  }
 
   bool _hasVideo = false;
   File _video;

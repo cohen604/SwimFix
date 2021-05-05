@@ -6,13 +6,14 @@ import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:video_player/video_player.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:client/Components/NumberButton.dart';
-import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'Holders/WebColors.dart';
 
 
 class WebUploadScreen extends StatefulWidget {
@@ -26,17 +27,25 @@ class WebUploadScreen extends StatefulWidget {
 
 class _WebUploadScreenState extends State<WebUploadScreen> {
 
-  LogicManager _logicManager = LogicManager.getInstance();
-  WebColors _webColors = new WebColors();
-  UploadStep _step = UploadStep.Upload;
+  LogicManager _logicManager;
+  WebColors _webColors;
+  UploadStep _step;
 
-  bool _hasVideo = false;
+  bool _hasVideo;
   File _video;
 
-  bool _hasFeedback = false;
+  bool _hasFeedback;
   FeedBackLink _feedbackLink;
   VideoPlayerController _controller;
   ChewieController _chewieController;
+
+  _WebUploadScreenState() {
+    _logicManager = LogicManager.getInstance();
+    _webColors = WebColors.getInstance();
+    _step = UploadStep.Upload;
+    _hasVideo = false;
+    _hasFeedback = false;
+  }
 
   @override
   void dispose() {

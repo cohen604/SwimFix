@@ -6,8 +6,8 @@ import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:client/Components/ImageCardButton.dart';
-import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -24,8 +24,14 @@ class WebWelcomeScreen extends StatefulWidget {
 
 class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
 
-  LogicManager _logicManger = LogicManager.getInstance();
-  WebColors _webColors = new WebColors();
+  LogicManager _logicManger;
+  WebColors _webColors;
+
+
+  _WebWelcomeScreenState() {
+    _logicManger = LogicManager.getInstance();
+    _webColors = WebColors.getInstance();
+  }
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(

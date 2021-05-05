@@ -1,7 +1,7 @@
 import 'package:client/Components/EmailInvitation.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
   TextEditingController _searchTextController;
 
   _WebCoachScreenState() {
-    _webColors = new WebColors();
+    _webColors = WebColors.getInstance();
     _searchTextController = TextEditingController();
   }
 

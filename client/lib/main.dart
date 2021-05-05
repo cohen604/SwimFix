@@ -1,4 +1,4 @@
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
@@ -13,7 +13,7 @@ import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Screens/ScreensHolder.dart';
+import 'Screens/Holders/ScreensHolder.dart';
 
 /// if running from web:localhost add to project arguments --web-host 5000
 void main() async {

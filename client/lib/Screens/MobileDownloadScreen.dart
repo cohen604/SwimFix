@@ -1,9 +1,9 @@
 import 'dart:html' as html;
 import 'dart:html';
-import 'package:client/Components/AboutScreenMenuBar.dart';
-import 'package:client/Components/MobileAboutScreenMenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/AboutScreenMenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/MobileAboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -18,7 +18,7 @@ class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
   WebColors webColors;
 
   _MobileDownloadScreenState() {
-    webColors = new WebColors();
+    webColors = WebColors.getInstance();
   }
 
   Function onLogo(BuildContext context) {

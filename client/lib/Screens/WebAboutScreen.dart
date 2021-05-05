@@ -1,8 +1,8 @@
-import 'package:client/Components/AboutScreenMenuBar.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Components/SimpleVideoPlayer.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
 import 'package:client/Services/GoogleAuth.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +34,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
 
   _WebAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
     _logicManager = LogicManager.getInstance();
-    _webColors = new WebColors();
+    _webColors = WebColors.getInstance();
     if(videoOn && !loginOn) {
       state = ScreenState.Video;
     }
