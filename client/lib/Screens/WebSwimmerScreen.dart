@@ -1,6 +1,5 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
-
 import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class WebColors {
@@ -8,11 +6,7 @@ class WebColors {
   /// I2 means important section rate 2
   /// ...
 
-  static WebColors _webColors;
-
-  _WebColors() {
-
-  }
+  static WebColors _webColors = null;
 
   static WebColors getInstance() {
     if(_webColors == null) {

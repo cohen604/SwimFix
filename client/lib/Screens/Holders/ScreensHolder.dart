@@ -1,5 +1,3 @@
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';

@@ -10,27 +10,27 @@ class AssetsHolder {
   }
 
   String getIntroVideo() {
-    return '/assets/videos/intro.mp4';
+    return 'assets/videos/intro.mp4';
   }
 
   String getGoogleIcon() {
-    return "/assets/google_logo.png";
+    return "assets/google_logo.png";
   }
 
   String getSwimmerBackGround() {
-    return '/assets/images/about_screen_background.png';
+    return 'assets/images/about_screen_background.png';
   }
 
   String getSwimmerImage() {
-    return '/assets/images/swimmer_image.png';
+    return 'assets/images/swimmer_image.png';
   }
 
   String getAdminImage() {
-    return '/assets/images/admin_image.png';
+    return 'assets/images/admin_image.png';
   }
 
   String getCoachImage() {
-    return '/assets/images/coach_image.png';
+    return 'assets/images/coach_image.png';
   }
 
   String getResearcherImage() {

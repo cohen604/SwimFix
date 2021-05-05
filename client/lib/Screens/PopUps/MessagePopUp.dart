@@ -1,4 +1,4 @@
-import 'file:///C:/Users/avrah/Desktop/semesterA/final_project/SwimFix/client/lib/Screens/Holders/WebColors.dart';
+import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -24,9 +24,7 @@ class MessagePopUp extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             color: _webColors.getBackgroundPopUp()
           ),
-          child: Flexible(
-            fit: FlexFit.tight,
-            child: Center(
+          child:Center(
               child: Text(_msg,
                   style: TextStyle(
                     fontSize: 20 * MediaQuery.of(context).textScaleFactor,
@@ -37,7 +35,7 @@ class MessagePopUp extends StatelessWidget {
               ),
             ),
           ),
-        ));
+        );
   }
 
 }
