@@ -108,13 +108,24 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text('History',
+            padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+            child: Text('Swimming days',
               style: TextStyle(
                 fontSize: 32 * MediaQuery.of(context).textScaleFactor,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
                 decoration: TextDecoration.none
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Text('Select the date to view the feedbacks of that date',
+              style: TextStyle(
+                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.normal,
+                  decoration: TextDecoration.none
               ),
             ),
           ),

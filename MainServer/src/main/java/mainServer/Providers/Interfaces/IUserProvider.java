@@ -21,11 +21,6 @@ public interface IUserProvider {
 
     boolean reload();
 
-    List<String> filterHistoryByDay(List<FeedbackVideoStreamer> history);
-
-    Map<String, FeedbackVideoStreamer> filterHistoryByPool
-            (List<FeedbackVideoStreamer> history, String day);
-
-    boolean deleteFeedbackByID(UserDTO userDTO, String feedbackID);
+    boolean deleteFeedbackByID(IUser user, String feedbackID);
 
 }

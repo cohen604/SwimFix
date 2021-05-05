@@ -20,12 +20,33 @@ class WebSwimmerHistoryDayScreen extends StatefulWidget {
 
 class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
-  LogicManager _logicManager = LogicManager.getInstance();
+  LogicManager _logicManager;
+  ScreenState _screenState;
+  Map<String, List<dynamic>> _feedbacks;
 
-  Future<Map<String, dynamic>> getSwimmerHistoryMap(String day) async {
+ _WebSwimmerHistoryScreenState() {
+    _logicManager = LogicManager.getInstance()
+    _screenState = ScreenState.LoadingDayHistory;
+    getSwimmerHistoryMap();
+ }
+
+  void getSwimmerHistoryMap() {
     Swimmer swimmer = this.widget.arguments.webUser.swimmer;
-    Map pools = await _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day);
-    return pools;
+    String day = this.widget.arguments.date;
+    _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day).then(
+        (feedbacks) {
+          if(feedbacks == null) {
+            setState(() {
+              _screenState = ScreenState.Error;
+            });
+          }
+          else {
+            setState(() {
+              _screenState = ScreenState.ViewDayHistory;
+            });
+          }
+        }
+    );
   }
 
   void removeTile() {
@@ -33,9 +54,54 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
     });
   }
 
+  Widget buildHistoryDayList(BuildContext context) {
+    return  ListView.builder(
+        itemCount: _feedbacks.length,
+        itemBuilder: (BuildContext context, int index) {
+          String hour = _feedbacks.keys.elementAt(index);
+          return new PoolHourTile
+            ( hour: hour,
+              link: _feedbacks[hour],
+              user: this.widget.arguments.webUser,
+              logicManager: _logicManager,
+              remove: removeTile);
+        },
+      );
+  }
+
+  Widget buildTopScreen(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Ink(
+        decoration: const ShapeDecoration(
+          color: Colors.lightBlue,
+          shape: CircleBorder(),
+        ),
+        child: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          iconSize: 20.0,
+        ),
+      ),
+    );
+  }
+
+  Widget buildStateViewHistory(BuildContext context) {
+    return Column(
+      children: [
+        buildTopScreen(context),
+        buildHistoryDayList(context),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -46,56 +112,9 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                 MenuBar(
                   user: this.widget.arguments.webUser,
                 ),
-                SizedBox(height: 10.0),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Ink(
-                    decoration: const ShapeDecoration(
-                      color: Colors.lightBlue,
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ),
-                      iconSize: 20.0,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5.0),
-                new Expanded    
-                  (child: FutureBuilder(
-                  initialData: [],
-                  future: getSwimmerHistoryMap(this.widget.arguments.date),
-                  builder: (context, swimmerSnap) {
-                    if (swimmerSnap.connectionState == ConnectionState.none &&
-                        swimmerSnap.hasData == null) {
-                      return Container();
-                    }
-                    else {
-                      return ListView.builder(
-                        itemCount: swimmerSnap.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          String hour = swimmerSnap.data.keys.elementAt(index);
-                          FeedBackLink feedbackLink =
-                            new FeedBackLink.fromJson(swimmerSnap.data[hour]);
-                          String path = feedbackLink.getPath();
-                          print('feedback link is ' + path);
-                          return new PoolHourTile
-                            (hour: hour,
-                            path: path,
-                            user: this.widget.arguments.webUser,
-                            logicManager: _logicManager,
-                            remove: removeTile);
-                        },
-                      );
-                    }
-                  },
-                ),
+                buildTopScreen(context),
+                new Expanded(
+                  child: buildHistoryDayList(context)
                 ),
               ]
           ),
@@ -110,11 +129,11 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 class PoolHourTile extends StatelessWidget {
 
   final String hour;
-  final String path;
+  final FeedBackLink link;
   final WebUser user;
   final LogicManager logicManager;
   final Function() remove;
-  PoolHourTile({ this.hour, this.path, this.user, this.logicManager, this.remove});
+  PoolHourTile({ this.hour, this.link, this.user, this.logicManager, this.remove});
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +150,7 @@ class PoolHourTile extends StatelessWidget {
           subtitle: Text('See the pools from $hour'),
           onTap: () {
             Navigator.pushNamed(context, '/viewFeedback',
-                arguments: new ViewFeedBackArguments(user, path));
+                arguments: new ViewFeedBackArguments(user, link.path));
           },
           trailing: IconButton(
             icon: Icon(Icons.delete),
@@ -147,4 +166,10 @@ class PoolHourTile extends StatelessWidget {
       ),
     );
   }
+}
+
+enum ScreenState {
+  LoadingDayHistory,
+  ViewDayHistory,
+  Error,
 }

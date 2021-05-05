@@ -34,7 +34,7 @@ class AssetsHolder {
   }
 
   String getResearcherImage() {
-    return '/assets/images/researcher_image.png';
+    return 'assets/images/researcher_image.png';
   }
 
   String getDownloadAppArmeabi() {

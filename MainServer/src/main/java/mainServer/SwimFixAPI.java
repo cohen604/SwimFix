@@ -27,7 +27,6 @@ import DomainLogic.SwimmingErrorDetectors.IFactoryErrorDetectors;
 import mainServer.Providers.Interfaces.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class SwimFixAPI {
 
@@ -117,13 +116,12 @@ public class SwimFixAPI {
    }
 
 
-   public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
+   public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
-   public ActionResult<HistoryPoolsDTO>
-            getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
-      return logicManager.getSwimmerHistoryPoolsBy(userDto, day);
+   public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsBy(UserDTO userDto, DateDTO date) {
+      return logicManager.getSwimmerHistoryPoolsByDay(userDto, date);
    }
 
    public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, String feedbackID) {

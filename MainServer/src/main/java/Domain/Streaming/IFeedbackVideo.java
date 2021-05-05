@@ -5,6 +5,8 @@ import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -72,4 +74,9 @@ public interface IFeedbackVideo {
      */
     ISwimmingPeriodTime getSwimmingPeriodTime();
 
+    /**
+     * The function return the date of the ISwimmingFeedback
+     * @return local date time of the feedback video
+     */
+    LocalDateTime getDate();
 }

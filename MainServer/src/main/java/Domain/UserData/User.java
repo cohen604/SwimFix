@@ -4,7 +4,9 @@ import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {
@@ -150,6 +152,16 @@ public class User implements IUser {
         return _swimmer.getFeedbacks();
     }
 
+    @Override
+    public Collection<LocalDateTime> getFeedbacksDays() {
+        return _swimmer.getFeedbacksDays();
+    }
+
+    @Override
+    public Collection<IFeedbackVideo> getFeedbacksOfDay(LocalDateTime day) {
+        return _swimmer.getFeedbacksOfDay(day);
+    }
+
     public Swimmer getSwimmer() {
         return _swimmer;
     }
@@ -182,7 +194,7 @@ public class User implements IUser {
      * @return - true if deleted, false if not
      */
     @Override
-    public boolean deleteFeedback(String feedbackPath) {
+    public IFeedbackVideo deleteFeedback(String feedbackPath) {
         return _swimmer.deleteFeedback(feedbackPath);
     }
 }
