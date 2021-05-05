@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
@@ -186,14 +187,15 @@ class LogicManager {
   }
 
   /// get the days a swimmer swim
-  Future<List<String>> getSwimmerHistoryDays(Swimmer swimmer) async {
+  Future<List<DateTimeDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
       String path = "/swimmer/history";
       ServerResponse response = await this.connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
       List<dynamic> daysMap = response.value as List<dynamic>;
-      List<String> days = daysMap.map((el) => el.toString()).toList();
+      List<DateTimeDTO> days = daysMap.map(
+              (element) => DateTimeDTO.factory(element)).toList();
       return days;
     }
     catch(e) {
@@ -204,15 +206,20 @@ class LogicManager {
 
 
   /// get the days a swimmer swim
-  Future<Map> getSwimmerHistoryPoolsByDay(Swimmer swimmer, String day) async {
+  Future<List<FeedBackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
     try {
-      String path = "/swimmer/history";
+      String path = "/swimmer/history/day";
       Map swimmerMap = swimmer.toJson();
+      Map dayMap = day.toJson();
+      Map request = Map();
+      request['uesr'] = swimmerMap;
+      request['date'] = dayMap;
       ServerResponse response = await this.connectionHandler
-          .postMessageWithParams(path, [day], swimmerMap);
+          .postMessage(path, request);
       //TODO check if response is valid
-      Map map = response.value as Map;
-      return map["pools"];
+      List<dynamic> feedbacks = response.value as List<dynamic>;
+      return feedbacks.map((element) => FeedBackLink.factory(element))
+          .toList();
     }
     catch(e) {
       print('error in get swimmer history pools by day ${e.toString()}');
