@@ -1,7 +1,6 @@
 import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Services/LogicManager.dart';
-import 'package:universal_html/html.dart';
 import 'Arguments/HistoryScreenArguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
