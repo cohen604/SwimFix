@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           FeedbackScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getFeedbackScreen(args);
         },
-        'history': (context) {
+        '/history': (context) {
           HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getHistoryScreen(args);
         }

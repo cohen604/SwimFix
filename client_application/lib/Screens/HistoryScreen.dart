@@ -110,7 +110,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             padding: const EdgeInsets.only(top: 10.0, bottom: 5),
             child: Text('Swimming days',
               style: TextStyle(
-                fontSize: 32 * MediaQuery.of(context).textScaleFactor,
+                fontSize: 24 * MediaQuery.of(context).textScaleFactor,
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
                 decoration: TextDecoration.none
@@ -121,11 +121,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
             padding: const EdgeInsets.only(bottom: 5.0),
             child: Text('Select the date to view the feedbacks of that date',
               style: TextStyle(
-                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                  fontSize: 16 * MediaQuery.of(context).textScaleFactor,
                   color: Colors.grey,
                   fontWeight: FontWeight.normal,
                   decoration: TextDecoration.none
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           Expanded(
@@ -210,8 +211,11 @@ class PoolDateTile extends StatelessWidget {
   final DateTimeDTO date;
   final Function onTap;
   final Color color;
+  ColorsHolder colorsHolder;
 
-  PoolDateTile({ this.date, this.onTap, this.color });
+  PoolDateTile({ this.date, this.onTap, this.color }) {
+    colorsHolder = new ColorsHolder();
+  }
 
   Widget buildTitle(BuildContext context) {
     return Text('${date.day}.${date.month}.${date.year}',
@@ -228,7 +232,7 @@ class PoolDateTile extends StatelessWidget {
   Widget buildDes(BuildContext context) {
     return Text('See the pools from ${date.day}.${date.month}.${date.year}',
       style: TextStyle(
-          fontSize: 16 * MediaQuery.of(context).textScaleFactor,
+          fontSize: 14 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black54,
           fontWeight: FontWeight.normal,
           decoration: TextDecoration.none
@@ -243,7 +247,7 @@ class PoolDateTile extends StatelessWidget {
       child: Material(
         child: ListTile(
           shape:RoundedRectangleBorder(
-            side: BorderSide(color: Colors.green, width: 1),
+            side: BorderSide(color: colorsHolder.getBackgroundForI1(), width: 1),
             borderRadius: const BorderRadius.all(
               Radius.circular(20.0),
             ),
