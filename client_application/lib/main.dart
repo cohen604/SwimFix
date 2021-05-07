@@ -1,5 +1,6 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -53,6 +54,10 @@ class MyApp extends StatelessWidget {
         '/feedback': (context) {
           FeedbackScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getFeedbackScreen(args);
+        },
+        'history': (context) {
+          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getHistoryScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,

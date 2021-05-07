@@ -1,4 +1,5 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/CameraScreen.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import '../Arguments/FeedbackScreenArguments.dart';
 import '../Arguments/WelcomeScreenArguments.dart';
 import '../PoolsScreen.dart';
+import '../HistoryScreen.dart';
 
 class ScreensHolders {
 
@@ -36,6 +38,10 @@ class ScreensHolders {
 
   Widget getFeedbackScreen(FeedbackScreenArguments args) {
     return new FeedbackScreen(args);
+  }
+
+  Widget getHistoryScreen(HistoryScreenArguments args) {
+    return new HistoryScreen(arguments: args,);
   }
 
 }
