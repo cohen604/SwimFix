@@ -138,6 +138,7 @@ class BasicDrawer extends StatelessWidget {
             buildMennu(context),
             buildUploadVideo(context),
             buildFilmVideo(context),
+            buildHistory(context),
             buildLogout(context),
           ],
         ),
