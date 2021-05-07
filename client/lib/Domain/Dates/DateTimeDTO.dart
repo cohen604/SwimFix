@@ -4,10 +4,10 @@ class DateTimeDTO {
   int month;
   int day;
 
-  DateTimeDTO(String year, String month, String day) {
-    this.year = int.parse(year);
-    this.month = int.parse(month);
-    this.day = int.parse(day);
+  DateTimeDTO(int year, int month, int day) {
+    this.year = year;
+    this.month = month;
+    this.day = day;
   }
 
   DateTimeDTO.fromJson(Map<String, dynamic> json)

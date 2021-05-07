@@ -56,6 +56,7 @@ public class SwimmerController {
             System.out.println("request view history days");
             UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
             ActionResult<List<DateDTO>> actionResult = swimFixAPI.getSwimmerHistoryDays(userDTO);
+            System.out.println("send view history days");
             return actionResult.toJson();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,6 +72,7 @@ public class SwimmerController {
             System.out.println("request view history pools by day");
             ActionResult<List<FeedbackVideoStreamer>> actionResult =
                     swimFixAPI.getSwimmerHistoryPoolsBy(historyDayDTO.getUser(), historyDayDTO.getDate());
+            System.out.println("send view history pools by day");
             return actionResult.toJson();
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,18 +80,20 @@ public class SwimmerController {
         return null;
     }
 
-
-    @PostMapping("/delete_feedback/{root}/{email}/{folder}/{date}")
+    @PostMapping("/history/day/delete")
     @CrossOrigin(origins = "*")
-    public String deleteFeedback(@PathVariable String root,
-                                 @PathVariable String email,
-                                 @PathVariable String folder,
-                                 @PathVariable String date,
-                                  @RequestBody UserDTO userDTO) {
+    public String deleteFeedback(@RequestBody DeleteFeedbackDTO deleteFeedbackDTO) {
         try {
             System.out.println("request delete feedback");
-            String path = root + "\\" + email + "\\" + folder + "\\" + date;
-            ActionResult<Boolean> deleted = swimFixAPI.deleteFeedback(userDTO, path);
+            UserDTO userDTO = deleteFeedbackDTO.getUser();
+            DateDTO dateDTO = deleteFeedbackDTO.getDate();
+            String link = deleteFeedbackDTO.getLink();
+            String path = link.replaceAll("/","\\");
+            ActionResult<Boolean> deleted = swimFixAPI.deleteFeedback(
+                    userDTO,
+                    dateDTO,
+                    path);
+            System.out.println("send request delete feedback");
             return deleted.toJson();
         }
         catch (Exception e) {

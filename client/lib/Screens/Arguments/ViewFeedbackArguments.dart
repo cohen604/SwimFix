@@ -1,9 +1,10 @@
+import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 
 class ViewFeedBackArguments {
 
   WebUser user;
-  String path;
-  ViewFeedBackArguments(this.user, this.path);
+  FeedBackLink link;
+  ViewFeedBackArguments(this.user, this.link);
 
 }

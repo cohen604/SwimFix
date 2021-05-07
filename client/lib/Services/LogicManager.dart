@@ -195,7 +195,9 @@ class LogicManager {
       //TODO check if response is valid
       List<dynamic> daysMap = response.value as List<dynamic>;
       List<DateTimeDTO> days = daysMap.map(
-              (element) => DateTimeDTO.factory(element)).toList();
+              (element) {
+                return DateTimeDTO.factory(element);
+              }).toList();
       return days;
     }
     catch(e) {
@@ -209,13 +211,10 @@ class LogicManager {
   Future<List<FeedBackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
     try {
       String path = "/swimmer/history/day";
-      Map swimmerMap = swimmer.toJson();
-      Map dayMap = day.toJson();
-      Map request = Map();
-      request['uesr'] = swimmerMap;
-      request['date'] = dayMap;
-      ServerResponse response = await this.connectionHandler
-          .postMessage(path, request);
+      Map<String, dynamic> request = Map();
+      request['user'] = swimmer.toJson();
+      request['date'] = day.toJson();
+      ServerResponse response = await connectionHandler.postMessage(path, request);
       //TODO check if response is valid
       List<dynamic> feedbacks = response.value as List<dynamic>;
       return feedbacks.map((element) => FeedBackLink.factory(element))
@@ -227,18 +226,22 @@ class LogicManager {
     return null;
   }
 
-  Future<bool> deleteFeedback(Swimmer swimmer, List<String> params) async {
+  Future<bool> deleteFeedback(Swimmer swimmer, DateTimeDTO date, FeedBackLink link) async {
     try {
-      String path = "/swimmer/delete_feedback";
-      Map swimmerMap = swimmer.toJson();
-      ServerResponse serverResponse = await this.connectionHandler.postMessageWithParams(
-          path, params, swimmerMap);
+      String path = "/swimmer/history/day/delete";
+      Map<String, dynamic> parameters = new Map();
+      parameters['user'] = swimmer.toJson();
+      parameters['date'] = date.toJson();
+      parameters['link'] = link.path;
+      print(parameters);
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, parameters);
       return serverResponse.value as bool;
     }
     catch(e) {
       print('error in delete feedback ${e.toString()}');
     }
-    return null;
+    return false;
   }
 
 }

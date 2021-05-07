@@ -69,7 +69,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CircularProgressIndicator(),
-            Text( 'Loading History...',
+            Text( 'Loading history...',
               style: TextStyle(
                 fontSize: 24 * MediaQuery.of(context).textScaleFactor,
                 color: Colors.black,
@@ -214,7 +214,7 @@ class PoolDateTile extends StatelessWidget {
   PoolDateTile({ this.date, this.onTap, this.color });
 
   Widget buildTitle(BuildContext context) {
-    return Text('$date',
+    return Text('${date.day}.${date.month}.${date.year}',
       style: TextStyle(
           fontSize: 21 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black,
@@ -226,7 +226,7 @@ class PoolDateTile extends StatelessWidget {
   }
 
   Widget buildDes(BuildContext context) {
-    return Text('See the pools from $date',
+    return Text('See the pools from ${date.day}.${date.month}.${date.year}',
       style: TextStyle(
           fontSize: 16 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black54,

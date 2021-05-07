@@ -111,8 +111,7 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean deleteFeedbackByID(IUser user, String feedbackPath) {
         User current = _users.get(user.getUid());
-        if (current != null
-                && current.isLogged()) {
+        if (current != null && current.isLogged()) {
             IFeedbackVideo video = current.deleteFeedback(feedbackPath);
             if(video != null) {
                 if (_dao.update(current) == null) {

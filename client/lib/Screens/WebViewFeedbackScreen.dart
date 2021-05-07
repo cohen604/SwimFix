@@ -20,12 +20,11 @@ class _WebViewFeedbackScreenState extends State<WebViewFeedbackScreen> {
   ChewieController _chewieController;
   LogicManager _logicManager;
 
-
   @override
   void initState() {
     super.initState();
     _logicManager = LogicManager.getInstance();
-    String path = _logicManager.getStreamUrl() + this.widget.arguments.path;
+    String path = _logicManager.getStreamUrl() + this.widget.arguments.link.path;
     print('the path is ' + path);
     _controller = VideoPlayerController.network(path);
     _controller.initialize();

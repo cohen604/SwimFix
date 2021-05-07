@@ -5,7 +5,6 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +104,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
 
     @Override
     public LocalDateTime getDate() {
-        String dateString = removeTypeFromPath(this.path);
+        String dateString = getDateString(this.path);
         String[] values = dateString.split("-");
         int year = Integer.valueOf(values[0]);
         int month = Integer.valueOf(values[1]);
@@ -116,9 +115,11 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         return LocalDateTime.of(year, month, day, hour, mintes, seconds);
     }
 
-    private String removeTypeFromPath(String path) {
-        int indexOfDot = path.lastIndexOf(".");
-        return path.substring(0, indexOfDot);
+    private String getDateString(String path) {
+        int indexOfSlash = path.lastIndexOf("\\") + 1;
+        String onlyDate = path.substring(indexOfSlash);
+        int indexOfDot = onlyDate.lastIndexOf(".");
+        return onlyDate.substring(0, indexOfDot);
     }
 
     @Override

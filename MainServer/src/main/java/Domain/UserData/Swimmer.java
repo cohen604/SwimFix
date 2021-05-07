@@ -42,16 +42,19 @@ public class Swimmer {
     }
 
     public Collection<LocalDateTime> getFeedbacksDays() {
-        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap();
+        Map<String, LocalDateTime> localDateMap = new HashMap<>();
+        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap(localDateMap);
         return map.keySet();
     }
 
     public Collection<IFeedbackVideo> getFeedbacksOfDay(LocalDateTime day) {
-        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap();
-        return map.get(day);
+        Map<String, LocalDateTime> localDateMap = new HashMap<>();
+        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap(localDateMap);
+        LocalDateTime date = localDateMap.get(dayToString(day));
+        return map.get(date);
     }
 
-    private Map<LocalDateTime, List<IFeedbackVideo>> getFeedbacksDayMap() {
+    private Map<LocalDateTime, List<IFeedbackVideo>> getFeedbacksDayMap(Map<String, LocalDateTime> localDateMap) {
         Map<LocalDateTime, List<IFeedbackVideo>> output = new HashMap<>();
         for (IFeedbackVideo feedbackVideo: _feedbacks.values()) {
             LocalDateTime date = feedbackVideo.getDate();
@@ -59,16 +62,23 @@ public class Swimmer {
                     date.getYear(),
                     date.getMonth(),
                     date.getDayOfMonth(), 0, 0);
-            if(output.containsKey(dayDate)) {
-                output.get(dayDate).add(feedbackVideo);
+            if(localDateMap.containsKey(dayToString(dayDate))) {
+                LocalDateTime tmp = localDateMap.get(dayToString(dayDate));
+                output.get(tmp).add(feedbackVideo);
             }
             else {
                 LinkedList<IFeedbackVideo> list = new LinkedList<>();
                 list.add(feedbackVideo);
                 output.put(date, list);
+                localDateMap.put(dayToString(dayDate), date);
             }
         }
         return output;
     }
 
+    private String dayToString(LocalDateTime localDateTime) {
+        return localDateTime.getYear() + "." +
+                localDateTime.getMonth() + "." +
+                localDateTime.getDayOfMonth();
+    }
 }

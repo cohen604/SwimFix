@@ -5,9 +5,13 @@ import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_html/html.dart';
+
+import 'PopUps/MessagePopUp.dart';
 
 class WebSwimmerHistoryDayScreen extends StatefulWidget {
 
@@ -15,25 +19,28 @@ class WebSwimmerHistoryDayScreen extends StatefulWidget {
   WebSwimmerHistoryDayScreen({Key key, this.arguments}) : super(key: key);
 
   @override
-  _WebSwimmerHistoryScreenState createState() => _WebSwimmerHistoryScreenState();
+  _WebSwimmerHistoryScreenState createState()
+      => _WebSwimmerHistoryScreenState(
+          arguments.webUser.swimmer,
+          arguments.date);
 }
 
 
 class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
   LogicManager _logicManager;
+  WebColors _webColors;
   ScreenState _screenState;
-  Map<String, List<dynamic>> _feedbacks;
+  List<FeedBackLink> _feedbacks;
 
- _WebSwimmerHistoryScreenState() {
+ _WebSwimmerHistoryScreenState(Swimmer swimmer, DateTimeDTO date) {
     _logicManager = LogicManager.getInstance();
+    _webColors = WebColors.getInstance();
     _screenState = ScreenState.LoadingDayHistory;
-    getSwimmerHistoryMap();
+    getSwimmerHistoryByDay(swimmer, date);
  }
 
-  void getSwimmerHistoryMap() {
-    Swimmer swimmer = this.widget.arguments.webUser.swimmer;
-    DateTimeDTO day = this.widget.arguments.date;
+  void getSwimmerHistoryByDay(Swimmer swimmer, DateTimeDTO day) {
     _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day).then(
         (feedbacks) {
           if(feedbacks == null) {
@@ -43,6 +50,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
           }
           else {
             setState(() {
+              _feedbacks = feedbacks;
               _screenState = ScreenState.ViewDayHistory;
             });
           }
@@ -50,55 +58,177 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
     );
   }
 
-  void removeTile() {
-    setState(() {
+  void onDeleteFeedback(int index) {
+   Swimmer swimmer = this.widget.arguments.webUser.swimmer;
+   DateTimeDTO date = this.widget.arguments.date;
+   FeedBackLink link = _feedbacks[index];
+    _logicManager.deleteFeedback(swimmer, date, link)
+        .then((deleted) {
+          if(deleted) {
+            getSwimmerHistoryByDay(swimmer, date);
+          }
+          else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return new MessagePopUp('Feedback failed to be deleted.\n'
+                    'For more information please contact help@swimanalytics.com');
+              },
+            );
+          }
     });
   }
 
-  Widget buildHistoryDayList(BuildContext context) {
-    return  ListView.builder(
-        itemCount: _feedbacks.length,
-        itemBuilder: (BuildContext context, int index) {
-          String hour = _feedbacks.keys.elementAt(index);
-          return new PoolHourTile
-            ( hour: hour,
-              link: _feedbacks[hour],
-              user: this.widget.arguments.webUser,
-              logicManager: _logicManager,
-              remove: removeTile);
-        },
-      );
+  void onViewFeedback(int index) {
+     WebUser user = this.widget.arguments.webUser;
+     FeedBackLink link = _feedbacks[index];
+     link.path = "/"+link.path.replaceAll("\\", "/");
+     Navigator.pushNamed(context, '/viewFeedback',
+        arguments: new ViewFeedBackArguments(user, link));
   }
 
-  Widget buildTopScreen(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Ink(
-        decoration: const ShapeDecoration(
-          color: Colors.lightBlue,
-          shape: CircleBorder(),
-        ),
-        child: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          iconSize: 20.0,
+  void onBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  Widget buildLoadingHistory(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            Text( 'Loading swimming day...',
+              style: TextStyle(
+                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  decoration: TextDecoration.none
+              ),
+            )
+          ],
         ),
       ),
     );
   }
 
+
+  Widget buildError(BuildContext context) {
+    return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error,
+              color:Colors.yellow,
+              size: 45,
+            ),
+            Text( 'Error as accrued, please try again later.',
+              style: TextStyle(
+                  fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  decoration: TextDecoration.none
+              ),
+            )
+          ],
+        )
+    );
+  }
+
+  Widget buildHistoryListEmpty(BuildContext context) {
+    return Center(
+      child: Text('There is no swimming feedbacks for the selected date.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 24 * MediaQuery
+                  .of(context)
+                  .textScaleFactor,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none
+          )
+      ),
+    );
+  }
+
+  Widget buildHistoryDayList(BuildContext context) {
+   if(_feedbacks.length == 0) {
+     return buildHistoryListEmpty(context);
+   }
+   DateTimeDTO date = this.widget.arguments.date;
+   return ListView.builder(
+    itemCount: _feedbacks.length,
+    itemBuilder: (BuildContext context, int index) {
+      return PoolHourTile(
+        date: date,
+        link: _feedbacks[index],
+        user: this.widget.arguments.webUser,
+        remove: ()=>onDeleteFeedback(index),
+        view: ()=>onViewFeedback(index),
+        color: _webColors.getBackgroundForI3(),);
+      },
+   );
+  }
+
   Widget buildStateViewHistory(BuildContext context) {
-    return Column(
+   DateTimeDTO date = this.widget.arguments.date;
+   return Column(
       children: [
-        buildTopScreen(context),
-        buildHistoryDayList(context),
+        Center(
+          child: Text('History ${date.day}.${date.month}.${date.year}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 28 * MediaQuery
+                    .of(context)
+                    .textScaleFactor,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                decoration: TextDecoration.none
+            )
+          ),
+        ),
+        Expanded(
+            child: buildHistoryDayList(context)
+        ),
       ],
     );
+  }
+
+  Widget buildBackButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: IconButton(
+            icon: Icon(Icons.arrow_back,
+              size: 30,
+            ),
+            onPressed: ()=>onBack(context),
+        ),
+      ),
+    );
+  }
+
+  Widget buildScreenState(BuildContext context) {
+   Widget child = Container();
+   if(_screenState == ScreenState.LoadingDayHistory) {
+      child = buildLoadingHistory(context);
+   }
+   else if(_screenState == ScreenState.Error) {
+      child = buildError(context);
+   }
+   else if(_screenState == ScreenState.ViewDayHistory) {
+      child = buildStateViewHistory(context);
+   }
+   return Column(
+     children: [
+       buildBackButton(context),
+       Expanded(
+           child: child
+       ),
+     ],
+   );
+   return Container();
   }
 
   @override
@@ -113,9 +243,8 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                 MenuBar(
                   user: this.widget.arguments.webUser,
                 ),
-                buildTopScreen(context),
                 new Expanded(
-                  child: buildHistoryDayList(context)
+                  child: buildScreenState(context)
                 ),
               ]
           ),
@@ -129,40 +258,65 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
 class PoolHourTile extends StatelessWidget {
 
-  final String hour;
+  final DateTimeDTO date;
   final FeedBackLink link;
   final WebUser user;
-  final LogicManager logicManager;
-  final Function() remove;
-  PoolHourTile({ this.hour, this.link, this.user, this.logicManager, this.remove});
+  final Function remove;
+  final Function view;
+  final Color color;
+
+  PoolHourTile({ this.date, this.link, this.user,
+    this.remove, this.view,
+    this.color});
+
+  Widget buildTitle(BuildContext context) {
+    return Text('${link.path}',
+      style: TextStyle(
+          fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
+      ),
+    );
+    return Text('See the pools from $date');
+  }
+
+  Widget buildDes(BuildContext context) {
+    return Text('View swimming feedback',
+      style: TextStyle(
+          fontSize: 16 * MediaQuery.of(context).textScaleFactor,
+          color: Colors.black54,
+          fontWeight: FontWeight.normal,
+          decoration: TextDecoration.none
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Card(
-        margin: EdgeInsets.fromLTRB(110.0, 6.0, 110.0, 0.0),
+      padding: EdgeInsets.all(10),
+      child: Material(
         child: ListTile(
-          leading: Icon(
-              Icons.pool
-          ),
-          title: Text(hour),
-          tileColor: Colors.blueGrey[50],
-          subtitle: Text('See the pools from $hour'),
-          onTap: () {
-            Navigator.pushNamed(context, '/viewFeedback',
-                arguments: new ViewFeedBackArguments(user, link.path));
-          },
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () async {
-              bool deleted = await logicManager.deleteFeedback(
-                  user.swimmer, path.substring(1).split('/'));
-              if(deleted) {
-                remove();
-              }
-            }
-          ),
+            shape:RoundedRectangleBorder(
+              side: BorderSide(color: Colors.green, width: 1),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+            leading: Icon(
+              Icons.pool,
+              color: Colors.black,
+              size: 35,
+            ),
+            trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: remove
+            ),
+            tileColor: color.withAlpha(120),
+            title: buildTitle(context),
+            subtitle: buildDes(context),
+            onTap: view
         ),
       ),
     );

@@ -21,6 +21,6 @@ public interface IUserProvider {
 
     boolean reload();
 
-    boolean deleteFeedbackByID(IUser user, String feedbackID);
+    boolean deleteFeedbackByID(IUser user, String feedbackPath);
 
 }

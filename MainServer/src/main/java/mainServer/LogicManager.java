@@ -234,7 +234,7 @@ public class LogicManager {
                 for(LocalDateTime day: days) {
                     outputDays.add(new DateDTO(
                             day.getYear(),
-                            day.getDayOfMonth(),
+                            day.getMonthValue(),
                             day.getDayOfMonth()));
                 }
                 return new ActionResult<>(Response.SUCCESS, outputDays);
@@ -260,7 +260,7 @@ public class LogicManager {
                 LocalDateTime date = LocalDateTime.of(
                         dateDTO.getYear(),
                         dateDTO.getMonth(),
-                        dateDTO.getYear(), 0, 0);
+                        dateDTO.getDay(), 0, 0);
                 Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
                 List<FeedbackVideoStreamer> output = new LinkedList<>();
                 for(IFeedbackVideo feedbackVideo : feedbacks) {
@@ -343,14 +343,14 @@ public class LogicManager {
     /***
      * delete a feedback of a user
      * @param userDTO - the user who own the feedback
-     * @param feedbackID - the id of the feedback to delete
+     * @param dateDTO - the date of the feedback
+     * @param path - the id of the feedback to delete
      * @return - true if deleted, false if not
      */
-    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
+    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDTO dateDTO, String path) {
         IUser user = _userProvider.getUser(userDTO);
         try {
-            if(user != null
-                    && _userProvider.deleteFeedbackByID(user, feedbackID)) {
+            if(user != null && _userProvider.deleteFeedbackByID(user, path)) {
                 return new ActionResult<>(Response.SUCCESS, true);
             }
         }
