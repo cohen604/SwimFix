@@ -6,6 +6,7 @@ import 'Arguments/HistoryScreenArguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'Drawers/BasicDrawer.dart';
 import 'Holders/ColorsHolder.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -180,24 +181,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Container();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    //TODO change this
     return SafeArea(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: _webColors.getBackgroundForI6(),
-        child: Column(
-          children: [
-            MenuBar(
-              user: this.widget.arguments.user,
-            ),
-            new Expanded(
-              child: buildScreenStates(context),
-            ),
-          ]
+      child: Scaffold(
+        drawer: BasicDrawer(
+            this.widget.arguments.user
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: Text("History",),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: _webColors.getBackgroundForI6(),
+            child: buildScreenStates(context)
+          ),
         ),
       ),
     );
