@@ -8,9 +8,9 @@ import 'package:client_application/Screens/UploadScreen.dart';
 import 'package:client_application/Screens/WelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'Arguments/FeedbackScreenArguments.dart';
-import 'Arguments/WelcomeScreenArguments.dart';
-import 'PoolsScreen.dart';
+import '../Arguments/FeedbackScreenArguments.dart';
+import '../Arguments/WelcomeScreenArguments.dart';
+import '../PoolsScreen.dart';
 
 class ScreensHolders {
 
