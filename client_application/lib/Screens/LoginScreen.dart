@@ -1,15 +1,12 @@
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
-import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'PopUps/MessagePopUp.dart';
+import 'Holders/ColorsHolder.dart';
 
 class LoginScreen extends StatefulWidget {
 

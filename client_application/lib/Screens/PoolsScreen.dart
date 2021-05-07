@@ -4,11 +4,10 @@ import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'Holders/ColorsHolder.dart';
 import 'Drawers/BasicDrawer.dart';
 
 class PoolsScreen extends StatefulWidget {

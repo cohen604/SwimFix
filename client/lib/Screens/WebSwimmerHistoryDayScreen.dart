@@ -170,28 +170,58 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
    );
   }
 
-  Widget buildStateViewHistory(BuildContext context) {
-   DateTimeDTO date = this.widget.arguments.date;
-   return Column(
-      children: [
-        Center(
-          child: Text('History ${date.day}.${date.month}.${date.year}',
+  Widget buildHistoryTitle(BuildContext context) {
+    DateTimeDTO date = this.widget.arguments.date;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0, bottom: 5),
+        child: Text('History ${date.day}.${date.month}.${date.year}',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 32 * MediaQuery
+                  .of(context)
+                  .textScaleFactor,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.none
+          )
+        ),
+      ),
+    );
+  }
+
+  Widget buildHistroyDesTitle(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: Text('Select the swimming feedback to view',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 28 * MediaQuery
+                fontSize: 24 * MediaQuery
                     .of(context)
                     .textScaleFactor,
-                color: Colors.black,
+                color: Colors.grey,
                 fontWeight: FontWeight.normal,
                 decoration: TextDecoration.none
             )
-          ),
         ),
-        Expanded(
-            child: buildHistoryDayList(context)
-        ),
-      ],
+      ),
     );
+  }
+
+  Widget buildStateViewHistory(BuildContext context) {
+   return Padding(
+     padding: const EdgeInsets.only(top: 20.0),
+     child: Column(
+        children: [
+          buildHistoryTitle(context),
+          buildHistroyDesTitle(context),
+          Expanded(
+              child: buildHistoryDayList(context)
+          ),
+        ],
+      ),
+   );
   }
 
   Widget buildBackButton(BuildContext context) {
@@ -220,12 +250,13 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
    else if(_screenState == ScreenState.ViewDayHistory) {
       child = buildStateViewHistory(context);
    }
-   return Column(
+   return Stack(
      children: [
+       child,
        buildBackButton(context),
-       Expanded(
-           child: child
-       ),
+       // Expanded(
+       //     child: child
+       // ),
      ],
    );
    return Container();

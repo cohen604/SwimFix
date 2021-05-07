@@ -1,9 +1,8 @@
 import 'package:client_application/Components/MediaPlayer.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'Holders/ColorsHolder.dart';
 import 'Drawers/BasicDrawer.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -19,7 +18,6 @@ class FeedbackScreen extends StatefulWidget {
 class _FeedbackScreenState extends State<FeedbackScreen> {
 
   ColorsHolder _colorsHolder;
-
 
   _FeedbackScreenState() {
     _colorsHolder = new ColorsHolder();
