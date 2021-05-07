@@ -1,11 +1,10 @@
-import 'dart:html' as html;
 import 'dart:html';
-import 'package:client/Components/AboutScreenMenuBar.dart';
+import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'Holders/WebColors.dart';
 
 class WebDownloadScreen extends StatefulWidget {
   @override
@@ -17,7 +16,7 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
   WebColors webColors;
 
   _WebDownloadScreenState() {
-    webColors = new WebColors();
+    webColors = WebColors.getInstance();
   }
 
   Function onLogo(BuildContext context) {

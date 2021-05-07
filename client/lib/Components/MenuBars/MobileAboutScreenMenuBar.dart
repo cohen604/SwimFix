@@ -1,4 +1,4 @@
-import 'package:client/Screens//WebColors.dart';
+import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +15,16 @@ class MobileAboutScreenMenuBar extends StatefulWidget {
 
 class _MobileAboutScreenMenuBarState extends State<MobileAboutScreenMenuBar> {
 
-  WebColors _webColors = new WebColors();
-  List<bool> _onHover = List.generate(2, (index) => false);
-  List<bool> _selected = List.generate(2, (index) => false);
+  WebColors _webColors;
+  List<bool> _onHover;
+  List<bool> _selected;
+
+  _MobileAboutScreenMenuBarState() {
+    _webColors = WebColors.getInstance();
+    int size = 2;
+    _onHover = List.generate(size, (index) => false);
+    _selected = List.generate(size, (index) => false);
+  }
 
   Function buildFutureDialogSupport(BuildContext context) {
     return () => showDialog(

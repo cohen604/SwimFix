@@ -1,7 +1,10 @@
 package Domain.UserData.Interfaces;
 
 import Domain.Streaming.IFeedbackVideo;
+
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface IUser {
 
@@ -39,7 +42,12 @@ public interface IUser {
 
     Collection<IFeedbackVideo> getFeedbacks();
 
+    Collection<LocalDateTime> getFeedbacksDays();
+
+    Collection<IFeedbackVideo> getFeedbacksOfDay(LocalDateTime day);
+
     boolean addFeedback(IFeedbackVideo feedbackVideo);
 
-    boolean deleteFeedback(String feedbackPath);
+    IFeedbackVideo deleteFeedback(String feedbackPath);
+
 }

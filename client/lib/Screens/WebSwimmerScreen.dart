@@ -1,11 +1,13 @@
+import 'package:client/Components/Buttons/IconCardButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
-import 'package:client/Components/IconCardButton.dart';
-import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'Holders/WebColors.dart';
 
 class WebSwimmerScreen extends StatefulWidget {
 
@@ -19,7 +21,11 @@ class WebSwimmerScreen extends StatefulWidget {
 
 class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
-  WebColors _webColors = new WebColors();
+  WebColors _webColors;
+
+  _WebSwimmerScreenState() {
+    _webColors = WebColors.getInstance();
+  }
 
   Widget buildWelcomeTitle(BuildContext context, int flex) {
       return Text('Welcome ${this.widget.arguments.user.swimmer.name}',
@@ -45,7 +51,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     this.setState(() {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/history',
-            arguments: new SwimmerScreenArguments(this.widget.arguments.user));
+            arguments: new HistoryScreenArguments(this.widget.arguments.user));
       });
     });
   }

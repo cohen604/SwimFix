@@ -1,8 +1,7 @@
-import 'package:client/Screens/WebColors.dart';
-import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
 import 'Screens/Arguments/CoachScreenArguments.dart';
+import 'Screens/Arguments/HistoryScreenArguments.dart';
 import 'Screens/Arguments/MultiReportScreenArguments.dart';
 import 'Screens/Arguments/ReportScreenArguments.dart';
 import 'Screens/Arguments/ResearcherScreenArguments.dart';
@@ -12,7 +11,8 @@ import 'Screens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Screens/ScreensHolder.dart';
+import 'Screens/Holders/ScreensHolder.dart';
+import 'Screens/Holders/WebColors.dart';
 
 /// if running from web:localhost add to project arguments --web-host 5000
 void main() async {
@@ -26,12 +26,17 @@ class MyApp extends StatelessWidget {
   ScreenHolder _screenHolder = new ScreenHolder();
   WebColors _webColors = new WebColors();
 
-  // This widget is the root of your application.
+
+  MyApp() {
+    _screenHolder = new ScreenHolder();
+    _webColors = WebColors.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/',
+      initialRoute: '/history',
       theme: ThemeData(
         primarySwatch: _webColors.createMaterialColor(
             _webColors.getBackgroundForI1()
@@ -74,10 +79,10 @@ class MyApp extends StatelessWidget {
           return _screenHolder.getCoachScreen(args);
         },
         '/history': (context) {
-          SwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
+          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryScreen(args);
         },
-        '/historyDay': (context) {
+        '/history/day': (context) {
           SwimmerHistoryPoolsArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getSwimmerHistoryDayScreen(args);
         },

@@ -1,13 +1,10 @@
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Screens//WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -24,12 +21,21 @@ class MenuBar extends StatefulWidget {
 
 class _MenuBarState extends State<MenuBar> {
 
-  LogicManager _logicManager = LogicManager.getInstance();
+  LogicManager _logicManager;
   Function onAdmin;
 
-  WebColors _webColors = new WebColors();
-  List<bool> _onHover = List.generate(5, (index) => false);
-  List<bool> _selected = List.generate(5, (index) => false);
+  WebColors _webColors;
+  List<bool> _onHover;
+  List<bool> _selected;
+
+
+  _MenuBarState() {
+    _logicManager = LogicManager.getInstance();
+    int size = 5;
+    _webColors = WebColors.getInstance();
+    _onHover = List.generate(size, (index) => false);
+    _selected = List.generate(size, (index) => false);
+  }
 
   Function buildFutureDialogSupport(BuildContext context) {
     return () => showDialog(
@@ -55,25 +61,15 @@ class _MenuBarState extends State<MenuBar> {
   Function onLogout(BuildContext context) {
     return () {
       _logicManager.logout(this.widget.user.swimmer).then(
-              (value) {
-            if (value) {
-              this.setState(() {
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamed(context, '/');
-                });
+        (serverLogout) {
+          _logicManager.signOutWithGoogle().then( (googleLogout) {
+            this.setState(() {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamed(context, '/');
               });
-            }
-            else {
-              showDialog(
-                context: context,
-                builder: (_) =>
-                  AlertDialog(
-                    content: Text('Cant Logout, Please Try again later',
-                      textAlign: TextAlign.center,),
-                  )
-              );
-            }
-          }
+            });
+          });
+        }
       );
     };
   }

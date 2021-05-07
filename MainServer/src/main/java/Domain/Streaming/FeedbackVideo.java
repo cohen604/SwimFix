@@ -4,6 +4,7 @@ import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,25 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         return this.periodTime;
     }
 
+    @Override
+    public LocalDateTime getDate() {
+        String dateString = getDateString(this.path);
+        String[] values = dateString.split("-");
+        int year = Integer.valueOf(values[0]);
+        int month = Integer.valueOf(values[1]);
+        int day = Integer.valueOf(values[2]);
+        int hour = Integer.valueOf(values[3]);
+        int mintes = Integer.valueOf(values[4]);
+        int seconds = Integer.valueOf(values[5]);
+        return LocalDateTime.of(year, month, day, hour, mintes, seconds);
+    }
+
+    private String getDateString(String path) {
+        int indexOfSlash = path.lastIndexOf("\\") + 1;
+        String onlyDate = path.substring(indexOfSlash);
+        int indexOfDot = onlyDate.lastIndexOf(".");
+        return onlyDate.substring(0, indexOfDot);
+    }
 
     @Override
     public boolean isFeedbackUpdated() {

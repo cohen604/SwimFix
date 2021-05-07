@@ -72,7 +72,9 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo) {
         User current = _users.get(user.getUid());
-        if (current != null && current.isLogged() && current.addFeedback(feedbackVideo)) {
+        if (current != null
+                && current.isLogged()
+                && current.addFeedback(feedbackVideo)) {
             if (_dao.update(current) == null) {
                 current.deleteFeedback(feedbackVideo.getPath());
             }
@@ -100,70 +102,25 @@ public class UserProvider implements IUserProvider {
         return true;
     }
 
-
-    /**
-     * filter list of FeedbackVideoStreamer to a map.
-     * Map is type of <String: date of swim, Map<String: hour of swim, FeedbackVideoStreamer>>
-     * Example: path: TestingVideos/example/2021-03-31-19-39-18.mov
-     *          date: 2021-03-31
-     *          hour: 19
-     * @param history - list of FeedbackVideoStreamer
-     * @return - map of FeedbackVideoStreamer by date and hour
-     */
-    @Override
-    public List<String> filterHistoryByDay
-            (List<FeedbackVideoStreamer> history ) {
-        List<String> days = new LinkedList<>();
-        for (FeedbackVideoStreamer feedbackVideoStreamer : history) {
-            String path = feedbackVideoStreamer.getPath();
-            int index_of_dot = path.lastIndexOf('.');
-            String date = path.substring(index_of_dot - 19, index_of_dot - 9);
-            days.add(date);
-        }
-        return days;
-    }
-
-
-    /**
-     * filter list of FeedbackVideoStreamer to a map.
-     * Map is type of <String: date of swim, Map<String: hour of swim, FeedbackVideoStreamer>>
-     * Example: path: TestingVideos/example/2021-03-31-19-39-18.mov
-     *          date: 2021-03-31
-     *          hour: 19
-     * @param history - list of FeedbackVideoStreamer
-     * @return - map of FeedbackVideoStreamer by date and hour
-     */
-    @Override
-    public Map <String, FeedbackVideoStreamer> filterHistoryByPool
-    (List<FeedbackVideoStreamer> history, String day) {
-        Map <String, FeedbackVideoStreamer> hour_map = new HashMap<>();
-        for (FeedbackVideoStreamer feedbackVideoStreamer : history) {
-            String path = feedbackVideoStreamer.getPath();
-            int index_of_dot = path.lastIndexOf('.');
-            String date = path.substring(index_of_dot - 19, index_of_dot - 9);
-            if (date.equals(day)) {
-                String hour = path.substring(index_of_dot - 8, index_of_dot - 6);
-                hour_map.put(hour, feedbackVideoStreamer);
-            }
-        }
-        return hour_map;
-    }
-
     /***
      * delete a feedback of a user
-     * @param userDTO - the user who own the feedback
+     * @param user - the user who own the feedback
      * @param feedbackPath - the path of the feedback to delete
      * @return - true if deleted, false if not
      */
     @Override
-    public boolean deleteFeedbackByID(UserDTO userDTO, String feedbackPath) {
-        IUser user = getUser(userDTO);
+    public boolean deleteFeedbackByID(IUser user, String feedbackPath) {
         User current = _users.get(user.getUid());
-        if (current == null || !current.isLogged()) {
-            return false;
-        }
-        if (current.deleteFeedback(feedbackPath)) {
-            return (_dao.update(current) != null);
+        if (current != null && current.isLogged()) {
+            IFeedbackVideo video = current.deleteFeedback(feedbackPath);
+            if(video != null) {
+                if (_dao.update(current) == null) {
+                    current.addFeedback(video);
+                }
+                else {
+                    return true;
+                }
+            }
         }
         return false;
     }

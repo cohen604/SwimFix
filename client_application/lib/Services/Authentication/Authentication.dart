@@ -9,7 +9,7 @@ abstract class Authentication {
   }
 
   Future<User> signIn();
-  void signOut();
+  Future<bool> signOut();
 
   Stream<User> get user {
     return this.auth.authStateChanges();

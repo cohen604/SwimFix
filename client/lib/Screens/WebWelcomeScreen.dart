@@ -1,16 +1,16 @@
+import 'package:client/Components/Buttons/ImageCardButton.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
-
-import 'Arguments/ReportScreenArguments.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
-import 'package:client/Components/ImageCardButton.dart';
-import 'package:client/Components/MenuBar.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'Holders/WebColors.dart';
 
 class WebWelcomeScreen extends StatefulWidget {
 
@@ -24,8 +24,15 @@ class WebWelcomeScreen extends StatefulWidget {
 
 class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
 
-  LogicManager _logicManger = LogicManager.getInstance();
-  WebColors _webColors = new WebColors();
+  LogicManager _logicManger;
+  WebColors _webColors;
+  AssetsHolder _assetsHolder;
+
+  _WebWelcomeScreenState() {
+    _logicManger = LogicManager.getInstance();
+    _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
+  }
 
   Widget buildTopSide(BuildContext context, int flex) {
     return Flexible(
@@ -85,7 +92,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
           context, 1, "Swimmer",
           onClick('/swimmer',
               arguments: new SwimmerScreenArguments(this.widget.args.user)),
-          'images/swimmer_image.png');
+          _assetsHolder.getSwimmerImage()
+      );
     }
     return Container();
   }
@@ -96,7 +104,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       return buildMainButton(context, 1, "Coach",
       onClick('/coach',
           arguments: new CoachScreenArguments(this.widget.args.user, 'Team Name')),
-          'images/coach_image.png');
+          _assetsHolder.getCoachImage()
+      );
     }
     return Container();
   }
@@ -104,7 +113,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
   Widget buildAdmin(BuildContext context) {
     if(this.widget.args.user.permissions.isAdmin) {
       return buildMainButton(context, 1, "Admin",
-          null, 'images/admin_image.png');
+          null,
+          _assetsHolder.getAdminImage());
     }
     return Container();
   }
@@ -114,7 +124,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
       return buildMainButton(context, 1, "Researcher",
           onClick('/researcher',
               arguments: new ResearcherScreenArguments(this.widget.args.user)),
-          'images/researcher_image.png');
+          _assetsHolder.getResearcherImage());
     }
     return Container();
   }
