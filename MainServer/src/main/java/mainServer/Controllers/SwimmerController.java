@@ -3,7 +3,7 @@ package mainServer.Controllers;
 import DTO.*;
 import Domain.Streaming.IFeedbackVideo;
 import com.google.gson.Gson;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;

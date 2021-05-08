@@ -4,7 +4,7 @@ import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 
 import java.util.List;
 import java.util.Map;
