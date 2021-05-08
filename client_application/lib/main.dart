@@ -2,6 +2,7 @@ import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart'
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,10 @@ class MyApp extends StatelessWidget {
         '/history': (context) {
           HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getHistoryScreen(args);
+        },
+        '/history/day': (context) {
+          HistoryDayScreenArguments args = ModalRoute.of(context).settings.arguments;;
+          return _screensHolders.getHistoryDayScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,

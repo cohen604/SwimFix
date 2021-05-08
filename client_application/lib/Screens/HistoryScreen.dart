@@ -57,7 +57,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void onTapDay(int index) {
     Navigator.pushNamed(context, '/history/day',
-        arguments: new SwimmerHistoryPoolsArguments(
+        arguments: new HistoryDayScreenArguments(
             this.widget.arguments.user, this.days[index]));
   }
 
