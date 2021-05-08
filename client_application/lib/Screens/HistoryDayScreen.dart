@@ -27,13 +27,13 @@ class HistoryDayScreen extends StatefulWidget {
 class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
 
   LogicManager _logicManager;
-  ColorsHolder _webColors;
+  ColorsHolder _colorsHolder;
   ScreenState _screenState;
   List<FeedbackLink> _feedbacks;
 
  _WebSwimmerHistoryScreenState(Swimmer swimmer, DateTimeDTO date) {
     _logicManager = LogicManager.getInstance();
-    _webColors = new ColorsHolder();
+    _colorsHolder = new ColorsHolder();
     _screenState = ScreenState.LoadingDayHistory;
     getSwimmerHistoryByDay(swimmer, date);
  }
@@ -78,11 +78,12 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
   }
 
   void onViewFeedback(int index) {
+     DateTimeDTO date = this.widget.arguments.date;
      AppUser user = this.widget.arguments.user;
      FeedbackLink link = _feedbacks[index];
      link.path = "/"+link.path.replaceAll("\\", "/");
-     Navigator.pushNamed(context, '/viewFeedback',
-        arguments: new ViewFeedBackArguments(user, link));
+     Navigator.pushNamed(context, '/history/day/feedback',
+        arguments: new HistoryFeedBackArguments(user, link, date));
   }
 
   Widget buildLoadingHistory(BuildContext context) {
@@ -159,8 +160,8 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
         user: this.widget.arguments.user,
         remove: ()=>onDeleteFeedback(index),
         view: ()=>onViewFeedback(index),
-        color: _webColors.getBackgroundForI3(),
-        borderColor: _webColors.getBackgroundForI1());
+        color: _colorsHolder.getBackgroundForI3(),
+        borderColor: _colorsHolder.getBackgroundForI1());
       },
    );
   }
@@ -248,7 +249,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
           child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: _webColors.getBackgroundForI6(),
+              color: _colorsHolder.getBackgroundForI6(),
               child: buildScreenState(context)
           ),
         ),
@@ -321,8 +322,10 @@ class PoolHourTile extends StatelessWidget {
               size: 35,
             ),
             trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: remove
+              icon: Icon(Icons.delete,
+                size: 30,
+              ),
+              onPressed: remove,
             ),
             tileColor: color.withAlpha(120),
             title: buildTitle(context),

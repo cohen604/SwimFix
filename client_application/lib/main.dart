@@ -4,6 +4,7 @@ import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
@@ -61,8 +62,12 @@ class MyApp extends StatelessWidget {
           return _screensHolders.getHistoryScreen(args);
         },
         '/history/day': (context) {
-          HistoryDayScreenArguments args = ModalRoute.of(context).settings.arguments;;
+          HistoryDayScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getHistoryDayScreen(args);
+        },
+        '/history/day/feedback': (context) {
+          HistoryFeedBackArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getHistoryFeedbackScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,

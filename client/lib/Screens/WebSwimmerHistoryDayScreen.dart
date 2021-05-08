@@ -340,8 +340,10 @@ class PoolHourTile extends StatelessWidget {
               size: 35,
             ),
             trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: remove
+              icon: Icon(Icons.delete,
+                size: 30,
+              ),
+              onPressed: remove,
             ),
             tileColor: color.withAlpha(120),
             title: buildTitle(context),

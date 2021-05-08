@@ -3,9 +3,11 @@ import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client_application/Screens/CameraScreen.dart';
 import 'package:client_application/Screens/FeedbackScreen.dart';
 import 'package:client_application/Screens/HistoryDayScreen.dart';
+import 'package:client_application/Screens/HistoryFeedbackScreen.dart';
 import 'package:client_application/Screens/LoginScreen.dart';
 import 'package:client_application/Screens/UploadScreen.dart';
 import 'package:client_application/Screens/WelcomeScreen.dart';
@@ -48,6 +50,10 @@ class ScreensHolders {
 
   Widget getHistoryDayScreen(HistoryDayScreenArguments args) {
     return new HistoryDayScreen(arguments: args,);
+  }
+
+  Widget getHistoryFeedbackScreen(HistoryFeedBackArguments args) {
+    return new HistoryFeedbackScreen(arguments: args,);
   }
 
 }
