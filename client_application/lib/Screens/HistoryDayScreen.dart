@@ -5,8 +5,6 @@ import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:universal_html/html.dart';
-
 import 'Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'Arguments/ViewFeedbackArguments.dart';
 import 'Drawers/BasicDrawer.dart';
@@ -161,7 +159,8 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
         user: this.widget.arguments.user,
         remove: ()=>onDeleteFeedback(index),
         view: ()=>onViewFeedback(index),
-        color: _webColors.getBackgroundForI3(),);
+        color: _webColors.getBackgroundForI3(),
+        borderColor: _webColors.getBackgroundForI1());
       },
    );
   }
@@ -173,7 +172,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
         child: Text('Swimming feedbacks',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 32 * MediaQuery
+              fontSize: 24 * MediaQuery
                   .of(context)
                   .textScaleFactor,
               color: Colors.black,
@@ -192,7 +191,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
         child: Text('Select the swimming feedback to view',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 24 * MediaQuery
+                fontSize: 16 * MediaQuery
                     .of(context)
                     .textScaleFactor,
                 color: Colors.grey,
@@ -268,15 +267,23 @@ class PoolHourTile extends StatelessWidget {
   final Function remove;
   final Function view;
   final Color color;
+  final Color borderColor;
 
   PoolHourTile({ this.date, this.link, this.user,
     this.remove, this.view,
-    this.color});
+    this.color, this.borderColor});
+
+  String getStringTitle(String path) {
+    int start = path.lastIndexOf("\\") + 1;
+    int end = path.lastIndexOf(".");
+    String output = path.substring(start, end);
+    return output.replaceAll("-", ".");
+  }
 
   Widget buildTitle(BuildContext context) {
-    return Text('${link.path}',
+    return Text('${getStringTitle(link.path)}',
       style: TextStyle(
-          fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+          fontSize: 16 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black,
           fontWeight: FontWeight.normal,
           decoration: TextDecoration.none
@@ -303,7 +310,7 @@ class PoolHourTile extends StatelessWidget {
       child: Material(
         child: ListTile(
             shape:RoundedRectangleBorder(
-              side: BorderSide(color: Colors.green, width: 1),
+              side: BorderSide(color: borderColor, width: 1),
               borderRadius: const BorderRadius.all(
                 Radius.circular(20.0),
               ),
