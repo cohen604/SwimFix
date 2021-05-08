@@ -6,7 +6,7 @@ import 'package:client_application/Components/MediaPlayer.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
+import 'Holders/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';

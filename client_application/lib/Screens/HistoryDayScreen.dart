@@ -1,41 +1,39 @@
-import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
-import 'package:client/Domain/Feedback/FeedBackLink.dart';
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
-import 'package:client/Screens/Holders/WebColors.dart';
-import 'package:client/Services/LogicManager.dart';
+import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
+import 'package:client_application/Domain/Users/AppUser.dart';
+import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Domain/Video/FeedBackLink.dart';
+import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:universal_html/html.dart';
-
+import 'Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'Arguments/ViewFeedbackArguments.dart';
+import 'Drawers/BasicDrawer.dart';
+import 'Holders/ColorsHolder.dart';
 import 'PopUps/MessagePopUp.dart';
 
-class WebSwimmerHistoryDayScreen extends StatefulWidget {
+class HistoryDayScreen extends StatefulWidget {
 
-  final SwimmerHistoryPoolsArguments arguments;
-  WebSwimmerHistoryDayScreen({Key key, this.arguments}) : super(key: key);
+  final HistoryDayScreenArguments arguments;
+  HistoryDayScreen({Key key, this.arguments}) : super(key: key);
 
   @override
   _WebSwimmerHistoryScreenState createState()
       => _WebSwimmerHistoryScreenState(
-          arguments.webUser.swimmer,
+          arguments.user.swimmer,
           arguments.date);
 }
 
 
-class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
+class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
 
   LogicManager _logicManager;
-  WebColors _webColors;
+  ColorsHolder _colorsHolder;
   ScreenState _screenState;
-  List<FeedBackLink> _feedbacks;
+  List<FeedbackLink> _feedbacks;
 
  _WebSwimmerHistoryScreenState(Swimmer swimmer, DateTimeDTO date) {
     _logicManager = LogicManager.getInstance();
-    _webColors = WebColors.getInstance();
+    _colorsHolder = new ColorsHolder();
     _screenState = ScreenState.LoadingDayHistory;
     getSwimmerHistoryByDay(swimmer, date);
  }
@@ -59,9 +57,9 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   }
 
   void onDeleteFeedback(int index) {
-   Swimmer swimmer = this.widget.arguments.webUser.swimmer;
+   Swimmer swimmer = this.widget.arguments.user.swimmer;
    DateTimeDTO date = this.widget.arguments.date;
-   FeedBackLink link = _feedbacks[index];
+   FeedbackLink link = _feedbacks[index];
     _logicManager.deleteFeedback(swimmer, date, link)
         .then((deleted) {
           if(deleted) {
@@ -80,15 +78,12 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   }
 
   void onViewFeedback(int index) {
-     WebUser user = this.widget.arguments.webUser;
-     FeedBackLink link = _feedbacks[index];
+     DateTimeDTO date = this.widget.arguments.date;
+     AppUser user = this.widget.arguments.user;
+     FeedbackLink link = _feedbacks[index];
      link.path = "/"+link.path.replaceAll("\\", "/");
-     Navigator.pushNamed(context, '/viewFeedback',
-        arguments: new ViewFeedBackArguments(user, link));
-  }
-
-  void onBack(BuildContext context) {
-    Navigator.pop(context);
+     Navigator.pushNamed(context, '/history/day/feedback',
+        arguments: new HistoryFeedBackArguments(user, link, date));
   }
 
   Widget buildLoadingHistory(BuildContext context) {
@@ -162,23 +157,23 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
       return PoolHourTile(
         date: date,
         link: _feedbacks[index],
-        user: this.widget.arguments.webUser,
+        user: this.widget.arguments.user,
         remove: ()=>onDeleteFeedback(index),
         view: ()=>onViewFeedback(index),
-        color: _webColors.getBackgroundForI3(),);
+        color: _colorsHolder.getBackgroundForI3(),
+        borderColor: _colorsHolder.getBackgroundForI1());
       },
    );
   }
 
   Widget buildHistoryTitle(BuildContext context) {
-    DateTimeDTO date = this.widget.arguments.date;
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0, bottom: 5),
-        child: Text('History ${date.day}.${date.month}.${date.year}',
+        child: Text('Swimming feedbacks',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 32 * MediaQuery
+              fontSize: 24 * MediaQuery
                   .of(context)
                   .textScaleFactor,
               color: Colors.black,
@@ -197,7 +192,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
         child: Text('Select the swimming feedback to view',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 24 * MediaQuery
+                fontSize: 16 * MediaQuery
                     .of(context)
                     .textScaleFactor,
                 color: Colors.grey,
@@ -224,59 +219,38 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
    );
   }
 
-  Widget buildBackButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: IconButton(
-            icon: Icon(Icons.arrow_back,
-              size: 30,
-            ),
-            onPressed: ()=>onBack(context),
-        ),
-      ),
-    );
-  }
-
   Widget buildScreenState(BuildContext context) {
    Widget child = Container();
    if(_screenState == ScreenState.LoadingDayHistory) {
-      child = buildLoadingHistory(context);
+      return buildLoadingHistory(context);
    }
    else if(_screenState == ScreenState.Error) {
-      child = buildError(context);
+      return buildError(context);
    }
    else if(_screenState == ScreenState.ViewDayHistory) {
-      child = buildStateViewHistory(context);
+      return buildStateViewHistory(context);
    }
-   return Stack(
-     children: [
-       child,
-       buildBackButton(context),
-       // Expanded(
-       //     child: child
-       // ),
-     ],
-   );
+   return Container();
   }
 
   @override
   Widget build(BuildContext context) {
+    DateTimeDTO date = this.widget.arguments.date;
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-              children: [
-                MenuBar(
-                  user: this.widget.arguments.webUser,
-                ),
-                new Expanded(
-                  child: buildScreenState(context)
-                ),
-              ]
+        drawer: BasicDrawer(
+            this.widget.arguments.user
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          title: Text("History ${date.day}.${date.month}.${date.year}",),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              color: _colorsHolder.getBackgroundForI6(),
+              child: buildScreenState(context)
           ),
         ),
       ),
@@ -289,20 +263,28 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 class PoolHourTile extends StatelessWidget {
 
   final DateTimeDTO date;
-  final FeedBackLink link;
-  final WebUser user;
+  final FeedbackLink link;
+  final AppUser user;
   final Function remove;
   final Function view;
   final Color color;
+  final Color borderColor;
 
   PoolHourTile({ this.date, this.link, this.user,
     this.remove, this.view,
-    this.color});
+    this.color, this.borderColor});
+
+  String getStringTitle(String path) {
+    int start = path.lastIndexOf("\\") + 1;
+    int end = path.lastIndexOf(".");
+    String output = path.substring(start, end);
+    return output.replaceAll("-", ".");
+  }
 
   Widget buildTitle(BuildContext context) {
-    return Text('${link.path}',
+    return Text('${getStringTitle(link.path)}',
       style: TextStyle(
-          fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+          fontSize: 16 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black,
           fontWeight: FontWeight.normal,
           decoration: TextDecoration.none
@@ -329,7 +311,7 @@ class PoolHourTile extends StatelessWidget {
       child: Material(
         child: ListTile(
             shape:RoundedRectangleBorder(
-              side: BorderSide(color: Colors.green, width: 1),
+              side: BorderSide(color: borderColor, width: 1),
               borderRadius: const BorderRadius.all(
                 Radius.circular(20.0),
               ),

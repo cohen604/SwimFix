@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
@@ -135,6 +136,65 @@ class LogicManager {
       print('error in feedbackFromTimes ${e.toString()}');
     }
     return null;
+  }
+
+
+  /// get the days a swimmer swim
+  Future<List<DateTimeDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/history";
+      ServerResponse response = await _connectionHandler
+          .postMessage(path, swimmer.toJson());
+      //TODO check if response is valid
+      List<dynamic> daysMap = response.value as List<dynamic>;
+      List<DateTimeDTO> days = daysMap.map(
+              (element) {
+            return DateTimeDTO.factory(element);
+          }).toList();
+      return days;
+    }
+    catch(e) {
+      print('error in get swimmer history days ${e.toString()}');
+    }
+    return null;
+  }
+
+
+  /// get the days a swimmer swim
+  Future<List<FeedbackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
+    try {
+      String path = "/swimmer/history/day";
+      Map<String, dynamic> request = Map();
+      request['user'] = swimmer.toJson();
+      request['date'] = day.toJson();
+      ServerResponse response = await _connectionHandler.postMessage(path, request);
+      //TODO check if response is valid
+      List<dynamic> feedbacks = response.value as List<dynamic>;
+      return feedbacks.map((element) => FeedbackLink.factory(element))
+          .toList();
+    }
+    catch(e) {
+      print('error in get swimmer history pools by day ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> deleteFeedback(Swimmer swimmer, DateTimeDTO date, FeedbackLink link) async {
+    try {
+      String path = "/swimmer/history/day/delete";
+      Map<String, dynamic> parameters = new Map();
+      parameters['user'] = swimmer.toJson();
+      parameters['date'] = date.toJson();
+      parameters['link'] = link.path;
+      print(parameters);
+      ServerResponse serverResponse = await _connectionHandler.postMessage(
+          path, parameters);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in delete feedback ${e.toString()}');
+    }
+    return false;
   }
 
 }
