@@ -3,9 +3,10 @@ package Domain.Drawing;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Points.IPoint;
 import Domain.Points.IPointUtils;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+
 
 import java.util.List;
 

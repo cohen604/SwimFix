@@ -2,7 +2,7 @@ package UnitTests.SwimmingTests;
 
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Points.IPoint;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;

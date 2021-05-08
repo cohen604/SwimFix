@@ -2,7 +2,6 @@ package Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph;
 
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Points.IPoint;
-import javafx.util.Pair;
 
 import java.util.*;
 
