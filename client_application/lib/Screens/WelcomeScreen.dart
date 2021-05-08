@@ -1,13 +1,12 @@
 import 'package:client_application/Domain/Users/AppUser.dart';
-import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
+import 'Arguments/HistoryScreenArguments.dart';
+import 'Holders/ColorsHolder.dart';
 import 'package:client_application/Screens/Drawers/BasicDrawer.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -36,7 +35,42 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Navigator.pushNamed(context, "/film",
         arguments: new CameraScreenArguments(appUser));
   }
-  
+
+  void onHistory(BuildContext context) {
+    AppUser appUser = this.widget.arguments.appUser;
+    Navigator.pushNamed(context, "/history",
+        arguments: new HistoryScreenArguments(appUser));
+  }
+
+  void onLogout(BuildContext context) {
+    Function onYes = () {
+      LogicManager.getInstance().logout(this.widget.arguments.appUser.swimmer);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    };
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Logout'),
+            content: Text('Do you want to logout?'),
+            actions: [
+              TextButton(
+                  onPressed: ()=>Navigator.pop(context),
+                  child: Text("No")
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onYes();
+                  },
+                  child: Text("Yes")
+              ),
+            ],
+          );
+        }
+    );
+  }
+
   Widget buildHi(BuildContext context) {
     return Center(
       child: Column(
@@ -182,32 +216,50 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  void onLogout(BuildContext context) {
-    Function onYes = () {
-      LogicManager.getInstance().logout(this.widget.arguments.appUser.swimmer);
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    };
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Logout'),
-          content: Text('Do you want to logout?'),
-          actions: [
-            TextButton(
-                onPressed: ()=>Navigator.pop(context),
-                child: Text("No")
+  Widget buildHistory(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Card(
+          borderOnForeground: true,
+          child: Container(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                buildTitle(context, 'History'),
+                buildDes(context, 'View swimming feedback history.'),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return _colorsHolder.getBackgroundForI1(); // Use the component's default.
+                        },
+                      ),
+                    ),
+                    onPressed: ()=>onHistory(context),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Wrap(
+                          spacing: 5,
+                          children: [
+                            Icon(Icons.history),
+                            Text('View',
+                              style: TextStyle(
+                                fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                )
+              ],
             ),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  onYes();
-                },
-                child: Text("Yes")
-            ),
-          ],
-        );
-      }
+          )
+      ),
     );
   }
 
@@ -243,6 +295,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       children: <Widget>[
                         buildUpload(context),
                         buildCamera(context),
+                        buildHistory(context),
                       ],
                     ),
                   ),

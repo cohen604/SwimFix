@@ -1,6 +1,6 @@
 class FeedbackLink {
 
-  final String path;
+  String path;
 
   FeedbackLink(this.path);
 

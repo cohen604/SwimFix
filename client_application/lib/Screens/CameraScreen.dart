@@ -1,16 +1,15 @@
 import 'package:camera/camera.dart';
 import 'package:client_application/Components/BlinkIcon.dart';
 import 'package:client_application/Components/TextTimer.dart';
-import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'Arguments/CameraScreenArguments.dart';
 import 'Drawers/BasicDrawer.dart';
+import 'Holders/ColorsHolder.dart';
 
 class CameraScreen extends StatefulWidget {
 
@@ -24,7 +23,6 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
 
   LogicManager _logicManager;
-
   ColorsHolder _colorsHolder;
   ScreenStates _screenState;
   List<CameraDescription> _cameras;

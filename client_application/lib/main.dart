@@ -1,13 +1,15 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
-import 'package:client_application/Screens/ColorsHolder.dart';
-import 'package:client_application/Screens/ScreensHolder.dart';
+import 'package:client_application/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
+import 'Screens/Holders/ScreensHolder.dart';
+import 'Screens/Holders/ColorsHolder.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,18 @@ class MyApp extends StatelessWidget {
         '/feedback': (context) {
           FeedbackScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getFeedbackScreen(args);
+        },
+        '/history': (context) {
+          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getHistoryScreen(args);
+        },
+        '/history/day': (context) {
+          HistoryDayScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getHistoryDayScreen(args);
+        },
+        '/history/day/feedback': (context) {
+          HistoryFeedBackArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getHistoryFeedbackScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,

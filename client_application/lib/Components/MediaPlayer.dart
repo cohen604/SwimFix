@@ -67,20 +67,23 @@ class _MediaPlayerState extends State<MediaPlayer> {
         ),
       );
     }
-    return Column(
-      children: [
-        Center(
-          child: CircularProgressIndicator(),
-        ),
-        SizedBox(height: 10,),
-        Center(
-            child: Text('Loading Media',
-              style: TextStyle(
-                fontSize: 18 * MediaQuery.of(context).textScaleFactor,
-              ),
-            )
-        )
-      ],
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+          SizedBox(height: 10,),
+          Center(
+              child: Text('Loading Media',
+                style: TextStyle(
+                  fontSize: 18 * MediaQuery.of(context).textScaleFactor,
+                ),
+              )
+          )
+        ],
+      ),
     );
   }
 
