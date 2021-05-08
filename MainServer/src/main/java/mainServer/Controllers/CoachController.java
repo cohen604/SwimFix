@@ -16,12 +16,12 @@ public class CoachController {
     @PostMapping(value = "/invite")
     @CrossOrigin(origins = "*")
     public String loginSwimmer(@RequestBody SendEmailInvitiationDTO invitation) {
-        System.out.println("Received invite request from "+ invitation.email + " to " + invitation.to);
+        System.out.println("Received invite request from "+ invitation.getEmail() + " to " + invitation.getTo());
         UserDTO userDTO = new UserDTO(
-                invitation.uid,
-                invitation.email,
-                invitation.name);
-        ActionResult<Boolean> actionResult = swimFixAPI.invite(userDTO, invitation.to);
+                invitation.getUid(),
+                invitation.getEmail(),
+                invitation.getName());
+        ActionResult<Boolean> actionResult = swimFixAPI.invite(userDTO, invitation.getTo());
         System.out.println("Send invite response");
         return actionResult.toJson();
     }

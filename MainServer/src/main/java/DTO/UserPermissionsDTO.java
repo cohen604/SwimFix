@@ -2,10 +2,10 @@ package DTO;
 
 public class UserPermissionsDTO {
 
-    boolean isSwimmer;
-    boolean isCoach;
-    boolean isAdmin;
-    boolean isResearcher;
+    private boolean isSwimmer;
+    private boolean isCoach;
+    private boolean isAdmin;
+    private boolean isResearcher;
 
     public UserPermissionsDTO(boolean isSwimmer, boolean isCoach, boolean isAdmin, boolean isResearcher) {
         this.isSwimmer = isSwimmer;
