@@ -1,7 +1,7 @@
 package Domain.SwimmingSkeletonsData;
 
 import Domain.Points.IPoint;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import java.util.List;
 
 public interface ISwimmingSkeleton {

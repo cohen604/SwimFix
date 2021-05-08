@@ -1,11 +1,13 @@
 package UnitTests;
 
+import UnitTests.DrawingTests.DrawingTests;
+import UnitTests.Erros.ErrorTests;
 import UnitTests.InterpolationTests.InterpolationTests;
 import UnitTests.ProvidersTests.ProvidersTests;
 import UnitTests.SkeletonTesting.SkeletonTests;
 import UnitTests.PeriodTimeTests.AllPeriodTimeTests;
 import UnitTests.PointsTests.IPointUtilsTests;
-import UnitTests.SkeletonFiltersTests.SkeletonFiltersTests;
+import UnitTests.StatisticsTests.StatisticsTests;
 import UnitTests.StreamingTests.*;
 import UnitTests.SwimmingErrorDetectorsTests.SwimmingErrorDetectorsTests;
 import UnitTests.SwimmingTests.SwimmingTests;
@@ -16,16 +18,18 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
+    DrawingTests.class,
+    ErrorTests.class,
     AllPeriodTimeTests.class,
     IPointUtilsTests.class,
     ProvidersTests.class,
-    SkeletonFiltersTests.class,
     StreamingTests.class,
     SwimmingErrorDetectorsTests.class,
     SwimmingTests.class,
     UsersTests.class,
     InterpolationTests.class,
     SkeletonTests.class,
+    StatisticsTests.class,
 })
 
 public class AllUnitTests {

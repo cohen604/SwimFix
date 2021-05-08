@@ -5,19 +5,23 @@ import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
+import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/VideoHandler.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'ConnectionHandler.dart';
 
 class LogicManager {
 
   static LogicManager logicManager;
+  GoogleAuth _googleAuth;
   ConnectionHandler _connectionHandler;
   VideoHandler _videoHandler;
 
   LogicManager() {
     _connectionHandler = new ConnectionHandler();
     _videoHandler = new VideoHandler();
+    _googleAuth = new GoogleAuth();
   }
 
   static LogicManager getInstance() {
@@ -32,6 +36,14 @@ class LogicManager {
     _connectionHandler = new ConnectionHandler(
       address: address,
       port: port);
+  }
+
+  Future<User> signInWithGoogle() async {
+    return await _googleAuth.signIn();
+  }
+
+  Future<bool> signOutWithGoogle() async {
+    return await _googleAuth.signOut();
   }
 
   Future<bool> login(Swimmer swimmer) async {
@@ -55,6 +67,7 @@ class LogicManager {
       ServerResponse response = await _connectionHandler.postMessage(
           path, swimmer.toJson());
       if (response != null && response.isSuccess() && response.value) {
+        await signOutWithGoogle();
         return true;
       }
     } catch (e) {

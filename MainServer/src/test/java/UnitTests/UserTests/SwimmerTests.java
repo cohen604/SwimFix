@@ -60,14 +60,14 @@ public class SwimmerTests extends TestCase {
     public void testDeleteFeedback() {
         String path = "test_path";
         setUpDelete(path);
-        assertTrue(swimmer.deleteFeedback(path));
+        assertNotNull(swimmer.deleteFeedback(path));
         assertEquals(swimmer.getFeedbacks().size(), 0);
     }
 
     public void testDeleteWrongPath() {
         String path = "test_path";
         setUpDelete(path);
-        assertFalse(swimmer.deleteFeedback("wrong_path"));
+        assertNotNull(swimmer.deleteFeedback("wrong_path"));
         assertEquals(swimmer.getFeedbacks().size(), 1);
     }
 

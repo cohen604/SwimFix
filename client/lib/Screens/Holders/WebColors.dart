@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class WebColors {
@@ -7,6 +5,15 @@ class WebColors {
   /// I1 means important section rate 1
   /// I2 means important section rate 2
   /// ...
+
+  static WebColors _webColors = null;
+
+  static WebColors getInstance() {
+    if(_webColors == null) {
+      _webColors = new WebColors();
+    }
+    return _webColors;
+  }
 
   Color getBackgroundForI1() {
     return Color.fromRGBO(4, 131, 209, 1.0);
@@ -19,11 +26,11 @@ class WebColors {
   Color getBackgroundForI3() {
     return Color.fromRGBO(179, 225, 253, 1.0);
   }
-  
+
   Color getBackgroundForI4() {
     return Color.fromRGBO(219, 241, 255, 1.0);
   }
-  
+
   Color getBackgroundForI5() {
     return Color.fromRGBO(214, 255, 238, 1.0);
   }

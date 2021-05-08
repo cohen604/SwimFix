@@ -16,8 +16,8 @@ import static org.mockito.Mockito.when;
 
 public class IPointUtilsTests extends TestCase {
 
-    private IPoint pointA;
-    private IPoint pointB;
+    protected IPoint pointA;
+    protected IPoint pointB;
 
     public void testCalcDistancePoints() {
         // Arrange
@@ -252,7 +252,7 @@ public class IPointUtilsTests extends TestCase {
      * @param x - the x value
      * @param y - the y value
      */
-    private void setUpPointA(double x, double y) {
+    protected void setUpPointA(double x, double y) {
         this.pointA = mock(IPoint.class);
         when(pointA.getX()).thenReturn(x);
         when(pointA.getY()).thenReturn(y);
@@ -263,7 +263,7 @@ public class IPointUtilsTests extends TestCase {
      * @param x - the x value
      * @param y - the y value
      */
-    private void setUpPointB(double x, double y) {
+    protected void setUpPointB(double x, double y) {
         this.pointB = mock(IPoint.class);
         when(pointB.getX()).thenReturn(x);
         when(pointB.getY()).thenReturn(y);

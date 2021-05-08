@@ -3,9 +3,10 @@ package Domain.Drawing;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Points.IPoint;
 import Domain.Points.IPointUtils;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Draw implements IDraw {
     }
 
     @Override
-    public Mat drawElipce(Mat frame, double radius, double angle, double startAngle,
+    public Mat drawEclipse(Mat frame, double radius, double angle, double startAngle,
                            double endAngle, IPoint center, double r, double g,
                            double b, double a) {
         Point centerPoint = new Point(center.getX(), center.getY());
@@ -86,6 +87,7 @@ public class Draw implements IDraw {
      */
     @Override
     public Mat drawLogo(Mat frame) {
+        //TODO refactor this to receive an input logo and x,y
         String logo = "Swim Analytics";
         double x = 10;
         double y = 30;
@@ -155,6 +157,7 @@ public class Draw implements IDraw {
         return drawArrow(frame, pointB, vec, red, green, blue);
     }
 
+    //TODO delete this
     private void drawLine(Mat frame, IPoint a, double x, double y, double r, double g, double b) {
         drawLine(frame, a, x, y, r, g, b, 2);
     }

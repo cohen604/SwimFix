@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +31,7 @@ class _EmailInvitationState extends State<EmailInvitation> {
 
   bool checkEmail(String email) {
     int i1 = email.indexOf("@");
-    int i2 = email.indexOf(".");
+    int i2 = email.lastIndexOf(".");
     return email.isNotEmpty
         && i1 >= 1
         && i2 >= 2
@@ -41,12 +39,16 @@ class _EmailInvitationState extends State<EmailInvitation> {
         && email.length - 1 > i2;
   }
 
+  String cleanEmail(String email) {
+    return email.replaceAll(String.fromCharCode(143), '');
+  }
+
   void onSendEmail(BuildContext context) {
-    if(checkEmail(_textController.text)) {
+    String email = cleanEmail(_textController.text);
+    if(checkEmail(email)) {
       this.setState(() {
         _state = ScreenState.Pending;
       });
-      String email = _textController.text;
       logicManager.sendInvitationEmail(
           this.widget.webUser.swimmer,
           email)
