@@ -4,7 +4,7 @@ import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -21,11 +21,6 @@ public interface IUserProvider {
 
     boolean reload();
 
-    List<String> filterHistoryByDay(List<FeedbackVideoStreamer> history);
-
-    Map<String, FeedbackVideoStreamer> filterHistoryByPool
-            (List<FeedbackVideoStreamer> history, String day);
-
-    boolean deleteFeedbackByID(UserDTO userDTO, String feedbackID);
+    boolean deleteFeedbackByID(IUser user, String feedbackPath);
 
 }

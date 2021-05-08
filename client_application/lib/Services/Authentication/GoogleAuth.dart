@@ -1,46 +1,44 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 import 'Authentication.dart';
 
 class GoogleAuth extends Authentication {
 
   GoogleSignIn googleSignIn;
-  GoogleAuth() {
+  GoogleSignInAccount account;
 
+  GoogleAuth() {
     this.googleSignIn = GoogleSignIn();
+    this.account = null;
   }
 
   @override
   Future<User> signIn() async{
     try {
-      await Firebase.initializeApp();
-      //print(1);
-      final GoogleSignInAccount account = await this.googleSignIn.signIn();
-      //print(2);
+      // await Firebase.initializeApp();
+      this.account = await this.googleSignIn.signIn();
       final GoogleSignInAuthentication authentication = await account.authentication;
-      //print(3);
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authentication.accessToken,
           idToken: authentication.idToken);
-      //print(4);
       final UserCredential userCredential = await this.auth.signInWithCredential(credential);
-      //print(5);
       final User user = userCredential.user;
       //print(user);
       return user;
     }
     catch (e) {
-      print('error');
       print(e.toString());
-      print('end error');
       return null;
     }
   }
 
   @override
-  void signOut() async {
-    this.googleSignIn.signOut();
+  Future<bool> signOut() async {
+    await this.account.clearAuthCache();
+    GoogleSignInAccount account = await this.googleSignIn.signOut();
+    return account != null;
   }
 
 }

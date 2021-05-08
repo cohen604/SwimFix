@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class LogicManager {
@@ -222,41 +223,55 @@ public class LogicManager {
      * @param userDto - userdto
      * @return - list of days
      */
-    public ActionResult<List<String>> getSwimmerHistoryDays(UserDTO userDto) {
-        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
-        List<String> history_filter = _userProvider.filterHistoryByDay(history);
-        return new ActionResult<>(Response.SUCCESS, history_filter);
+    public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
+        IUser user = _userProvider.getUser(userDto);
+        if(user != null
+            && user.isLogged()
+            && user.isSwimmer()) {
+            try {
+                Collection<LocalDateTime> days = user.getFeedbacksDays();
+                List<DateDTO> outputDays = new LinkedList<>();
+                for(LocalDateTime day: days) {
+                    outputDays.add(new DateDTO(
+                            day.getYear(),
+                            day.getMonthValue(),
+                            day.getDayOfMonth()));
+                }
+                return new ActionResult<>(Response.SUCCESS, outputDays);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new ActionResult<>(Response.FAIL, null);
     }
 
 
     /**
      * get the hours of a swimmer by day
      * @param userDto - userdto
-     * @return - map of <String: hour of the swim, FeedbackVideoStreamer>
+     * @return - list of feedbacks of the given date
      */
-    public ActionResult<HistoryPoolsDTO>
-            getSwimmerHistoryPoolsBy(UserDTO userDto, String day) {
-        List<FeedbackVideoStreamer> history = getFeedbackVideoStreamerList(userDto);
-        Map<String, FeedbackVideoStreamer> history_filter = _userProvider.filterHistoryByPool(history, day);
-        HistoryPoolsDTO pools = new HistoryPoolsDTO(history_filter);
-        return new ActionResult<>(Response.SUCCESS, pools);
-    }
-
-    /**
-     * get a list of FeedbackVideoStreamer
-     * @param userDto - userdto
-     * @return - list of FeedbackVideoStreamer
-     */
-    private List<FeedbackVideoStreamer> getFeedbackVideoStreamerList(UserDTO userDto) {
-        List<FeedbackVideoStreamer> history = new LinkedList<>();
+    public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsByDay(UserDTO userDto, DateDTO dateDTO) {
         IUser user = _userProvider.getUser(userDto);
-        Collection<IFeedbackVideo> feedbacks = user.getFeedbacks();
-        for (IFeedbackVideo v : feedbacks) {
-            String path = v.getPath();
-            FeedbackVideoStreamer feedbackVideoStreamer = new FeedbackVideoStreamer(path);
-            history.add(feedbackVideoStreamer);
+        if(user != null
+                && user.isLogged()
+                && user.isSwimmer()) {
+            try {
+                LocalDateTime date = LocalDateTime.of(
+                        dateDTO.getYear(),
+                        dateDTO.getMonth(),
+                        dateDTO.getDay(), 0, 0);
+                Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
+                List<FeedbackVideoStreamer> output = new LinkedList<>();
+                for(IFeedbackVideo feedbackVideo : feedbacks) {
+                    output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
+                }
+                return new ActionResult<>(Response.SUCCESS, output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return history;
+        return new ActionResult<>(Response.FAIL, null);
     }
 
     /***
@@ -328,13 +343,14 @@ public class LogicManager {
     /***
      * delete a feedback of a user
      * @param userDTO - the user who own the feedback
-     * @param feedbackID - the id of the feedback to delete
+     * @param dateDTO - the date of the feedback
+     * @param path - the id of the feedback to delete
      * @return - true if deleted, false if not
      */
-    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, String feedbackID) {
+    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDTO dateDTO, String path) {
+        IUser user = _userProvider.getUser(userDTO);
         try {
-            boolean deleted = _userProvider.deleteFeedbackByID(userDTO, feedbackID);
-            if (deleted) {
+            if(user != null && _userProvider.deleteFeedbackByID(user, path)) {
                 return new ActionResult<>(Response.SUCCESS, true);
             }
         }

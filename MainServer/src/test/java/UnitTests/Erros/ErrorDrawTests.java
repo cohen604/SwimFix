@@ -3,7 +3,7 @@ package UnitTests.Erros;
 import Domain.Errors.Interfaces.SwimmingError;
 import Domain.Points.IPoint;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
-import javafx.util.Pair;
+import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.opencv.core.CvType;

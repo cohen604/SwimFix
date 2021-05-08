@@ -5,6 +5,10 @@ import Domain.UserData.Swimmer;
 import junit.framework.TestCase;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+
 import static org.mockito.Mockito.*;
 
 
@@ -60,15 +64,65 @@ public class SwimmerTests extends TestCase {
     public void testDeleteFeedback() {
         String path = "test_path";
         setUpDelete(path);
-        assertTrue(swimmer.deleteFeedback(path));
+        assertNotNull(swimmer.deleteFeedback(path));
         assertEquals(swimmer.getFeedbacks().size(), 0);
     }
 
     public void testDeleteWrongPath() {
         String path = "test_path";
         setUpDelete(path);
-        assertFalse(swimmer.deleteFeedback("wrong_path"));
+        assertNotNull(swimmer.deleteFeedback("wrong_path"));
         assertEquals(swimmer.getFeedbacks().size(), 1);
+    }
+
+    public void testGetFeedbacksDays() {
+        // add the feedback
+        when(feedbackVideo_1.getPath()).thenReturn("test_path1");
+        when(feedbackVideo_2.getPath()).thenReturn("test_path2");
+        assertTrue(swimmer.addFeedback(feedbackVideo_1));
+        assertTrue(swimmer.addFeedback(feedbackVideo_2));
+        assertEquals(2, swimmer.getFeedbacks().size());
+        LocalDateTime time = LocalDateTime.now();
+        when(feedbackVideo_1.getDate()).thenReturn(time);
+        when(feedbackVideo_2.getDate()).thenReturn(time);
+        // call
+        Collection<LocalDateTime> dates = swimmer.getFeedbacksDays();
+        // test
+        for (LocalDateTime date : dates) {
+            assertEquals(date, time);
+        }
+    }
+
+    public void testGetFeedbacksOfDay() {
+        // add the feedback
+        when(feedbackVideo_1.getPath()).thenReturn("test_path1");
+        when(feedbackVideo_2.getPath()).thenReturn("test_path2");
+        assertTrue(swimmer.addFeedback(feedbackVideo_1));
+        assertTrue(swimmer.addFeedback(feedbackVideo_2));
+        assertEquals(2, swimmer.getFeedbacks().size());
+        LocalDateTime time = LocalDateTime.now();
+        when(feedbackVideo_1.getDate()).thenReturn(time);
+        when(feedbackVideo_2.getDate()).thenReturn(time);
+        LocalDateTime day = LocalDateTime.now();
+        // call
+        Collection<IFeedbackVideo> feedbackVideos = swimmer.getFeedbacksOfDay(day);
+        assertEquals(2,feedbackVideos.size());
+    }
+
+    public void testGetFeedbacksOfDayWrongDay() {
+        // add the feedback
+        when(feedbackVideo_1.getPath()).thenReturn("test_path1");
+        when(feedbackVideo_2.getPath()).thenReturn("test_path2");
+        assertTrue(swimmer.addFeedback(feedbackVideo_1));
+        assertTrue(swimmer.addFeedback(feedbackVideo_2));
+        assertEquals(2, swimmer.getFeedbacks().size());
+        LocalDateTime time = LocalDateTime.now();
+        when(feedbackVideo_1.getDate()).thenReturn(time);
+        when(feedbackVideo_2.getDate()).thenReturn(time);
+        LocalDateTime day = LocalDateTime.now().minusDays(1);
+        // call
+        Collection<IFeedbackVideo> feedbackVideos = swimmer.getFeedbacksOfDay(day);
+        assertNull(feedbackVideos);
     }
 
 

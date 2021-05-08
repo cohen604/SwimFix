@@ -1,12 +1,11 @@
-import 'dart:html' as html;
 import 'dart:html';
-import 'package:client/Components/AboutScreenMenuBar.dart';
-import 'package:client/Components/MobileAboutScreenMenuBar.dart';
+import 'package:client/Components/MenuBars/MobileAboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'Holders/WebColors.dart';
 
 class MobileDownloadScreen extends StatefulWidget {
   @override
@@ -15,10 +14,12 @@ class MobileDownloadScreen extends StatefulWidget {
 
 class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
 
-  WebColors webColors;
+  WebColors _webColors;
+  AssetsHolder _assetsHolder;
 
   _MobileDownloadScreenState() {
-    webColors = new WebColors();
+    _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   Function onLogo(BuildContext context) {
@@ -55,14 +56,14 @@ class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
   }
 
   void onDownloadAndroidArm32() {
-    onClickHref('/assets/assets/releases/app-armeabi-v7a-release.apk');
+    onClickHref(_assetsHolder.getDownloadAppArmeabi());
   }
 
   void onDownloadAndroidArm64() {
-    onClickHref('/assets/assets/releases/app-arm64-v8a-release.apk');
+    onClickHref(_assetsHolder.getDownloadAppArm64());
   }
   void onDownloadAndroidx86_64() {
-    onClickHref('/assets/assets/releases/app-x86_64-release.apk');
+    onClickHref(_assetsHolder.getDownloadAppX86());
   }
 
   Widget buildTitle(BuildContext context, String text) {
@@ -149,7 +150,7 @@ class _MobileDownloadScreenState extends State<MobileDownloadScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: webColors.getBackgroundForI6(),
+        color: _webColors.getBackgroundForI6(),
         child: Column(
           children: [
             MobileAboutScreenMenuBar(

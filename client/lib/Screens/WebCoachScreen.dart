@@ -1,9 +1,9 @@
 import 'package:client/Components/EmailInvitation.dart';
-import 'package:client/Components/MenuBar.dart';
+import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'Holders/WebColors.dart';
 
 class WebCoachScreen extends StatefulWidget {
 
@@ -21,7 +21,7 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
   TextEditingController _searchTextController;
 
   _WebCoachScreenState() {
-    _webColors = new WebColors();
+    _webColors = WebColors.getInstance();
     _searchTextController = TextEditingController();
   }
 

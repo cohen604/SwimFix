@@ -21,12 +21,17 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  ColorsHolder _colorsHolder = new ColorsHolder();
+  ColorsHolder _colorsHolder;
+  LogicManager _logicManager;
 
+
+  _LoginScreenState() {
+    _colorsHolder = new ColorsHolder();
+    _logicManager = LogicManager.getInstance();
+  }
 
   void signInWithGoogle() async {
-    GoogleAuth googleAuth = new GoogleAuth();
-    User user = await googleAuth.signIn();
+    User user = await _logicManager.signInWithGoogle();
     print(user);
     String name = user.displayName;
     String email = user.email;
@@ -163,13 +168,13 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.all(5.0),
       alignment: Alignment.topRight,
       child: CircleAvatar(
-        backgroundColor: Colors.lightGreenAccent.withAlpha(220),
+        backgroundColor: Colors.redAccent.withAlpha(220),
         radius: 30,
         child: TextButton(
           onPressed: onPressed,
-          child: Text('Debug',
+          child: Text('Beta',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 18,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),

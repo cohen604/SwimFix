@@ -1,22 +1,28 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 
+import 'GoogleAuth.dart';
+
 class LogicManager {
 
   static LogicManager logicManager;
   ConnectionHandler connectionHandler;
+  GoogleAuth googleAuth;
 
   LogicManager() {
     this.connectionHandler = new ConnectionHandler();
+    this.googleAuth = new GoogleAuth();
   }
 
   static LogicManager getInstance() {
@@ -24,6 +30,14 @@ class LogicManager {
       logicManager = new LogicManager();
     }
     return logicManager;
+  }
+
+  Future<User> signInWithGoogle() async {
+    return await googleAuth.signIn();
+  }
+
+  Future<bool> signOutWithGoogle() async {
+    return await googleAuth.signOut();
   }
 
   Future<bool> login(Swimmer swimmer) async{
@@ -173,14 +187,17 @@ class LogicManager {
   }
 
   /// get the days a swimmer swim
-  Future<List<String>> getSwimmerHistoryDays(Swimmer swimmer) async {
+  Future<List<DateTimeDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
       String path = "/swimmer/history";
       ServerResponse response = await this.connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
       List<dynamic> daysMap = response.value as List<dynamic>;
-      List<String> days = daysMap.map((el) => el.toString()).toList();
+      List<DateTimeDTO> days = daysMap.map(
+              (element) {
+                return DateTimeDTO.factory(element);
+              }).toList();
       return days;
     }
     catch(e) {
@@ -191,15 +208,17 @@ class LogicManager {
 
 
   /// get the days a swimmer swim
-  Future<Map> getSwimmerHistoryPoolsByDay(Swimmer swimmer, String day) async {
+  Future<List<FeedBackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
     try {
-      String path = "/swimmer/history";
-      Map swimmerMap = swimmer.toJson();
-      ServerResponse response = await this.connectionHandler
-          .postMessageWithParams(path, [day], swimmerMap);
+      String path = "/swimmer/history/day";
+      Map<String, dynamic> request = Map();
+      request['user'] = swimmer.toJson();
+      request['date'] = day.toJson();
+      ServerResponse response = await connectionHandler.postMessage(path, request);
       //TODO check if response is valid
-      Map map = response.value as Map;
-      return map["pools"];
+      List<dynamic> feedbacks = response.value as List<dynamic>;
+      return feedbacks.map((element) => FeedBackLink.factory(element))
+          .toList();
     }
     catch(e) {
       print('error in get swimmer history pools by day ${e.toString()}');
@@ -207,18 +226,22 @@ class LogicManager {
     return null;
   }
 
-  Future<bool> deleteFeedback(Swimmer swimmer, List<String> params) async {
+  Future<bool> deleteFeedback(Swimmer swimmer, DateTimeDTO date, FeedBackLink link) async {
     try {
-      String path = "/swimmer/delete_feedback";
-      Map swimmerMap = swimmer.toJson();
-      ServerResponse serverResponse = await this.connectionHandler.postMessageWithParams(
-          path, params, swimmerMap);
+      String path = "/swimmer/history/day/delete";
+      Map<String, dynamic> parameters = new Map();
+      parameters['user'] = swimmer.toJson();
+      parameters['date'] = date.toJson();
+      parameters['link'] = link.path;
+      print(parameters);
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, parameters);
       return serverResponse.value as bool;
     }
     catch(e) {
       print('error in delete feedback ${e.toString()}');
     }
-    return null;
+    return false;
   }
 
 }

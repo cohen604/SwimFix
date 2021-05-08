@@ -1,21 +1,12 @@
 import 'package:chewie/chewie.dart';
-import 'package:client/Components/AboutScreenMenuBar.dart';
-import 'package:client/Components/MobileAboutScreenMenuBar.dart';
-import 'package:client/Components/SimpleVideoPlayer.dart';
-import 'package:client/Domain/Users/Swimmer.dart';
-import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/WebColors.dart';
-import 'package:client/Services/GoogleAuth.dart';
-import 'package:client/Services/LogicManager.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:client/Components/MenuBars/MobileAboutScreenMenuBar.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:video_player/video_player.dart';
-
 import 'Arguments/AboutScreenArguments.dart';
-import 'Arguments/WelcomeScreenArguments.dart';
-import 'PopUps/MessagePopUp.dart';
+import 'Holders/WebColors.dart';
 
 class MobileAboutScreen extends StatefulWidget {
 
@@ -35,9 +26,11 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
   ScreenState state;
   VideoPlayerController _controller;
   ChewieController _chewieController;
+  AssetsHolder _assetsHolder;
 
   _MobileAboutScreenState(bool videoOn, bool loginOn, bool aboutOn) {
-    _webColors = new WebColors();
+    _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     if(videoOn && !loginOn) {
       state = ScreenState.Video;
     }
@@ -49,7 +42,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/videos/intro.mp4');
+    _controller = VideoPlayerController.asset(_assetsHolder.getIntroVideo());
     _controller.initialize().then((_) {
       _chewieController = ChewieController(
         videoPlayerController: _controller,
@@ -124,7 +117,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
       padding: EdgeInsets.only(left: 30),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/about_screen_background.png'),
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),
@@ -184,7 +177,7 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
       height: MediaQuery.of(context).size.height / 2,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/about_screen_background.png'),
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),

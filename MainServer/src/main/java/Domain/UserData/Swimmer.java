@@ -1,9 +1,8 @@
 package Domain.UserData;
 import Domain.Streaming.IFeedbackVideo;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Swimmer {
@@ -30,8 +29,8 @@ public class Swimmer {
         return _feedbacks.putIfAbsent(feedbackVideo.getPath(), feedbackVideo) == null;
     }
 
-    public boolean deleteFeedback(String feedbackPath) {
-        return _feedbacks.remove(feedbackPath) != null;
+    public IFeedbackVideo deleteFeedback(String feedbackPath) {
+        return _feedbacks.remove(feedbackPath);
     }
 
     public Collection<IFeedbackVideo> getFeedbacks() {
@@ -40,5 +39,46 @@ public class Swimmer {
 
     public IFeedbackVideo get(String path) {
         return _feedbacks.get(path);
+    }
+
+    public Collection<LocalDateTime> getFeedbacksDays() {
+        Map<String, LocalDateTime> localDateMap = new HashMap<>();
+        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap(localDateMap);
+        return map.keySet();
+    }
+
+    public Collection<IFeedbackVideo> getFeedbacksOfDay(LocalDateTime day) {
+        Map<String, LocalDateTime> localDateMap = new HashMap<>();
+        Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap(localDateMap);
+        LocalDateTime date = localDateMap.get(dayToString(day));
+        return map.get(date);
+    }
+
+    private Map<LocalDateTime, List<IFeedbackVideo>> getFeedbacksDayMap(Map<String, LocalDateTime> localDateMap) {
+        Map<LocalDateTime, List<IFeedbackVideo>> output = new HashMap<>();
+        for (IFeedbackVideo feedbackVideo: _feedbacks.values()) {
+            LocalDateTime date = feedbackVideo.getDate();
+            LocalDateTime dayDate = LocalDateTime.of(
+                    date.getYear(),
+                    date.getMonth(),
+                    date.getDayOfMonth(), 0, 0);
+            if(localDateMap.containsKey(dayToString(dayDate))) {
+                LocalDateTime tmp = localDateMap.get(dayToString(dayDate));
+                output.get(tmp).add(feedbackVideo);
+            }
+            else {
+                LinkedList<IFeedbackVideo> list = new LinkedList<>();
+                list.add(feedbackVideo);
+                output.put(date, list);
+                localDateMap.put(dayToString(dayDate), date);
+            }
+        }
+        return output;
+    }
+
+    private String dayToString(LocalDateTime localDateTime) {
+        return localDateTime.getYear() + "." +
+                localDateTime.getMonth() + "." +
+                localDateTime.getDayOfMonth();
     }
 }

@@ -1,10 +1,10 @@
-import 'dart:html' as html;
-import 'package:client/Components/AboutScreenMenuBar.dart';
+import 'dart:html';
+import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
-import 'package:client/Screens/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'Holders/WebColors.dart';
 
 class WebDownloadScreen extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
   WebColors webColors;
 
   _WebDownloadScreenState() {
-    webColors = new WebColors();
+    webColors = WebColors.getInstance();
   }
 
   Function onLogo(BuildContext context) {
@@ -56,15 +56,22 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
     };
   }
 
-  void onDownloadAndroidArm32() async{
-    html.window.open('/assets/releases/app-armeabi-v7a-release.apk', "apk");
+  void onClickHref(String href) {
+    AnchorElement(
+        href: href)
+      ..setAttribute("download", 'swimAnalytics.apk')
+      ..click();
   }
 
-  void onDownloadAndroidArm64() async{
-    html.window.open('/assets/releases/app-arm64-v8a-release.apk', "apk");
+  void onDownloadAndroidArm32() {
+    onClickHref('/assets/assets/releases/app-armeabi-v7a-release.apk');
   }
-  void onDownloadAndroidx86_64() async{
-    html.window.open('/assets/releases/app-x86_64-release.apk', "apk");
+
+  void onDownloadAndroidArm64() {
+    onClickHref('/assets/assets/releases/app-arm64-v8a-release.apk');
+  }
+  void onDownloadAndroidx86_64() {
+    onClickHref('/assets/assets/releases/app-x86_64-release.apk');
   }
 
   Widget buildTitle(BuildContext context, String text) {
