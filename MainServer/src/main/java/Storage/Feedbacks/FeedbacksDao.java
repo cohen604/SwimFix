@@ -11,8 +11,15 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
@@ -56,14 +63,37 @@ public class FeedbacksDao extends Dao<FeedbackVideo> implements IFeedbackDao {
     }
 
     @Override
-    public FeedbackVideo find(String id) {
-        //TODO
+    public FeedbackVideo update(FeedbackVideo value) {
+        try {
+            MongoCollection<FeedbackVideo> collection = getCollection();
+            Document query = new Document("_id", value.getPath());
+            UpdateResult result = collection.replaceOne(query, value);
+            if (result == null) {
+                return null;
+            }
+            return value;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
-    public FeedbackVideo update(FeedbackVideo value) {
-        //TODO
+    public FeedbackVideo tryInsertThenUpdate(FeedbackVideo value) {
+        try {
+            MongoCollection<FeedbackVideo> collection = getCollection();
+            Document query = new Document("_id", value.getPath());
+            ReplaceOptions options = new ReplaceOptions().upsert(true);
+            UpdateResult result = collection.replaceOne(query, value, options);
+            if (result == null) {
+                return null;
+            }
+            return value;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

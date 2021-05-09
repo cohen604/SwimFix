@@ -34,7 +34,7 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
     @Override
     public FeedbackVideo decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String feedbackPath = bsonReader.readString("path");
+        String feedbackPath = bsonReader.readString("_id");
         String videoPath = bsonReader.readString("video_path");
         String skeletonsPath = bsonReader.readString("skeletons_path");
         String mlSkeletonsPath = bsonReader.readString("ml_skeletons_path");
@@ -89,7 +89,7 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
     public void encode(BsonWriter bsonWriter, FeedbackVideo feedbackVideo, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
         // write fields
-        bsonWriter.writeString("path", feedbackVideo.getPath());
+        bsonWriter.writeString("_id", feedbackVideo.getPath());
         bsonWriter.writeString("video_path", feedbackVideo.getIVideo().getPath());
         bsonWriter.writeString("skeletons_path", feedbackVideo.getSkeletonsPath());
         bsonWriter.writeString("ml_skeletons_path", feedbackVideo.getMLSkeletonsPath());

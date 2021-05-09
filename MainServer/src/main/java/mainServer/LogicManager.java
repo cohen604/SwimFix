@@ -6,6 +6,7 @@ import Domain.Streaming.*;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
+import Storage.DbContext;
 import mainServer.Providers.Interfaces.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -43,7 +44,10 @@ public class LogicManager {
         _reportProvider = reportProvider;
         _emailSenderProvider = emailSenderProvider;
         _zipProvider = zipProvider;
+        // initialize server
         createClientsDir();
+        DbContext dbContext = new DbContext();
+        dbContext.initialize();
         _userProvider.reload();
     }
 

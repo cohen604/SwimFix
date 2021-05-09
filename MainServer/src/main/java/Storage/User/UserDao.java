@@ -1,6 +1,7 @@
 package Storage.User;
 import Domain.UserData.User;
 import Storage.Dao;
+import Storage.DbContext;
 import Storage.Feedbacks.Codecs.SwimmingErrors.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -44,25 +45,8 @@ public class UserDao extends Dao<User> implements IUserDao{
         // here we define the connection
         MongoClient mongoClient = MongoClients.create(settings);
 
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("swimfix");
-        return mongoDatabase.getCollection("user", User.class);
-    }
-
-    @Override
-    public User find(String id) {
-        try {
-            MongoCollection<User> collection = getCollection();
-            List<User> users = new LinkedList<>();
-            Document query = new Document("_id", id);
-            collection.find(query).into(users);
-            if(users.isEmpty()) {
-                return null;
-            }
-            return users.get(0);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
+        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_USERS, User.class);
     }
 
     @Override

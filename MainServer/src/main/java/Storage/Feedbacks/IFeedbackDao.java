@@ -14,5 +14,7 @@ public interface IFeedbackDao {
 
     FeedbackVideo update(FeedbackVideo value);
 
+    FeedbackVideo tryInsertThenUpdate(FeedbackVideo value);
+
     boolean removeFeedback(String id);
 }

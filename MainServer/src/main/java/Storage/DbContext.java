@@ -3,6 +3,7 @@ package Storage;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.internal.MongoDatabaseImpl;
 
@@ -41,10 +42,17 @@ public class DbContext {
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME);
 
         for (String collection : collections) {
-            if(mongoDatabase.getCollection(collection) == null) {
+            try {
                 mongoDatabase.createCollection(collection);
+                System.out.println("Created Db Collection "+collection);
+            } catch (Exception e) {
+                System.out.println("Collection already exists - "+collection);
             }
+//            MongoCollection findCollection = mongoDatabase.getCollection(collection);
+//            if(findCollection == null) {
+//            }
         }
+        mongoClient.close();
 
     }
 
