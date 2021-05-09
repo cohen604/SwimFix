@@ -23,15 +23,15 @@ public class ResearcherCodec implements Codec<Researcher> {
     @Override
     public Researcher decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String tag = bsonReader.readString("tag");
+        String email = bsonReader.readString("_id");
         bsonReader.readEndDocument();
-        return new Researcher(tag);
+        return new Researcher(email);
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Researcher researcher, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("tag", researcher.getTag());
+        bsonWriter.writeString("_id", researcher.getEmail());
         bsonWriter.writeEndDocument();
     }
 

@@ -31,7 +31,7 @@ public class User implements IUser {
         this.email = userDTO.getEmail();
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
-        _swimmer = new Swimmer();
+        _swimmer = new Swimmer(email);
 //        _coach = new Coach();
 //        _researcher = new Researcher();
 //        _admin = new Admin();

@@ -14,6 +14,7 @@ import DomainLogic.PdfDrawing.PdfDrawer;
 import Domain.Drawing.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.Completions.SkeletonsCompletionBefore;
@@ -33,7 +34,7 @@ public class SwimFixAPI {
    private LogicManager logicManager;
 
    public SwimFixAPI() {
-      IUserProvider userProvider = new UserProvider(new UserDao());
+      IUserProvider userProvider = new UserProvider(new UserDao(), new SwimmerDao());
 
       IFactoryDraw iFactoryDraw = new FactoryDraw();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors(

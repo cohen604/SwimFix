@@ -5,6 +5,8 @@ import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
+import Storage.Swimmer.ISwimmerDao;
+import Storage.Swimmer.SwimmerDao;
 import Storage.User.IUserDao;
 import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
@@ -19,10 +21,12 @@ public class UserProvider implements IUserProvider {
      */
     ConcurrentHashMap<String, User> _users;
     IUserDao _dao;
+    ISwimmerDao _swimmerdao;
 
-    public UserProvider(UserDao dao) {
+    public UserProvider(IUserDao dao, ISwimmerDao swimmerDao) {
         _users = new ConcurrentHashMap<>();
         _dao = dao;
+        _swimmerdao = swimmerDao;
     }
 
     @Override
@@ -71,11 +75,12 @@ public class UserProvider implements IUserProvider {
 
     @Override
     public boolean addFeedbackToUser(IUser user, IFeedbackVideo feedbackVideo) {
+        // TODO refactor this to FeedbackProvider to insert the feedback
         User current = _users.get(user.getUid());
         if (current != null
                 && current.isLogged()
                 && current.addFeedback(feedbackVideo)) {
-            if (_dao.update(current) == null) {
+            if (_swimmerdao.update(current.getSwimmer()) == null) {
                 current.deleteFeedback(feedbackVideo.getPath());
             }
             else {
@@ -110,11 +115,12 @@ public class UserProvider implements IUserProvider {
      */
     @Override
     public boolean deleteFeedbackByID(IUser user, String feedbackPath) {
+        // TODO refactor this to FeedbackProvider to delete the feedback
         User current = _users.get(user.getUid());
         if (current != null && current.isLogged()) {
             IFeedbackVideo video = current.deleteFeedback(feedbackPath);
             if(video != null) {
-                if (_dao.update(current) == null) {
+                if (_swimmerdao.update(current.getSwimmer()) == null) {
                     current.addFeedback(video);
                 }
                 else {

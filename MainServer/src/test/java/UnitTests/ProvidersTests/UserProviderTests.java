@@ -2,6 +2,7 @@ package UnitTests.ProvidersTests;
 
 import DTO.UserDTO;
 import Domain.UserData.User;
+import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import junit.framework.TestCase;
 import mainServer.Providers.UserProvider;
@@ -10,13 +11,15 @@ import org.junit.BeforeClass;
 public class UserProviderTests extends TestCase {
 
     private UserDao userDao;
+    private SwimmerDao swimmerDao;
     private UserProvider userProvider;
     private UserDTO userDTO;
 
     @BeforeClass
     public void setUp() {
         userDao = new UserDao();
-        userProvider = new UserProvider(userDao);
+        swimmerDao = new SwimmerDao();
+        userProvider = new UserProvider(userDao, swimmerDao);
         String uid_1 = "1";
         String email_1 = "test@test.com";
         String name_1 = "test";

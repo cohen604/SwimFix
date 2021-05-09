@@ -7,14 +7,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Swimmer {
 
+    private String _email;
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
     private Queue<Invitation> _invetations;
 
-    public Swimmer() {
+    public Swimmer(String email) {
+         _email = email;
         _feedbacks = new ConcurrentHashMap<>();
     }
 
-    public Swimmer(List<IFeedbackVideo> feedbacks) {
+    public Swimmer(String email, List<IFeedbackVideo> feedbacks) {
+        _email = email;
         _feedbacks = new ConcurrentHashMap<>();
         for (IFeedbackVideo feedbackVideo: feedbacks) {
             _feedbacks.put(feedbackVideo.getPath(), feedbackVideo);
@@ -31,6 +34,10 @@ public class Swimmer {
 
     public IFeedbackVideo deleteFeedback(String feedbackPath) {
         return _feedbacks.remove(feedbackPath);
+    }
+
+    public String getEmail() {
+        return _email;
     }
 
     public Collection<IFeedbackVideo> getFeedbacks() {

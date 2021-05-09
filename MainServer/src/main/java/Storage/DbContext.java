@@ -48,9 +48,6 @@ public class DbContext {
             } catch (Exception e) {
                 System.out.println("Collection already exists - "+collection);
             }
-//            MongoCollection findCollection = mongoDatabase.getCollection(collection);
-//            if(findCollection == null) {
-//            }
         }
         mongoClient.close();
 

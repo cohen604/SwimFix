@@ -1,4 +1,4 @@
-package Storage.User;
+package Storage.Swimmer.Codecs;
 
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.IFeedbackVideo;
@@ -11,7 +11,9 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import java.util.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class SwimmerCodec implements Codec<Swimmer> {
 
@@ -24,6 +26,7 @@ public class SwimmerCodec implements Codec<Swimmer> {
     @Override
     public Swimmer decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
+        String email = bsonReader.readString("_id");
         List<IFeedbackVideo> feedbacks = new LinkedList<>();
         bsonReader.readStartArray();
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -32,13 +35,13 @@ public class SwimmerCodec implements Codec<Swimmer> {
         }
         bsonReader.readEndArray();
         bsonReader.readEndDocument();
-        return new Swimmer(feedbacks);
+        return new Swimmer(email, feedbacks);
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Swimmer swimmer, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-
+        bsonWriter.writeString("_id", swimmer.getEmail());
         bsonWriter.writeStartArray("feedbacks");
         for (IFeedbackVideo feedbackVideo: swimmer.getFeedbacks()) {
             bsonWriter.writeString(feedbackVideo.getPath());

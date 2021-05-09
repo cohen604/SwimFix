@@ -26,7 +26,6 @@ public class UserDao extends Dao<User> implements IUserDao{
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
-                                new SwimmerCodec(),
                                 new CoachCodec(),
                                 new AdminCodec(),
                                 new ResearcherCodec()
