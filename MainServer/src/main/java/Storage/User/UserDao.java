@@ -1,6 +1,7 @@
 package Storage.User;
 import Domain.UserData.User;
-import Storage.SwimmingErrors.*;
+import Storage.Dao;
+import Storage.Feedbacks.Codecs.SwimmingErrors.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -17,22 +18,14 @@ import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class UserDao implements IUserDao{
+public class UserDao extends Dao<User> implements IUserDao{
 
-    private MongoCollection<User> getCollection() {
-        CodecRegistry swimmerCodecRegistry = CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(
-                new LeftElbowErrorCodec(),
-                new LeftForearmErrorCodec(),
-                new LeftPalmCrossHeadErrorCodec(),
-                new RightElbowErrorCodec(),
-                new RightForearmErrorCodec(),
-                new RightPalmCrossHeadErrorCodec()
-        ));
-
+    @Override
+    protected MongoCollection<User> getCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
-                                new SwimmerCodec(swimmerCodecRegistry),
+                                new SwimmerCodec(),
                                 new CoachCodec(),
                                 new AdminCodec(),
                                 new ResearcherCodec()
@@ -54,33 +47,6 @@ public class UserDao implements IUserDao{
         MongoDatabase mongoDatabase = mongoClient.getDatabase("swimfix");
         return mongoDatabase.getCollection("user", User.class);
     }
-
-    @Override
-    public List<User> getAll() {
-        try {
-            MongoCollection<User> collection = getCollection();
-            List<User> users = new LinkedList<>();
-            collection.find().into(users);
-            return users;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public User insert(User value) {
-        try {
-            MongoCollection<User> collection = getCollection();
-            collection.insertOne(value);
-            return value;
-        } catch ( Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     @Override
     public User find(String id) {

@@ -1,4 +1,4 @@
-package Storage.SwimmingErrors;
+package Storage.Feedbacks.Codecs.SwimmingErrors;
 
 import Domain.Drawing.Draw;
 import Domain.Errors.RightElbowError;
