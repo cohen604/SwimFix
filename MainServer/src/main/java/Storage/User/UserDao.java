@@ -3,7 +3,6 @@ import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
 import Storage.User.Codecs.CoachCodec;
-import Storage.Researcher.Codecs.ResearcherCodec;
 import Storage.User.Codecs.UserCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -29,8 +28,7 @@ public class UserDao extends Dao<User> implements IUserDao{
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
-                                new CoachCodec(),
-                                new ResearcherCodec()
+                                new CoachCodec()
                                ), //here we define the codec
                         //CodecRegistries.fromProviders( new UserCodecProvider()),
                         getDefaultCodecRegistry());

@@ -45,10 +45,24 @@ public class LogicManager {
         _emailSenderProvider = emailSenderProvider;
         _zipProvider = zipProvider;
         // initialize server
+        initializeServer();
+    }
+
+    private void initializeServer() {
+        // create system dirs
         createClientsDir();
+        // create db
         DbContext dbContext = new DbContext();
         dbContext.initialize();
+        // reload all users
         _userProvider.reload();
+        // verify system administrator is created
+        UserDTO swimAnalyticsUser = new UserDTO(
+            "sIuzq2wFIHV4V335bf8o0QP3XQJ2",
+            "swimfixofficial@gmail.com",
+            "swim fix"
+        );
+        _userProvider.addSwimAnalyticsUser(swimAnalyticsUser);
     }
 
     /**

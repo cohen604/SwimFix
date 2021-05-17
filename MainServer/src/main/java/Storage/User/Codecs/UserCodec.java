@@ -49,6 +49,9 @@ public class UserCodec implements Codec<User> {
         if(objectName.equals("swimmer")) {
             String swimmerId = bsonReader.readString();
             swimmer = _swimmerDao.find(swimmerId);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("coach")) {
@@ -61,12 +64,18 @@ public class UserCodec implements Codec<User> {
 
         if(objectName.equals("admin")) {
             String adminId = bsonReader.readString();
-            admin =  _adminDao.find(adminId);
+            admin = _adminDao.find(adminId);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("researcher")) {
             String researcherId = bsonReader.readString();
             researcher = _researcherDao.find(researcherId);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         bsonReader.readEndDocument();

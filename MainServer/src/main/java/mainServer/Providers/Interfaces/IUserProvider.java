@@ -1,16 +1,13 @@
 package mainServer.Providers.Interfaces;
-
-import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
-import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
-
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+
 
 public interface IUserProvider {
+
+    void addSwimAnalyticsUser(UserDTO userDTO);
 
     boolean login(UserDTO userDTO);
 

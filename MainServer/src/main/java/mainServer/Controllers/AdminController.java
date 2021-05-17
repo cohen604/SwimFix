@@ -18,7 +18,7 @@ public class AdminController {
         swimFixAPI = SingleServiceAPI.getInstance();
     }
 
-    @GetMapping("/search/users/not/admin")
+    @GetMapping("/search/users/not/admins")
     @CrossOrigin(origins = "*")
     public String findUsersThatNotAdmin(@RequestBody UserDTO userDTO) {
         System.out.println("Received admin search request for users that not admin");
@@ -32,7 +32,7 @@ public class AdminController {
         return null;
     }
 
-    @GetMapping("/search/users/not/researcher")
+    @GetMapping("/search/users/not/researchers")
     @CrossOrigin(origins = "*")
     public String findUsersThatNotResearcher(@RequestBody UserDTO userDTO) {
         System.out.println("Received admin search request for users that not researcher");
