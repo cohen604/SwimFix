@@ -2,7 +2,6 @@ package Storage.User;
 import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.Feedbacks.Codecs.SwimmingErrors.*;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -14,9 +13,6 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
 public class UserDao extends Dao<User> implements IUserDao{
@@ -27,7 +23,6 @@ public class UserDao extends Dao<User> implements IUserDao{
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
                                 new CoachCodec(),
-                                new AdminCodec(),
                                 new ResearcherCodec()
                                ), //here we define the codec
                         //CodecRegistries.fromProviders( new UserCodecProvider()),

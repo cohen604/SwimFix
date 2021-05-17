@@ -1,14 +1,10 @@
 package mainServer.Providers;
-
-import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
-import Storage.Swimmer.SwimmerDao;
 import Storage.User.IUserDao;
-import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
 
 import java.util.*;
@@ -19,9 +15,9 @@ public class UserProvider implements IUserProvider {
     /**
      * The hash map key: user uid, the values is the user
      */
-    ConcurrentHashMap<String, User> _users;
-    IUserDao _dao;
-    ISwimmerDao _swimmerdao;
+    private ConcurrentHashMap<String, User> _users;
+    private IUserDao _dao;
+    private ISwimmerDao _swimmerdao;
 
     public UserProvider(IUserDao dao, ISwimmerDao swimmerDao) {
         _users = new ConcurrentHashMap<>();

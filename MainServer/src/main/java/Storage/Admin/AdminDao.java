@@ -1,16 +1,16 @@
-package Storage.Swimmer;
+package Storage.Admin;
 
-import Domain.UserData.Swimmer;
-import Domain.UserData.User;
+import Domain.UserData.Admin;
+import Storage.Admin.Codecs.AdminCodec;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.Swimmer.Codecs.SwimmerCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -18,32 +18,34 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class SwimmerDao extends Dao<Swimmer> implements ISwimmerDao {
+public class AdminDao extends Dao<Admin> implements IAdminDao {
 
     @Override
-    protected MongoCollection<Swimmer> getCollection() {
-        CodecRegistry codecRegistryUser =
+    protected MongoCollection<Admin> getCollection() {
+        CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new SwimmerCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(
+                                new AdminCodec()
+                        ), //here we define the codec
                         getDefaultCodecRegistry());
 
         MongoClientSettings settings = MongoClientSettings.builder()
-                .codecRegistry(codecRegistryUser).build();
+                .codecRegistry(codecRegistry).build();
 
         // here we define the connection
         MongoClient mongoClient = MongoClients.create(settings);
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
-        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_SWIMMERS, Swimmer.class);
+        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_ADMINS, Admin.class);
     }
 
     @Override
-    public Swimmer update(Swimmer value) {
+    public Admin update(Admin value) {
         return defaultUpdate(value, value.getEmail());
     }
 
     @Override
-    public Swimmer tryInsertThenUpdate(Swimmer swimmer) {
-        return defualtTryInsertThenUpdate(swimmer, swimmer.getEmail());
+    public Admin tryInsertThenUpdate(Admin admin) {
+        return defualtTryInsertThenUpdate(admin, admin.getEmail());
     }
 }
