@@ -267,12 +267,12 @@ public class LogicManager {
                         dateDTO.getDay(), 0, 0);
                 Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
                 List<FeedbackVideoStreamer> output = new LinkedList<>();
-                if(!feedbacks.isEmpty()) {
+                if(feedbacks!=null && !feedbacks.isEmpty()) {
                     for (IFeedbackVideo feedbackVideo : feedbacks) {
                         output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
                     }
-                    return new ActionResult<>(Response.SUCCESS, output);
                 }
+                return new ActionResult<>(Response.SUCCESS, output);
             } catch (Exception e) {
                 e.printStackTrace();
             }

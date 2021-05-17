@@ -88,11 +88,13 @@ public class SwimmerController {
             UserDTO userDTO = deleteFeedbackDTO.getUser();
             DateDTO dateDTO = deleteFeedbackDTO.getDate();
             String link = deleteFeedbackDTO.getLink();
-            String path = link.replaceAll("/","\\");
+            if(link.contains("/")) {
+                link = link.replaceAll("/","\\");
+            }
             ActionResult<Boolean> deleted = swimFixAPI.deleteFeedback(
                     userDTO,
                     dateDTO,
-                    path);
+                    link);
             System.out.println("send request delete feedback");
             return deleted.toJson();
         }
