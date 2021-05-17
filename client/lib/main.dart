@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/history',
+      initialRoute: '/',
       theme: ThemeData(
         primarySwatch: _webColors.createMaterialColor(
             _webColors.getBackgroundForI1()
