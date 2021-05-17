@@ -1,4 +1,4 @@
-package Storage.User;
+package Storage.User.Codecs;
 import Domain.UserData.Coach;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;

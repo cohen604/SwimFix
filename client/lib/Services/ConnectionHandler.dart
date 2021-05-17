@@ -27,7 +27,7 @@ class ConnectionHandler {
     String url = getUrl() + path;
     final response = await http.get(url);
       if (response.statusCode == 200) {
-        return toServerResponse(response.body);
+        return toServerResponse(response.body); 
       } else {
         throw Exception('Error code !!! :0');
       }

@@ -129,4 +129,19 @@ public class SwimFixAPI {
       return logicManager.deleteFeedbackByID(userDTO, dateDTO, path);
    }
 
+   public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {
+      return logicManager.findUsersThatNotAdmin(userDTO);
+   }
+
+   public ActionResult<List<UserDTO>> findUsersThatNotResearcher(UserDTO userDTO) {
+      return logicManager.findUsersThatNotResearcher(userDTO);
+   }
+
+   public ActionResult<Boolean> addAdmin(UserDTO admin, UserDTO addToUser) {
+      return logicManager.addAdmin(admin, addToUser);
+   }
+
+   public ActionResult<Boolean> addResearcher(UserDTO admin, UserDTO addToUser) {
+      return logicManager.addResearcher(admin, addToUser);
+   }
 }

@@ -2,6 +2,9 @@ package Storage.User;
 import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
+import Storage.User.Codecs.CoachCodec;
+import Storage.Researcher.Codecs.ResearcherCodec;
+import Storage.User.Codecs.UserCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -12,6 +15,10 @@ import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
@@ -73,5 +80,39 @@ public class UserDao extends Dao<User> implements IUserDao{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public Collection<User> findUsersThatNotAdmin() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            List<User> output = new LinkedList<>();
+            Document query = new Document("admin", null);
+            collection.find(query).into(output);
+            if(output.isEmpty()) {
+                return null;
+            }
+            return output;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<User> findUsersThatNotResearcher() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            List<User> output = new LinkedList<>();
+            Document query = new Document("researcher", null);
+            collection.find(query).into(output);
+            if(output.isEmpty()) {
+                return null;
+            }
+            return output;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

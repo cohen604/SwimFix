@@ -50,4 +50,12 @@ public interface IUser {
 
     IFeedbackVideo deleteFeedback(String feedbackPath);
 
+    boolean addAdmin();
+
+    void deleteAdmin();
+
+    boolean addResearcher();
+
+    void deleteResearcher();
+
 }

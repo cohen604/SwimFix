@@ -127,5 +127,57 @@ public class UserProvider implements IUserProvider {
         return false;
     }
 
+    @Override
+    public Collection<? extends IUser> findUsersThatNotAdmin(IUser user) {
+        if(user.isLogged() && user.isAdmin()) {
+            return _dao.findUsersThatNotAdmin();
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<? extends IUser> findUsersThatNotResearcher(IUser user) {
+        if(user.isLogged() && user.isAdmin()) {
+            return _dao.findUsersThatNotResearcher();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addAdmin(IUser admin, IUser userToAdd) {
+        User user = _users.get(userToAdd.getUid());
+        if(admin.isLogged()
+                && admin.isAdmin()
+                && user !=null) {
+            if(user.addAdmin()) {
+                if(_dao.update(user) != null) {
+                    return true;
+                }
+                else  {
+                    user.deleteAdmin();
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addResearcher(IUser admin, IUser userToAdd) {
+        User user = _users.get(userToAdd.getUid());
+        if(admin.isLogged()
+                && admin.isAdmin()
+                && user !=null) {
+            if(user.addResearcher()) {
+                if(_dao.update(user) != null) {
+                    return true;
+                }
+                else  {
+                    user.deleteResearcher();
+                }
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package Storage.User;
+package Storage.Researcher.Codecs;
 
 import Domain.UserData.Researcher;
 import org.bson.BsonReader;

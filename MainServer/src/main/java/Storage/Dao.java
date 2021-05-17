@@ -71,7 +71,7 @@ public abstract class Dao<T> {
         return null;
     }
 
-    protected T defualtTryInsertThenUpdate(T value, String id) {
+    protected T defaultTryInsertThenUpdate(T value, String id) {
         try {
             MongoCollection<T> collection = getCollection();
             Document query = new Document("_id", id);

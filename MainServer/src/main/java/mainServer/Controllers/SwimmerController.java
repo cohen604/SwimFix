@@ -20,7 +20,11 @@ import java.util.Map;
 @RequestMapping("/swimmer")
 public class SwimmerController {
 
-    private SwimFixAPI swimFixAPI = SingleServiceAPI.getInstance();
+    private SwimFixAPI swimFixAPI;
+
+    public SwimmerController() {
+        swimFixAPI = SingleServiceAPI.getInstance();
+    }
 
     @PostMapping("/feedback/link")
     @CrossOrigin(origins = "*")

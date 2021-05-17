@@ -305,6 +305,15 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
+    /***
+     * The function return a download file
+     * @param userDTO the user who want to download
+     * @param root the root folder
+     * @param email the email folder
+     * @param folder the name of the inner folder
+     * @param fileName the filer name want to download
+     * @return the file to download
+     */
     public ActionResult<FileDownloadDTO> downloadFile(UserDTO userDTO, String root, String email, String folder, String fileName) {
         IUser user = _userProvider.getUser(userDTO);
         try {
@@ -326,6 +335,12 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
+    /***
+     * The function return a zip file that contains the request files
+     * @param userDTO - the request user
+     * @param files - the files we want to access to download
+     * @return a zip file to download that contains the list of wanted files
+     */
     public ActionResult<FileDownloadDTO> downloadFilesAsZip(UserDTO userDTO, String[] files) {
         IUser user = _userProvider.getUser(userDTO);
         try {
@@ -367,5 +382,95 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, false);
     }
 
+    /***
+     * The function return a list of users that they not admins
+     * @param userDTO - the request user
+     * @return List of users that not admins
+     */
+    public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user != null) {
+                Collection<? extends IUser> users = _userProvider.findUsersThatNotAdmin(user);
+                List<UserDTO> output = new LinkedList<>();
+                for (IUser foundUser: users) {
+                    UserDTO outputUser = new UserDTO(
+                            foundUser.getUid(),
+                            foundUser.getEmail(),
+                            foundUser.getName());
+                    output.add(outputUser);
+                }
+                return new ActionResult<>(Response.SUCCESS, output);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /***
+     * The function return a list of users that they not researchers
+     * @param userDTO - the request user
+     * @return List of users that not researchers
+     */
+    public ActionResult<List<UserDTO>> findUsersThatNotResearcher(UserDTO userDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user != null) {
+                Collection<? extends IUser> users = _userProvider.findUsersThatNotResearcher(user);
+                List<UserDTO> output = new LinkedList<>();
+                for (IUser foundUser: users) {
+                    UserDTO outputUser = new UserDTO(
+                            foundUser.getUid(),
+                            foundUser.getEmail(),
+                            foundUser.getName());
+                    output.add(outputUser);
+                }
+                return new ActionResult<>(Response.SUCCESS, output);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function add admin permissions to user
+     * @param adminDTO the request user
+     * @param addToUserDTO the user to add to
+     * @return true if the user have admin permissions
+     */
+    public ActionResult<Boolean> addAdmin(UserDTO adminDTO, UserDTO addToUserDTO) {
+        IUser admin = _userProvider.getUser(adminDTO);
+        IUser userToAdd = _userProvider.getUser(addToUserDTO);
+        try {
+            if(admin != null) {
+                boolean output = _userProvider.addAdmin(admin, userToAdd);
+                return new ActionResult<>(Response.SUCCESS, output);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+
+    public ActionResult<Boolean> addResearcher(UserDTO adminDTO, UserDTO addToUserDTO) {
+        IUser admin = _userProvider.getUser(adminDTO);
+        IUser userToAdd = _userProvider.getUser(addToUserDTO);
+        try {
+            if(admin != null) {
+                boolean output = _userProvider.addResearcher(admin, userToAdd);
+                return new ActionResult<>(Response.SUCCESS, output);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 
