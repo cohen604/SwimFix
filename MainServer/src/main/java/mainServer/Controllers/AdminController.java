@@ -18,7 +18,7 @@ public class AdminController {
         swimFixAPI = SingleServiceAPI.getInstance();
     }
 
-    @GetMapping("/search/users/not/admins")
+    @PostMapping("/search/users/not/admins")
     @CrossOrigin(origins = "*")
     public String findUsersThatNotAdmin(@RequestBody UserDTO userDTO) {
         System.out.println("Received admin search request for users that not admin");
@@ -32,21 +32,7 @@ public class AdminController {
         return null;
     }
 
-    @GetMapping("/search/users/not/researchers")
-    @CrossOrigin(origins = "*")
-    public String findUsersThatNotResearcher(@RequestBody UserDTO userDTO) {
-        System.out.println("Received admin search request for users that not researcher");
-        try {
-            ActionResult<List<UserDTO>> users = swimFixAPI.findUsersThatNotResearcher(userDTO);
-            System.out.println("Sending admin search request for users that not researcher");
-            return users.toJson();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @GetMapping("/add/admin")
+    @PostMapping("/add/admin")
     @CrossOrigin(origins = "*")
     public String addAdmin(@RequestBody AdminAddRequestDTO addRequestDTO) {
         System.out.println("Received add admin request");
@@ -62,7 +48,21 @@ public class AdminController {
         return null;
     }
 
-    @GetMapping("/add/researcher")
+    @PostMapping("/search/users/not/researchers")
+    @CrossOrigin(origins = "*")
+    public String findUsersThatNotResearcher(@RequestBody UserDTO userDTO) {
+        System.out.println("Received admin search request for users that not researcher");
+        try {
+            ActionResult<List<UserDTO>> users = swimFixAPI.findUsersThatNotResearcher(userDTO);
+            System.out.println("Sending admin search request for users that not researcher");
+            return users.toJson();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/add/researcher")
     @CrossOrigin(origins = "*")
     public String addResearcher(@RequestBody AdminAddRequestDTO addRequestDTO) {
         System.out.println("Received add researcher request");

@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
+import 'dart:convert' show utf8;
 
 import 'GoogleAuth.dart';
 
@@ -242,6 +243,26 @@ class LogicManager {
       print('error in delete feedback ${e.toString()}');
     }
     return false;
+  }
+
+  Future<List<Swimmer>> getUsersThatNotAdmins(Swimmer admin) async {
+    try {
+      String path = "/admin/search/users/not/admins";
+      Map<String, dynamic> map = admin.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      List<dynamic> list = serverResponse.value;
+      print(list);
+      return list.map((e) {
+        Swimmer swimmer = Swimmer.fromJson(e);
+        swimmer.name = utf8.decode(swimmer.name.runes.toList());
+        return swimmer;
+      }).toList();
+    }
+    catch(e) {
+      print('error in get users that not admins ${e.toString()}');
+    }
+    return null;
   }
 
 }

@@ -1,4 +1,5 @@
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
@@ -22,7 +23,6 @@ class MenuBar extends StatefulWidget {
 class _MenuBarState extends State<MenuBar> {
 
   LogicManager _logicManager;
-  Function onAdmin;
 
   WebColors _webColors;
   List<bool> _onHover;
@@ -105,6 +105,17 @@ class _MenuBarState extends State<MenuBar> {
     };
   }
 
+  Function onAdmin(BuildContext context) {
+    return () {
+      this.setState(() {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, '/admin',
+              arguments: new AdminScreenArguments(this.widget.user));
+        });
+      });
+    };
+  }
+
   Widget buildOption(BuildContext context, String optionName, IconData icon, int index,
       Function onClick) {
     return MouseRegion(
@@ -159,7 +170,7 @@ class _MenuBarState extends State<MenuBar> {
 
   buildAdmin(BuildContext context, int index) {
     if(this.widget.user.permissions.isAdmin) {
-      return buildOption(context, "Admin", Icons.backpack_outlined, index, onAdmin);
+      return buildOption(context, "Admin", Icons.backpack_outlined, index, onAdmin(context));
     }
     return Container();
   }
@@ -177,7 +188,6 @@ class _MenuBarState extends State<MenuBar> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Scrollbar(
-          isAlwaysShown: true,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

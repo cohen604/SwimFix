@@ -63,12 +63,7 @@ class ScreenHolder {
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
-    // args = new WelcomeScreenArguments(
-    //   new WebUser(
-    //       new Swimmer("sIuzq2wFIHV4V335bf8o0QP3XQJ2", "swimfixofficial@gmail.com", "swim fix"),
-    //       new UserPermissions(true, true, true, true))
-    // );
-    if(args == null || args.user == null || args.user.swimmer == null) {
+     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/welcome');
     }
     return new WebWelcomeScreen(args: args);
@@ -175,6 +170,11 @@ class ScreenHolder {
   }
 
   Widget getAddAdminScreen(AddAdminsScreenArguments args) {
+    args = new AddAdminsScreenArguments(
+      new WebUser(
+          new Swimmer("sIuzq2wFIHV4V335bf8o0QP3XQJ2", "swimfixofficial@gmail.com", "swim fix"),
+          new UserPermissions(true, false, true, true))
+    );
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/admin');
     }
