@@ -1,5 +1,5 @@
 import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';

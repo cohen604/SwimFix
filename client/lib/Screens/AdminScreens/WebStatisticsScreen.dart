@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'Arguments/AdminSceenArguments.dart';
+import 'Arguments/AdminSrceenArguments.dart';
 
 class WebStatisticsScreen extends StatefulWidget {
 

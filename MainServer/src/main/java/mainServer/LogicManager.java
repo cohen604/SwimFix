@@ -406,15 +406,17 @@ public class LogicManager {
         try {
             if(user != null) {
                 Collection<? extends IUser> users = _userProvider.findUsersThatNotAdmin(user);
-                List<UserDTO> output = new LinkedList<>();
-                for (IUser foundUser: users) {
-                    UserDTO outputUser = new UserDTO(
-                            foundUser.getUid(),
-                            foundUser.getEmail(),
-                            foundUser.getName());
-                    output.add(outputUser);
+                if(users!=null) {
+                    List<UserDTO> output = new LinkedList<>();
+                    for (IUser foundUser : users) {
+                        UserDTO outputUser = new UserDTO(
+                                foundUser.getUid(),
+                                foundUser.getEmail(),
+                                foundUser.getName());
+                        output.add(outputUser);
+                    }
+                    return new ActionResult<>(Response.SUCCESS, output);
                 }
-                return new ActionResult<>(Response.SUCCESS, output);
             }
         }
         catch(Exception e) {
@@ -433,15 +435,17 @@ public class LogicManager {
         try {
             if(user != null) {
                 Collection<? extends IUser> users = _userProvider.findUsersThatNotResearcher(user);
-                List<UserDTO> output = new LinkedList<>();
-                for (IUser foundUser: users) {
-                    UserDTO outputUser = new UserDTO(
-                            foundUser.getUid(),
-                            foundUser.getEmail(),
-                            foundUser.getName());
-                    output.add(outputUser);
+                if(users!=null) {
+                    List<UserDTO> output = new LinkedList<>();
+                    for (IUser foundUser : users) {
+                        UserDTO outputUser = new UserDTO(
+                                foundUser.getUid(),
+                                foundUser.getEmail(),
+                                foundUser.getName());
+                        output.add(outputUser);
+                    }
+                    return new ActionResult<>(Response.SUCCESS, output);
                 }
-                return new ActionResult<>(Response.SUCCESS, output);
             }
         }
         catch(Exception e) {

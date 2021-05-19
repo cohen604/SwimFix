@@ -3,7 +3,7 @@ import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
-import 'AdminScreens/Arguments/AdminSceenArguments.dart';
+import 'AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';

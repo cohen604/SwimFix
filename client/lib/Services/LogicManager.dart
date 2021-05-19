@@ -265,4 +265,57 @@ class LogicManager {
     return null;
   }
 
+  Future<bool> addAdmin(Swimmer admin, Swimmer user) async {
+    try {
+      String path = "/admin/add/admin";
+      Map<String, dynamic> map = {};
+      map['admin'] = admin.toJson();
+      map['user'] = user.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in add admin ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<List<Swimmer>> getUsersThatNotResearchers(Swimmer admin) async {
+    try {
+      String path = "/admin/search/users/not/researchers";
+      Map<String, dynamic> map = admin.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      List<dynamic> list = serverResponse.value;
+      print(list);
+      return list.map((e) {
+        Swimmer swimmer = Swimmer.fromJson(e);
+        swimmer.name = utf8.decode(swimmer.name.runes.toList());
+        return swimmer;
+      }).toList();
+    }
+    catch(e) {
+      print('error in get users that not researchers ${e.toString()}');
+    }
+    return null;
+  }
+
+
+  Future<bool> addResearcher(Swimmer admin, Swimmer user) async{
+    try {
+      String path = "/admin/add/researcher";
+      Map<String, dynamic> map = {};
+      map['admin'] = admin.toJson();
+      map['user'] = user.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in add researcher ${e.toString()}');
+    }
+    return null;
+  }
+
 }

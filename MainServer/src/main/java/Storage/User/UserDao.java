@@ -87,9 +87,7 @@ public class UserDao extends Dao<User> implements IUserDao{
             List<User> output = new LinkedList<>();
             Document query = new Document("admin", null);
             collection.find(query).into(output);
-            if(output.isEmpty()) {
-                return null;
-            }
+            System.out.println(output.size());
             return output;
         }catch (Exception e) {
             e.printStackTrace();
@@ -104,9 +102,6 @@ public class UserDao extends Dao<User> implements IUserDao{
             List<User> output = new LinkedList<>();
             Document query = new Document("researcher", null);
             collection.find(query).into(output);
-            if(output.isEmpty()) {
-                return null;
-            }
             return output;
         }catch (Exception e) {
             e.printStackTrace();

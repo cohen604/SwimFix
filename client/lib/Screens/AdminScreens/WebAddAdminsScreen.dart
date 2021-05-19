@@ -11,7 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'Arguments/AdminSceenArguments.dart';
+import 'Arguments/AdminSrceenArguments.dart';
 
 class WebAddAdminsScreen extends StatefulWidget {
 
@@ -64,11 +64,47 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
     );
   }
 
-  void OnAddSwimmerAsAdmin(Swimmer swimmer) {
-    print('Swimmer added as admin');
+  void OnAddSwimmerAsAdmin(BuildContext context, int index) {
+    Swimmer swimmer = _users[index];
+    _logicManager.addAdmin(this.widget.args.user.swimmer, swimmer)
+        .then((bool added) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    added ==null ? getMsgAlertServerBroken(context):
+                    added ? getMsgAlertAddAdminSuccess(context, index) :
+                    getMsgAlertAddAdminFailed(context, swimmer),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if(added) {
+                            this.setState(() {
+                              _screenState = ScreenState.Loading;
+                              getUsersList();
+                            });
+                          }
+                        },
+                        child: buildText(
+                            context, 'ok', 18, _webColors.getBackgroundForI2(), FontWeight.normal
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+
+            )
+          );
+    });
   }
 
-  void onSelectedSwimmer(BuildContext context, Swimmer swimmer) {
+  void onSelectedSwimmer(BuildContext context, int index) {
+    Swimmer swimmer = _users[index];
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -81,7 +117,10 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
               child: buildText(context, 'No', 21, _webColors.getBackgroundForI2(), FontWeight.normal),
           ),
           TextButton(
-              onPressed: ()=>OnAddSwimmerAsAdmin(swimmer),
+              onPressed: () {
+                Navigator.pop(context);
+                OnAddSwimmerAsAdmin(context, index);
+              },
               child: buildText(context, 'Yes', 21, _webColors.getBackgroundForI2(), FontWeight.normal),
           ),
           SizedBox(width: 5,)
@@ -105,6 +144,55 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
           fontWeight: fontWeight,
           decoration: TextDecoration.none
       ),
+    );
+  }
+
+  Widget getMsgAlertServerBroken(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.warning,
+          size: 35,
+          color: Colors.red,
+        ),
+        SizedBox(height: 5,),
+        buildText(context, 'Something broken.\n'
+            'Maybe you don\'t have permessions to that action or the servers are down.\n'
+            'For more information contact swimanalytics@gmail.com', 24, Colors.black, FontWeight.normal),
+        SizedBox(height: 5,),
+      ],
+    );
+  }
+
+  Widget getMsgAlertAddAdminFailed(BuildContext context, Swimmer swimmer) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.clear,
+          size: 35,
+          color: Colors.red,
+        ),
+        SizedBox(height: 5,),
+        buildText(context, 'Can\'t add ${swimmer.name} as admin', 24, Colors.black, FontWeight.normal)
+      ],
+    );
+  }
+
+  Widget getMsgAlertAddAdminSuccess(BuildContext context, int index) {
+    Swimmer swimmer = _users[index];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.check,
+          size: 35,
+          color: Colors.green,
+        ),
+        SizedBox(height: 5,),
+        buildText(context, 'User ${swimmer.name} added as admin', 24, Colors.black, FontWeight.normal)
+      ],
     );
   }
 
@@ -156,7 +244,8 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
     );
   }
 
-  Widget buildUser(BuildContext context, Swimmer swimmer) {
+  Widget buildUser(BuildContext context, int index) {
+    Swimmer swimmer = _users[index];
     return Card(
       child: ListTile(
         leading: Icon(
@@ -173,7 +262,7 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
           ],
         ),
         hoverColor: _webColors.getBackgroundForI3().withAlpha(120),
-        onTap:()=>onSelectedSwimmer(context, swimmer),
+        onTap:()=>onSelectedSwimmer(context, index),
       ),
     );
   }
@@ -184,7 +273,6 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
       child: ListView.builder(
           itemCount: _users.length,
           itemBuilder: (BuildContext context, int index) {
-            Swimmer swimmer = _users[index];
             return  Container(
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -197,7 +285,7 @@ class _WebAddAdminsScreenState extends State<WebAddAdminsScreen> {
                     ),
                   ],
                 ),
-                child: buildUser(context, swimmer)
+                child: buildUser(context, index)
             );
           }
       ),

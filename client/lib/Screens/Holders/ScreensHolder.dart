@@ -3,7 +3,7 @@ import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
-import 'package:client/Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/WebAddAdminsScreen.dart';
 import 'package:client/Screens/AdminScreens/WebAddResearchersScreen.dart';
@@ -170,11 +170,6 @@ class ScreenHolder {
   }
 
   Widget getAddAdminScreen(AddAdminsScreenArguments args) {
-    args = new AddAdminsScreenArguments(
-      new WebUser(
-          new Swimmer("sIuzq2wFIHV4V335bf8o0QP3XQJ2", "swimfixofficial@gmail.com", "swim fix"),
-          new UserPermissions(true, false, true, true))
-    );
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/admin');
     }

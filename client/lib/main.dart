@@ -2,7 +2,7 @@ import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.d
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
-import 'Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
+import 'Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
 import 'Screens/Arguments/CoachScreenArguments.dart';
 import 'Screens/Arguments/HistoryScreenArguments.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SwimFix',
-      initialRoute: '/admin/add/admins', //
+      initialRoute: '/', //
       theme: ThemeData(
         primarySwatch: _webColors.createMaterialColor(
             _webColors.getBackgroundForI1()
