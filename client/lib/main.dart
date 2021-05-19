@@ -1,4 +1,8 @@
+import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
 import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
 import 'Screens/Arguments/CoachScreenArguments.dart';
 import 'Screens/Arguments/HistoryScreenArguments.dart';
@@ -90,6 +94,22 @@ class MyApp extends StatelessWidget {
           ViewFeedBackArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getViewFeedbackScreen(args);
         },
+        '/admin': (context) {
+          AdminScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getAdminScreen(args);
+        },
+        '/admin/add/admins': (context) {
+          AddAdminsScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getAddAdminScreen(args);
+        },
+        '/admin/add/researchers': (context) {
+          AddResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getAddResearcherScreen(args);
+        },
+        '/admin/statistics': (context) {
+          StatisticsScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getStatisticsScreen(args);
+        }
       },
       debugShowCheckedModeBanner: false,
     );

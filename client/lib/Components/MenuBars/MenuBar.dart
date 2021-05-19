@@ -105,7 +105,7 @@ class _MenuBarState extends State<MenuBar> {
     };
   }
 
-  Widget buildOption(BuildContext context, String optionName, int index,
+  Widget buildOption(BuildContext context, String optionName, IconData icon, int index,
       Function onClick) {
     return MouseRegion(
       onHover: (PointerEvent details) =>  setState(()=>_onHover[index] = true),
@@ -115,16 +115,27 @@ class _MenuBarState extends State<MenuBar> {
         onClick :
         buildFutureDialogSupport(context),
         child: Container(
-          color: _onHover[index] ? _webColors.getBackgroundForI3() : _webColors.getBackgroundForI1(),
+          color: Colors.transparent,
           padding: EdgeInsets.only(right: 10, left: 10),
           child: Center(
-            child: Text(optionName,
-              style: TextStyle(
-                  fontSize: 18 * MediaQuery.of(context).textScaleFactor,
-                  color: _onHover[index] ? Colors.black : Colors.white,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 35,
+                  color: _onHover[index]? _webColors.getBackgroundForI2() : Colors.black,
+                ),
+                SizedBox(width: 3,),
+                Text(optionName,
+                  style: TextStyle(
+                      fontSize: 18 * MediaQuery.of(context).textScaleFactor,
+                      color: _onHover[index]? _webColors.getBackgroundForI2() : Colors.black,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -134,28 +145,28 @@ class _MenuBarState extends State<MenuBar> {
 
   buildSwimmer(BuildContext context, int index) {
     if(this.widget.user.permissions.isSwimmer) {
-      return buildOption(context, "Swimmer", index, onSwimmer(context));
+      return buildOption(context, "Swimmer", Icons.person, index, onSwimmer(context));
     }
     return Container();
   }
 
   buildCoach(BuildContext context, int index) {
     if(this.widget.user.permissions.isCoach) {
-      return buildOption(context, "Coach", index, onCoach(context));
+      return buildOption(context, "Coach", Icons.timer, index, onCoach(context));
     }
     return Container();
   }
 
   buildAdmin(BuildContext context, int index) {
     if(this.widget.user.permissions.isAdmin) {
-      return buildOption(context, "Admin", index, onAdmin);
+      return buildOption(context, "Admin", Icons.backpack_outlined, index, onAdmin);
     }
     return Container();
   }
 
   buildResearcher(BuildContext context, int index) {
     if(this.widget.user.permissions.isResearcher) {
-      return buildOption(context, "Researcher", index, onResearcher(context));
+      return buildOption(context, "Researcher", Icons.find_in_page_outlined, index, onResearcher(context));
     }
     return Container();
   }
@@ -166,6 +177,7 @@ class _MenuBarState extends State<MenuBar> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Scrollbar(
+          isAlwaysShown: true,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -173,7 +185,7 @@ class _MenuBarState extends State<MenuBar> {
               buildCoach(context, 1),
               buildAdmin(context, 2),
               buildResearcher(context, 3),
-              buildOption(context, "Logout", 4, onLogout(context)),
+              buildOption(context, "Logout", Icons.logout, 4, onLogout(context)),
             ],
           ),
         ),
@@ -197,15 +209,17 @@ class _MenuBarState extends State<MenuBar> {
                 color: Colors.white,
               ),
               SizedBox(width: 5,),
-              Text( "Swim Analytics",
-                  style: TextStyle(
-                      fontSize: 26 * MediaQuery.of(context).textScaleFactor,
-                      color:Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.none
-                  ),
-                overflow: TextOverflow.clip,
+              Flexible(
+                child: Text( "Swim Analytics",
+                    style: TextStyle(
+                        fontSize: 26 * MediaQuery.of(context).textScaleFactor,
+                        color:Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        decoration: TextDecoration.none
+                    ),
+                  overflow: TextOverflow.clip,
+                ),
               ),
             ],
           ),
@@ -218,7 +232,7 @@ class _MenuBarState extends State<MenuBar> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 70,
+      height: 65,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -226,12 +240,19 @@ class _MenuBarState extends State<MenuBar> {
             width: 2.0,
           ),
         ),
-        color: _webColors.getBackgroundForI1(),
+        gradient: LinearGradient(
+            colors: [
+              _webColors.getBackgroundForI1(),
+              _webColors.getBackgroundForI7()
+            ]
+        ),
       ),
       child: Row(
         children: [
           buildLogo(context),
-          Expanded(child: buildLinks(context))
+          Expanded(
+              child: buildLinks(context)
+          )
         ],
       )
     );

@@ -59,8 +59,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
               "Get single report for swimming video", onClickReport(context), Icons.upload_file),
           IconCardButton("Multi report",
               "Get multiply reports for swimming videos", onClickMultiReport(context), Icons.drive_folder_upload),
-          // IconCardButton("Edit Swimming error",
-          //     "Edit the angles of the swimming errors", null, Icons.edit),
+          IconCardButton("Edit Swimming error",
+              "Edit the angles of the swimming errors", null, Icons.edit),
         ],
       ),
     );

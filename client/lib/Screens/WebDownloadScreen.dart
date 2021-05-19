@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'package:client/Components/MenuBars/AboutScreenMenuBar.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,10 +14,11 @@ class WebDownloadScreen extends StatefulWidget {
 
 class _WebDownloadScreenState extends State<WebDownloadScreen> {
 
-  WebColors webColors;
-
+  WebColors _webColors;
+  AssetsHolder _assetsHolder;
   _WebDownloadScreenState() {
-    webColors = WebColors.getInstance();
+    _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   Function onLogo(BuildContext context) {
@@ -164,7 +166,15 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: webColors.getBackgroundForI6(),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+            fit: BoxFit.fill,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withAlpha(120),
+                BlendMode.darken),
+          ),
+        ),
         child: Column(
           children: [
             AboutScreenMenuBar(

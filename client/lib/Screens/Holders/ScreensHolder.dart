@@ -1,4 +1,14 @@
+import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AdminSceenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/WebAddAdminsScreen.dart';
+import 'package:client/Screens/AdminScreens/WebAddResearchersScreen.dart';
+import 'package:client/Screens/AdminScreens/WebAdminScreen.dart';
+import 'package:client/Screens/AdminScreens/WebStatisticsScreen.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
@@ -53,6 +63,11 @@ class ScreenHolder {
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
+    // args = new WelcomeScreenArguments(
+    //   new WebUser(
+    //       new Swimmer("sIuzq2wFIHV4V335bf8o0QP3XQJ2", "swimfixofficial@gmail.com", "swim fix"),
+    //       new UserPermissions(true, true, true, true))
+    // );
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/welcome');
     }
@@ -147,6 +162,46 @@ class ScreenHolder {
       return getNoPermissionScreen(args.user);
     }
     return new WebViewFeedbackScreen(arguments: args,);
+  }
+
+  Widget getAdminScreen(AdminScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAdminScreen(args);
+  }
+
+  Widget getAddAdminScreen(AddAdminsScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAddAdminsScreen(args);
+  }
+
+  Widget getAddResearcherScreen(AddResearcherScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAddResearchersScreen(args);
+  }
+
+  Widget getStatisticsScreen(StatisticsScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebStatisticsScreen(args);
   }
 
   Widget getReLoginScreen(String desPath) {
