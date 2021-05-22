@@ -4,6 +4,7 @@ import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
+import 'package:client/Domain/Summaries/Summary.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -314,6 +315,21 @@ class LogicManager {
     }
     catch(e) {
       print('error in add researcher ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<Summary> getSummary(Swimmer swimmer) async {
+    try {
+      String path = "/admin/summary";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return Summary.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e) {
+      print('error in get summary ${e.toString()}');
     }
     return null;
   }

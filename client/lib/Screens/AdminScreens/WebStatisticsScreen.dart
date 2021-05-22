@@ -56,7 +56,7 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
             });
           }
         }
-    )
+    );
   }
 
   Widget buildText(
@@ -126,8 +126,8 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildText(context, '$title $total', 24, Colors.black, FontWeight.normal),
-        SizedBox(width: 5,),
+        buildText(context, '$title: $total', 24, Colors.black, FontWeight.normal),
+        SizedBox(width: 10,),
         Icon(
           Icons.circle,
           size: 24,
@@ -149,7 +149,7 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        buildText(context, 'Feedbacks ${getDisplayInt(_summary.feedbacks)}', 24, Colors.black, FontWeight.normal),
+        buildText(context, 'Feedbacks: ${getDisplayInt(_summary.feedbacks)},', 24, Colors.black, FontWeight.normal),
         SizedBox(width: 5,),
         buildText(context, 'per swimmer ${getDisplayDouble(_summary.feedbacksPerSwimmer())}', 24, Colors.black, FontWeight.normal),
       ],
@@ -157,31 +157,36 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
   }
 
   Widget buildViewState(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        buildUsersSummary(context, 'Users',
-          getDisplayInt(_summary.users),
-          getDisplayInt(_summary.loggedUsers),
-          getDisplayInt(_summary.offlineUsers())),
-        buildUsersSummary(context, 'Swimmers',
-            getDisplayInt(_summary.swimmers),
-            getDisplayInt(_summary.loggedSwimmers),
-            getDisplayInt(_summary.offlineSwimmers())),
-        buildUsersSummary(context, 'Coaches',
-            getDisplayInt(_summary.coaches),
-            getDisplayInt(_summary.loggedCoaches),
-            getDisplayInt(_summary.offlineCoaches())),
-        buildUsersSummary(context, 'Researchers',
-            getDisplayInt(_summary.researchers),
-            getDisplayInt(_summary.loggedResearchers),
-            getDisplayInt(_summary.offlineResearchers())),
-        buildUsersSummary(context, 'Admins',
-            getDisplayInt(_summary.admins),
-            getDisplayInt(_summary.loggedAdmins),
-            getDisplayInt(_summary.offlineAdmins())),
-        buildFeedbackSummary(context),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildText(context, 'Summary', 36, _webColors.getBackgroundForI2(), FontWeight.normal),
+          buildUsersSummary(context, 'Users',
+            getDisplayInt(_summary.users),
+            getDisplayInt(_summary.loggedUsers),
+            getDisplayInt(_summary.offlineUsers())),
+          buildUsersSummary(context, 'Swimmers',
+              getDisplayInt(_summary.swimmers),
+              getDisplayInt(_summary.loggedSwimmers),
+              getDisplayInt(_summary.offlineSwimmers())),
+          buildUsersSummary(context, 'Coaches',
+              getDisplayInt(_summary.coaches),
+              getDisplayInt(_summary.loggedCoaches),
+              getDisplayInt(_summary.offlineCoaches())),
+          buildUsersSummary(context, 'Researchers',
+              getDisplayInt(_summary.researchers),
+              getDisplayInt(_summary.loggedResearchers),
+              getDisplayInt(_summary.offlineResearchers())),
+          buildUsersSummary(context, 'Admins',
+              getDisplayInt(_summary.admins),
+              getDisplayInt(_summary.loggedAdmins),
+              getDisplayInt(_summary.offlineAdmins())),
+          buildFeedbackSummary(context),
+        ],
+      ),
     );
   }
 
@@ -200,6 +205,8 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
 
   Widget buildMainArea(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(_assetsHolder.getSwimmerBackGround()),
@@ -209,7 +216,7 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
               BlendMode.hardLight),
         ),
       ),
-      child: Container(),
+      child: buildState(context),
     );
   }
 

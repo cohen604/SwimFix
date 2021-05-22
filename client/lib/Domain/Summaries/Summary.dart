@@ -25,6 +25,19 @@ class Summary {
       this.loggedAdmins,
       this.feedbacks);
 
+  Summary.fromJson(Map<String,dynamic> map):
+        users = map['users'],
+        loggedUsers = map['loggedUsers'],
+        swimmers = map['swimmers'],
+        loggedSwimmers = map['loggedSwimmers'],
+        coaches = map['coaches'],
+        loggedCoaches = map['loggedCoaches'],
+        researchers = map['researchers'],
+        loggedResearchers = map['loggedResearchers'],
+        admins = map['admins'],
+        loggedAdmins = map['loggedAdmins'],
+        feedbacks = map['feedbacks'];
+
   int offlineUsers() {
     if(users == null || loggedUsers == null) {
       return null;
