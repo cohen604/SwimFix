@@ -1,6 +1,7 @@
 package mainServer.Providers;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
@@ -189,6 +190,32 @@ public class UserProvider implements IUserProvider {
             }
         }
         return false;
+    }
+
+    @Override
+    public UsersSummary getSummary() {
+        Long users = _dao.countUsers();
+        Long loggedUsers = _dao.countLoggedUsers();
+        Long swimmers = _dao.countSwimmers();
+        Long loggedSwimmers = _dao.countLoggedSwimmers();
+        Long coaches = _dao.countCoaches();
+        Long loggedCoaches = _dao.countLoggedCoaches();
+        Long admins = _dao.countAdmins();
+        Long loggedAdmins = _dao.countLoggedAdmins();
+        Long researchers = _dao.countResearchers();
+        Long loggedResearchers = _dao.countLoggedResearchers();
+        return new UsersSummary(
+                users,
+                loggedUsers,
+                swimmers,
+                loggedSwimmers,
+                coaches,
+                loggedCoaches,
+                admins,
+                loggedAdmins,
+                researchers,
+                loggedResearchers
+        );
     }
 
 

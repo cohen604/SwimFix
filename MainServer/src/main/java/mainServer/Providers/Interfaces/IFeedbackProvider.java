@@ -4,6 +4,7 @@ import DTO.ConvertedVideoDTO;
 import DTO.FeedbackVideoDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.IVideo;
+import Domain.Summaries.FeedbacksSummary;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,5 +48,7 @@ public interface IFeedbackProvider {
                                          String feedbackSkeletonsFolderPath,
                                          String mlSkeletonsFolderPath,
                                          List<String> detectorsNames) throws Exception;
+
+    FeedbacksSummary getSummary();
 
 }

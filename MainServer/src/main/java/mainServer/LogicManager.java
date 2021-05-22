@@ -3,6 +3,8 @@ package mainServer;
 import DTO.*;
 import Domain.StatisticsData.IStatistic;
 import Domain.Streaming.*;
+import Domain.Summaries.FeedbacksSummary;
+import Domain.Summaries.UsersSummary;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
@@ -475,7 +477,12 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
-
+    /**
+     * The function add researcher to the desired user
+     * @param adminDTO - the admin trying to add
+     * @param addToUserDTO - the user to become a researcher
+     * @return true if the user added as researcher, otherwise false
+     */
     public ActionResult<Boolean> addResearcher(UserDTO adminDTO, UserDTO addToUserDTO) {
         IUser admin = _userProvider.getUser(adminDTO);
         IUser userToAdd = _userProvider.getUser(addToUserDTO);
@@ -486,6 +493,39 @@ public class LogicManager {
             }
         }
         catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return a report off the system
+     * @param adminDTO
+     * @return
+     */
+    public ActionResult<SummaryDTO> getSummary(UserDTO adminDTO) {
+        IUser admin = _userProvider.getUser(adminDTO);
+        try {
+            if(admin!=null && admin.isLogged()) {
+                UsersSummary usersSummary = _userProvider.getSummary();
+                FeedbacksSummary feedbacksSummary = _feedbackProvider.getSummary();
+                SummaryDTO summaryDTO = new SummaryDTO(
+                        usersSummary.getUsers(),
+                        usersSummary.getLoggedUsers(),
+                        usersSummary.getSwimmers(),
+                        usersSummary.getLoggedSwimmers(),
+                        usersSummary.getCoaches(),
+                        usersSummary.getLoggedCoaches(),
+                        usersSummary.getResearchers(),
+                        usersSummary.getLoggedResearchers(),
+                        usersSummary.getAdmins(),
+                        usersSummary.getLoggedAdmins(),
+                        feedbacksSummary.getFeedbacks()
+                );
+                return new ActionResult<>(Response.SUCCESS, summaryDTO);
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);

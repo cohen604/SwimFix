@@ -21,4 +21,24 @@ public interface IUserDao {
 
     Collection<User> findUsersThatNotResearcher();
 
+    Long countUsers();
+
+    Long countLoggedUsers();
+
+    Long countSwimmers();
+
+    Long countLoggedSwimmers();
+
+    Long countResearchers();
+
+    Long countLoggedResearchers();
+
+    Long countAdmins();
+
+    Long countLoggedAdmins();
+
+    Long countCoaches();
+
+    Long countLoggedCoaches();
+
 }

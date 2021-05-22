@@ -14,6 +14,8 @@ import DomainLogic.PdfDrawing.PdfDrawer;
 import Domain.Drawing.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.Feedbacks.FeedbacksDao;
+import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
@@ -52,9 +54,11 @@ public class SwimFixAPI {
       IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
       IFactorySwimmingPeriodTime factorySwimmingPeriodTime = new FactorySwimmingPeriodTime();
       IPeriodTimeProvider iPeriodTimeProvider = new PeriodTimeProvider(factorySwimmingPeriodTime);
+      IFeedbackDao iFeedbackDao = new FeedbacksDao();
+
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
               iFactorySkeletonInterpolation, completionBefore, iFactoryVideo, detectProvider, skeletonsLoaderFeedback,
-              iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider);
+              iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider, iFeedbackDao);
 
       ISkeletonsLoader skeletonsLoaderLogic = new SkeletonsLoader();
 
@@ -144,4 +148,9 @@ public class SwimFixAPI {
    public ActionResult<Boolean> addResearcher(UserDTO admin, UserDTO addToUser) {
       return logicManager.addResearcher(admin, addToUser);
    }
+
+   public ActionResult<SummaryDTO> getSummary(UserDTO admin) {
+      return logicManager.getSummary(admin);
+   }
+
 }

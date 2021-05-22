@@ -17,4 +17,6 @@ public interface IFeedbackDao {
     FeedbackVideo tryInsertThenUpdate(FeedbackVideo value);
 
     boolean removeFeedback(String id);
+
+    Long countFeedbacks();
 }

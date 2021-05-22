@@ -9,12 +9,13 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-
+import org.bson.conversions.Bson;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,9 +104,149 @@ public class UserDao extends Dao<User> implements IUserDao{
             Document query = new Document("researcher", null);
             collection.find(query).into(output);
             return output;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    @Override
+    public Long countUsers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            return collection.countDocuments();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countLoggedUsers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.eq("logged", true);
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countSwimmers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.exists("swimmer"),
+                    Filters.ne("swimmer", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countLoggedSwimmers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.eq("logged", true),
+                    Filters.exists("swimmer"),
+                    Filters.ne("swimmer", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countAdmins() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.exists("admin"),
+                    Filters.ne("admin", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countLoggedAdmins() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.eq("logged", true),
+                    Filters.exists("admin"),
+                    Filters.ne("admin", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countResearchers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.exists("researcher"),
+                    Filters.ne("researcher", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countLoggedResearchers() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.eq("logged", true),
+                    Filters.exists("researcher"),
+                    Filters.ne("researcher", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countCoaches() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.exists("coach"),
+                    Filters.ne("coach", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countLoggedCoaches() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.eq("logged", true),
+                    Filters.exists("coach"),
+                    Filters.ne("coach", null));
+            return collection.countDocuments(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

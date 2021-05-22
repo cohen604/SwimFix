@@ -1,6 +1,7 @@
 package mainServer.Controllers;
 import DTO.ActionResult;
 import DTO.AdminAddRequestDTO;
+import DTO.SummaryDTO;
 import DTO.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
@@ -73,6 +74,21 @@ public class AdminController {
             System.out.println("Sending add researcher request response");
             return added.toJson();
         } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/summary")
+    @CrossOrigin(origins = "*")
+    public String getSummary(@RequestBody UserDTO admin) {
+        System.out.println("Received get summary request");
+        try {
+            ActionResult<SummaryDTO> result = swimFixAPI.getSummary(admin);
+            System.out.println("Sending get summary response");
+            return result.toJson();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;
