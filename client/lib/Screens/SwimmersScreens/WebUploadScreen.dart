@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'Holders/WebColors.dart';
+import '../Holders/WebColors.dart';
 
 
 class WebUploadScreen extends StatefulWidget {

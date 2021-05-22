@@ -1,10 +1,10 @@
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
-import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
+import 'package:client/Screens/ResearcherScreens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

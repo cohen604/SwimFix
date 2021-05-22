@@ -3,15 +3,15 @@ import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_html/html.dart';
 
-import 'PopUps/MessagePopUp.dart';
+import '../PopUps/MessagePopUp.dart';
+import 'Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'Arguments/ViewFeedbackArguments.dart';
 
 class WebSwimmerHistoryDayScreen extends StatefulWidget {
 

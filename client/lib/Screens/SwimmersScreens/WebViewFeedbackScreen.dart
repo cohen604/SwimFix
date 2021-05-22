@@ -1,10 +1,10 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'Arguments/ViewFeedbackArguments.dart';
 
 class WebViewFeedbackScreen extends StatefulWidget {
 

@@ -1,22 +1,22 @@
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
-import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
 import 'Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
-import 'Screens/Arguments/CoachScreenArguments.dart';
-import 'Screens/Arguments/HistoryScreenArguments.dart';
-import 'Screens/Arguments/MultiReportScreenArguments.dart';
-import 'Screens/Arguments/ReportScreenArguments.dart';
-import 'Screens/Arguments/ResearcherScreenArguments.dart';
-import 'Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'Screens/Arguments/SwimmerScreenArguments.dart';
-import 'Screens/Arguments/UploadScreenArguments.dart';
+import 'Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
+import 'Screens/ResearcherScreens/Arguments/MultiReportScreenArguments.dart';
+import 'Screens/ResearcherScreens/Arguments/ReportScreenArguments.dart';
+import 'Screens/ResearcherScreens/Arguments/ResearcherScreenArguments.dart';
+import 'Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
+import 'Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
 import 'Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Screens/Holders/ScreensHolder.dart';
 import 'Screens/Holders/WebColors.dart';
+import 'Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
 
 /// if running from web:localhost add to project arguments --web-host 5000
 void main() async {

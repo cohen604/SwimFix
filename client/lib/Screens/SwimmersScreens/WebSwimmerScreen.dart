@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'Holders/WebColors.dart';
+import '../Holders/WebColors.dart';
 
 class WebSwimmerScreen extends StatefulWidget {
 

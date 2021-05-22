@@ -1,10 +1,10 @@
 import 'package:client/Components/Buttons/ImageCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'AdminScreens/Arguments/AdminSrceenArguments.dart';
-import 'Arguments/SwimmerScreenArguments.dart';
+import 'CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'ResearcherScreens/Arguments/ResearcherScreenArguments.dart';
+import 'SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
