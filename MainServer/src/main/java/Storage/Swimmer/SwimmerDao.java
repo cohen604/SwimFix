@@ -1,41 +1,30 @@
-package Storage.User;
+package Storage.Swimmer;
+
+import Domain.UserData.Swimmer;
 import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.Feedbacks.Codecs.SwimmingErrors.*;
+import Storage.Swimmer.Codecs.SwimmerCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class UserDao extends Dao<User> implements IUserDao{
+public class SwimmerDao extends Dao<Swimmer> implements ISwimmerDao {
 
     @Override
-    protected MongoCollection<User> getCollection() {
-        CodecRegistry codecRegistry =
-                CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(
-                                new CoachCodec(),
-                                new AdminCodec(),
-                                new ResearcherCodec()
-                               ), //here we define the codec
-                        //CodecRegistries.fromProviders( new UserCodecProvider()),
-                        getDefaultCodecRegistry());
-
+    protected MongoCollection<Swimmer> getCollection() {
         CodecRegistry codecRegistryUser =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new UserCodec(codecRegistry)), //here we define the codec
+                        CodecRegistries.fromCodecs(new SwimmerCodec()), //here we define the codec
                         getDefaultCodecRegistry());
 
         MongoClientSettings settings = MongoClientSettings.builder()
@@ -45,14 +34,14 @@ public class UserDao extends Dao<User> implements IUserDao{
         MongoClient mongoClient = MongoClients.create(settings);
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
-        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_USERS, User.class);
+        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_SWIMMERS, Swimmer.class);
     }
 
     @Override
-    public User update(User value) {
+    public Swimmer update(Swimmer value) {
         try {
-            MongoCollection<User> collection = getCollection();
-            Document query = new Document("_id", value.getUid());
+            MongoCollection<Swimmer> collection = getCollection();
+            Document query = new Document("_id", value.getEmail());
             UpdateResult result = collection.replaceOne(query, value);
             if (result == null) {
                 return null;
@@ -65,18 +54,21 @@ public class UserDao extends Dao<User> implements IUserDao{
         return null;
     }
 
-
     @Override
-    public boolean removeUser(String id) {
+    public Swimmer tryInsertThenUpdate(Swimmer swimmer) {
         try {
-            MongoCollection<User> collection = getCollection();
-            Document query = new Document("_id", id);
-            DeleteResult result = collection.deleteOne(query);
-            return result.wasAcknowledged();
+            MongoCollection<Swimmer> collection = getCollection();
+            Document query = new Document("_id", swimmer.getEmail());
+            ReplaceOptions options = new ReplaceOptions().upsert(true);
+            UpdateResult result = collection.replaceOne(query, swimmer, options);
+            if (result == null) {
+                return null;
+            }
+            return swimmer;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 }

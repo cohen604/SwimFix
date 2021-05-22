@@ -1,6 +1,7 @@
 package Storage.User;
 
 import Domain.UserData.*;
+import Storage.Swimmer.SwimmerDao;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -16,9 +17,11 @@ import java.util.Set;
 public class UserCodec implements Codec<User> {
 
     private final CodecRegistry _codecRegistry;
+    private SwimmerDao _swimmerDao;
 
     public UserCodec(CodecRegistry codecRegistry) {
         _codecRegistry = codecRegistry;
+        _swimmerDao = new SwimmerDao();
     }
 
     @Override
@@ -38,11 +41,13 @@ public class UserCodec implements Codec<User> {
         objectName = bsonReader.readName();
 
         if(objectName.equals("swimmer")) {
-            Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
-            swimmer = decoderContext.decodeWithChildContext(swimmerCodec, bsonReader);
-            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                objectName = bsonReader.readName();
-            }
+            String swimmerId = bsonReader.readString();
+            swimmer = _swimmerDao.find(swimmerId);
+//            Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
+//            swimmer = decoderContext.decodeWithChildContext(swimmerCodec, bsonReader);
+//            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+//                objectName = bsonReader.readName();
+//            }
         }
 
         if(objectName.equals("coach")) {
@@ -79,9 +84,11 @@ public class UserCodec implements Codec<User> {
         bsonWriter.writeBoolean("logged", user.isLogged());
 
         if(user.getSwimmer() != null) {
-            Codec dateCodec = _codecRegistry.get(Swimmer.class);
-            bsonWriter.writeName("swimmer");
-            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getSwimmer());
+//            Codec dateCodec = _codecRegistry.get(Swimmer.class);
+//            bsonWriter.writeName("swimmer");
+//            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getSwimmer());
+            bsonWriter.writeString("swimmer", user.getSwimmer().getEmail());
+            _swimmerDao.tryInsertThenUpdate(user.getSwimmer());
         }
 
         if(user.getCoach() != null) {

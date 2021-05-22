@@ -17,7 +17,7 @@ public class SwimmerTests extends TestCase {
 
     @BeforeClass
     public void setUp() {
-        this.swimmer = new Swimmer();
+        this.swimmer = new Swimmer("test@test");
         feedbackVideo_1 = mock(IFeedbackVideo.class);
         feedbackVideo_2 = mock(IFeedbackVideo.class);
     }
