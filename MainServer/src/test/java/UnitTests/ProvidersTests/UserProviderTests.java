@@ -30,8 +30,6 @@ public class UserProviderTests extends TestCase {
         userDao.removeUser(id);
     }
 
-
-
     public void testFirstLoginSuccessful() {
         assertTrue(userProvider.login(userDTO));
         removeUser(userDTO.getUid());

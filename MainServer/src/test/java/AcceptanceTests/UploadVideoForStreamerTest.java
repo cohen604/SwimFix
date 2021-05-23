@@ -13,37 +13,34 @@ import java.util.List;
 
 public class UploadVideoForStreamerTest extends AcceptanceTests {
 
-    final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
-    private ConvertedVideoDTO convertedVideoDTO;
-    private List<File> deleteList;
+    private String[][] videos = new String[3][];
+    private String[][] users = new String[2][];
 
     @Before
-    public void setUp() {
-        try {
-            setUpBridge();
-            deleteList = new LinkedList<>();
-            File file = new File(VIDEO_FOLDER + "/sample.mov");
-            byte[] bytes = Files.readAllBytes(file.toPath());
-            this.convertedVideoDTO = new ConvertedVideoDTO("/test1.mov", bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+    public void setUp(){
+        setUpBridge();
+        this.videos[0] = new String[]{"/path/to/video1", "www.video1.stream.com"};
+        this.videos[1] = new String[]{"/path/to/video2", "www.video2.stream.com"};
+        this.videos[2] = new String[]{"/path/to/video3", "www.video3.stream.com"};
+
+        this.users[0] = new String[]{"foo@bar.com", "foo"};
+        this.users[1] = new String[]{"goo@bar.com", "goo"};
     }
 
     @After
-    public void tearDown() {
+    public void tearDown(){
         tearDownBridge();
     }
 
-    // TODO - try to fix the heap space bug
-    // java.lang.OutOfMemoryError: Java heap space
-    // another bug here: java.lang.IndexOutOfBoundsException: Index: 83, Size: 83
-    public void testUploadVideoForStreamerSuccess() {
-        ActionResult<FeedbackVideoStreamer> result = this.bridge.uploadVideoForStreamer(this.convertedVideoDTO);
-        assertNotNull(result);
-        FeedbackVideoStreamer feedbackVideoStreamer = result.getValue();
-        assertNotNull(feedbackVideoStreamer);
+    public void testAddNewVideoSuccess(){
+        this.bridge.login(Integer.toString(0), this.users[0][0], this.users[0][1]);
+        assertTrue(this.bridge.uploadVideoForStreamer(Integer.toString(0), new byte[] {0x3}));
+        this.bridge.logout(Integer.toString(0));
+
+    }
+
+    public void testAddNewVideoNotLoggedin(){
+        assertFalse(this.bridge.uploadVideoForStreamer(Integer.toString(0), new byte[] {0x3}));
     }
 
 }

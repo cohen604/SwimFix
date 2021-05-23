@@ -5,13 +5,14 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class DbContext {
 
-    public static final String DATABASE_NAME = "swimfix";
+    public static String DATABASE_NAME = "swimfix";
     public static final String COLLECTION_NAME_USERS = "user";
     public static final String COLLECTION_NAME_SWIMMERS = "swimmer";
     public static final String COLLECTION_NAME_FEEDBACKS = "feedback";
@@ -20,6 +21,10 @@ public class DbContext {
     public static final String COLLECTION_NAME_INVITATIONS = "invitations";
     public static final String COLLECTION_NAME_RESEARCHERS = "researcher";
     public static final String COLLECTION_NAME_ADMINS = "admin";
+
+    public DbContext(String dbName) {
+        DATABASE_NAME = dbName;
+    }
 
     public void initialize() {
         List<String> collections = new LinkedList<>();
@@ -42,11 +47,9 @@ public class DbContext {
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME);
 
         for (String collection : collections) {
-            try {
+            if(!mongoDatabase.listCollectionNames().into(new ArrayList<String>()).contains(collection)) {
                 mongoDatabase.createCollection(collection);
-                System.out.println("Created Db Collection "+collection);
-            } catch (Exception e) {
-                System.out.println("Collection already exists - "+collection);
+                System.out.println("Created Db Collection " + collection);
             }
         }
         mongoClient.close();
