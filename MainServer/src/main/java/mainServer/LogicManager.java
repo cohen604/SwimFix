@@ -36,7 +36,7 @@ public class LogicManager {
                         IStatisticProvider statisticProvider,
                         IReportProvider reportProvider,
                         IEmailSenderProvider emailSenderProvider,
-                        IZipProvider zipProvider) {
+                        IZipProvider zipProvider, String dbName) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
         _skeletonLoader = skeletonLoader;
@@ -46,7 +46,7 @@ public class LogicManager {
         _zipProvider = zipProvider;
         // initialize server
         createClientsDir();
-        DbContext dbContext = new DbContext();
+        DbContext dbContext = new DbContext(dbName);
         dbContext.initialize();
         _userProvider.reload();
     }

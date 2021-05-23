@@ -33,7 +33,7 @@ public class SwimFixAPI {
 
    private LogicManager logicManager;
 
-   public SwimFixAPI() {
+   public SwimFixAPI(String dbName) {
       IUserProvider userProvider = new UserProvider(new UserDao(), new SwimmerDao());
 
       IFactoryDraw iFactoryDraw = new FactoryDraw();
@@ -75,7 +75,8 @@ public class SwimFixAPI {
               statisticProvider,
               reportProvider,
               emailSenderProvider,
-              zipProvider);
+              zipProvider,
+              dbName);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {

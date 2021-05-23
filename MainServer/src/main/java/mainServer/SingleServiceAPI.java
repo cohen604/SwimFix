@@ -5,7 +5,7 @@ public class SingleServiceAPI {
 
     public static SwimFixAPI getInstance(){
         if (swimFixAPI == null)
-            swimFixAPI = new SwimFixAPI();
+            swimFixAPI = new SwimFixAPI("swimfix");
         return swimFixAPI;
     }
 }
