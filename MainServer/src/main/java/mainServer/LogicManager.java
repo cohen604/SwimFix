@@ -6,6 +6,7 @@ import Domain.Streaming.*;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
+import Storage.DbContext;
 import mainServer.Providers.Interfaces.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -43,7 +44,10 @@ public class LogicManager {
         _reportProvider = reportProvider;
         _emailSenderProvider = emailSenderProvider;
         _zipProvider = zipProvider;
+        // initialize server
         createClientsDir();
+        DbContext dbContext = new DbContext();
+        dbContext.initialize();
         _userProvider.reload();
     }
 
@@ -263,8 +267,10 @@ public class LogicManager {
                         dateDTO.getDay(), 0, 0);
                 Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
                 List<FeedbackVideoStreamer> output = new LinkedList<>();
-                for(IFeedbackVideo feedbackVideo : feedbacks) {
-                    output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
+                if(feedbacks!=null && !feedbacks.isEmpty()) {
+                    for (IFeedbackVideo feedbackVideo : feedbacks) {
+                        output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
+                    }
                 }
                 return new ActionResult<>(Response.SUCCESS, output);
             } catch (Exception e) {
@@ -350,7 +356,8 @@ public class LogicManager {
     public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDTO dateDTO, String path) {
         IUser user = _userProvider.getUser(userDTO);
         try {
-            if(user != null && _userProvider.deleteFeedbackByID(user, path)) {
+            if(user != null
+                    && _userProvider.deleteFeedbackByID(user, path)) {
                 return new ActionResult<>(Response.SUCCESS, true);
             }
         }
