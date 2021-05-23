@@ -14,6 +14,8 @@ public abstract class Dao<T> {
 
     protected abstract MongoCollection<T> getCollection();
 
+    //TODO maybe need here to add cache for faster usage
+
     public List<T> getAll() {
         try {
             MongoCollection<T> collection = getCollection();

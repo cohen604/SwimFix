@@ -1,8 +1,7 @@
 package Domain.UserData;
 
-enum InvitationStatus {
-    VIEW,
+public enum InvitationStatus {
+    PENDING,
     DENY,
-    RECIVED,
     ACCEPTED
 }

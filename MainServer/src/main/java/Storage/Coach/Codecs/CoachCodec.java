@@ -1,6 +1,7 @@
 package Storage.Coach.Codecs;
 import Domain.UserData.Coach;
 import Domain.UserData.Team;
+import Storage.Team.TeamDao;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -11,29 +12,18 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 public class CoachCodec implements Codec<Coach> {
 
-    private final CodecRegistry _codecRegistry;
+    private TeamDao teamDao;
 
     public CoachCodec() {
-        _codecRegistry = null;
-    }
-
-    public CoachCodec(CodecRegistry codecRegistry) {
-        _codecRegistry = codecRegistry;
+        this.teamDao = new TeamDao();
     }
 
     @Override
     public Coach decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String email = bsonReader.readString("id");
-        Team team = null;
-        String objectName = bsonReader.readName();
-        if(objectName.equals("team")) {
-            Codec<Team> teamCodec = _codecRegistry.get(Team.class);
-            team = decoderContext.decodeWithChildContext(teamCodec, bsonReader);
-            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                objectName = bsonReader.readName();
-            }
-        }
+        String email = bsonReader.readString("_id");
+        String teamId = bsonReader.readString("team_id");
+        Team team = this.teamDao.find(teamId);
         bsonReader.readEndDocument();
         return new Coach(email, team);
     }
@@ -41,12 +31,8 @@ public class CoachCodec implements Codec<Coach> {
     @Override
     public void encode(BsonWriter bsonWriter, Coach coach, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("id", coach.getEmail());
-        if(coach.getTeam()!=null) {
-            Codec<Team> teamCodec = _codecRegistry.get(Team.class);
-            bsonWriter.writeName("team");
-            encoderContext.encodeWithChildContext(teamCodec, bsonWriter, coach.getTeam());
-        }
+        bsonWriter.writeString("_id", coach.getEmail());
+        bsonWriter.writeString("team_id", coach.getTeam().getName());
         bsonWriter.writeEndDocument();
     }
 

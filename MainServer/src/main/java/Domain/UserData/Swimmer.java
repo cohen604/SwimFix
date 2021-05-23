@@ -1,11 +1,12 @@
 package Domain.UserData;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.UserData.Interfaces.ISwimmer;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Swimmer {
+public class Swimmer implements ISwimmer {
 
     private String _email;
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
