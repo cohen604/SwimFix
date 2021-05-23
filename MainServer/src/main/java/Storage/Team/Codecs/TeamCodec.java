@@ -3,7 +3,7 @@ package Storage.Team.Codecs;
 import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Invitation;
 import Domain.UserData.Team;
-import Storage.Invitation.InvitationDad;
+import Storage.Invitation.InvitationDao;
 import Storage.Swimmer.SwimmerDao;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -20,11 +20,11 @@ import java.util.List;
 public class TeamCodec implements Codec<Team> {
 
     private SwimmerDao swimmerDao;
-    private InvitationDad invitiationDao;
+    private InvitationDao invitiationDao;
 
     public TeamCodec() {
         this.swimmerDao = new SwimmerDao();
-        this.invitiationDao = new InvitationDad();
+        this.invitiationDao = new InvitationDao();
     }
 
     @Override
@@ -80,16 +80,13 @@ public class TeamCodec implements Codec<Team> {
         ZonedDateTime zonedDateTime = team.getOpenDate().atZone(ZoneId.of("UTC"));
         bsonWriter.writeDateTime("open_date", zonedDateTime.toInstant().toEpochMilli());
         bsonWriter.writeString("coach_id", team.getCoachId());
-
-        bsonWriter.writeName("swimmers");
-        bsonWriter.writeStartArray();
+        bsonWriter.writeStartArray("swimmers");
         for(String swimmerId: team.getSwimmers().keySet()) {
             bsonWriter.writeString(swimmerId);
         }
         bsonWriter.writeEndArray();
         bsonWriter.writeInt32("send_invitations", team.getSendInvitations());
-        bsonWriter.writeName("invitations");
-        bsonWriter.writeStartArray();
+        bsonWriter.writeStartArray("invitations");
         for(Invitation invitation: team.getInvitations()) {
             bsonWriter.writeString(invitation.getId());
             this.invitiationDao.tryInsertThenUpdate(invitation);

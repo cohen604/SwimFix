@@ -26,6 +26,14 @@ public class Invitation {
         this.status = status;
     }
 
+    public Invitation(Invitation other) {
+        this.id = other.id;
+        this.teamId = other.teamId;
+        this.swimmerId = other.swimmerId;
+        this.creationTime = other.creationTime;
+        this.status = other.status;
+    }
+
     public String getId() {
         return id;
     }

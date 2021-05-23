@@ -14,7 +14,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class InvitationDad extends Dao<Invitation> implements IInvitationDao {
+public class InvitationDao extends Dao<Invitation> implements IInvitationDao {
 
     @Override
     protected MongoCollection<Invitation> getCollection() {

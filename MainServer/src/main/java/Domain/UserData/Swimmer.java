@@ -10,23 +10,33 @@ public class Swimmer implements ISwimmer {
 
     private String _email;
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
-    private String teamId;
-    private ConcurrentHashMap<String, SwimmerInvitation> pendingInvitiations;
-    private ConcurrentHashMap<String, Invitation> InvitiaionHistory;
+    private String _teamId;
+    private ConcurrentHashMap<String, SwimmerInvitation> _pendingInvitations;
+    private ConcurrentHashMap<String, Invitation> _invitationHistory;
 
     public Swimmer(String email) {
          _email = email;
         _feedbacks = new ConcurrentHashMap<>();
+        _teamId = null;
+        _pendingInvitations = new ConcurrentHashMap<>();
+        _invitationHistory = new ConcurrentHashMap<>();
     }
 
-    public Swimmer(String email, List<IFeedbackVideo> feedbacks) {
+    public Swimmer(
+            String email,
+            List<IFeedbackVideo> feedbacks,
+            String teamId,
+            ConcurrentHashMap<String, SwimmerInvitation> pendingInvitations,
+            ConcurrentHashMap<String, Invitation> invitationHistory) {
         _email = email;
         _feedbacks = new ConcurrentHashMap<>();
         for (IFeedbackVideo feedbackVideo: feedbacks) {
             _feedbacks.put(feedbackVideo.getPath(), feedbackVideo);
         }
+        _teamId = teamId;
+        _pendingInvitations = pendingInvitations;
+        _invitationHistory = invitationHistory;
     }
-
 
     public boolean addFeedback(IFeedbackVideo feedbackVideo) {
         if (feedbackVideo == null) {
@@ -62,6 +72,18 @@ public class Swimmer implements ISwimmer {
         Map<LocalDateTime, List<IFeedbackVideo>> map = getFeedbacksDayMap(localDateMap);
         LocalDateTime date = localDateMap.get(dayToString(day));
         return map.get(date);
+    }
+
+    public String getTeamId() {
+        return _teamId;
+    }
+
+    public ConcurrentHashMap<String, SwimmerInvitation> getPendingInvitations() {
+        return _pendingInvitations;
+    }
+
+    public ConcurrentHashMap<String, Invitation> getInvitationHistory() {
+        return _invitationHistory;
     }
 
     private Map<LocalDateTime, List<IFeedbackVideo>> getFeedbacksDayMap(Map<String, LocalDateTime> localDateMap) {
