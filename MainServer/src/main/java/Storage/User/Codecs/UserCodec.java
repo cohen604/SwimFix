@@ -2,6 +2,7 @@ package Storage.User.Codecs;
 
 import Domain.UserData.*;
 import Storage.Admin.AdminDao;
+import Storage.Coach.CoachDao;
 import Storage.Researcher.ResearcherDao;
 import Storage.Swimmer.SwimmerDao;
 import org.bson.BsonReader;
@@ -22,12 +23,14 @@ public class UserCodec implements Codec<User> {
     private SwimmerDao _swimmerDao;
     private AdminDao _adminDao;
     private ResearcherDao _researcherDao;
+    private CoachDao _coachDao;
 
     public UserCodec(CodecRegistry codecRegistry) {
         _codecRegistry = codecRegistry;
         _swimmerDao = new SwimmerDao();
         _adminDao = new AdminDao();
         _researcherDao = new ResearcherDao();
+        _coachDao = new CoachDao();
     }
 
     @Override
@@ -55,8 +58,8 @@ public class UserCodec implements Codec<User> {
         }
 
         if(objectName.equals("coach")) {
-            Codec<Coach> coachCodec = _codecRegistry.get(Coach.class);
-            coach = decoderContext.decodeWithChildContext(coachCodec, bsonReader);
+            String coachId = bsonReader.readString();
+            coach = _coachDao.find(coachId);
             if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 objectName = bsonReader.readName();
             }
@@ -96,9 +99,8 @@ public class UserCodec implements Codec<User> {
         }
 
         if(user.getCoach() != null) {
-            Codec dateCodec = _codecRegistry.get(Coach.class);
-            bsonWriter.writeName("coach");
-            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getCoach());
+            bsonWriter.writeString("coach", user.getCoach().getEmail());
+            _coachDao.tryInsertThenUpdate(user.getCoach());
         }
 
         if(user.getAdmin() != null) {

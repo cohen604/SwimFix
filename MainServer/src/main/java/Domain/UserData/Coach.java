@@ -2,19 +2,19 @@ package Domain.UserData;
 
 public class Coach {
 
+    private String _email;
     private Team _team;
-    private String _tag;
 
-    public Coach() {
-        _tag = "Coach";
+    public Coach(String _email, Team _team) {
+        this._email = _email;
+        this._team = _team;
     }
 
-    public Coach(String tag) {
-        _tag = tag;
+    public String getEmail() {
+        return _email;
     }
 
-    public String getTag() {
-        return _tag;
+    public Team getTeam() {
+        return _team;
     }
-
 }

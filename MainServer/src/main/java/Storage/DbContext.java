@@ -3,9 +3,7 @@ package Storage;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.internal.MongoDatabaseImpl;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -18,7 +16,8 @@ public class DbContext {
     public static final String COLLECTION_NAME_SWIMMERS = "swimmer";
     public static final String COLLECTION_NAME_FEEDBACKS = "feedback";
     public static final String COLLECTION_NAME_COACHES = "coach";
-    public static final String COLLECTION_NAME_GROUPS = "group";
+    public static final String COLLECTION_NAME_TEAMS = "team";
+    public static final String COLLECTION_NAME_INVITATIONS = "invitations";
     public static final String COLLECTION_NAME_RESEARCHERS = "researcher";
     public static final String COLLECTION_NAME_ADMINS = "admin";
 
@@ -28,7 +27,8 @@ public class DbContext {
         collections.add(COLLECTION_NAME_SWIMMERS);
         collections.add(COLLECTION_NAME_FEEDBACKS);
         collections.add(COLLECTION_NAME_COACHES);
-        collections.add(COLLECTION_NAME_GROUPS);
+        collections.add(COLLECTION_NAME_TEAMS);
+        collections.add(COLLECTION_NAME_INVITATIONS);
         collections.add(COLLECTION_NAME_RESEARCHERS);
         collections.add(COLLECTION_NAME_ADMINS);
         initialize(collections);

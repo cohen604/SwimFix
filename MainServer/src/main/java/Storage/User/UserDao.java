@@ -2,7 +2,7 @@ package Storage.User;
 import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.User.Codecs.CoachCodec;
+import Storage.Coach.Codecs.CoachCodec;
 import Storage.User.Codecs.UserCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;

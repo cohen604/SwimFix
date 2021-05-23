@@ -1,6 +1,8 @@
-package Storage.User.Codecs;
+package Storage.Coach.Codecs;
 import Domain.UserData.Coach;
+import Domain.UserData.Team;
 import org.bson.BsonReader;
+import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -22,15 +24,29 @@ public class CoachCodec implements Codec<Coach> {
     @Override
     public Coach decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String tag = bsonReader.readString("tag");
+        String email = bsonReader.readString("id");
+        Team team = null;
+        String objectName = bsonReader.readName();
+        if(objectName.equals("team")) {
+            Codec<Team> teamCodec = _codecRegistry.get(Team.class);
+            team = decoderContext.decodeWithChildContext(teamCodec, bsonReader);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
+        }
         bsonReader.readEndDocument();
-        return new Coach(tag);
+        return new Coach(email, team);
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Coach coach, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("tag", coach.getTag());
+        bsonWriter.writeString("id", coach.getEmail());
+        if(coach.getTeam()!=null) {
+            Codec<Team> teamCodec = _codecRegistry.get(Team.class);
+            bsonWriter.writeName("team");
+            encoderContext.encodeWithChildContext(teamCodec, bsonWriter, coach.getTeam());
+        }
         bsonWriter.writeEndDocument();
     }
 

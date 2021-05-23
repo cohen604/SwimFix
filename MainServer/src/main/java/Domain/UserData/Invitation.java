@@ -1,14 +1,14 @@
 package Domain.UserData;
 
-enum Status{
-    VIEW, DENY, RECIVED, ACCEPTED
-}
+import java.time.LocalDateTime;
 
 public class Invitation {
 
-    Status status;
-    Team team;
-    Swimmer swimmer;
+    String id;
+    String teamId;
+    String swimmerId;
+    LocalDateTime time;
+    InvitationStatus status;
 
 }
 

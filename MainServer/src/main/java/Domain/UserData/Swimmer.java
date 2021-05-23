@@ -9,7 +9,9 @@ public class Swimmer {
 
     private String _email;
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
-    private Queue<Invitation> _invetations;
+    private String teamId;
+    private ConcurrentHashMap<String, SwimmerInvitation> pendingInvitiations;
+    private ConcurrentHashMap<String, Invitation> InvitiaionHistory;
 
     public Swimmer(String email) {
          _email = email;
