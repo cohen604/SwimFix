@@ -6,6 +6,8 @@ public interface ITeamDao {
 
     Team find(String teamId);
 
+    Team tryInsertThenUpdate(Team team);
+
     boolean isTeamExists(String teamId);
 
 }

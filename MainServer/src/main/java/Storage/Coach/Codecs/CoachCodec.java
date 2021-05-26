@@ -1,6 +1,7 @@
 package Storage.Coach.Codecs;
 import Domain.UserData.Coach;
 import Domain.UserData.Team;
+import Storage.Team.ITeamDao;
 import Storage.Team.TeamDao;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -12,7 +13,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 public class CoachCodec implements Codec<Coach> {
 
-    private TeamDao teamDao;
+    private ITeamDao teamDao;
 
     public CoachCodec() {
         this.teamDao = new TeamDao();
@@ -33,6 +34,7 @@ public class CoachCodec implements Codec<Coach> {
         bsonWriter.writeStartDocument();
         bsonWriter.writeString("_id", coach.getEmail());
         bsonWriter.writeString("team_id", coach.getTeam().getName());
+        this.teamDao.tryInsertThenUpdate(coach.getTeam());
         bsonWriter.writeEndDocument();
     }
 
