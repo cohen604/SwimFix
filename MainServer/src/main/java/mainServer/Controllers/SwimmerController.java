@@ -3,9 +3,7 @@ package mainServer.Controllers;
 import DTO.*;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
-import DTO.SwimmerDTOs.DateDTO;
-import DTO.SwimmerDTOs.DeleteFeedbackDTO;
-import DTO.SwimmerDTOs.HistoryDayDTO;
+import DTO.SwimmerDTOs.*;
 import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
@@ -99,6 +97,23 @@ public class SwimmerController {
                     link);
             System.out.println("send request delete feedback");
             return deleted.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/open/team")
+    @CrossOrigin(origins = "*")
+    public String openSwimmingTeam(@RequestBody OpenTeamRequestDTO requestDTO) {
+        try {
+            System.out.println("received open swimming team");
+            UserDTO coachDTO = requestDTO.getUserDTO();
+            String teamName = requestDTO.getTeamName();
+            ActionResult<OpenTeamResponseDTO> response = swimFixAPI.openSwimmingTeam(coachDTO, teamName);
+            System.out.println("send response of open swimming team");
+            return response.toJson();
         }
         catch (Exception e) {
             e.printStackTrace();
