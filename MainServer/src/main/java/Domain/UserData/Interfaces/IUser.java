@@ -58,4 +58,8 @@ public interface IUser {
 
     void deleteResearcher();
 
+    boolean addCoach(String teamName);
+
+    void deleteCoach();
+
 }

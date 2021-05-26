@@ -5,6 +5,7 @@ import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
+import Storage.Team.ITeamDao;
 import Storage.User.IUserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
 
@@ -18,12 +19,14 @@ public class UserProvider implements IUserProvider {
      */
     private ConcurrentHashMap<String, User> _users;
     private IUserDao _dao;
-    private ISwimmerDao _swimmerdao;
+    private ISwimmerDao _swimmerDao;
+    private ITeamDao _teamDao;
 
-    public UserProvider(IUserDao dao, ISwimmerDao swimmerDao) {
+    public UserProvider(IUserDao dao, ISwimmerDao swimmerDao, ITeamDao teamDao) {
         _users = new ConcurrentHashMap<>();
         _dao = dao;
-        _swimmerdao = swimmerDao;
+        _swimmerDao = swimmerDao;
+        _teamDao = teamDao;
     }
 
     @Override
@@ -89,7 +92,7 @@ public class UserProvider implements IUserProvider {
         if (current != null
                 && current.isLogged()
                 && current.addFeedback(feedbackVideo)) {
-            if (_swimmerdao.update(current.getSwimmer()) == null) {
+            if (_swimmerDao.update(current.getSwimmer()) == null) {
                 current.deleteFeedback(feedbackVideo.getPath());
             }
             else {
@@ -129,7 +132,7 @@ public class UserProvider implements IUserProvider {
         if (current != null && current.isLogged()) {
             IFeedbackVideo video = current.deleteFeedback(feedbackPath);
             if(video != null) {
-                if (_swimmerdao.update(current.getSwimmer()) == null) {
+                if (_swimmerDao.update(current.getSwimmer()) == null) {
                     current.addFeedback(video);
                 }
                 else {
@@ -218,5 +221,21 @@ public class UserProvider implements IUserProvider {
         );
     }
 
+    @Override
+    public boolean addCoach(IUser user, String teamName) {
+        User currentUser = _users.get(user.getUid());
+        if(!currentUser.isCoach()
+                && !_teamDao.isTeamExists(teamName)
+                && user.addCoach(teamName)) {
+            if(_dao.update(currentUser) != null) {
+                return true;
+            }
+            else {
+                user.deleteCoach();
+            }
+
+        }
+        return false;
+    }
 
 }

@@ -35,7 +35,7 @@ public class InvitationDao extends Dao<Invitation> implements IInvitationDao {
 
     @Override
     public Invitation update(Invitation value) {
-        return null;
+        return defaultUpdate(value, value.getId());
     }
 
     @Override

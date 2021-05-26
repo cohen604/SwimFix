@@ -33,6 +33,15 @@ public class SwimmerCodec implements Codec<Swimmer> {
     public Swimmer decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
         String email = bsonReader.readString("_id");
+        List<IFeedbackVideo> feedbacks = decodeFeedbacks(bsonReader, decoderContext);
+        String teamid = bsonReader.readString("team_id");
+        ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = decodePendingInvitations(bsonReader, decoderContext);
+        ConcurrentHashMap<String, Invitation> invitations = decodeInvitationHistory(bsonReader, decoderContext);
+        bsonReader.readEndDocument();
+        return new Swimmer(email, feedbacks, teamid, swimmerInvitations, invitations);
+    }
+
+    private List<IFeedbackVideo> decodeFeedbacks(BsonReader bsonReader, DecoderContext decoderContext) {
         List<IFeedbackVideo> feedbacks = new LinkedList<>();
         bsonReader.readName("feedbacks");
         bsonReader.readStartArray();
@@ -41,8 +50,10 @@ public class SwimmerCodec implements Codec<Swimmer> {
             feedbacks.add(_feedbackDao.find(id));
         }
         bsonReader.readEndArray();
-        String teamid = bsonReader.readString("team_id");
+        return feedbacks;
+    }
 
+    private ConcurrentHashMap<String, SwimmerInvitation> decodePendingInvitations(BsonReader bsonReader, DecoderContext decoderContext) {
         ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = new ConcurrentHashMap<>();
         bsonReader.readName("pending_invitations");
         bsonReader.readStartArray();
@@ -52,7 +63,10 @@ public class SwimmerCodec implements Codec<Swimmer> {
             swimmerInvitations .put(invitationId, new SwimmerInvitation(invitation));
         }
         bsonReader.readEndArray();
+        return swimmerInvitations;
+    }
 
+    private ConcurrentHashMap<String, Invitation> decodeInvitationHistory(BsonReader bsonReader, DecoderContext decoderContext) {
         ConcurrentHashMap<String, Invitation> invitations = new ConcurrentHashMap<>();
         bsonReader.readName("invitations_history");
         bsonReader.readStartArray();
@@ -62,9 +76,7 @@ public class SwimmerCodec implements Codec<Swimmer> {
             invitations.put(invitationId, invitation);
         }
         bsonReader.readEndArray();
-
-        bsonReader.readEndDocument();
-        return new Swimmer(email, feedbacks, teamid, swimmerInvitations, invitations);
+        return invitations;
     }
 
     @Override

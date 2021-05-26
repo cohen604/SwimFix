@@ -36,7 +36,7 @@ public class CoachDao extends Dao<Coach> implements ICoachDao {
 
     @Override
     public Coach update(Coach value) {
-        return null;
+        return defaultUpdate(value, value.getEmail());
     }
 
     @Override

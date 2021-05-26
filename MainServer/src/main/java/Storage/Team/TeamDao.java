@@ -9,8 +9,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
@@ -35,6 +37,20 @@ public class TeamDao extends Dao<Team> implements ITeamDao {
 
     @Override
     public Team update(Team value) {
-        return null;
+        return defaultUpdate(value, value.getName());
+    }
+
+    @Override
+    public boolean isTeamExists(String teamId) {
+        try {
+            MongoCollection<Team> collection = getCollection();
+            Bson query  = Filters.and(
+                    Filters.eq("_id", teamId));
+            return collection.countDocuments(query) != 0;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

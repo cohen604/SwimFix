@@ -31,4 +31,7 @@ public interface IUserProvider {
     boolean addResearcher(IUser admin, IUser userToAdd);
 
     UsersSummary getSummary();
+
+    boolean addCoach(IUser user, String teamName);
 }
+

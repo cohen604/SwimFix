@@ -24,6 +24,7 @@ public class User implements IUser {
 
     private final Object _adminLock;
     private final Object _researcherLock;
+    private final Object _coachLock;
     /***
      * Note: Only when register using this constructor
      * @param userDTO - user dto
@@ -39,6 +40,7 @@ public class User implements IUser {
 //        _admin = new Admin();
         _adminLock = new Object();
         _researcherLock = new Object();
+        _coachLock = new Object();
         _pathManager = new PathManager(email, true);
     }
 
@@ -54,6 +56,7 @@ public class User implements IUser {
         this._researcher = researcher;
         _adminLock = new Object();
         _researcherLock = new Object();
+        _coachLock = new Object();
         _pathManager = new PathManager(email, false);
     }
 
@@ -221,6 +224,24 @@ public class User implements IUser {
     public void deleteResearcher() {
         synchronized (_researcherLock) {
             _researcher = null;
+        }
+    }
+
+    @Override
+    public boolean addCoach(String teamName) {
+        synchronized (_coachLock) {
+            if(_coach == null) {
+                _coach = new Coach(email, teamName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteCoach() {
+        synchronized (_coachLock) {
+            _coach = null;
         }
     }
 }
