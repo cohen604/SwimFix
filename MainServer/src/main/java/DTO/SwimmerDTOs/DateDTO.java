@@ -1,4 +1,4 @@
-package DTO;
+package DTO.SwimmerDTOs;
 
 public class DateDTO {
 

@@ -1,7 +1,6 @@
 package AcceptanceTests.Bridge;
 
-import AcceptanceTests.Data.SwimFIxAPIMock;
-import DTO.*;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SwimFixAPI;
 
 public class AcceptanceTestsReal implements AcceptanceTestsBridge {

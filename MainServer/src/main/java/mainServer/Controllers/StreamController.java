@@ -1,6 +1,7 @@
 package mainServer.Controllers;
 
 import DTO.*;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -8,9 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController()
 @RequestMapping("/stream")

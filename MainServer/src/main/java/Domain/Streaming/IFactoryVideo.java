@@ -1,8 +1,6 @@
 package Domain.Streaming;
 
-import DTO.ConvertedVideoDTO;
-
-import java.time.LocalDateTime;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
 
 public interface IFactoryVideo {
 

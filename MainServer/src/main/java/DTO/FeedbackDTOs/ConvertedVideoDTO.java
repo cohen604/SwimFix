@@ -1,4 +1,4 @@
-package DTO;
+package DTO.FeedbackDTOs;
 
 public class ConvertedVideoDTO {
 

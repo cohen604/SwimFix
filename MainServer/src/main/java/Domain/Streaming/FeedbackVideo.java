@@ -1,5 +1,5 @@
 package Domain.Streaming;
-import DTO.FeedbackVideoStreamer;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;

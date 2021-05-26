@@ -1,10 +1,7 @@
 package AcceptanceTests.Data;
 
-import DTO.ConvertedVideoDTO;
-import DTO.UserDTO;
-import Domain.UserData.User;
+import DTO.UserDTOs.UserDTO;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

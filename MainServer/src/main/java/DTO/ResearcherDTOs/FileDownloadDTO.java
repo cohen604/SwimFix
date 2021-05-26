@@ -1,4 +1,4 @@
-package DTO;
+package DTO.ResearcherDTOs;
 
 public class FileDownloadDTO {
 

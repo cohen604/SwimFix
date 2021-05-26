@@ -1,15 +1,7 @@
 package AcceptanceTests;
 
-import DTO.ActionResult;
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoStreamer;
 import org.junit.After;
 import org.junit.Before;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.List;
 
 public class UploadVideoForStreamerTest extends AcceptanceTests {
 

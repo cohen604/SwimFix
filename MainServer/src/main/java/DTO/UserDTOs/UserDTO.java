@@ -1,17 +1,18 @@
-package DTO;
+package DTO.UserDTOs;
 
-public class SendEmailInvitiationDTO {
+public class UserDTO {
 
     private String uid;
     private String email;
     private String name;
-    private String to;
 
-    public SendEmailInvitiationDTO(String uid, String email, String name, String to) {
+    public UserDTO() {
+    }
+
+    public UserDTO(String uid, String email, String name) {
         this.uid = uid;
         this.email = email;
         this.name = name;
-        this.to = to;
     }
 
     public String getUid() {
@@ -24,9 +25,5 @@ public class SendEmailInvitiationDTO {
 
     public String getName() {
         return name;
-    }
-
-    public String getTo() {
-        return to;
     }
 }

@@ -1,4 +1,4 @@
-package DTO;
+package DTO.FeedbackDTOs;
 
 import java.util.List;
 

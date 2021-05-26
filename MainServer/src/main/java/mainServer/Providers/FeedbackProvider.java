@@ -1,6 +1,7 @@
 package mainServer.Providers;
 
-import DTO.*;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.Streaming.*;
 import Domain.Summaries.FeedbacksSummary;

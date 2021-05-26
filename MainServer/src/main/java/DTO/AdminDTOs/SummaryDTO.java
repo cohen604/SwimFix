@@ -1,4 +1,4 @@
-package DTO;
+package DTO.AdminDTOs;
 
 public class SummaryDTO {
 

@@ -1,6 +1,6 @@
 package UnitTests.StreamingTests;
 
-import DTO.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
 import Domain.Streaming.FactoryVideo;
 import Domain.Streaming.IVideo;
 import junit.framework.TestCase;

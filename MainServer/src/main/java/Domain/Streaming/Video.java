@@ -1,14 +1,8 @@
 package Domain.Streaming;
-import DTO.ConvertedVideoDTO;
-import org.opencv.core.Mat;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Video implements IVideo {
     

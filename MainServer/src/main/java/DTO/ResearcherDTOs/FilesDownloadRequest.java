@@ -1,4 +1,6 @@
-package DTO;
+package DTO.ResearcherDTOs;
+
+import DTO.UserDTOs.UserDTO;
 
 public class FilesDownloadRequest {
 

@@ -1,10 +1,5 @@
 package AcceptanceTests.Bridge;
 
-import DTO.ActionResult;
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoDTO;
-import DTO.FeedbackVideoStreamer;
-
 public class AcceptanceTestsProxy implements AcceptanceTestsBridge {
 
     private AcceptanceTestsReal acceptanceTestsReal;

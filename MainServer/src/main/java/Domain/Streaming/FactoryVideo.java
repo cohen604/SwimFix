@@ -1,6 +1,6 @@
 package Domain.Streaming;
 
-import DTO.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
 
 public class FactoryVideo implements IFactoryVideo{
 

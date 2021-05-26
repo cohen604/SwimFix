@@ -1,4 +1,6 @@
-package DTO;
+package DTO.AdminDTOs;
+
+import DTO.UserDTOs.UserDTO;
 
 public class AdminAddRequestDTO {
 

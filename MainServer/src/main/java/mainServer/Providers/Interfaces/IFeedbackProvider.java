@@ -1,7 +1,7 @@
 package mainServer.Providers.Interfaces;
 
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Streaming.IVideo;
 import Domain.Summaries.FeedbacksSummary;

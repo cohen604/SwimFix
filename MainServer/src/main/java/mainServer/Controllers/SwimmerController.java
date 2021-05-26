@@ -1,20 +1,18 @@
 package mainServer.Controllers;
 
 import DTO.*;
-import Domain.Streaming.IFeedbackVideo;
-import com.google.gson.Gson;
-import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.DeleteFeedbackDTO;
+import DTO.SwimmerDTOs.HistoryDayDTO;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/swimmer")

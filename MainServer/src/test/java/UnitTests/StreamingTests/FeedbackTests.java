@@ -1,6 +1,6 @@
 package UnitTests.StreamingTests;
 
-import DTO.FeedbackVideoStreamer;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;

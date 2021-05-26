@@ -1,6 +1,17 @@
 package mainServer;
 
 import DTO.*;
+import DTO.AdminDTOs.SummaryDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.ResearcherDTOs.FileDTO;
+import DTO.ResearcherDTOs.FileDownloadDTO;
+import DTO.ResearcherDTOs.ResearcherReportDTO;
+import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.OpenTeamResponseDTO;
+import DTO.UserDTOs.UserDTO;
+import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.Errors.Factories.FactoryElbowError;
 import Domain.Errors.Factories.FactoryForearmError;
 import Domain.Errors.Factories.FactoryPalmCrossHeadError;
@@ -17,6 +28,7 @@ import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Feedbacks.FeedbacksDao;
 import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.SwimmerDao;
+import Storage.Team.TeamDao;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.Completions.SkeletonsCompletionBefore;
@@ -36,7 +48,10 @@ public class SwimFixAPI {
    private LogicManager logicManager;
 
    public SwimFixAPI(String dbName) {
-      IUserProvider userProvider = new UserProvider(new UserDao(), new SwimmerDao());
+      IUserProvider userProvider = new UserProvider(
+              new UserDao(),
+              new SwimmerDao(),
+              new TeamDao());
 
       IFactoryDraw iFactoryDraw = new FactoryDraw();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors(
@@ -154,4 +169,7 @@ public class SwimFixAPI {
       return logicManager.getSummary(admin);
    }
 
+   public ActionResult<OpenTeamResponseDTO> openSwimmingTeam(UserDTO coachDTO, String teamName) {
+      return logicManager.addCoach(coachDTO, teamName);
+   }
 }

@@ -1,6 +1,6 @@
 package UnitTests.ProvidersTests;
 
-import DTO.FileDTO;
+import DTO.ResearcherDTOs.FileDTO;
 import Domain.StatisticsData.IStatistic;
 import Domain.StatisticsData.StatisticsHolder;
 import DomainLogic.PdfDrawing.IPdfDrawer;

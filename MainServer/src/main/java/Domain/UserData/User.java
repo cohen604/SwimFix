@@ -1,12 +1,11 @@
 package Domain.UserData;
 
-import DTO.UserDTO;
+import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.UserData.Interfaces.IUser;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {

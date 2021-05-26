@@ -1,4 +1,6 @@
-package DTO;
+package DTO.SwimmerDTOs;
+
+import DTO.UserDTOs.UserDTO;
 
 public class DeleteFeedbackDTO {
 

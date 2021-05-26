@@ -1,8 +1,8 @@
 package mainServer.Controllers;
 
 import DTO.ActionResult;
-import DTO.SendEmailInvitiationDTO;
-import DTO.UserDTO;
+import DTO.CoachDTOs.SendEmailInvitiationDTO;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.web.bind.annotation.*;

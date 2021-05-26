@@ -1,5 +1,5 @@
 package mainServer.Providers;
-import DTO.UserDTO;
+import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;

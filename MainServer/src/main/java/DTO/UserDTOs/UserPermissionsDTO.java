@@ -1,4 +1,4 @@
-package DTO;
+package DTO.UserDTOs;
 
 public class UserPermissionsDTO {
 

@@ -1,6 +1,17 @@
 package mainServer;
 
 import DTO.*;
+import DTO.AdminDTOs.SummaryDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.ResearcherDTOs.FileDTO;
+import DTO.ResearcherDTOs.FileDownloadDTO;
+import DTO.ResearcherDTOs.ResearcherReportDTO;
+import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.OpenTeamResponseDTO;
+import DTO.UserDTOs.UserDTO;
+import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.StatisticsData.IStatistic;
 import Domain.Streaming.*;
 import Domain.Summaries.FeedbacksSummary;
@@ -524,6 +535,35 @@ public class LogicManager {
                         feedbacksSummary.getFeedbacks()
                 );
                 return new ActionResult<>(Response.SUCCESS, summaryDTO);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /***
+     * The function add coach to the given user
+     * @param coachDTO - the user to add a new team to
+     * @param teamName - the new team name
+     * @return if the team added to the user otherwise false and the reason
+     */
+    public ActionResult<OpenTeamResponseDTO> addCoach(UserDTO coachDTO, String teamName) {
+        IUser coach = _userProvider.getUser(coachDTO);
+        try {
+            if(coach!=null && coach.isLogged()) {
+                OpenTeamResponseDTO responseDTO = new OpenTeamResponseDTO(teamName);
+                if(coach.isCoach()) {
+                    responseDTO.setAlreadyCoach(true);
+                    return new ActionResult<>(Response.FAIL, responseDTO);
+                }
+                else if(_userProvider.addCoach(coach, teamName)) {
+                    responseDTO.setAdded(true);
+                    return new ActionResult<>(Response.SUCCESS, responseDTO);
+                }
+                responseDTO.setAlreadyExists(true);
+                return new ActionResult<>(Response.FAIL, responseDTO);
             }
         }
         catch (Exception e) {
