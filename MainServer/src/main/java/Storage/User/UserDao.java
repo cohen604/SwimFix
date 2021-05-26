@@ -249,4 +249,9 @@ public class UserDao extends Dao<User> implements IUserDao{
         return null;
     }
 
+    @Override
+    public User tryInsertThenUpdate(User user) {
+        return defaultTryInsertThenUpdate(user, user.getUid());
+    }
+
 }

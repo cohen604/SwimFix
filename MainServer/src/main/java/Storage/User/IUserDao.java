@@ -41,4 +41,6 @@ public interface IUserDao {
 
     Long countLoggedCoaches();
 
+    User tryInsertThenUpdate(User user);
+
 }

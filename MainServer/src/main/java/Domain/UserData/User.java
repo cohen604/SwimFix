@@ -34,9 +34,6 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer(email);
-//        _coach = new Coach();
-//        _researcher = new Researcher();
-//        _admin = new Admin();
         _adminLock = new Object();
         _researcherLock = new Object();
         _coachLock = new Object();

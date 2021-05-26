@@ -32,13 +32,21 @@ public class UserProvider implements IUserProvider {
     @Override
     public void addSwimAnalyticsUser(UserDTO userDTO) {
         IUser user = getUser(userDTO);
-        if(!user.isAdmin()) {
-            user.addAdmin();
+        if(user == null) {
+            User admin = new User(userDTO);
+            admin.addAdmin();
+            admin.addResearcher();
+            _dao.tryInsertThenUpdate(admin);
         }
-        if(!user.isResearcher()) {
-            user.addResearcher();
+        else {
+            if (!user.isAdmin()) {
+                user.addAdmin();
+            }
+            if (!user.isResearcher()) {
+                user.addResearcher();
+            }
+            _dao.update(_users.get(user.getUid()));
         }
-        _dao.update(_users.get(user.getUid()));
     }
 
     @Override
