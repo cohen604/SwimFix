@@ -23,11 +23,13 @@ import 'package:client/Screens/ResearcherScreens/WebReportScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebResearcherScreen.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryDayScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebSwimmerOpenTeamScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebUploadScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebViewFeedbackScreen.dart';
@@ -195,6 +197,16 @@ class ScreenHolder {
     return new WebStatisticsScreen(args);
   }
 
+  Widget getSwimmerOpenTeamScrren(SwimmerOpenTeamArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebSwimmerOpenTeamScreen(args);
+  }
+
   Widget getReLoginScreen(String desPath) {
     ReLoginScreenArguments args = new ReLoginScreenArguments(desPath);
     return new WebReLoginScreen(args: args);
@@ -209,5 +221,4 @@ class ScreenHolder {
     return (defaultTargetPlatform == TargetPlatform.iOS
         || defaultTargetPlatform == TargetPlatform.android);
   }
-
 }

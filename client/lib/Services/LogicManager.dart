@@ -5,8 +5,10 @@ import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
+import 'package:client/Domain/Team/AddingTeamResponse.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
@@ -330,6 +332,23 @@ class LogicManager {
     }
     catch(e) {
       print('error in get summary ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<AddingTeamResponse> openSwimmingTeam(Swimmer swimmer, String teamName) async {
+    try {
+      String path = "/swimmer/open/team";
+      Map<String, dynamic> map = {};
+      map['userDTO'] = swimmer.toJson();
+      map['teamName'] = teamName;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null) {
+        return AddingTeamResponse.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e) {
+      print('error in open swimming team ${e.toString()}');
     }
     return null;
   }

@@ -1,6 +1,7 @@
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
 import 'Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
@@ -66,6 +67,22 @@ class MyApp extends StatelessWidget {
           UploadScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getUploadScreen(args);
         },
+        '/history': (context) {
+          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerHistoryScreen(args);
+        },
+        '/history/day': (context) {
+          SwimmerHistoryPoolsArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerHistoryDayScreen(args);
+        },
+        '/viewFeedback': (context) {
+          ViewFeedBackArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getViewFeedbackScreen(args);
+        },
+        '/swimmer/open/team': (context) {
+          SwimmerOpenTeamArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getSwimmerOpenTeamScrren(args);
+        },
         '/researcher': (context) {
           ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getResearcherScreen(args);
@@ -81,18 +98,6 @@ class MyApp extends StatelessWidget {
         '/coach': (context) {
           CoachScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getCoachScreen(args);
-        },
-        '/history': (context) {
-          HistoryScreenArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getSwimmerHistoryScreen(args);
-        },
-        '/history/day': (context) {
-          SwimmerHistoryPoolsArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getSwimmerHistoryDayScreen(args);
-        },
-        '/viewFeedback': (context) {
-          ViewFeedBackArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getViewFeedbackScreen(args);
         },
         '/admin': (context) {
           AdminScreenArguments args = ModalRoute.of(context).settings.arguments;
