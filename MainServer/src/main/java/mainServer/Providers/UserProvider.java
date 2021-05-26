@@ -39,6 +39,9 @@ public class UserProvider implements IUserProvider {
             _dao.tryInsertThenUpdate(admin);
         }
         else {
+            if(!user.isSwimmer()){
+
+            }
             if (!user.isAdmin()) {
                 user.addAdmin();
             }

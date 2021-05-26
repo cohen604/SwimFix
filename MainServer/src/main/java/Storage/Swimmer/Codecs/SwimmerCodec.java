@@ -34,12 +34,12 @@ public class SwimmerCodec implements Codec<Swimmer> {
         bsonReader.readStartDocument();
         String email = bsonReader.readString("_id");
         List<IFeedbackVideo> feedbacks = decodeFeedbacks(bsonReader, decoderContext);
-        String teamId = null;
-        if(bsonReader.readName().equals("team_id")) {
-            teamId = bsonReader.readString("team_id");
-        }
         ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = decodePendingInvitations(bsonReader, decoderContext);
         ConcurrentHashMap<String, Invitation> invitations = decodeInvitationHistory(bsonReader, decoderContext);
+        String teamId = null;
+        if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+            teamId = bsonReader.readString("team_id");
+        }
         bsonReader.readEndDocument();
         return new Swimmer(email, feedbacks, teamId, swimmerInvitations, invitations);
     }
@@ -93,10 +93,6 @@ public class SwimmerCodec implements Codec<Swimmer> {
         }
         bsonWriter.writeEndArray();
 
-        if(swimmer.getTeamId() != null) {
-            bsonWriter.writeString("team_id", swimmer.getTeamId());
-        }
-
         bsonWriter.writeStartArray("pending_invitations");
         for(SwimmerInvitation swimmerInvitation: swimmer.getPendingInvitations().values()) {
             bsonWriter.writeString(swimmerInvitation.getId());
@@ -110,6 +106,10 @@ public class SwimmerCodec implements Codec<Swimmer> {
             _invitationDao.tryInsertThenUpdate(invitation);
         }
         bsonWriter.writeEndArray();
+
+        if(swimmer.getTeamId() != null) {
+            bsonWriter.writeString("team_id", swimmer.getTeamId());
+        }
 
         bsonWriter.writeEndDocument();
     }
