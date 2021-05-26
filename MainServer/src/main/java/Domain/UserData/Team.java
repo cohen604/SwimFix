@@ -3,7 +3,9 @@ import Domain.UserData.Interfaces.ISwimmer;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Team {
 
@@ -11,12 +13,16 @@ public class Team {
     private LocalDateTime openDate;
     private String coachId;
     private HashMap<String, ISwimmer> swimmers;
-    private int sendInvitations;
+    private AtomicInteger sendInvitations;
     private List<Invitation> invitations;
 
     public Team(String name, String coachId) {
         this.name = name;
         this.coachId = coachId;
+        this.openDate = LocalDateTime.now();
+        this.swimmers = new HashMap<>();
+        this.sendInvitations = new AtomicInteger(0);
+        this.invitations = new LinkedList<>();
     }
 
     public Team(
@@ -30,7 +36,7 @@ public class Team {
         this.openDate = openDate;
         this.coachId = coachId;
         this.swimmers = swimmers;
-        this.sendInvitations = sendInvitations;
+        this.sendInvitations = new AtomicInteger(sendInvitations);
         this.invitations = invitations;
     }
 
@@ -51,7 +57,7 @@ public class Team {
     }
 
     public int getSendInvitations() {
-        return sendInvitations;
+        return sendInvitations.get();
     }
 
     public List<Invitation> getInvitations() {
