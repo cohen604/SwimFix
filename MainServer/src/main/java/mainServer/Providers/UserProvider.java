@@ -1,14 +1,11 @@
 package mainServer.Providers;
-
-import DTO.FeedbackVideoStreamer;
 import DTO.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
-import Storage.Swimmer.SwimmerDao;
 import Storage.User.IUserDao;
-import Storage.User.UserDao;
 import mainServer.Providers.Interfaces.IUserProvider;
 
 import java.util.*;
@@ -19,14 +16,26 @@ public class UserProvider implements IUserProvider {
     /**
      * The hash map key: user uid, the values is the user
      */
-    ConcurrentHashMap<String, User> _users;
-    IUserDao _dao;
-    ISwimmerDao _swimmerdao;
+    private ConcurrentHashMap<String, User> _users;
+    private IUserDao _dao;
+    private ISwimmerDao _swimmerdao;
 
     public UserProvider(IUserDao dao, ISwimmerDao swimmerDao) {
         _users = new ConcurrentHashMap<>();
         _dao = dao;
         _swimmerdao = swimmerDao;
+    }
+
+    @Override
+    public void addSwimAnalyticsUser(UserDTO userDTO) {
+        IUser user = getUser(userDTO);
+        if(!user.isAdmin()) {
+            user.addAdmin();
+        }
+        if(!user.isResearcher()) {
+            user.addResearcher();
+        }
+        _dao.update(_users.get(user.getUid()));
     }
 
     @Override
@@ -129,6 +138,84 @@ public class UserProvider implements IUserProvider {
             }
         }
         return false;
+    }
+
+    @Override
+    public Collection<? extends IUser> findUsersThatNotAdmin(IUser user) {
+        if(user.isLogged() && user.isAdmin()) {
+            return _dao.findUsersThatNotAdmin();
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<? extends IUser> findUsersThatNotResearcher(IUser user) {
+        if(user.isLogged() && user.isAdmin()) {
+            return _dao.findUsersThatNotResearcher();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addAdmin(IUser admin, IUser userToAdd) {
+        User user = _users.get(userToAdd.getUid());
+        if(admin.isLogged()
+                && admin.isAdmin()
+                && user !=null) {
+            if(user.addAdmin()) {
+                if(_dao.update(user) != null) {
+                    return true;
+                }
+                else  {
+                    user.deleteAdmin();
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addResearcher(IUser admin, IUser userToAdd) {
+        User user = _users.get(userToAdd.getUid());
+        if(admin.isLogged()
+                && admin.isAdmin()
+                && user !=null) {
+            if(user.addResearcher()) {
+                if(_dao.update(user) != null) {
+                    return true;
+                }
+                else  {
+                    user.deleteResearcher();
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public UsersSummary getSummary() {
+        Long users = _dao.countUsers();
+        Long loggedUsers = _dao.countLoggedUsers();
+        Long swimmers = _dao.countSwimmers();
+        Long loggedSwimmers = _dao.countLoggedSwimmers();
+        Long coaches = _dao.countCoaches();
+        Long loggedCoaches = _dao.countLoggedCoaches();
+        Long admins = _dao.countAdmins();
+        Long loggedAdmins = _dao.countLoggedAdmins();
+        Long researchers = _dao.countResearchers();
+        Long loggedResearchers = _dao.countLoggedResearchers();
+        return new UsersSummary(
+                users,
+                loggedUsers,
+                swimmers,
+                loggedSwimmers,
+                coaches,
+                loggedCoaches,
+                admins,
+                loggedAdmins,
+                researchers,
+                loggedResearchers
+        );
     }
 
 

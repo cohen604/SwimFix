@@ -1,5 +1,6 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'Arguments/HistoryScreenArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'Holders/WebColors.dart';
+import '../Holders/WebColors.dart';
 
 class WebSwimmerScreen extends StatefulWidget {
 
@@ -22,20 +23,10 @@ class WebSwimmerScreen extends StatefulWidget {
 class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
   WebColors _webColors;
-
+  AssetsHolder _assetsHolder;
   _WebSwimmerScreenState() {
     _webColors = WebColors.getInstance();
-  }
-
-  Widget buildWelcomeTitle(BuildContext context, int flex) {
-      return Text('Welcome ${this.widget.arguments.user.swimmer.name}',
-        style: TextStyle(
-            fontSize: 32 * MediaQuery.of(context).textScaleFactor,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            decoration: TextDecoration.none
-        ),
-      );
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   void onClickUpload() {
@@ -58,7 +49,15 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
 
   Widget buildBottomSide(BuildContext context) {
     return Container(
-      color: _webColors.getBackgroundForI7(),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+          fit: BoxFit.fill,
+          colorFilter: ColorFilter.mode(
+              _webColors.getBackgroundForI6(),
+              BlendMode.hardLight),
+        ),
+      ),
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
@@ -71,7 +70,7 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
           IconCardButton("Team invitations",
               'View your swimming team invitations', null, Icons.insert_invitation),
           IconCardButton("My Team",
-              'View your team, you are part of', null, Icons.group), // buildMainButtons(context, 6),
+              'View your team, you are part of', null, Icons.group),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-package Storage.User;
+package Storage.Admin.Codecs;
 
 import Domain.UserData.Admin;
 import org.bson.BsonReader;
@@ -23,15 +23,19 @@ public class AdminCodec implements Codec<Admin> {
     @Override
     public Admin decode(BsonReader bsonReader, DecoderContext decoderContext) {
         bsonReader.readStartDocument();
-        String tag = bsonReader.readString("tag");
+        String email = bsonReader.readString("_id");
+        boolean researcherAuthorized = bsonReader.readBoolean("researcher_authorized");
+        boolean adminAuthorized = bsonReader.readBoolean("admin_authorized");
         bsonReader.readEndDocument();
-        return new Admin(tag);
+        return new Admin(email, researcherAuthorized, adminAuthorized);
     }
 
     @Override
     public void encode(BsonWriter bsonWriter, Admin admin, EncoderContext encoderContext) {
         bsonWriter.writeStartDocument();
-        bsonWriter.writeString("tag", admin.getTag());
+        bsonWriter.writeString("_id", admin.getEmail());
+        bsonWriter.writeBoolean("researcher_authorized", admin.isResearcherAuthorized());
+        bsonWriter.writeBoolean("admin_authorized", admin.isAdminAuthorized());
         bsonWriter.writeEndDocument();
     }
 

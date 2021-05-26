@@ -4,6 +4,7 @@ import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
+import 'package:client/Domain/Summaries/Summary.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
 import 'package:client/Services/ConnectionHandler.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
+import 'dart:convert' show utf8;
 
 import 'GoogleAuth.dart';
 
@@ -242,6 +244,94 @@ class LogicManager {
       print('error in delete feedback ${e.toString()}');
     }
     return false;
+  }
+
+  Future<List<Swimmer>> getUsersThatNotAdmins(Swimmer admin) async {
+    try {
+      String path = "/admin/search/users/not/admins";
+      Map<String, dynamic> map = admin.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      List<dynamic> list = serverResponse.value;
+      print(list);
+      return list.map((e) {
+        Swimmer swimmer = Swimmer.fromJson(e);
+        swimmer.name = utf8.decode(swimmer.name.runes.toList());
+        return swimmer;
+      }).toList();
+    }
+    catch(e) {
+      print('error in get users that not admins ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> addAdmin(Swimmer admin, Swimmer user) async {
+    try {
+      String path = "/admin/add/admin";
+      Map<String, dynamic> map = {};
+      map['admin'] = admin.toJson();
+      map['user'] = user.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in add admin ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<List<Swimmer>> getUsersThatNotResearchers(Swimmer admin) async {
+    try {
+      String path = "/admin/search/users/not/researchers";
+      Map<String, dynamic> map = admin.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      List<dynamic> list = serverResponse.value;
+      print(list);
+      return list.map((e) {
+        Swimmer swimmer = Swimmer.fromJson(e);
+        swimmer.name = utf8.decode(swimmer.name.runes.toList());
+        return swimmer;
+      }).toList();
+    }
+    catch(e) {
+      print('error in get users that not researchers ${e.toString()}');
+    }
+    return null;
+  }
+
+
+  Future<bool> addResearcher(Swimmer admin, Swimmer user) async{
+    try {
+      String path = "/admin/add/researcher";
+      Map<String, dynamic> map = {};
+      map['admin'] = admin.toJson();
+      map['user'] = user.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(
+          path, map);
+      return serverResponse.value as bool;
+    }
+    catch(e) {
+      print('error in add researcher ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<Summary> getSummary(Swimmer swimmer) async {
+    try {
+      String path = "/admin/summary";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return Summary.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e) {
+      print('error in get summary ${e.toString()}');
+    }
+    return null;
   }
 
 }

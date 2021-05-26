@@ -19,14 +19,14 @@ class ImageCardButton extends StatefulWidget {
 
 class _ImageCardButtonState extends State<ImageCardButton> {
 
-  Widget buildTopSide(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
+  Widget buildTopSide(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: 10
+      ),
       child: Container(
         color: this.widget.background,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
         child: Image.asset(
           this.widget.image,
           fit: BoxFit.fill,
@@ -35,14 +35,10 @@ class _ImageCardButtonState extends State<ImageCardButton> {
     );
   }
 
-  Widget buildTitle(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+  Widget buildTitle(BuildContext context) {
+    return Container(
         padding: EdgeInsets.only(left:10.0),
+        // alignment: Alignment.topLeft,
         child: Text(
           this.widget.title,
           textAlign: TextAlign.left,
@@ -54,87 +50,79 @@ class _ImageCardButtonState extends State<ImageCardButton> {
               decoration: TextDecoration.none,
           )
         ),
-      ),
     );
   }
 
-  Widget buildExplanation(BuildContext context, int flex) {
-    return Flexible(
-      flex: flex,
-      fit: FlexFit.tight,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.only(left:10.0),
-        child: Text(
-            'Additional information about ${this.widget.title}',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 20 * MediaQuery.of(context).textScaleFactor,
-              color:Colors.black54,
-              // fontWeight: FontWeight.bold,
-              // fontStyle: FontStyle.italic,
-              decoration: TextDecoration.none,
-            )
+  Widget buildExplanation(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left:10.0),
+      child: Text(
+        'Additional information about ${this.widget.title}',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+          color:Colors.black54,
+          // fontWeight: FontWeight.bold,
+          // fontStyle: FontStyle.italic,
+          decoration: TextDecoration.none,
         ),
       ),
     );
   }
 
-  Widget buildBottomSide(BuildContext context, int flex) {
-      return Column(
-          children: [
-            buildTitle(context, 1),
-            buildExplanation(context, 1),
-            Flexible(
-              flex: 1,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  padding: EdgeInsets.only(right:5.0, bottom: 7.0),
-                  child: ElevatedButton(
-                    onPressed: this.widget.onClick,
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.white),
-                      backgroundColor:  MaterialStateColor.resolveWith(
-                              (states) => this.widget.buttonBackground),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.only(right:2.0, left:2.0),
-                      child: Text('More',
-                        style: TextStyle(
-                            fontSize: 21 * MediaQuery.of(context).textScaleFactor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+  Widget buildMoreButton(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomRight,
+      padding: EdgeInsets.only(top: 10, right:5.0, bottom: 7.0),
+      child: ElevatedButton(
+        onPressed: this.widget.onClick,
+        style: ButtonStyle(
+          foregroundColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.white),
+          backgroundColor:  MaterialStateColor.resolveWith(
+                  (states) => this.widget.buttonBackground),
+        ),
+        child: Container(
+          padding: EdgeInsets.only(right:2.0, left:2.0),
+          child: Text('More',
+            style: TextStyle(
+                fontSize: 21 * MediaQuery.of(context).textScaleFactor,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.none
             ),
-          ],
-      );
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBottomSide(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildTitle(context),
+        buildExplanation(context),
+        buildMoreButton(context),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        border: Border.all(color: Colors.black, width: 2),
         color: this.widget.background,
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
-            buildTopSide(context, 5),
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: buildBottomSide(context, 2),
+            Expanded(
+                child: buildTopSide(context)
             ),
+            buildBottomSide(context),
           ],
         ),
     );

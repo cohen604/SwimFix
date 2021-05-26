@@ -3,6 +3,7 @@ package mainServer.Providers;
 import DTO.*;
 import Domain.PeriodTimeData.ISwimmingPeriodTime;
 import Domain.Streaming.*;
+import Domain.Summaries.FeedbacksSummary;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 import DomainLogic.Interpolations.IFactorySkeletonInterpolation;
@@ -11,6 +12,7 @@ import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import DomainLogic.Interpolations.ISkeletonInterpolation;
 import Domain.Drawing.IFactoryDraw;
+import Storage.Feedbacks.IFeedbackDao;
 import mainServer.Providers.Interfaces.IDetectProvider;
 import mainServer.Providers.Interfaces.IFeedbackProvider;
 import mainServer.Providers.Interfaces.IPeriodTimeProvider;
@@ -36,6 +38,7 @@ public class FeedbackProvider implements IFeedbackProvider {
     private IFactoryVideoHandler iFactoryVideoHandler;
     private IFactoryDraw iFactoryDraw;
     private IPeriodTimeProvider periodTimeProvider;
+    private IFeedbackDao dao;
 
     public FeedbackProvider(MLConnectionHandler mlConnectionHandler,
                             IFactoryFeedbackVideo iFactoryFeedbackVideo,
@@ -46,7 +49,8 @@ public class FeedbackProvider implements IFeedbackProvider {
                             ISkeletonsLoader iSkeletonsLoader,
                             IFactoryVideoHandler iFactoryVideoHandler,
                             IFactoryDraw iFactoryDraw,
-                            IPeriodTimeProvider periodTimeProvider) {
+                            IPeriodTimeProvider periodTimeProvider,
+                            IFeedbackDao dao) {
 
         this.mlConnectionHandler = mlConnectionHandler;
         this.iFactoryFeedbackVideo = iFactoryFeedbackVideo;
@@ -58,6 +62,7 @@ public class FeedbackProvider implements IFeedbackProvider {
         this.iFactoryVideoHandler = iFactoryVideoHandler;
         this.iFactoryDraw = iFactoryDraw;
         this.periodTimeProvider = periodTimeProvider;
+        this.dao = dao;
     }
 
     @Override
@@ -141,6 +146,12 @@ public class FeedbackProvider implements IFeedbackProvider {
             }
         }
         return null;
+    }
+
+    @Override
+    public FeedbacksSummary getSummary() {
+        Long feedbacks = this.dao.countFeedbacks();
+        return new FeedbacksSummary(feedbacks);
     }
 
     /***

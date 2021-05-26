@@ -9,8 +9,8 @@ import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Arguments/MultiReportScreenArguments.dart';
-import 'Holders/WebColors.dart';
-import 'PopUps/MessagePopUp.dart';
+import '../Holders/WebColors.dart';
+import '../PopUps/MessagePopUp.dart';
 
 class WebMultiReportsScreen extends StatefulWidget {
 

@@ -280,7 +280,7 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(_assetsHolder.getSwimmerBackGround()),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
           colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),
       ),

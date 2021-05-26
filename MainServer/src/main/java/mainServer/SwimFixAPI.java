@@ -14,6 +14,8 @@ import DomainLogic.PdfDrawing.PdfDrawer;
 import Domain.Drawing.IFactoryDraw;
 import ExernalSystems.MLConnectionHandler;
 import ExernalSystems.MLConnectionHandlerProxy;
+import Storage.Feedbacks.FeedbacksDao;
+import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.SwimmerDao;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
@@ -52,9 +54,11 @@ public class SwimFixAPI {
       IFactoryVideoHandler iFactoryVideoHandler =  new FactoryVideoHandler();
       IFactorySwimmingPeriodTime factorySwimmingPeriodTime = new FactorySwimmingPeriodTime();
       IPeriodTimeProvider iPeriodTimeProvider = new PeriodTimeProvider(factorySwimmingPeriodTime);
+      IFeedbackDao iFeedbackDao = new FeedbacksDao();
+
       IFeedbackProvider feedbackProvider = new FeedbackProvider(mlConnectionHandler, iFactoryFeedbackVideo,
               iFactorySkeletonInterpolation, completionBefore, iFactoryVideo, detectProvider, skeletonsLoaderFeedback,
-              iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider);
+              iFactoryVideoHandler, iFactoryDraw, iPeriodTimeProvider, iFeedbackDao);
 
       ISkeletonsLoader skeletonsLoaderLogic = new SkeletonsLoader();
 
@@ -127,6 +131,26 @@ public class SwimFixAPI {
 
    public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, DateDTO dateDTO, String path) {
       return logicManager.deleteFeedbackByID(userDTO, dateDTO, path);
+   }
+
+   public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {
+      return logicManager.findUsersThatNotAdmin(userDTO);
+   }
+
+   public ActionResult<List<UserDTO>> findUsersThatNotResearcher(UserDTO userDTO) {
+      return logicManager.findUsersThatNotResearcher(userDTO);
+   }
+
+   public ActionResult<Boolean> addAdmin(UserDTO admin, UserDTO addToUser) {
+      return logicManager.addAdmin(admin, addToUser);
+   }
+
+   public ActionResult<Boolean> addResearcher(UserDTO admin, UserDTO addToUser) {
+      return logicManager.addResearcher(admin, addToUser);
+   }
+
+   public ActionResult<SummaryDTO> getSummary(UserDTO admin) {
+      return logicManager.getSummary(admin);
    }
 
 }

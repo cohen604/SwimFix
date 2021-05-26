@@ -1,6 +1,8 @@
-package Storage.User;
+package Storage.User.Codecs;
 
 import Domain.UserData.*;
+import Storage.Admin.AdminDao;
+import Storage.Researcher.ResearcherDao;
 import Storage.Swimmer.SwimmerDao;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -18,10 +20,14 @@ public class UserCodec implements Codec<User> {
 
     private final CodecRegistry _codecRegistry;
     private SwimmerDao _swimmerDao;
+    private AdminDao _adminDao;
+    private ResearcherDao _researcherDao;
 
     public UserCodec(CodecRegistry codecRegistry) {
         _codecRegistry = codecRegistry;
         _swimmerDao = new SwimmerDao();
+        _adminDao = new AdminDao();
+        _researcherDao = new ResearcherDao();
     }
 
     @Override
@@ -43,11 +49,9 @@ public class UserCodec implements Codec<User> {
         if(objectName.equals("swimmer")) {
             String swimmerId = bsonReader.readString();
             swimmer = _swimmerDao.find(swimmerId);
-//            Codec<Swimmer> swimmerCodec = _codecRegistry.get(Swimmer.class);
-//            swimmer = decoderContext.decodeWithChildContext(swimmerCodec, bsonReader);
-//            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-//                objectName = bsonReader.readName();
-//            }
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         if(objectName.equals("coach")) {
@@ -59,16 +63,19 @@ public class UserCodec implements Codec<User> {
         }
 
         if(objectName.equals("admin")) {
-            Codec<Admin> adminCodec = _codecRegistry.get(Admin.class);
-            admin= decoderContext.decodeWithChildContext(adminCodec,bsonReader);
+            String adminId = bsonReader.readString();
+            admin = _adminDao.find(adminId);
             if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 objectName = bsonReader.readName();
             }
         }
 
         if(objectName.equals("researcher")) {
-            Codec<Researcher> researcherCodec = _codecRegistry.get(Researcher.class);
-            researcher = decoderContext.decodeWithChildContext(researcherCodec,bsonReader);
+            String researcherId = bsonReader.readString();
+            researcher = _researcherDao.find(researcherId);
+            if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                objectName = bsonReader.readName();
+            }
         }
 
         bsonReader.readEndDocument();
@@ -84,9 +91,6 @@ public class UserCodec implements Codec<User> {
         bsonWriter.writeBoolean("logged", user.isLogged());
 
         if(user.getSwimmer() != null) {
-//            Codec dateCodec = _codecRegistry.get(Swimmer.class);
-//            bsonWriter.writeName("swimmer");
-//            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getSwimmer());
             bsonWriter.writeString("swimmer", user.getSwimmer().getEmail());
             _swimmerDao.tryInsertThenUpdate(user.getSwimmer());
         }
@@ -98,15 +102,13 @@ public class UserCodec implements Codec<User> {
         }
 
         if(user.getAdmin() != null) {
-            Codec dateCodec = _codecRegistry.get(Admin.class);
-            bsonWriter.writeName("admin");
-            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getAdmin());
+            bsonWriter.writeString("admin", user.getAdmin().getEmail());
+            _adminDao.tryInsertThenUpdate(user.getAdmin());
         }
 
         if(user.getResearcher() != null) {
-            Codec dateCodec = _codecRegistry.get(Researcher.class);
-            bsonWriter.writeName("researcher");
-            encoderContext.encodeWithChildContext(dateCodec, bsonWriter, user.getResearcher());
+            bsonWriter.writeString("researcher", user.getResearcher().getEmail());
+            _researcherDao.tryInsertThenUpdate(user.getResearcher());
         }
 
         bsonWriter.writeEndDocument();

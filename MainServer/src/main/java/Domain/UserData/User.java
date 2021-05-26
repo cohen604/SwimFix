@@ -22,6 +22,8 @@ public class User implements IUser {
     private Admin _admin;
     private Researcher _researcher;
 
+    private final Object _adminLock;
+    private final Object _researcherLock;
     /***
      * Note: Only when register using this constructor
      * @param userDTO - user dto
@@ -35,23 +37,9 @@ public class User implements IUser {
 //        _coach = new Coach();
 //        _researcher = new Researcher();
 //        _admin = new Admin();
+        _adminLock = new Object();
+        _researcherLock = new Object();
         _pathManager = new PathManager(email, true);
-    }
-
-    public User(String uid, String email, String name) {
-        this.uid = uid;
-        this.email = email;
-        this.name = name;
-        this.logged = new AtomicBoolean(false);
-        _pathManager = new PathManager(email, false);
-    }
-
-    public User(String uid, String email, String name, boolean logged) {
-        this.uid = uid;
-        this.email = email;
-        this.name = name;
-        this.logged = new AtomicBoolean(logged);
-        _pathManager = new PathManager(email, false);
     }
 
     public User(String uid, String email, String name, boolean logged,
@@ -64,6 +52,8 @@ public class User implements IUser {
         this._coach = coach;
         this._admin = admin;
         this._researcher = researcher;
+        _adminLock = new Object();
+        _researcherLock = new Object();
         _pathManager = new PathManager(email, false);
     }
 
@@ -196,5 +186,41 @@ public class User implements IUser {
     @Override
     public IFeedbackVideo deleteFeedback(String feedbackPath) {
         return _swimmer.deleteFeedback(feedbackPath);
+    }
+
+    @Override
+    public boolean addAdmin() {
+        synchronized (_adminLock) {
+            if(_admin == null) {
+                _admin = new Admin(email);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void deleteAdmin() {
+        synchronized (_adminLock) {
+            _admin = null;
+        }
+    }
+
+    @Override
+    public boolean addResearcher() {
+        synchronized (_researcherLock) {
+            if(_researcher == null) {
+                _researcher = new Researcher(email);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void deleteResearcher() {
+        synchronized (_researcherLock) {
+            _researcher = null;
+        }
     }
 }

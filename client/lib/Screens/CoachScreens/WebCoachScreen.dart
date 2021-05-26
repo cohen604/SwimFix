@@ -1,9 +1,9 @@
 import 'package:client/Components/EmailInvitation.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Holders/WebColors.dart';
+import '../Holders/WebColors.dart';
+import 'Arguments/CoachScreenArguments.dart';
 
 class WebCoachScreen extends StatefulWidget {
 

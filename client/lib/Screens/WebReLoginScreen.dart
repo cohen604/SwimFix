@@ -1,22 +1,22 @@
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/UserPermissions.dart';
 import 'package:client/Domain/Users/WebUser.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
-import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
-import 'package:client/Screens/Arguments/SwimmerScreenArguments.dart';
-import 'package:client/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'Arguments/HistoryScreenArguments.dart';
+import 'CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'ResearcherScreens/Arguments/MultiReportScreenArguments.dart';
+import 'ResearcherScreens/Arguments/ReportScreenArguments.dart';
+import 'ResearcherScreens/Arguments/ResearcherScreenArguments.dart';
+import 'SwimmersScreens/Arguments/HistoryScreenArguments.dart';
 import 'PopUps/MessagePopUp.dart';
 import 'Holders/WebColors.dart';
+import 'SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
+import 'SwimmersScreens/Arguments/UploadScreenArguments.dart';
 
 class WebReLoginScreen extends StatefulWidget {
 

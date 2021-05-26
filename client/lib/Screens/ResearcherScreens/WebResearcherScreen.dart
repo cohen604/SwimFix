@@ -1,13 +1,13 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Screens/Arguments/ReportScreenArguments.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'Arguments/MultiReportScreenArguments.dart';
+import 'Arguments/ReportScreenArguments.dart';
+import 'Arguments/ResearcherScreenArguments.dart';
 
 class WebResearcherScreen extends StatefulWidget {
 
@@ -59,8 +59,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
               "Get single report for swimming video", onClickReport(context), Icons.upload_file),
           IconCardButton("Multi report",
               "Get multiply reports for swimming videos", onClickMultiReport(context), Icons.drive_folder_upload),
-          // IconCardButton("Edit Swimming error",
-          //     "Edit the angles of the swimming errors", null, Icons.edit),
+          IconCardButton("Edit Swimming error",
+              "Edit the angles of the swimming errors", null, Icons.edit),
         ],
       ),
     );

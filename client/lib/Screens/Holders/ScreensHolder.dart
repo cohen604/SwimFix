@@ -1,37 +1,43 @@
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
+import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
+import 'package:client/Screens/AdminScreens/WebAddAdminsScreen.dart';
+import 'package:client/Screens/AdminScreens/WebAddResearchersScreen.dart';
+import 'package:client/Screens/AdminScreens/WebAdminScreen.dart';
+import 'package:client/Screens/AdminScreens/WebStatisticsScreen.dart';
 import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
-import 'package:client/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
-import 'package:client/Screens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/WebCoachScreen.dart';
 import 'package:client/Screens/MobileAboutScreen.dart';
 import 'package:client/Screens/MobileDownloadScreen.dart';
+import 'package:client/Screens/ResearcherScreens/Arguments/MultiReportScreenArguments.dart';
+import 'package:client/Screens/ResearcherScreens/Arguments/ReportScreenArguments.dart';
+import 'package:client/Screens/ResearcherScreens/Arguments/ResearcherScreenArguments.dart';
+import 'package:client/Screens/ResearcherScreens/WebMultiReportsScreen.dart';
+import 'package:client/Screens/ResearcherScreens/WebReportScreen.dart';
+import 'package:client/Screens/ResearcherScreens/WebResearcherScreen.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryDayScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebSwimmerScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebUploadScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebViewFeedbackScreen.dart';
 import 'package:client/Screens/WebNoPermissionScreen.dart';
 import 'package:client/Screens/WebReLoginScreen.dart';
-import 'package:client/Screens/WebSwimmerHistoryScreen.dart';
-import 'package:client/Screens/Arguments/CoachScreenArguments.dart';
-import 'package:client/Screens/Arguments/MultiReportScreenArguments.dart';
-import 'package:client/Screens/Arguments/ResearcherScreenArguments.dart';
 import 'package:client/Screens/WebAboutScreen.dart';
-import 'package:client/Screens/WebCoachScreen.dart';
 import 'package:client/Screens/WebDownloadScreen.dart';
-import 'package:client/Screens/WebMultiReportsScreen.dart';
-import 'package:client/Screens/WebResearcherScreen.dart';
 import 'package:flutter/foundation.dart';
-import '../Arguments/HistoryScreenArguments.dart';
-import '../Arguments/ReportScreenArguments.dart';
-import 'package:client/Screens/WebViewFeedbackScreen.dart';
-import '../Arguments/ResearcherScreenArguments.dart';
-import '../Arguments/SwimmerScreenArguments.dart';
-import '../Arguments/UploadScreenArguments.dart';
-import '../Arguments/WelcomeScreenArguments.dart';
-import 'package:client/Screens/WebReportScreen.dart';
-import 'package:client/Screens/WebSwimmerScreen.dart';
-import 'package:client/Screens/WebUploadScreen.dart';
 import 'package:client/Screens/WebWelcomeScreen.dart';
 import 'package:flutter/cupertino.dart';
-import '../WebSwimmerHistoryDayScreen.dart';
-
 
 class ScreenHolder {
 
@@ -53,7 +59,7 @@ class ScreenHolder {
   }
 
   Widget getWelcomeScreen(WelcomeScreenArguments args) {
-    if(args == null || args.user == null || args.user.swimmer == null) {
+     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/welcome');
     }
     return new WebWelcomeScreen(args: args);
@@ -147,6 +153,46 @@ class ScreenHolder {
       return getNoPermissionScreen(args.user);
     }
     return new WebViewFeedbackScreen(arguments: args,);
+  }
+
+  Widget getAdminScreen(AdminScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAdminScreen(args);
+  }
+
+  Widget getAddAdminScreen(AddAdminsScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAddAdminsScreen(args);
+  }
+
+  Widget getAddResearcherScreen(AddResearcherScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebAddResearchersScreen(args);
+  }
+
+  Widget getStatisticsScreen(StatisticsScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/admin');
+    }
+    if(!args.user.permissions.isAdmin) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebStatisticsScreen(args);
   }
 
   Widget getReLoginScreen(String desPath) {

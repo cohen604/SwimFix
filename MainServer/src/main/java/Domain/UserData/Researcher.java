@@ -1,13 +1,14 @@
 package Domain.UserData;
 
-public class Researcher extends Swimmer {
+public class Researcher {
+
+    private String _email;
 
     public Researcher(String email) {
-        super(email);
+        _email = email;
     }
 
-    public Researcher(String email, String tag)
-    {
-        super(email);
+    public String getEmail() {
+        return _email;
     }
 }

@@ -1,5 +1,4 @@
 package Storage.Feedbacks;
-
 import Domain.Streaming.FeedbackVideo;
 import Storage.Dao;
 import Storage.DbContext;
@@ -11,15 +10,14 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 
-import java.util.LinkedList;
-import java.util.List;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
@@ -102,4 +100,17 @@ public class FeedbacksDao extends Dao<FeedbackVideo> implements IFeedbackDao {
         //TODO
         return false;
     }
+
+    @Override
+    public Long countFeedbacks() {
+        try {
+            MongoCollection<FeedbackVideo> collection = getCollection();
+            return collection.countDocuments();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

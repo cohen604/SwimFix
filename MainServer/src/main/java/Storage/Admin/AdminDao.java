@@ -1,9 +1,9 @@
-package Storage.Swimmer;
+package Storage.Admin;
 
-import Domain.UserData.Swimmer;
+import Domain.UserData.Admin;
+import Storage.Admin.Codecs.AdminCodec;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.Swimmer.Codecs.SwimmerCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -14,32 +14,34 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static com.mongodb.internal.async.client.AsyncMongoClients.getDefaultCodecRegistry;
 
-public class SwimmerDao extends Dao<Swimmer> implements ISwimmerDao {
+public class AdminDao extends Dao<Admin> implements IAdminDao {
 
     @Override
-    protected MongoCollection<Swimmer> getCollection() {
-        CodecRegistry codecRegistryUser =
+    protected MongoCollection<Admin> getCollection() {
+        CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new SwimmerCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(
+                                new AdminCodec()
+                        ), //here we define the codec
                         getDefaultCodecRegistry());
 
         MongoClientSettings settings = MongoClientSettings.builder()
-                .codecRegistry(codecRegistryUser).build();
+                .codecRegistry(codecRegistry).build();
 
         // here we define the connection
         MongoClient mongoClient = MongoClients.create(settings);
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
-        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_SWIMMERS, Swimmer.class);
+        return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_ADMINS, Admin.class);
     }
 
     @Override
-    public Swimmer update(Swimmer value) {
+    public Admin update(Admin value) {
         return defaultUpdate(value, value.getEmail());
     }
 
     @Override
-    public Swimmer tryInsertThenUpdate(Swimmer swimmer) {
-        return defaultTryInsertThenUpdate(swimmer, swimmer.getEmail());
+    public Admin tryInsertThenUpdate(Admin admin) {
+        return defaultTryInsertThenUpdate(admin, admin.getEmail());
     }
 }
