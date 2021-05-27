@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
@@ -10,6 +11,7 @@ import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
 import DTO.SwimmerDTOs.DateDTO;
 import DTO.SwimmerDTOs.OpenTeamResponseDTO;
+import DTO.SwimmerDTOs.SwimmerInvitationDTO;
 import DTO.UserDTOs.UserDTO;
 import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.StatisticsData.IStatistic;
@@ -17,7 +19,10 @@ import Domain.Streaming.*;
 import Domain.Summaries.FeedbacksSummary;
 import Domain.Summaries.UsersSummary;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
+import Domain.UserData.Interfaces.IInvitation;
 import Domain.UserData.Interfaces.IUser;
+import Domain.UserData.Invitation;
+import Domain.UserData.SwimmerInvitation;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import Storage.DbContext;
 import mainServer.Providers.Interfaces.*;
@@ -314,17 +319,23 @@ public class LogicManager {
      * @param to - the email to send the invitation
      * @return true if the email send, other wise false
      */
-    public ActionResult<Boolean> invite(UserDTO userDTO, String to) {
+    public ActionResult<InvitationResponseDTO> invite(UserDTO userDTO, String to) {
         IUser user = _userProvider.getUser(userDTO);
         try {
-            if (user != null
-//                && user.isLogged()
-//                && user.isCoach()
-                && !to.isEmpty()
-                && to.contains("@")) {
-                if(_emailSenderProvider.sendInvitationEmail(user.getEmail(), to)) {
-                    return new ActionResult<>(Response.SUCCESS, true);
+            if(user!=null
+                    && user.isLogged()
+                    && user.isCoach()
+                    && !to.isEmpty()
+                    && to.contains("@")) {
+                IUser userToSendTo = _userProvider.findUser(to);
+                InvitationResponseDTO responseDTO = new InvitationResponseDTO();
+                if(userToSendTo!=null && _userProvider.sendInvitation(user, userToSendTo)) {
+                    responseDTO.setSendInvitationToUser(true);
                 }
+                else if(_emailSenderProvider.sendInvitationEmail(user.getEmail(), to)) {
+                    responseDTO.setSendEmailToUser(true);
+                }
+                return new ActionResult<>(Response.SUCCESS, responseDTO);
             }
         }
         catch (Exception e) {
@@ -518,7 +529,9 @@ public class LogicManager {
     public ActionResult<SummaryDTO> getSummary(UserDTO adminDTO) {
         IUser admin = _userProvider.getUser(adminDTO);
         try {
-            if(admin!=null && admin.isLogged()) {
+            if(admin!=null
+                    && admin.isAdmin()
+                    && admin.isLogged()) {
                 UsersSummary usersSummary = _userProvider.getSummary();
                 FeedbacksSummary feedbacksSummary = _feedbackProvider.getSummary();
                 SummaryDTO summaryDTO = new SummaryDTO(
@@ -552,7 +565,9 @@ public class LogicManager {
     public ActionResult<OpenTeamResponseDTO> addCoach(UserDTO coachDTO, String teamName) {
         IUser coach = _userProvider.getUser(coachDTO);
         try {
-            if(coach!=null && coach.isLogged()) {
+            if(coach!=null
+                    && coach.isCoach()
+                    && coach.isLogged()) {
                 OpenTeamResponseDTO responseDTO = new OpenTeamResponseDTO(teamName);
                 if(coach.isCoach()) {
                     responseDTO.setAlreadyCoach(true);
@@ -570,6 +585,68 @@ public class LogicManager {
             e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return the pending invitations of a swimmer
+     * @param userDTO - the user
+     * @return list of the swimmer invitations
+     */
+    public ActionResult<List<SwimmerInvitationDTO>> getPendingInvitations(UserDTO userDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if (user != null
+                    && user.isLogged()
+                    && user.isSwimmer()) {
+                Collection<? extends IInvitation> collection = user.getInvitations();
+                if(collection!=null) {
+                    List<SwimmerInvitationDTO> output = convertToSwimmerInvitation(collection);
+                    return new ActionResult<>(Response.SUCCESS, output);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return the invitations history of a swimmer
+     * @param userDTO - the user
+     * @return list of the swimmer invitations history
+     */
+    public ActionResult<List<SwimmerInvitationDTO>> getInvitationsHistory(UserDTO userDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if (user != null
+                    && user.isLogged()
+                    && user.isSwimmer()) {
+                Collection<? extends IInvitation> collection = user.getInvitationsHistory();
+                if(collection!=null) {
+                    List<SwimmerInvitationDTO> output = convertToSwimmerInvitation(collection);
+                    return new ActionResult<>(Response.SUCCESS, output);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function convert a collection of invitations to swimmer invitation dto
+     * @param collection the collection to convert
+     * @return the list of swimmer invitation dto
+     */
+    private List<SwimmerInvitationDTO> convertToSwimmerInvitation(Collection<? extends IInvitation> collection) {
+        List<SwimmerInvitationDTO> output = new LinkedList<>();
+        for (IInvitation invitation : collection) {
+            SwimmerInvitationDTO swimmerInvitationDTO = new SwimmerInvitationDTO(
+                    invitation.getTeamId(),
+                    invitation.getCreationTime());
+            output.add(swimmerInvitationDTO);
+        }
+        return output;
     }
 }
 

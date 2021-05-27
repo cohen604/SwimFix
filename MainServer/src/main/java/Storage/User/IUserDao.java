@@ -1,5 +1,6 @@
 package Storage.User;
 
+import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 
 import java.util.Collection;
@@ -43,4 +44,5 @@ public interface IUserDao {
 
     User tryInsertThenUpdate(User user);
 
+    User findUserByEmail(String email);
 }

@@ -63,7 +63,7 @@ public class SwimmerCodec implements Codec<Swimmer> {
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String invitationId = bsonReader.readString();
             Invitation invitation = _invitationDao.find(invitationId);
-            swimmerInvitations .put(invitationId, new SwimmerInvitation(invitation));
+            swimmerInvitations.put(invitationId, new SwimmerInvitation(invitation));
         }
         bsonReader.readEndArray();
         return swimmerInvitations;

@@ -3,6 +3,9 @@ import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;
+import Domain.UserData.Invitation;
+import Domain.UserData.Swimmer;
+import Domain.UserData.Team;
 import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
 import Storage.Team.ITeamDao;
@@ -18,13 +21,13 @@ public class UserProvider implements IUserProvider {
      * The hash map key: user uid, the values is the user
      */
     private ConcurrentHashMap<String, User> _users;
-    private IUserDao _dao;
+    private IUserDao _userDao;
     private ISwimmerDao _swimmerDao;
     private ITeamDao _teamDao;
 
     public UserProvider(IUserDao dao, ISwimmerDao swimmerDao, ITeamDao teamDao) {
         _users = new ConcurrentHashMap<>();
-        _dao = dao;
+        _userDao = dao;
         _swimmerDao = swimmerDao;
         _teamDao = teamDao;
     }
@@ -36,7 +39,7 @@ public class UserProvider implements IUserProvider {
             User admin = new User(userDTO);
             admin.addAdmin();
             admin.addResearcher();
-            _dao.tryInsertThenUpdate(admin);
+            _userDao.tryInsertThenUpdate(admin);
         }
         else {
             if(!user.isSwimmer()){
@@ -48,7 +51,7 @@ public class UserProvider implements IUserProvider {
             if (!user.isResearcher()) {
                 user.addResearcher();
             }
-            _dao.update(_users.get(user.getUid()));
+            _userDao.update(_users.get(user.getUid()));
         }
     }
 
@@ -56,9 +59,9 @@ public class UserProvider implements IUserProvider {
     public boolean login(UserDTO userDTO) {
         User user = _users.get(userDTO.getUid());
         if(user == null) {
-            user = _dao.find(userDTO.getUid());
+            user = _userDao.find(userDTO.getUid());
             if(user == null) {
-                user = _dao.insert(new User(userDTO));
+                user = _userDao.insert(new User(userDTO));
                 if(user == null) {
                     return false;
                 }
@@ -68,7 +71,7 @@ public class UserProvider implements IUserProvider {
             }
         }
         if(user.login()) {
-            return _dao.update(user) != null;
+            return _userDao.update(user) != null;
         }
         return false;
     }
@@ -78,7 +81,7 @@ public class UserProvider implements IUserProvider {
         User user = _users.get(userDTO.getUid());
         if(user != null) {
             if(user.logout()){
-                return _dao.update(user) != null;
+                return _userDao.update(user) != null;
             }
         }
         return false;
@@ -88,7 +91,7 @@ public class UserProvider implements IUserProvider {
     public IUser getUser(UserDTO userDTO) {
         User user = _users.get(userDTO.getUid());
         if(user == null) {
-            user = _dao.find(userDTO.getUid());
+            user = _userDao.find(userDTO.getUid());
             if(user != null) {
                 _users.putIfAbsent(user.getUid(), user);
             }
@@ -117,13 +120,13 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean reload() {
         _users = new ConcurrentHashMap<>();
-        List<User> users = _dao.getAll();
+        List<User> users = _userDao.getAll();
         if(users == null) {
             return false;
         }
         for (User user: users) {
             user.logout();
-            _dao.update(user);
+            _userDao.update(user);
             // no need to hold them in the cache only need to logout them and update
             //_users.put(user.getUid(), user);
         }
@@ -157,7 +160,7 @@ public class UserProvider implements IUserProvider {
     @Override
     public Collection<? extends IUser> findUsersThatNotAdmin(IUser user) {
         if(user.isLogged() && user.isAdmin()) {
-            return _dao.findUsersThatNotAdmin();
+            return _userDao.findUsersThatNotAdmin();
         }
         return null;
     }
@@ -165,7 +168,7 @@ public class UserProvider implements IUserProvider {
     @Override
     public Collection<? extends IUser> findUsersThatNotResearcher(IUser user) {
         if(user.isLogged() && user.isAdmin()) {
-            return _dao.findUsersThatNotResearcher();
+            return _userDao.findUsersThatNotResearcher();
         }
         return null;
     }
@@ -177,7 +180,7 @@ public class UserProvider implements IUserProvider {
                 && admin.isAdmin()
                 && user !=null) {
             if(user.addAdmin()) {
-                if(_dao.update(user) != null) {
+                if(_userDao.update(user) != null) {
                     return true;
                 }
                 else  {
@@ -195,7 +198,7 @@ public class UserProvider implements IUserProvider {
                 && admin.isAdmin()
                 && user !=null) {
             if(user.addResearcher()) {
-                if(_dao.update(user) != null) {
+                if(_userDao.update(user) != null) {
                     return true;
                 }
                 else  {
@@ -208,16 +211,16 @@ public class UserProvider implements IUserProvider {
 
     @Override
     public UsersSummary getSummary() {
-        Long users = _dao.countUsers();
-        Long loggedUsers = _dao.countLoggedUsers();
-        Long swimmers = _dao.countSwimmers();
-        Long loggedSwimmers = _dao.countLoggedSwimmers();
-        Long coaches = _dao.countCoaches();
-        Long loggedCoaches = _dao.countLoggedCoaches();
-        Long admins = _dao.countAdmins();
-        Long loggedAdmins = _dao.countLoggedAdmins();
-        Long researchers = _dao.countResearchers();
-        Long loggedResearchers = _dao.countLoggedResearchers();
+        Long users = _userDao.countUsers();
+        Long loggedUsers = _userDao.countLoggedUsers();
+        Long swimmers = _userDao.countSwimmers();
+        Long loggedSwimmers = _userDao.countLoggedSwimmers();
+        Long coaches = _userDao.countCoaches();
+        Long loggedCoaches = _userDao.countLoggedCoaches();
+        Long admins = _userDao.countAdmins();
+        Long loggedAdmins = _userDao.countLoggedAdmins();
+        Long researchers = _userDao.countResearchers();
+        Long loggedResearchers = _userDao.countLoggedResearchers();
         return new UsersSummary(
                 users,
                 loggedUsers,
@@ -238,13 +241,53 @@ public class UserProvider implements IUserProvider {
         if(!currentUser.isCoach()
                 && !_teamDao.isTeamExists(teamName)
                 && user.addCoach(teamName)) {
-            if(_dao.update(currentUser) != null) {
+            if(_userDao.update(currentUser) != null) {
                 return true;
             }
             else {
                 user.deleteCoach();
             }
 
+        }
+        return false;
+    }
+
+    @Override
+    public IUser findUser(String email) {
+        User output = _userDao.findUserByEmail(email);
+        if(output!=null) {
+            _users.putIfAbsent(output.getUid(), output);
+        }
+        return output;
+    }
+
+    @Override
+    public boolean sendInvitation(IUser user, IUser sendTo) {
+        User current = _users.get(user.getUid());
+        User userToSendTo = _users.get(user.getUid());
+        if(current!=null
+                && userToSendTo !=null
+                && current.isCoach()
+                && current.isLogged()
+                && userToSendTo.isSwimmer()) {
+            Team team = current.getCoach().getTeam();
+            Swimmer swimmer = userToSendTo.getSwimmer();
+            Invitation invitation = team.addInvitation(swimmer);
+            if(invitation!=null) {
+                if(_teamDao.update(team)!=null) {
+                    if (_swimmerDao.update(swimmer) != null) {
+                        return true;
+                    } else {
+                        team.deleteInvitation(invitation);
+                        swimmer.deleteInvitation(invitation);
+                        _teamDao.update(team);
+                    }
+                }
+                else {
+                    team.deleteInvitation(invitation);
+                    swimmer.deleteInvitation(invitation);
+                }
+            }
         }
         return false;
     }

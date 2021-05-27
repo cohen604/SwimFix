@@ -10,4 +10,5 @@ public interface ITeamDao {
 
     boolean isTeamExists(String teamId);
 
+    Team update(Team value);
 }

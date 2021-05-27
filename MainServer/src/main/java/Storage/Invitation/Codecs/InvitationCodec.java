@@ -46,4 +46,5 @@ public class InvitationCodec implements Codec<Invitation> {
     public Class<Invitation> getEncoderClass() {
         return Invitation.class;
     }
+
 }

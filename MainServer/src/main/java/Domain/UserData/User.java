@@ -2,6 +2,8 @@ package Domain.UserData;
 
 import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.UserData.Interfaces.IInvitation;
+import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Interfaces.IUser;
 
 import java.time.LocalDateTime;
@@ -239,5 +241,21 @@ public class User implements IUser {
         synchronized (_coachLock) {
             _coach = null;
         }
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitations() {
+        if(_swimmer!=null) {
+            return _swimmer.getInvitations();
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitationsHistory() {
+        if(_swimmer!=null) {
+            return _swimmer.getInvitationsHistory();
+        }
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import Domain.UserData.Invitation;
 import Storage.Dao;
 import Storage.DbContext;
 import Storage.Invitation.Codecs.InvitationCodec;
+import Storage.Invitation.Codecs.SwimmerInvitationCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -20,7 +21,9 @@ public class InvitationDao extends Dao<Invitation> implements IInvitationDao {
     protected MongoCollection<Invitation> getCollection() {
         CodecRegistry codecRegistry =
                 CodecRegistries.fromRegistries(
-                        CodecRegistries.fromCodecs(new InvitationCodec()), //here we define the codec
+                        CodecRegistries.fromCodecs(
+                                new InvitationCodec(),
+                                new SwimmerInvitationCodec()), //here we define the codec
                         getDefaultCodecRegistry());
 
         MongoClientSettings settings = MongoClientSettings.builder()

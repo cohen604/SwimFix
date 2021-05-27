@@ -121,4 +121,33 @@ public class SwimmerController {
         return null;
     }
 
+    @PostMapping("/invitations")
+    @CrossOrigin(origins = "*")
+    public String getPendingInvitations(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received invitations request");
+            ActionResult<List<SwimmerInvitationDTO>> response = swimFixAPI.getPendingInvitations(userDTO);
+            System.out.println("send invitations");
+            return  response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitations/history")
+    @CrossOrigin(origins = "*")
+    public String getInvitationHistory(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received invitations history request");
+            ActionResult<List<SwimmerInvitationDTO>> response = swimFixAPI.getInvitationsHistory(userDTO);
+            System.out.println("send invitations history");
+            return  response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

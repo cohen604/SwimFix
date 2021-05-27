@@ -89,7 +89,8 @@ public class TeamCodec implements Codec<Team> {
         bsonWriter.writeStartArray("invitations");
         for(Invitation invitation: team.getInvitations()) {
             bsonWriter.writeString(invitation.getId());
-            this.invitiationDao.tryInsertThenUpdate(invitation);
+            // when team can delete invitation make this and make sure the swimmer and team invitation always the same
+            //this.invitiationDao.tryInsertThenUpdate(invitation);
         }
         bsonWriter.writeEndArray();
 

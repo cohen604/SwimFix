@@ -254,4 +254,17 @@ public class UserDao extends Dao<User> implements IUserDao{
         return defaultTryInsertThenUpdate(user, user.getUid());
     }
 
+    @Override
+    public User findUserByEmail(String email) {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query = Filters.eq("email", email);
+            return collection.find(query).first();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -6,6 +6,7 @@ import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
 import 'package:client/Domain/Team/AddingTeamResponse.dart';
+import 'package:client/Domain/Team/InvitationResponse.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
@@ -172,22 +173,22 @@ class LogicManager {
     return await this.connectionHandler.downloadFile(path, map);
   }
 
-  Future<bool> sendInvitationEmail(Swimmer swimmer, String email) async {
+  Future<InvitationResponse> sendInvitationEmail(Swimmer swimmer, String email) async {
     String path = '/coach/invite';
     Map<String, dynamic> map = swimmer.toJson();
     map['to'] = email;
     try {
       ServerResponse response = await connectionHandler.postMessage(
           path, map);
-      if (response != null && response.isSuccess() && response.value) {
-        return true;
+      if (response != null && response.isSuccess()) {
+        return InvitationResponse.fromJson(response.value as Map);
       }
     }
     catch(e) {
       print(e);
       print('error in $path with ${e.toString()}');
     }
-    return false;
+    return null;
   }
 
   /// get the days a swimmer swim

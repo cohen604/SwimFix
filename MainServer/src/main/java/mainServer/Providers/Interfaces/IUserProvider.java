@@ -33,5 +33,9 @@ public interface IUserProvider {
     UsersSummary getSummary();
 
     boolean addCoach(IUser user, String teamName);
+
+    IUser findUser(String email);
+
+    boolean sendInvitation(IUser user, IUser sendTo);
 }
 

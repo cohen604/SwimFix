@@ -62,4 +62,7 @@ public interface IUser {
 
     void deleteCoach();
 
+    Collection<? extends IInvitation> getInvitations();
+
+    Collection<? extends  IInvitation> getInvitationsHistory();
 }

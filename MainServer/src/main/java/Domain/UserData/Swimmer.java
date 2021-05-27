@@ -1,5 +1,6 @@
 package Domain.UserData;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.UserData.Interfaces.IInvitation;
 import Domain.UserData.Interfaces.ISwimmer;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public class Swimmer implements ISwimmer {
     private String _email;
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
     private String _teamId;
-    private ConcurrentHashMap<String, SwimmerInvitation> _pendingInvitations;
+    private ConcurrentHashMap<String, SwimmerInvitation> _pendingInvitations; //key => invitationsId
     private ConcurrentHashMap<String, Invitation> _invitationHistory;
 
     public Swimmer(String email) {
@@ -49,8 +50,29 @@ public class Swimmer implements ISwimmer {
         return _feedbacks.remove(feedbackPath);
     }
 
+    @Override
     public String getEmail() {
         return _email;
+    }
+
+    @Override
+    public boolean addInvitation(Invitation invitation) {
+        return _pendingInvitations.putIfAbsent(invitation.getId(), new SwimmerInvitation(invitation)) == null;
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitations() {
+        return _pendingInvitations.values();
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitationsHistory() {
+        return _invitationHistory.values();
+    }
+
+
+    public void deleteInvitation(Invitation invitation) {
+        _pendingInvitations.remove(invitation.getId());
     }
 
     public Collection<IFeedbackVideo> getFeedbacks() {

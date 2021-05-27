@@ -1,8 +1,10 @@
 package Domain.UserData;
 
+import Domain.UserData.Interfaces.IInvitation;
+
 import java.time.LocalDateTime;
 
-public class Invitation {
+public class Invitation implements IInvitation {
 
     private String id;
     private String teamId;

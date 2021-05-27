@@ -2,10 +2,11 @@ package Domain.UserData;
 import Domain.UserData.Interfaces.ISwimmer;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Team {
 
@@ -14,7 +15,7 @@ public class Team {
     private String coachId;
     private HashMap<String, ISwimmer> swimmers;
     private AtomicInteger sendInvitations;
-    private List<Invitation> invitations;
+    private ConcurrentHashMap<String, Invitation> invitations;
 
     public Team(String name, String coachId) {
         this.name = name;
@@ -22,7 +23,7 @@ public class Team {
         this.openDate = LocalDateTime.now();
         this.swimmers = new HashMap<>();
         this.sendInvitations = new AtomicInteger(0);
-        this.invitations = new LinkedList<>();
+        this.invitations = new ConcurrentHashMap<>();
     }
 
     public Team(
@@ -37,7 +38,10 @@ public class Team {
         this.coachId = coachId;
         this.swimmers = swimmers;
         this.sendInvitations = new AtomicInteger(sendInvitations);
-        this.invitations = invitations;
+        this.invitations = new ConcurrentHashMap<>();
+        for (Invitation invitation : invitations) {
+            this.invitations.putIfAbsent(invitation.getId(), invitation);
+        }
     }
 
     public String getName() {
@@ -60,7 +64,25 @@ public class Team {
         return sendInvitations.get();
     }
 
-    public List<Invitation> getInvitations() {
-        return invitations;
+    public Collection<Invitation> getInvitations() {
+        return invitations.values();
+    }
+
+    public Invitation addInvitation(ISwimmer swimmer) {
+        String id = this.name + sendInvitations.getAndIncrement();
+        Invitation invitation = new Invitation(id, this.name, swimmer.getEmail());
+        if(this.invitations.putIfAbsent(id, invitation) == null) {
+            if(swimmer.addInvitation(invitation)) {
+                return invitation;
+            }
+            else {
+                this.invitations.remove(id);
+            }
+        }
+        return null;
+    }
+
+    public void deleteInvitation(Invitation invitation) {
+        this.invitations.remove(invitation.getId());
     }
 }
