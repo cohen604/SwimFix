@@ -143,9 +143,43 @@ public class SwimmerController {
             System.out.println("received invitations history request");
             ActionResult<List<SwimmerInvitationDTO>> response = swimFixAPI.getInvitationsHistory(userDTO);
             System.out.println("send invitations history");
-            return  response.toJson();
+            return response.toJson();
         }
         catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitation/approve")
+    @CrossOrigin(origins = "*")
+    public String approveInvitation(@RequestBody SwimmerInvitationUpdateDTO updateDTO) {
+        try {
+            System.out.println("received approve invitation");
+            UserDTO userDTO = updateDTO.getUserDTO();
+            String invitationId = updateDTO.getInvitationId();
+            ActionResult<Boolean> response = swimFixAPI.approveInvitation(userDTO, invitationId);
+            System.out.println("send approve invitation");
+            return response.toJson();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitation/deny")
+    @CrossOrigin(origins = "*")
+    public String denyInvitation(@RequestBody SwimmerInvitationUpdateDTO updateDTO) {
+        try {
+            System.out.println("received deny invitation");
+            UserDTO userDTO = updateDTO.getUserDTO();
+            String invitationId = updateDTO.getInvitationId();
+            ActionResult<Boolean> response = swimFixAPI.denyInvitation(userDTO, invitationId);
+            System.out.println("send deny invitation");
+            return response.toJson();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         return null;

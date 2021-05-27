@@ -182,4 +182,12 @@ public class SwimFixAPI {
    public ActionResult<List<SwimmerInvitationDTO>> getInvitationsHistory(UserDTO userDTO) {
       return logicManager.getInvitationsHistory(userDTO);
    }
+
+   public ActionResult<Boolean> approveInvitation(UserDTO userDTO, String invitationId) {
+      return logicManager.approveInvitation(userDTO, invitationId);
+   }
+
+   public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
+      return logicManager.denyInvitation(userDTO, invitationId);
+   }
 }

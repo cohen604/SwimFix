@@ -21,8 +21,6 @@ import Domain.Summaries.UsersSummary;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IInvitation;
 import Domain.UserData.Interfaces.IUser;
-import Domain.UserData.Invitation;
-import Domain.UserData.SwimmerInvitation;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import Storage.DbContext;
 import mainServer.Providers.Interfaces.*;
@@ -642,11 +640,50 @@ public class LogicManager {
         List<SwimmerInvitationDTO> output = new LinkedList<>();
         for (IInvitation invitation : collection) {
             SwimmerInvitationDTO swimmerInvitationDTO = new SwimmerInvitationDTO(
+                    invitation.getId(),
                     invitation.getTeamId(),
                     invitation.getCreationTime());
             output.add(swimmerInvitationDTO);
         }
         return output;
+    }
+
+    public ActionResult<Boolean> approveInvitation(UserDTO userDTO, String invitationId) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user!=null
+                    && user.isSwimmer()
+                    && user.isLogged()) {
+                boolean approved = _userProvider.approveInvitation(user, invitationId);
+                if(approved) {
+                    return new ActionResult<>(Response.FAIL, true);
+                }
+                return new ActionResult<>(Response.FAIL, false);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user!=null
+                    && user.isSwimmer()
+                    && user.isLogged()) {
+                boolean approved = _userProvider.denyInvitation(user, invitationId);
+                if(approved) {
+                    return new ActionResult<>(Response.FAIL, true);
+                }
+                return new ActionResult<>(Response.FAIL, false);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
     }
 }
 

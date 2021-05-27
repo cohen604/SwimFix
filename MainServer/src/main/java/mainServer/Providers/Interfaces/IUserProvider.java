@@ -37,5 +37,9 @@ public interface IUserProvider {
     IUser findUser(String email);
 
     boolean sendInvitation(IUser user, IUser sendTo);
+
+    boolean approveInvitation(IUser user, String invitationId);
+
+    boolean denyInvitation(IUser user, String invitationId);
 }
 

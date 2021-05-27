@@ -292,4 +292,25 @@ public class UserProvider implements IUserProvider {
         return false;
     }
 
+    @Override
+    public boolean approveInvitation(IUser user, String invitationId) {
+        User current = _users.get(user.getUid());
+        if(current!=null
+                && current.isSwimmer()
+                && current.isLogged()) {
+            Swimmer swimmer = current.getSwimmer();
+            Invitation invitation = swimmer.approveInvitation(invitationId);
+            if(invitation!=null) {
+                //TODO add team cache
+                Team team = _teamDao.find(invitation.getTeamId());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean denyInvitation(IUser user, String invitationId) {
+        return false;
+    }
+
 }
