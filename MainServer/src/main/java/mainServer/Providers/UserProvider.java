@@ -379,4 +379,16 @@ public class UserProvider implements IUserProvider {
         return false;
     }
 
+    @Override
+    public String getMyTeam(IUser iUser) {
+        User user = _users.get(iUser.getUid());
+        if(user!=null
+                && user.isLogged()
+                && user.isSwimmer()) {
+            Swimmer swimmer = user.getSwimmer();
+            return swimmer.getTeamId();
+        }
+        return null;
+    }
+
 }

@@ -44,5 +44,6 @@ public interface IUserProvider {
 
     boolean leaveTeam(IUser user, String teamId);
 
+    String getMyTeam(IUser iUser);
 }
 

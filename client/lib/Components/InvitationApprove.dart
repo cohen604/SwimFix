@@ -151,7 +151,7 @@ class _InvitationApproveState extends State<InvitationApprove> {
           buildText(context, 'Something is broken.\n'
               'Maybe the you don\'t have permissions or the servers are down.\n'
               'For more information contact swimAnalytics@gmail.com',
-              16, Colors.black, FontWeight.normal,
+              18, Colors.black, FontWeight.normal,
               textAlign: TextAlign.center),
         ],
     );
@@ -193,18 +193,15 @@ class _InvitationApproveState extends State<InvitationApprove> {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          buildText(context, 'You ${getSuccessString()} ${this.widget.invitation.teamId}', 18, Colors.black, FontWeight.normal),
+          buildText(context, 'You ${getSuccessString()} ${this.widget.invitation.teamId}', 21, Colors.black, FontWeight.normal),
           SizedBox(height: 5.0,),
-          Align(
-            alignment: Alignment.topRight,
-            child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  this.widget.onSuccess();
-                },
-                child: buildText(context, 'ok', 18, Colors.blueAccent, FontWeight.normal)
-            ),
-          )
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                this.widget.onSuccess();
+              },
+              child: buildText(context, 'Ok', 21, Colors.blueAccent, FontWeight.normal)
+          ),
         ],
     );
   }

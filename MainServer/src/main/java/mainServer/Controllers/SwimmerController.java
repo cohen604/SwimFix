@@ -185,6 +185,21 @@ public class SwimmerController {
         return null;
     }
 
+    @PostMapping("/team")
+    @CrossOrigin(origins = "*")
+    public String getMyTeam(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received my team");
+            ActionResult<MyTeamDTO> response = swimFixAPI.getMyTeam(userDTO);
+            System.out.println("send my team");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @PostMapping("/team/leave")
     @CrossOrigin(origins = "*")
     public String leaveTeam(@RequestBody SwimmerLeaveTeamDTO leaveTeamDTO) {

@@ -10,6 +10,7 @@ import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
 import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.MyTeamDTO;
 import DTO.SwimmerDTOs.OpenTeamResponseDTO;
 import DTO.SwimmerDTOs.SwimmerInvitationDTO;
 import DTO.UserDTOs.UserDTO;
@@ -696,10 +697,31 @@ public class LogicManager {
             if(user!=null) {
                 boolean removed = _userProvider.leaveTeam(user, teamId);
                 if(removed) {
-                    return new ActionResult<>(Response.FAIL, true);
+                    return new ActionResult<>(Response.SUCCESS, true);
                 }
-                return new ActionResult<>(Response.FAIL, false);
+                return new ActionResult<>(Response.SUCCESS, false);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 
+    /**
+     * The function return the team name of the swimmer
+     * @param userDTO - the swimmer
+     * @return the team name.
+     */
+    public ActionResult<MyTeamDTO> getMyTeam(UserDTO userDTO) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user!=null) {
+                String teamName = _userProvider.getMyTeam(user);
+                if(teamName!=null) {
+                    return new ActionResult<>(Response.SUCCESS, new MyTeamDTO(true, teamName));
+                }
+                return new ActionResult<>(Response.SUCCESS, new MyTeamDTO(false, ""));
             }
         }
         catch (Exception e) {

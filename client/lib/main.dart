@@ -2,6 +2,7 @@ import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.d
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
@@ -92,6 +93,10 @@ class MyApp extends StatelessWidget {
         '/swimmer/invitations/history': (context) {
           InvitationHistoryArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getInvitationsHistoryScreen(args);
+        },
+        '/swimmer/team': (context) {
+          MyTeamArguments args =  ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getMyTeamScreen(args);
         },
         '/researcher': (context) {
           ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;

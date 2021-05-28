@@ -23,6 +23,7 @@ import 'package:client/Screens/ResearcherScreens/WebReportScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebResearcherScreen.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
@@ -30,6 +31,7 @@ import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.
 import 'package:client/Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
 import 'package:client/Screens/SwimmersScreens/WebInvitationHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebMyTeamScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebPendingInvitationsScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryDayScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryScreen.dart';
@@ -231,6 +233,16 @@ class ScreenHolder {
     return new WebInvitationHistoryScreen(args);
   }
 
+  Widget getMyTeamScreen(MyTeamArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebNyTeamScreen(args);
+  }
+
   Widget getReLoginScreen(String desPath) {
     ReLoginScreenArguments args = new ReLoginScreenArguments(desPath);
     return new WebReLoginScreen(args: args);
@@ -245,4 +257,5 @@ class ScreenHolder {
     return (defaultTargetPlatform == TargetPlatform.iOS
         || defaultTargetPlatform == TargetPlatform.android);
   }
+
 }

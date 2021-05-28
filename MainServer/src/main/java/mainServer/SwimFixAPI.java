@@ -10,6 +10,7 @@ import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
 import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.MyTeamDTO;
 import DTO.SwimmerDTOs.OpenTeamResponseDTO;
 import DTO.SwimmerDTOs.SwimmerInvitationDTO;
 import DTO.UserDTOs.UserDTO;
@@ -193,5 +194,9 @@ public class SwimFixAPI {
 
    public ActionResult<Boolean> leaveTeam(UserDTO userDTO, String teamId) {
       return logicManager.leaveTeam(userDTO, teamId);
+   }
+
+   public ActionResult<MyTeamDTO> getMyTeam(UserDTO userDTO) {
+      return logicManager.getMyTeam(userDTO);
    }
 }
