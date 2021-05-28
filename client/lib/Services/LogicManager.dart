@@ -180,6 +180,9 @@ class LogicManager {
     try {
       ServerResponse response = await connectionHandler.postMessage(
           path, map);
+      print(response);
+      print(response.isSuccess());
+      print(response.value);
       if (response != null && response.isSuccess()) {
         return InvitationResponse.fromJson(response.value as Map);
       }

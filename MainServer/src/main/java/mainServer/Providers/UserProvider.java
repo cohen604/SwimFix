@@ -41,12 +41,10 @@ public class UserProvider implements IUserProvider {
             User admin = new User(userDTO);
             admin.addAdmin();
             admin.addResearcher();
+
             _userDao.tryInsertThenUpdate(admin);
         }
         else {
-            if(!user.isSwimmer()){
-
-            }
             if (!user.isAdmin()) {
                 user.addAdmin();
             }
@@ -268,7 +266,7 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean sendInvitation(IUser user, IUser sendTo) {
         User current = _users.get(user.getUid());
-        User userToSendTo = _users.get(user.getUid());
+        User userToSendTo = _users.get(sendTo.getUid());
         if(current!=null
                 && userToSendTo !=null
                 && current.isCoach()

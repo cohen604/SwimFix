@@ -1,5 +1,6 @@
 import 'package:client/Components/EmailInvitation.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Holders/WebColors.dart';
@@ -18,10 +19,12 @@ class WebCoachScreen extends StatefulWidget {
 class _WebCoachScreenState extends State<WebCoachScreen> {
 
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
   TextEditingController _searchTextController;
 
   _WebCoachScreenState() {
     _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     _searchTextController = TextEditingController();
   }
 
@@ -202,13 +205,26 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
   }
 
   Widget buildGroupView(BuildContext context) {
-    return Column(
-      children: [
-        buildTopBar(context),
-        // buildGroupInfo(context),
-        buildLastGroupActivities(context),
-        buildSwimmingGroup(context),
-      ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+          fit: BoxFit.fill,
+          colorFilter: ColorFilter.mode(
+              _webColors.getBackgroundForI6(),
+              BlendMode.hardLight),
+        ),
+      ),
+      child: Column(
+        children: [
+          buildTopBar(context),
+          // buildGroupInfo(context),
+          buildLastGroupActivities(context),
+          buildSwimmingGroup(context),
+        ],
+      ),
     );
   }
 
@@ -219,7 +235,6 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: _webColors.getBackgroundForI4(),
           child: Column(
             children: [
               MenuBar(

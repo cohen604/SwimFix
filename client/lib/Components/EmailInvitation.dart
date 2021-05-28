@@ -62,9 +62,14 @@ class _EmailInvitationState extends State<EmailInvitation> {
                 _state = ScreenState.SuccessEmail;
               });
             }
-            else if(response.sendInvitationToUser ){
+            else if(response.sendInvitationToUser){
               this.setState(() {
                 _state = ScreenState.SuccessInvitation;
+              });
+            }
+            else {
+              this.setState(() {
+                _state = ScreenState.Failed;
               });
             }
       });
@@ -139,7 +144,7 @@ class _EmailInvitationState extends State<EmailInvitation> {
   }
 
   Widget buildSuccessInvitation(BuildContext context) {
-    return Text('Email send to ${_textController.text}');
+    return Text('Invitation send to ${_textController.text}');
   }
 
   Widget buildFailedButtonBar(BuildContext context) {

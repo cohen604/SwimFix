@@ -7,6 +7,6 @@ class InvitationResponse {
 
   InvitationResponse.fromJson(Map<String, dynamic> map)
     : sendEmailToUser = map['sendEmailToUser'],
-      sendInvitationToUser = map['sendEmailToUser'];
+      sendInvitationToUser = map['sendInvitationToUser'];
 
 }

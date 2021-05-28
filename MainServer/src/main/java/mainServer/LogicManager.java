@@ -551,7 +551,6 @@ public class LogicManager {
         IUser coach = _userProvider.getUser(coachDTO);
         try {
             if(coach!=null
-                    && coach.isCoach()
                     && coach.isLogged()) {
                 OpenTeamResponseDTO responseDTO = new OpenTeamResponseDTO(teamName);
                 if(coach.isCoach()) {
