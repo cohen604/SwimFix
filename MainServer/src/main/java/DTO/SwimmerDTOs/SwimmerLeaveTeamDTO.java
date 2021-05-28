@@ -7,8 +7,9 @@ public class SwimmerLeaveTeamDTO {
     private UserDTO userDTO;
     private String teamId;
 
-    public SwimmerLeaveTeamDTO(UserDTO userDTO) {
+    public SwimmerLeaveTeamDTO(UserDTO userDTO, String teamId) {
         this.userDTO = userDTO;
+        this.teamId = teamId;
     }
 
     public UserDTO getUserDTO() {
