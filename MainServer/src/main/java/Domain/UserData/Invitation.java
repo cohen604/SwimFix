@@ -52,6 +52,21 @@ public class Invitation implements IInvitation {
         return creationTime;
     }
 
+    @Override
+    public boolean isPending() {
+        return status == InvitationStatus.PENDING;
+    }
+
+    @Override
+    public boolean isApprove() {
+        return status == InvitationStatus.ACCEPTED;
+    }
+
+    @Override
+    public boolean isDenied() {
+        return status == InvitationStatus.DENY;
+    }
+
     public InvitationStatus getStatus() {
         return status;
     }

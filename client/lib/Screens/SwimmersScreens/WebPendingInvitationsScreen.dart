@@ -77,10 +77,13 @@ class _WebPendingInvitationsScreenState extends State<WebPendingInvitationsScree
 
   void sortBy(SortBy newSortBy) {
     if(newSortBy == SortBy.ID) {
+      _invitations.sort((a, b)=>a.id.compareTo(b.id));
+    }
+    else if(newSortBy == SortBy.TeamId) {
       _invitations.sort((a, b)=>a.teamId.compareTo(b.teamId));
     }
-    if(newSortBy == SortBy.TeamId) {
-      _invitations.sort((a, b)=>a.teamId.compareTo(b.teamId));
+    else if(newSortBy == SortBy.Date) {
+      _invitations.sort((a, b)=>a.date.compareTo(b.date));
     }
     else { //filterByState == FilterByState.None
       _invitations = List.from(_origin);

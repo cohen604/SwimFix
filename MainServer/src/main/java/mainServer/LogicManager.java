@@ -629,7 +629,11 @@ public class LogicManager {
             SwimmerInvitationDTO swimmerInvitationDTO = new SwimmerInvitationDTO(
                     invitation.getId(),
                     invitation.getTeamId(),
-                    invitation.getCreationTime());
+                    invitation.getCreationTime(),
+                    invitation.isPending(),
+                    invitation.isApprove(),
+                    invitation.isDenied()
+                    );
             output.add(swimmerInvitationDTO);
         }
         return output;

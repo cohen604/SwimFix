@@ -64,10 +64,16 @@ class _WebInvitationHistoryScreenState extends State<WebInvitationHistoryScreen>
 
   void sortBy(SortBy newSortBy) {
     if(newSortBy == SortBy.ID) {
+      _invitations.sort((a, b)=>a.id.compareTo(b.id));
+    }
+    else if(newSortBy == SortBy.TeamId) {
       _invitations.sort((a, b)=>a.teamId.compareTo(b.teamId));
     }
-    if(newSortBy == SortBy.TeamId) {
-      _invitations.sort((a, b)=>a.teamId.compareTo(b.teamId));
+    else if(newSortBy == SortBy.Date) {
+      _invitations.sort((a, b)=>a.date.compareTo(b.date));
+    }
+    else if(newSortBy == SortBy.Status) {
+      _invitations.sort((a,b)=>a.compareTo(b));
     }
     else { //filterByState == FilterByState.None
       _invitations = List.from(_origin);
@@ -191,6 +197,7 @@ class _WebInvitationHistoryScreenState extends State<WebInvitationHistoryScreen>
           buildButtonSort(context, 'ID', SortBy.ID),
           buildButtonSort(context, 'Team', SortBy.TeamId),
           buildButtonSort(context, 'Date', SortBy.Date),
+          buildButtonSort(context, 'Status', SortBy.Status),
           IconButton(
               onPressed: ()=>onClickButtonSort(SortBy.None),
               icon: Icon(
@@ -201,6 +208,19 @@ class _WebInvitationHistoryScreenState extends State<WebInvitationHistoryScreen>
         ],
       ),
     );
+  }
+
+  Widget buildTrialingInvitation(BuildContext context, Invitation invitation) {
+    if(invitation.isApprove) {
+      return buildText(context, 'Approved', 24, Colors.green, FontWeight.normal);
+    }
+    if(invitation.isDenied) {
+      return buildText(context, 'Denied', 24, Colors.redAccent, FontWeight.normal);
+    }
+    if(invitation.isPending) {
+      return buildText(context, 'Pending', 24, Colors.orangeAccent, FontWeight.normal);
+    }
+    return Container();
   }
 
   Widget buildInvitation(BuildContext context, Invitation invitation) {
@@ -227,6 +247,7 @@ class _WebInvitationHistoryScreenState extends State<WebInvitationHistoryScreen>
                     textAlign: TextAlign.left),
               ],
             ),
+            trailing: buildTrialingInvitation(context, invitation),
           ),
         ),
       ),
@@ -353,6 +374,7 @@ enum SortBy {
   ID,
   TeamId,
   Date,
+  Status,
 }
 
 enum OrderBy {
