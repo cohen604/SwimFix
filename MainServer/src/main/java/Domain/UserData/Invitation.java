@@ -10,7 +10,7 @@ public class Invitation implements IInvitation {
     private String teamId;
     private String swimmerId;
     private LocalDateTime creationTime;
-    private InvitationStatus status;
+    protected InvitationStatus status;
 
     public Invitation(String id, String teamId, String swimmerId) {
         this.id = id;

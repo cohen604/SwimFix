@@ -339,7 +339,7 @@ class LogicManager {
 
   Future<AddingTeamResponse> openSwimmingTeam(Swimmer swimmer, String teamName) async {
     try {
-      String path = "/swimmer/open/team";
+      String path = "/swimmer/team/open";
       Map<String, dynamic> map = {};
       map['userDTO'] = swimmer.toJson();
       map['teamName'] = teamName;

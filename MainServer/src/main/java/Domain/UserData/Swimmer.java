@@ -13,7 +13,9 @@ public class Swimmer implements ISwimmer {
     private ConcurrentHashMap<String, IFeedbackVideo> _feedbacks;
     private String _teamId;
     private ConcurrentHashMap<String, SwimmerInvitation> _pendingInvitations; //key => invitationsId
-    private ConcurrentHashMap<String, Invitation> _invitationHistory;
+    private ConcurrentHashMap<String, SwimmerInvitation> _invitationHistory;
+
+    private final Object _teamLock;
 
     public Swimmer(String email) {
          _email = email;
@@ -21,6 +23,7 @@ public class Swimmer implements ISwimmer {
         _teamId = null;
         _pendingInvitations = new ConcurrentHashMap<>();
         _invitationHistory = new ConcurrentHashMap<>();
+        _teamLock = new Object();
     }
 
     public Swimmer(
@@ -28,7 +31,7 @@ public class Swimmer implements ISwimmer {
             List<IFeedbackVideo> feedbacks,
             String teamId,
             ConcurrentHashMap<String, SwimmerInvitation> pendingInvitations,
-            ConcurrentHashMap<String, Invitation> invitationHistory) {
+            ConcurrentHashMap<String, SwimmerInvitation> invitationHistory) {
         _email = email;
         _feedbacks = new ConcurrentHashMap<>();
         for (IFeedbackVideo feedbackVideo: feedbacks) {
@@ -37,6 +40,7 @@ public class Swimmer implements ISwimmer {
         _teamId = teamId;
         _pendingInvitations = pendingInvitations;
         _invitationHistory = invitationHistory;
+        _teamLock = new Object();
     }
 
     public boolean addFeedback(IFeedbackVideo feedbackVideo) {
@@ -104,7 +108,7 @@ public class Swimmer implements ISwimmer {
         return _pendingInvitations;
     }
 
-    public ConcurrentHashMap<String, Invitation> getInvitationHistory() {
+    public ConcurrentHashMap<String, SwimmerInvitation> getInvitationHistory() {
         return _invitationHistory;
     }
 
@@ -134,5 +138,54 @@ public class Swimmer implements ISwimmer {
         return localDateTime.getYear() + "." +
                 localDateTime.getMonth() + "." +
                 localDateTime.getDayOfMonth();
+    }
+
+    public Invitation getInvitation(String invitationId) {
+        return _pendingInvitations.get(invitationId);
+    }
+
+    public boolean approveInvitation(String invitationId) {
+        SwimmerInvitation pending = _pendingInvitations.get(invitationId);
+        return pending!=null
+                && pending.approveInvitation()
+                && addTeam(pending.getTeamId())
+                && _pendingInvitations.remove(invitationId) != null
+                && _invitationHistory.putIfAbsent(invitationId, pending) == null;
+    }
+
+    public boolean denyInvitation(String invitationId) {
+        SwimmerInvitation pending = _pendingInvitations.get(invitationId);
+        return pending!=null
+                && pending.denyInvitation()
+                && _pendingInvitations.remove(invitationId) != null
+                && _invitationHistory.putIfAbsent(invitationId, pending) == null;
+    }
+
+    public boolean resetInvitation(String invitationId) {
+        SwimmerInvitation history = _invitationHistory.get(invitationId);
+        return history != null
+                && history.resetInvitation()
+                && _invitationHistory.remove(invitationId) != null
+                && _pendingInvitations.putIfAbsent(invitationId, history) == null;
+    }
+
+    public boolean leaveTeam() {
+        synchronized (_teamLock) {
+            if (_teamId != null) {
+                _teamId = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean addTeam(String teamId) {
+        synchronized (_teamLock) {
+            if (_teamId == null) {
+                _teamId = teamId;
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,3 +1,4 @@
+import 'package:client/Domain/Team/InvitationResponse.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
@@ -49,20 +50,23 @@ class _EmailInvitationState extends State<EmailInvitation> {
       this.setState(() {
         _state = ScreenState.Pending;
       });
-      logicManager.sendInvitationEmail(
-          this.widget.webUser.swimmer,
-          email)
-          .then((response) {
-        if (response) {
-          this.setState(() {
-            _state = ScreenState.Success;
-          });
-        }
-        else {
-          this.setState(() {
-            _state = ScreenState.Failed;
-          });
-        }
+      logicManager.sendInvitationEmail(this.widget.webUser.swimmer, email)
+          .then((InvitationResponse response) {
+            if(response == null) {
+              this.setState(() {
+                _state = ScreenState.Failed;
+              });
+            }
+            else if (response.sendEmailToUser) {
+              this.setState(() {
+                _state = ScreenState.SuccessEmail;
+              });
+            }
+            else if(response.sendInvitationToUser ){
+              this.setState(() {
+                _state = ScreenState.SuccessInvitation;
+              });
+            }
       });
     }
     else {
@@ -130,7 +134,11 @@ class _EmailInvitationState extends State<EmailInvitation> {
     );
   }
 
-  Widget buildSuccess(BuildContext context) {
+  Widget buildSuccessEmail(BuildContext context) {
+    return Text('Email send to ${_textController.text}');
+  }
+
+  Widget buildSuccessInvitation(BuildContext context) {
     return Text('Email send to ${_textController.text}');
   }
 
@@ -177,8 +185,11 @@ class _EmailInvitationState extends State<EmailInvitation> {
     else if(_state == ScreenState.Pending) {
       return buildPending(context);
     }
-    else if(_state == ScreenState.Success) {
-      return buildSuccess(context);
+    else if(_state == ScreenState.SuccessEmail) {
+      return buildSuccessEmail(context);
+    }
+    else if(_state == ScreenState.SuccessInvitation) {
+      return buildSuccessInvitation(context);
     }
     return buildFailed(context);
   }
@@ -187,6 +198,7 @@ class _EmailInvitationState extends State<EmailInvitation> {
 enum ScreenState {
   Preparing,
   Pending,
-  Success,
+  SuccessEmail,
+  SuccessInvitation,
   Failed,
 }

@@ -13,18 +13,18 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 import java.time.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TeamCodec implements Codec<Team> {
 
     private SwimmerDao swimmerDao;
-    private InvitationDao invitiationDao;
+    private InvitationDao invitationDao;
 
     public TeamCodec() {
         this.swimmerDao = new SwimmerDao();
-        this.invitiationDao = new InvitationDao();
+        this.invitationDao = new InvitationDao();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TeamCodec implements Codec<Team> {
                 .toLocalDateTime();
         String coachId = bsonReader.readString("coach_id");
 
-        HashMap<String, ISwimmer> swimmerHashMap = readSwimmers(bsonReader, decoderContext);
+        ConcurrentHashMap<String, ISwimmer> swimmerHashMap = readSwimmers(bsonReader, decoderContext);
 
         int sendInvitations = bsonReader.readInt32("send_invitations");
 
@@ -47,8 +47,8 @@ public class TeamCodec implements Codec<Team> {
         return new Team(name, localDateTime, coachId, swimmerHashMap, sendInvitations, invitationList);
     }
 
-    private HashMap<String, ISwimmer> readSwimmers(BsonReader bsonReader, DecoderContext decoderContext) {
-        HashMap<String, ISwimmer> swimmerHashMap = new HashMap<>();
+    private ConcurrentHashMap<String, ISwimmer> readSwimmers(BsonReader bsonReader, DecoderContext decoderContext) {
+        ConcurrentHashMap<String, ISwimmer> swimmerHashMap = new ConcurrentHashMap<>();
         bsonReader.readName("swimmers");
         bsonReader.readStartArray();
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
@@ -66,7 +66,7 @@ public class TeamCodec implements Codec<Team> {
         bsonReader.readStartArray();
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String invitationId = bsonReader.readString();
-            Invitation teamInvitation = this.invitiationDao.find(invitationId);
+            Invitation teamInvitation = this.invitationDao.find(invitationId);
             invitationList.add(teamInvitation);
         }
         bsonReader.readEndArray();
@@ -90,7 +90,7 @@ public class TeamCodec implements Codec<Team> {
         for(Invitation invitation: team.getInvitations()) {
             bsonWriter.writeString(invitation.getId());
             // when team can delete invitation make this and make sure the swimmer and team invitation always the same
-            //this.invitiationDao.tryInsertThenUpdate(invitation);
+            //this.invitationDao.tryInsertThenUpdate(invitation);
         }
         bsonWriter.writeEndArray();
 

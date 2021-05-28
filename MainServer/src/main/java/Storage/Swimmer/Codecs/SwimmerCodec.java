@@ -34,8 +34,10 @@ public class SwimmerCodec implements Codec<Swimmer> {
         bsonReader.readStartDocument();
         String email = bsonReader.readString("_id");
         List<IFeedbackVideo> feedbacks = decodeFeedbacks(bsonReader, decoderContext);
-        ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = decodePendingInvitations(bsonReader, decoderContext);
-        ConcurrentHashMap<String, Invitation> invitations = decodeInvitationHistory(bsonReader, decoderContext);
+        bsonReader.readName("pending_invitations");
+        ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = decodeInvitations(bsonReader, decoderContext);
+        bsonReader.readName("invitations_history");
+        ConcurrentHashMap<String, SwimmerInvitation> invitations = decodeInvitations(bsonReader, decoderContext);
         String teamId = null;
         if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             teamId = bsonReader.readString("team_id");
@@ -56,27 +58,13 @@ public class SwimmerCodec implements Codec<Swimmer> {
         return feedbacks;
     }
 
-    private ConcurrentHashMap<String, SwimmerInvitation> decodePendingInvitations(BsonReader bsonReader, DecoderContext decoderContext) {
-        ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = new ConcurrentHashMap<>();
-        bsonReader.readName("pending_invitations");
+    private ConcurrentHashMap<String, SwimmerInvitation> decodeInvitations(BsonReader bsonReader, DecoderContext decoderContext) {
+        ConcurrentHashMap<String, SwimmerInvitation> invitations = new ConcurrentHashMap<>();
         bsonReader.readStartArray();
         while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String invitationId = bsonReader.readString();
             Invitation invitation = _invitationDao.find(invitationId);
-            swimmerInvitations.put(invitationId, new SwimmerInvitation(invitation));
-        }
-        bsonReader.readEndArray();
-        return swimmerInvitations;
-    }
-
-    private ConcurrentHashMap<String, Invitation> decodeInvitationHistory(BsonReader bsonReader, DecoderContext decoderContext) {
-        ConcurrentHashMap<String, Invitation> invitations = new ConcurrentHashMap<>();
-        bsonReader.readName("invitations_history");
-        bsonReader.readStartArray();
-        while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            String invitationId = bsonReader.readString();
-            Invitation invitation = _invitationDao.find(invitationId);
-            invitations.put(invitationId, invitation);
+            invitations.put(invitationId, new SwimmerInvitation(invitation));
         }
         bsonReader.readEndArray();
         return invitations;

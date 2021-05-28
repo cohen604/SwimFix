@@ -98,19 +98,6 @@ public class LogicManager {
     }
 
     /**
-     * delete all the files in the given path
-     * @param file = the file to delete
-     * @throws IOException - if fail
-     */
-    void delete(File file) throws IOException {
-        if (file.isDirectory()) {
-            FileUtils.deleteDirectory(file);
-        }
-        if (!file.delete())
-            throw new FileNotFoundException("Failed to delete file: " + file);
-    }
-
-    /**
      * The function handle login of swimmers to the system
      * @param userDTO the swimmer information
      * @return true
@@ -648,6 +635,12 @@ public class LogicManager {
         return output;
     }
 
+    /**
+     * The function make swimmer approve invitation
+     * @param userDTO - user
+     * @param invitationId - the invitation id
+     * @return true if the invitation is approved, otherwise false
+     */
     public ActionResult<Boolean> approveInvitation(UserDTO userDTO, String invitationId) {
         IUser user = _userProvider.getUser(userDTO);
         try {
@@ -667,6 +660,12 @@ public class LogicManager {
         return new ActionResult<>(Response.FAIL, null);
     }
 
+    /**
+     * The function make swimmer deny invitation
+     * @param userDTO - user
+     * @param invitationId - the invitation id
+     * @return true if the invitation is denied, otherwise false
+     */
     public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
         IUser user = _userProvider.getUser(userDTO);
         try {
@@ -681,6 +680,30 @@ public class LogicManager {
             }
         }
         catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /***
+     * The function take swimmer and remove him from his team
+     * @param userDTO - swimmer
+     * @param teamId - the teamId
+     * @return true if swimmer left the team, otherwise false
+      */
+    public ActionResult<Boolean> leaveTeam(UserDTO userDTO, String teamId) {
+        IUser user = _userProvider.getUser(userDTO);
+        try {
+            if(user!=null) {
+                boolean removed = _userProvider.leaveTeam(user, teamId);
+                if(removed) {
+                    return new ActionResult<>(Response.FAIL, true);
+                }
+                return new ActionResult<>(Response.FAIL, false);
+
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);

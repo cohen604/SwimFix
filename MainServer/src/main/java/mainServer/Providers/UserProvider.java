@@ -21,12 +21,14 @@ public class UserProvider implements IUserProvider {
      * The hash map key: user uid, the values is the user
      */
     private ConcurrentHashMap<String, User> _users;
+    private ConcurrentHashMap<String, Team> _teams;
     private IUserDao _userDao;
     private ISwimmerDao _swimmerDao;
     private ITeamDao _teamDao;
 
     public UserProvider(IUserDao dao, ISwimmerDao swimmerDao, ITeamDao teamDao) {
         _users = new ConcurrentHashMap<>();
+        _teams = new ConcurrentHashMap<>();
         _userDao = dao;
         _swimmerDao = swimmerDao;
         _teamDao = teamDao;
@@ -242,6 +244,8 @@ public class UserProvider implements IUserProvider {
                 && !_teamDao.isTeamExists(teamName)
                 && user.addCoach(teamName)) {
             if(_userDao.update(currentUser) != null) {
+                Team team = currentUser.getCoach().getTeam();
+                _teams.putIfAbsent(teamName, team);
                 return true;
             }
             else {
@@ -271,6 +275,9 @@ public class UserProvider implements IUserProvider {
                 && current.isLogged()
                 && userToSendTo.isSwimmer()) {
             Team team = current.getCoach().getTeam();
+            if(_teams.putIfAbsent(team.getName(), team)!= null) {
+                team = _teams.get(team.getName());
+            }
             Swimmer swimmer = userToSendTo.getSwimmer();
             Invitation invitation = team.addInvitation(swimmer);
             if(invitation!=null) {
@@ -299,10 +306,25 @@ public class UserProvider implements IUserProvider {
                 && current.isSwimmer()
                 && current.isLogged()) {
             Swimmer swimmer = current.getSwimmer();
-            Invitation invitation = swimmer.approveInvitation(invitationId);
-            if(invitation!=null) {
-                //TODO add team cache
-                Team team = _teamDao.find(invitation.getTeamId());
+            Invitation invitation = swimmer.getInvitation(invitationId);
+            Team team = _teamDao.find(invitation.getTeamId());
+            // take team from cache
+            if (_teams.putIfAbsent(team.getName(), team) != null) {
+                team = _teams.get(team.getName());
+            }
+            if (swimmer.approveInvitation(invitationId)) {
+                if (team.addSwimmer(swimmer, invitationId)) {
+                    if (_swimmerDao.update(swimmer) != null
+                            && _teamDao.update(team) != null) {
+                        return true;
+                    } else {
+                        team.removeSwimmer(swimmer);
+                        swimmer.resetInvitation(invitationId);
+                    }
+                }
+                else {
+                    swimmer.resetInvitation(invitationId);
+                }
             }
         }
         return false;
@@ -310,6 +332,57 @@ public class UserProvider implements IUserProvider {
 
     @Override
     public boolean denyInvitation(IUser user, String invitationId) {
+        User current = _users.get(user.getUid());
+        if(current!=null
+                && current.isSwimmer()
+                && current.isLogged()) {
+            Swimmer swimmer = current.getSwimmer();
+            Invitation invitation = swimmer.getInvitation(invitationId);
+            if(swimmer.denyInvitation(invitationId)) {
+                if(_swimmerDao.update(swimmer) != null) {
+                    if(_teams.containsKey(invitation.getTeamId())) {
+                        _teams.get(invitation.getTeamId()).updateInvitation(invitation);
+                    }
+                    return true;
+                }
+                else {
+                    swimmer.resetInvitation(invitationId);
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean leaveTeam(IUser user, String teamId) {
+        User current = _users.get(user.getUid());
+        if(current != null
+                && current.isSwimmer()) {
+            Swimmer swimmer = current.getSwimmer();
+            Team team = _teams.get(teamId);
+            if(team == null) {
+                team = _teamDao.find(teamId);
+                if(team == null) {
+                    return false;
+                }
+                _teams.putIfAbsent(teamId, team);
+            }
+            if(swimmer.leaveTeam()) {
+                if(team.removeSwimmer(swimmer)) {
+                    if(_swimmerDao.update(swimmer) != null
+                            && _teamDao.update(team) != null) {
+                        return true;
+                    }
+                    else {
+                        team.addSwimmer(swimmer);
+                        swimmer.addTeam(teamId);
+                    }
+                }
+                else {
+                    swimmer.addTeam(teamId);
+                }
+            }
+        }
         return false;
     }
 

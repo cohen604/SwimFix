@@ -190,4 +190,8 @@ public class SwimFixAPI {
    public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
       return logicManager.denyInvitation(userDTO, invitationId);
    }
+
+   public ActionResult<Boolean> leaveTeam(UserDTO userDTO, String teamId) {
+      return logicManager.leaveTeam(userDTO, teamId);
+   }
 }

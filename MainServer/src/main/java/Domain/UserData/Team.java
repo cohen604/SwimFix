@@ -3,7 +3,6 @@ import Domain.UserData.Interfaces.ISwimmer;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +12,7 @@ public class Team {
     private String name;
     private LocalDateTime openDate;
     private String coachId;
-    private HashMap<String, ISwimmer> swimmers;
+    private ConcurrentHashMap<String, ISwimmer> swimmers;
     private AtomicInteger sendInvitations;
     private ConcurrentHashMap<String, Invitation> invitations;
 
@@ -21,7 +20,7 @@ public class Team {
         this.name = name;
         this.coachId = coachId;
         this.openDate = LocalDateTime.now();
-        this.swimmers = new HashMap<>();
+        this.swimmers = new ConcurrentHashMap<>();
         this.sendInvitations = new AtomicInteger(0);
         this.invitations = new ConcurrentHashMap<>();
     }
@@ -30,7 +29,7 @@ public class Team {
             String name,
             LocalDateTime openDate,
             String coachId,
-            HashMap<String, ISwimmer> swimmers,
+            ConcurrentHashMap<String, ISwimmer> swimmers,
             int sendInvitations,
             List<Invitation> invitations) {
         this.name = name;
@@ -56,7 +55,7 @@ public class Team {
         return coachId;
     }
 
-    public HashMap<String, ISwimmer> getSwimmers() {
+    public ConcurrentHashMap<String, ISwimmer> getSwimmers() {
         return swimmers;
     }
 
@@ -85,4 +84,23 @@ public class Team {
     public void deleteInvitation(Invitation invitation) {
         this.invitations.remove(invitation.getId());
     }
+
+
+    public boolean addSwimmer(ISwimmer swimmer) {
+        return swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
+    }
+
+    public boolean addSwimmer(ISwimmer swimmer, String invitationId) {
+        return invitations.containsKey(invitationId)
+                && swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
+    }
+
+    public boolean removeSwimmer(ISwimmer swimmer) {
+        return swimmers.remove(swimmer.getEmail()) != null;
+    }
+
+    public void updateInvitation(Invitation invitation) {
+        invitations.put(invitation.getId(), invitation);
+    }
+
 }

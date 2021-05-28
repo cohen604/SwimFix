@@ -41,5 +41,8 @@ public interface IUserProvider {
     boolean approveInvitation(IUser user, String invitationId);
 
     boolean denyInvitation(IUser user, String invitationId);
+
+    boolean leaveTeam(IUser user, String teamId);
+
 }
 
