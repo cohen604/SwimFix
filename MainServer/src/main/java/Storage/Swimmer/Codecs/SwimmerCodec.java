@@ -38,9 +38,13 @@ public class SwimmerCodec implements Codec<Swimmer> {
         ConcurrentHashMap<String, SwimmerInvitation> swimmerInvitations = decodeInvitations(bsonReader, decoderContext);
         bsonReader.readName("invitations_history");
         ConcurrentHashMap<String, SwimmerInvitation> invitations = decodeInvitations(bsonReader, decoderContext);
+        bsonReader.readName("team_id");
         String teamId = null;
-        if(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            teamId = bsonReader.readString("team_id");
+        if(bsonReader.getCurrentBsonType() == BsonType.STRING) {
+            teamId =  bsonReader.readString();//"team_id"
+        }
+        else {
+            bsonReader.readNull();
         }
         bsonReader.readEndDocument();
         return new Swimmer(email, feedbacks, teamId, swimmerInvitations, invitations);
@@ -97,6 +101,9 @@ public class SwimmerCodec implements Codec<Swimmer> {
 
         if(swimmer.getTeamId() != null) {
             bsonWriter.writeString("team_id", swimmer.getTeamId());
+        }
+        else {
+            bsonWriter.writeNull("team_id");
         }
 
         bsonWriter.writeEndDocument();

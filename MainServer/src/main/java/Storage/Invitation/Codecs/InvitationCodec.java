@@ -36,6 +36,7 @@ public class InvitationCodec implements Codec<Invitation> {
         bsonWriter.writeStartDocument();
         bsonWriter.writeString("_id", invitation.getId());
         bsonWriter.writeString("team_id", invitation.getTeamId());
+        bsonWriter.writeString("swimmer_id", invitation.getSwimmerId());
         ZonedDateTime zonedDateTime = invitation.getCreationTime().atZone(ZoneId.of("UTC"));
         bsonWriter.writeDateTime("creation_time", zonedDateTime.toInstant().toEpochMilli());
         bsonWriter.writeString("status", invitation.getStatus().toString());

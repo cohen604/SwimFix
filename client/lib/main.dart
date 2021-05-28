@@ -1,6 +1,8 @@
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'Screens/AdminScreens/Arguments/AdminSrceenArguments.dart';
 import 'Screens/Arguments/AboutScreenArguments.dart';
@@ -81,7 +83,15 @@ class MyApp extends StatelessWidget {
         },
         '/swimmer/open/team': (context) {
           SwimmerOpenTeamArguments args = ModalRoute.of(context).settings.arguments;
-          return _screenHolder.getSwimmerOpenTeamScrren(args);
+          return _screenHolder.getSwimmerOpenTeamScreen(args);
+        },
+        '/swimmer/invitations': (context) {
+          PendingInvitationsArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getPendingInvitationsScreen(args);
+        },
+        '/swimmer/invitations/history': (context) {
+          InvitationHistoryArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getInvitationsHistoryScreen(args);
         },
         '/researcher': (context) {
           ResearcherScreenArguments args = ModalRoute.of(context).settings.arguments;

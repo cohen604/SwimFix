@@ -648,7 +648,7 @@ public class LogicManager {
                     && user.isLogged()) {
                 boolean approved = _userProvider.approveInvitation(user, invitationId);
                 if(approved) {
-                    return new ActionResult<>(Response.FAIL, true);
+                    return new ActionResult<>(Response.SUCCESS, true);
                 }
                 return new ActionResult<>(Response.FAIL, false);
             }
@@ -673,7 +673,7 @@ public class LogicManager {
                     && user.isLogged()) {
                 boolean approved = _userProvider.denyInvitation(user, invitationId);
                 if(approved) {
-                    return new ActionResult<>(Response.FAIL, true);
+                    return new ActionResult<>(Response.SUCCESS, true);
                 }
                 return new ActionResult<>(Response.FAIL, false);
             }

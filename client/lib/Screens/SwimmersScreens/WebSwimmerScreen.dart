@@ -3,6 +3,7 @@ import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'Arguments/HistoryScreenArguments.dart';
+import 'Arguments/PendingInvitationsArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,6 +52,13 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     });
   }
 
+  void onClickInvitations(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, '/swimmer/invitations',
+          arguments: new PendingInvitationsArguments(this.widget.arguments.user));
+    });
+  }
+
   Widget buildBottomSide(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -78,7 +86,9 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
                ()=>onClickOpenTeam(context),
               Icons.group_add),
           IconCardButton("Team invitations",
-              'View your swimming team invitations', null, Icons.insert_invitation),
+              'View your swimming team invitations',
+              ()=>onClickInvitations(context),
+              Icons.insert_invitation),
           IconCardButton("My Team",
               'View your team, you are part of', null, Icons.group),
         ],

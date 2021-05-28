@@ -10,10 +10,10 @@ class DateTimeDTO {
     this.day = day;
   }
 
-  DateTimeDTO.fromJson(Map<String, dynamic> json)
-      : year = int.parse(json['year']),
-        month = int.parse(json['month']),
-        day = int.parse(json['day']);
+  DateTimeDTO.fromJson(Map<String, dynamic> map)
+      : year = map['year'],
+        month = map['month'],
+        day = map['day'];
 
   Map<String, dynamic> toJson() =>
     {

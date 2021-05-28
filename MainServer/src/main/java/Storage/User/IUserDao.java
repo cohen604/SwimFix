@@ -10,6 +10,8 @@ public interface IUserDao {
 
     List<User> getAll();
 
+    boolean logoutAll();
+
     User insert(User value);
 
     User find(String id);

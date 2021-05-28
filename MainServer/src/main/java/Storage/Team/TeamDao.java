@@ -42,7 +42,7 @@ public class TeamDao extends Dao<Team> implements ITeamDao {
 
     @Override
     public Team tryInsertThenUpdate(Team team) {
-        return defaultTryInsertThenUpdate(team, team.getName());
+            return defaultTryInsertThenUpdate(team, team.getName());
     }
 
     @Override

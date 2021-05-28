@@ -8,7 +8,6 @@ public class SwimmerInvitationDTO {
     private String teamId;
     private DateDTO dateDTO;
 
-
     public SwimmerInvitationDTO(String id, String teamId, DateDTO dateDTO) {
         this.id = id;
         this.teamId = teamId;

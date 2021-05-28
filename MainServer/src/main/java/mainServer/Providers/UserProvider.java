@@ -45,13 +45,18 @@ public class UserProvider implements IUserProvider {
             _userDao.tryInsertThenUpdate(admin);
         }
         else {
+            boolean isUpdated = false;
             if (!user.isAdmin()) {
                 user.addAdmin();
+                isUpdated = true;
             }
             if (!user.isResearcher()) {
                 user.addResearcher();
+                isUpdated = true;
             }
-            _userDao.update(_users.get(user.getUid()));
+            if(isUpdated) {
+                _userDao.update(_users.get(user.getUid()));
+            }
         }
     }
 
@@ -120,17 +125,7 @@ public class UserProvider implements IUserProvider {
     @Override
     public boolean reload() {
         _users = new ConcurrentHashMap<>();
-        List<User> users = _userDao.getAll();
-        if(users == null) {
-            return false;
-        }
-        for (User user: users) {
-            user.logout();
-            _userDao.update(user);
-            // no need to hold them in the cache only need to logout them and update
-            //_users.put(user.getUid(), user);
-        }
-        return true;
+        return _userDao.logoutAll();
     }
 
     /***

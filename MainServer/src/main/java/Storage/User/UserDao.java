@@ -12,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -47,6 +48,20 @@ public class UserDao extends Dao<User> implements IUserDao{
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
         return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_USERS, User.class);
+    }
+
+    @Override
+    public boolean logoutAll() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson searchQuery  = Filters.eq("logged", true);
+            Bson updateQuery =  new Document("$set", new Document("logged", false));
+            return collection.updateMany(searchQuery,updateQuery)
+                    .getModifiedCount() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

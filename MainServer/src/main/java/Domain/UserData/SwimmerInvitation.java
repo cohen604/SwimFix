@@ -36,7 +36,7 @@ public class SwimmerInvitation extends Invitation{
 
     public boolean resetInvitation() {
         synchronized (_invitationLock) {
-            if(this.status == InvitationStatus.ACCEPTED|| this.status == InvitationStatus.DENY) {
+            if(this.status == InvitationStatus.ACCEPTED || this.status == InvitationStatus.DENY) {
                 this.status = InvitationStatus.PENDING;
                 return true;
             }

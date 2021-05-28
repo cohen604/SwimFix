@@ -22,11 +22,15 @@ import 'package:client/Screens/ResearcherScreens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebReportScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebResearcherScreen.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/SwimmersScreens/WebInvitationHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebPendingInvitationsScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryDayScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerOpenTeamScreen.dart';
@@ -197,7 +201,7 @@ class ScreenHolder {
     return new WebStatisticsScreen(args);
   }
 
-  Widget getSwimmerOpenTeamScrren(SwimmerOpenTeamArguments args) {
+  Widget getSwimmerOpenTeamScreen(SwimmerOpenTeamArguments args) {
     if(args == null || args.user == null || args.user.swimmer == null) {
       return getReLoginScreen('/swimmer');
     }
@@ -205,6 +209,26 @@ class ScreenHolder {
       return getNoPermissionScreen(args.user);
     }
     return new WebSwimmerOpenTeamScreen(args);
+  }
+
+  Widget getPendingInvitationsScreen(PendingInvitationsArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebPendingInvitationsScreen(args);
+  }
+
+  Widget getInvitationsHistoryScreen(InvitationHistoryArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebInvitationHistoryScreen(args);
   }
 
   Widget getReLoginScreen(String desPath) {
