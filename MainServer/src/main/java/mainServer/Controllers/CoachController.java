@@ -1,13 +1,13 @@
 package mainServer.Controllers;
 
 import DTO.ActionResult;
-import DTO.CoachDTOs.InvitationResponseDTO;
-import DTO.CoachDTOs.SendEmailInvitiationDTO;
-import DTO.CoachDTOs.TeamDTO;
+import DTO.CoachDTOs.*;
 import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/coach")
@@ -44,6 +44,23 @@ public class CoachController {
             return actionResult.toJson();
         }
         catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/swimmer/feedbacks")
+    @CrossOrigin(origins = "*")
+    public String coachGetSwimmerFeedbacks(@RequestBody CoachSwimmerFeedbacksRequest request) {
+        try {
+            System.out.println("Received coach get swimmers feedbacks request");
+            UserDTO coachDto = request.getCoachDTO();
+            String swimmerEmail = request.getSwimmersEmail();
+            ActionResult<List<CoachSwimmerFeedbackDTO>> result = swimFixAPI.coachGetSwimmerFeedbacks(coachDto, swimmerEmail);
+            System.out.println("Send coach swimmers feedbacks");
+            return result.toJson();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         return null;

@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
@@ -203,5 +204,9 @@ public class SwimFixAPI {
 
    public ActionResult<TeamDTO> getCoachTeam(UserDTO userDTO) {
       return logicManager.getCoachTeam(userDTO);
+   }
+
+   public ActionResult<List<CoachSwimmerFeedbackDTO>> coachGetSwimmerFeedbacks(UserDTO coachDto, String swimmerEmail) {
+      return logicManager.coachGetSwimmerFeedbacks(coachDto, swimmerEmail);
    }
 }

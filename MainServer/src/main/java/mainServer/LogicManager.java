@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
@@ -90,7 +91,6 @@ public class LogicManager {
     private void createClientsDir() {
         try {
             Path path = Paths.get("clients");
-            // TODO - check if good
             if (!Files.isDirectory(path)) {
                 Files.createDirectory(path);
             }
@@ -105,8 +105,13 @@ public class LogicManager {
      * @return true
      */
     public ActionResult<UserDTO> login(UserDTO userDTO) {
-        if(_userProvider.login(userDTO)) {
-            return new ActionResult<>(Response.SUCCESS, userDTO);
+        try {
+            if(_userProvider.login(userDTO)) {
+                return new ActionResult<>(Response.SUCCESS, userDTO);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL,null);
     }
@@ -117,8 +122,13 @@ public class LogicManager {
      * @return
      */
     public ActionResult<Boolean> logout(UserDTO user) {
-        if(_userProvider.logout(user)) {
-            return new ActionResult<>(Response.SUCCESS, true);
+        try {
+            if (_userProvider.logout(user)) {
+                return new ActionResult<>(Response.SUCCESS, true);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL,null);
     }
@@ -172,7 +182,6 @@ public class LogicManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //TODO what to return when fail
         return new ActionResult<>(Response.FAIL, null);
     }
 
@@ -182,16 +191,12 @@ public class LogicManager {
      * @return the bytes for the file
      */
     public ActionResult<FeedbackVideoDTO> streamFile(String path) {
-        //TODO need here to be access check
         try {
             FeedbackVideoDTO output = _feedbackProvider.streamFeedback(path);
             return new ActionResult<>(Response.SUCCESS, output);
         } catch (Exception e) {
-            //TODO return here error
             System.out.println(e.getMessage());
         }
-        //TODO return error
-        //TODO maybe always generate a video if it a error video then return error video ?
         return null;
     }
 
@@ -203,8 +208,8 @@ public class LogicManager {
      * @return
      */
     public ActionResult<ResearcherReportDTO> getResearcherReport(UserDTO userDTO, ConvertedVideoDTO videoDTO, FileDTO fileDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if (user != null && user.isLogged() && user.isResearcher()) {
                 // create video
                 List<String> detectorsNames = new LinkedList<>();
@@ -248,23 +253,24 @@ public class LogicManager {
      * @return - list of days
      */
     public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
-        IUser user = _userProvider.getUser(userDto);
-        if(user != null
-            && user.isLogged()
-            && user.isSwimmer()) {
-            try {
+        try {
+            IUser user = _userProvider.getUser(userDto);
+            if (user != null
+                    && user.isLogged()
+                    && user.isSwimmer()) {
                 Collection<LocalDateTime> days = user.getFeedbacksDays();
                 List<DateDTO> outputDays = new LinkedList<>();
-                for(LocalDateTime day: days) {
+                for (LocalDateTime day : days) {
                     outputDays.add(new DateDTO(
                             day.getYear(),
                             day.getMonthValue(),
                             day.getDayOfMonth()));
                 }
                 return new ActionResult<>(Response.SUCCESS, outputDays);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);
     }
@@ -276,26 +282,27 @@ public class LogicManager {
      * @return - list of feedbacks of the given date
      */
     public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsByDay(UserDTO userDto, DateDTO dateDTO) {
-        IUser user = _userProvider.getUser(userDto);
-        if(user != null
-                && user.isLogged()
-                && user.isSwimmer()) {
-            try {
+        try {
+            IUser user = _userProvider.getUser(userDto);
+            if (user != null
+                    && user.isLogged()
+                    && user.isSwimmer()) {
                 LocalDateTime date = LocalDateTime.of(
                         dateDTO.getYear(),
                         dateDTO.getMonth(),
                         dateDTO.getDay(), 0, 0);
                 Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
                 List<FeedbackVideoStreamer> output = new LinkedList<>();
-                if(feedbacks!=null && !feedbacks.isEmpty()) {
+                if (feedbacks != null && !feedbacks.isEmpty()) {
                     for (IFeedbackVideo feedbackVideo : feedbacks) {
                         output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
                     }
                 }
                 return new ActionResult<>(Response.SUCCESS, output);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return new ActionResult<>(Response.FAIL, null);
     }
@@ -307,8 +314,8 @@ public class LogicManager {
      * @return true if the email send, other wise false
      */
     public ActionResult<InvitationResponseDTO> invite(UserDTO userDTO, String to) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user!=null
                     && user.isLogged()
                     && user.isCoach()
@@ -341,8 +348,8 @@ public class LogicManager {
      * @return the file to download
      */
     public ActionResult<FileDownloadDTO> downloadFile(UserDTO userDTO, String root, String email, String folder, String fileName) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user != null
                 && user.isLogged()
                 && user.isResearcher()) {
@@ -368,8 +375,8 @@ public class LogicManager {
      * @return a zip file to download that contains the list of wanted files
      */
     public ActionResult<FileDownloadDTO> downloadFilesAsZip(UserDTO userDTO, String[] files) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user != null
                 && user.isLogged()
                 && user.isResearcher()) {
@@ -395,8 +402,8 @@ public class LogicManager {
      * @return - true if deleted, false if not
      */
     public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDTO dateDTO, String path) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user != null
                     && _userProvider.deleteFeedbackByID(user, path)) {
                 return new ActionResult<>(Response.SUCCESS, true);
@@ -414,8 +421,8 @@ public class LogicManager {
      * @return List of users that not admins
      */
     public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user != null) {
                 Collection<? extends IUser> users = _userProvider.findUsersThatNotAdmin(user);
                 if(users!=null) {
@@ -443,8 +450,8 @@ public class LogicManager {
      * @return List of users that not researchers
      */
     public ActionResult<List<UserDTO>> findUsersThatNotResearcher(UserDTO userDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user != null) {
                 Collection<? extends IUser> users = _userProvider.findUsersThatNotResearcher(user);
                 if(users!=null) {
@@ -473,9 +480,9 @@ public class LogicManager {
      * @return true if the user have admin permissions
      */
     public ActionResult<Boolean> addAdmin(UserDTO adminDTO, UserDTO addToUserDTO) {
-        IUser admin = _userProvider.getUser(adminDTO);
-        IUser userToAdd = _userProvider.getUser(addToUserDTO);
         try {
+            IUser admin = _userProvider.getUser(adminDTO);
+            IUser userToAdd = _userProvider.getUser(addToUserDTO);
             if(admin != null) {
                 boolean output = _userProvider.addAdmin(admin, userToAdd);
                 return new ActionResult<>(Response.SUCCESS, output);
@@ -494,9 +501,9 @@ public class LogicManager {
      * @return true if the user added as researcher, otherwise false
      */
     public ActionResult<Boolean> addResearcher(UserDTO adminDTO, UserDTO addToUserDTO) {
-        IUser admin = _userProvider.getUser(adminDTO);
-        IUser userToAdd = _userProvider.getUser(addToUserDTO);
         try {
+            IUser admin = _userProvider.getUser(adminDTO);
+            IUser userToAdd = _userProvider.getUser(addToUserDTO);
             if(admin != null) {
                 boolean output = _userProvider.addResearcher(admin, userToAdd);
                 return new ActionResult<>(Response.SUCCESS, output);
@@ -514,8 +521,8 @@ public class LogicManager {
      * @return
      */
     public ActionResult<SummaryDTO> getSummary(UserDTO adminDTO) {
-        IUser admin = _userProvider.getUser(adminDTO);
         try {
+            IUser admin = _userProvider.getUser(adminDTO);
             if(admin!=null
                     && admin.isAdmin()
                     && admin.isLogged()) {
@@ -550,8 +557,8 @@ public class LogicManager {
      * @return if the team added to the user otherwise false and the reason
      */
     public ActionResult<OpenTeamResponseDTO> addCoach(UserDTO coachDTO, String teamName) {
-        IUser coach = _userProvider.getUser(coachDTO);
         try {
+            IUser coach = _userProvider.getUser(coachDTO);
             if(coach!=null
                     && coach.isLogged()) {
                 OpenTeamResponseDTO responseDTO = new OpenTeamResponseDTO(teamName);
@@ -579,8 +586,8 @@ public class LogicManager {
      * @return list of the swimmer invitations
      */
     public ActionResult<List<SwimmerInvitationDTO>> getPendingInvitations(UserDTO userDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if (user != null
                     && user.isLogged()
                     && user.isSwimmer()) {
@@ -602,8 +609,8 @@ public class LogicManager {
      * @return list of the swimmer invitations history
      */
     public ActionResult<List<SwimmerInvitationDTO>> getInvitationsHistory(UserDTO userDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if (user != null
                     && user.isLogged()
                     && user.isSwimmer()) {
@@ -648,8 +655,8 @@ public class LogicManager {
      * @return true if the invitation is approved, otherwise false
      */
     public ActionResult<Boolean> approveInvitation(UserDTO userDTO, String invitationId) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user!=null
                     && user.isSwimmer()
                     && user.isLogged()) {
@@ -673,8 +680,8 @@ public class LogicManager {
      * @return true if the invitation is denied, otherwise false
      */
     public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user!=null
                     && user.isSwimmer()
                     && user.isLogged()) {
@@ -698,8 +705,8 @@ public class LogicManager {
      * @return true if swimmer left the team, otherwise false
       */
     public ActionResult<Boolean> leaveTeam(UserDTO userDTO, String teamId) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user!=null) {
                 boolean removed = _userProvider.leaveTeam(user, teamId);
                 if(removed) {
@@ -720,8 +727,8 @@ public class LogicManager {
      * @return the team name.
      */
     public ActionResult<MyTeamDTO> getMyTeam(UserDTO userDTO) {
-        IUser user = _userProvider.getUser(userDTO);
         try {
+            IUser user = _userProvider.getUser(userDTO);
             if(user!=null) {
                 String teamName = _userProvider.getMyTeam(user);
                 if(teamName!=null) {
@@ -742,8 +749,8 @@ public class LogicManager {
      * @return the coach team
      */
     public ActionResult<TeamDTO> getCoachTeam(UserDTO userDTO) {
-        IUser iUser = _userProvider.getUser(userDTO);
         try {
+            IUser iUser = _userProvider.getUser(userDTO);
             if(iUser!=null) {
                 ITeam iTeam = _userProvider.getCoachTeam(iUser);
                 if(iTeam != null) {
@@ -779,6 +786,22 @@ public class LogicManager {
                     return new ActionResult<>(Response.SUCCESS, teamDto);
                 }
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return the swimmers feedbacks for the coach request
+     * @param coachDto - the coach
+     * @param swimmerEmail - the swimmer
+     * @return the list of feedbacks of the swimmer
+     */
+    public ActionResult<List<CoachSwimmerFeedbackDTO>> coachGetSwimmerFeedbacks(UserDTO coachDto, String swimmerEmail) {
+        try {
+            IUser iUser = _userProvider.getUser(coachDto);
         }
         catch (Exception e) {
             e.printStackTrace();
