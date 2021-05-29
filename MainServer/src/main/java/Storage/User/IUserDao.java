@@ -1,5 +1,6 @@
 package Storage.User;
 
+import Domain.UserData.Interfaces.IUser;
 import Domain.UserData.User;
 
 import java.util.Collection;
@@ -8,6 +9,8 @@ import java.util.List;
 public interface IUserDao {
 
     List<User> getAll();
+
+    boolean logoutAll();
 
     User insert(User value);
 
@@ -41,4 +44,7 @@ public interface IUserDao {
 
     Long countLoggedCoaches();
 
+    User tryInsertThenUpdate(User user);
+
+    User findUserByEmail(String email);
 }

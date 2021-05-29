@@ -65,8 +65,7 @@ class _WebReLoginScreenState extends State<WebReLoginScreen> {
       args = new MultiReportScreenArguments(user);
     }
     else if(prefix == '/coach') {
-      //TODO add support to coach screen when receive no team name
-      args = new CoachScreenArguments(user, null);
+      args = new CoachScreenArguments(user);
     }
     else if(prefix == '/history') {
       args = new HistoryScreenArguments(user);

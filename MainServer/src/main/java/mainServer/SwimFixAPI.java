@@ -1,6 +1,20 @@
 package mainServer;
 
 import DTO.*;
+import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.InvitationResponseDTO;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.ResearcherDTOs.FileDTO;
+import DTO.ResearcherDTOs.FileDownloadDTO;
+import DTO.ResearcherDTOs.ResearcherReportDTO;
+import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.MyTeamDTO;
+import DTO.SwimmerDTOs.OpenTeamResponseDTO;
+import DTO.SwimmerDTOs.SwimmerInvitationDTO;
+import DTO.UserDTOs.UserDTO;
+import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.Errors.Factories.FactoryElbowError;
 import Domain.Errors.Factories.FactoryForearmError;
 import Domain.Errors.Factories.FactoryPalmCrossHeadError;
@@ -17,6 +31,7 @@ import ExernalSystems.MLConnectionHandlerProxy;
 import Storage.Feedbacks.FeedbacksDao;
 import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.SwimmerDao;
+import Storage.Team.TeamDao;
 import Storage.User.UserDao;
 import DomainLogic.Completions.ISkeletonsCompletion;
 import DomainLogic.Completions.SkeletonsCompletionBefore;
@@ -35,8 +50,11 @@ public class SwimFixAPI {
 
    private LogicManager logicManager;
 
-   public SwimFixAPI() {
-      IUserProvider userProvider = new UserProvider(new UserDao(), new SwimmerDao());
+   public SwimFixAPI(String dbName) {
+      IUserProvider userProvider = new UserProvider(
+              new UserDao(),
+              new SwimmerDao(),
+              new TeamDao());
 
       IFactoryDraw iFactoryDraw = new FactoryDraw();
       IFactoryErrorDetectors iFactoryErrorDetectors = new FactoryErrorDetectors(
@@ -79,7 +97,8 @@ public class SwimFixAPI {
               statisticProvider,
               reportProvider,
               emailSenderProvider,
-              zipProvider);
+              zipProvider,
+              dbName);
    }
 
    public ActionResult<UserDTO> login(UserDTO userDTO) {
@@ -108,7 +127,7 @@ public class SwimFixAPI {
       return logicManager.getResearcherReport(userDTO, videoDTO, fileDTO);
    }
 
-    public ActionResult<Boolean> invite(UserDTO userDTO, String to) {
+    public ActionResult<InvitationResponseDTO> invite(UserDTO userDTO, String to) {
       return logicManager.invite(userDTO, to);
    }
 
@@ -153,4 +172,31 @@ public class SwimFixAPI {
       return logicManager.getSummary(admin);
    }
 
+   public ActionResult<OpenTeamResponseDTO> openSwimmingTeam(UserDTO coachDTO, String teamName) {
+      return logicManager.addCoach(coachDTO, teamName);
+   }
+
+   public ActionResult<List<SwimmerInvitationDTO>> getPendingInvitations(UserDTO userDTO) {
+      return logicManager.getPendingInvitations(userDTO);
+   }
+
+   public ActionResult<List<SwimmerInvitationDTO>> getInvitationsHistory(UserDTO userDTO) {
+      return logicManager.getInvitationsHistory(userDTO);
+   }
+
+   public ActionResult<Boolean> approveInvitation(UserDTO userDTO, String invitationId) {
+      return logicManager.approveInvitation(userDTO, invitationId);
+   }
+
+   public ActionResult<Boolean> denyInvitation(UserDTO userDTO, String invitationId) {
+      return logicManager.denyInvitation(userDTO, invitationId);
+   }
+
+   public ActionResult<Boolean> leaveTeam(UserDTO userDTO, String teamId) {
+      return logicManager.leaveTeam(userDTO, teamId);
+   }
+
+   public ActionResult<MyTeamDTO> getMyTeam(UserDTO userDTO) {
+      return logicManager.getMyTeam(userDTO);
+   }
 }

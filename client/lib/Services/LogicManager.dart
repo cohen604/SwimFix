@@ -4,9 +4,14 @@ import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
+import 'package:client/Domain/Invitations/Invitation.dart';
+import 'package:client/Domain/Summaries/MyTeam.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
+import 'package:client/Domain/Team/AddingTeamResponse.dart';
+import 'package:client/Domain/Team/InvitationResponse.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/Domain/ServerResponse.dart';
@@ -170,22 +175,22 @@ class LogicManager {
     return await this.connectionHandler.downloadFile(path, map);
   }
 
-  Future<bool> sendInvitationEmail(Swimmer swimmer, String email) async {
+  Future<InvitationResponse> sendInvitationEmail(Swimmer swimmer, String email) async {
     String path = '/coach/invite';
     Map<String, dynamic> map = swimmer.toJson();
     map['to'] = email;
     try {
       ServerResponse response = await connectionHandler.postMessage(
           path, map);
-      if (response != null && response.isSuccess() && response.value) {
-        return true;
+      if (response != null && response.isSuccess()) {
+        return InvitationResponse.fromJson(response.value as Map);
       }
     }
     catch(e) {
       print(e);
       print('error in $path with ${e.toString()}');
     }
-    return false;
+    return null;
   }
 
   /// get the days a swimmer swim
@@ -330,6 +335,121 @@ class LogicManager {
     }
     catch(e) {
       print('error in get summary ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<AddingTeamResponse> openSwimmingTeam(Swimmer swimmer, String teamName) async {
+    try {
+      String path = "/swimmer/team/open";
+      Map<String, dynamic> map = {};
+      map['userDTO'] = swimmer.toJson();
+      map['teamName'] = teamName;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null) {
+        return AddingTeamResponse.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e) {
+      print('error in open swimming team ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitations(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e) {
+      print('error in get invitations ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> approveInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/approve";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e) {
+      print('error in approve invitation ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> denyInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/deny";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e) {
+      print('error in deny invitation ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitationsHistory(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations/history";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e) {
+      print('error in get invitations history ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<bool> leaveTeam(Swimmer swimmer, String teamName) async {
+    try {
+      String path = '/swimmer/team/leave';
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['teamId'] = teamName;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e) {
+      print('error in leave team ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<MyTeam> getMyTeam(Swimmer swimmer) async {
+    try {
+      String path = '/swimmer/team';
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return MyTeam.fromJson(serverResponse.value) ;
+      }
+    }
+    catch(e) {
+      print('error in get my team ${e.toString()}');
     }
     return null;
   }

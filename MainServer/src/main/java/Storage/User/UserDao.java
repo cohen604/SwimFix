@@ -2,7 +2,7 @@ package Storage.User;
 import Domain.UserData.User;
 import Storage.Dao;
 import Storage.DbContext;
-import Storage.User.Codecs.CoachCodec;
+import Storage.Coach.Codecs.CoachCodec;
 import Storage.User.Codecs.UserCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -12,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -47,6 +48,20 @@ public class UserDao extends Dao<User> implements IUserDao{
 
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DbContext.DATABASE_NAME);
         return mongoDatabase.getCollection(DbContext.COLLECTION_NAME_USERS, User.class);
+    }
+
+    @Override
+    public boolean logoutAll() {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson searchQuery  = Filters.eq("logged", true);
+            Bson updateQuery =  new Document("$set", new Document("logged", false));
+            return collection.updateMany(searchQuery,updateQuery)
+                    .getModifiedCount() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -244,6 +259,24 @@ public class UserDao extends Dao<User> implements IUserDao{
                     Filters.ne("coach", null));
             return collection.countDocuments(query);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User tryInsertThenUpdate(User user) {
+        return defaultTryInsertThenUpdate(user, user.getUid());
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        try {
+            MongoCollection<User> collection = getCollection();
+            Bson query = Filters.eq("email", email);
+            return collection.find(query).first();
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;

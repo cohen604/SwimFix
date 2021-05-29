@@ -1,5 +1,5 @@
 package mainServer.Providers.Interfaces;
-import DTO.UserDTO;
+import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.IUser;
@@ -31,4 +31,19 @@ public interface IUserProvider {
     boolean addResearcher(IUser admin, IUser userToAdd);
 
     UsersSummary getSummary();
+
+    boolean addCoach(IUser user, String teamName);
+
+    IUser findUser(String email);
+
+    boolean sendInvitation(IUser user, IUser sendTo);
+
+    boolean approveInvitation(IUser user, String invitationId);
+
+    boolean denyInvitation(IUser user, String invitationId);
+
+    boolean leaveTeam(IUser user, String teamId);
+
+    String getMyTeam(IUser iUser);
 }
+

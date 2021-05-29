@@ -1,5 +1,7 @@
 package UnitTests.StreamingTests;
 
+import Domain.Streaming.TextualComment;
+import Domain.Streaming.VisualComment;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -10,6 +12,10 @@ import org.junit.runners.Suite;
         VideoTests.class,
         FeedbackTests.class,
         TaggedVideoTests.class,
+        FactoryFeedbackVideoTests.class,
+        FactoryVideoHandlerTests.class,
+        TextualCommentTests.class,
+        VisualComentsTests.class,
 })
 
 

@@ -22,12 +22,20 @@ import 'package:client/Screens/ResearcherScreens/WebMultiReportsScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebReportScreen.dart';
 import 'package:client/Screens/ResearcherScreens/WebResearcherScreen.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/HistoryScreenArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerHistoryPoolsArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/UploadScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/ViewFeedbackArguments.dart';
+import 'package:client/Screens/SwimmersScreens/WebInvitationHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebMyTeamScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebPendingInvitationsScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryDayScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerHistoryScreen.dart';
+import 'package:client/Screens/SwimmersScreens/WebSwimmerOpenTeamScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebSwimmerScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebUploadScreen.dart';
 import 'package:client/Screens/SwimmersScreens/WebViewFeedbackScreen.dart';
@@ -193,6 +201,46 @@ class ScreenHolder {
       return getNoPermissionScreen(args.user);
     }
     return new WebStatisticsScreen(args);
+  }
+
+  Widget getSwimmerOpenTeamScreen(SwimmerOpenTeamArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebSwimmerOpenTeamScreen(args);
+  }
+
+  Widget getPendingInvitationsScreen(PendingInvitationsArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebPendingInvitationsScreen(args);
+  }
+
+  Widget getInvitationsHistoryScreen(InvitationHistoryArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebInvitationHistoryScreen(args);
+  }
+
+  Widget getMyTeamScreen(MyTeamArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/swimmer');
+    }
+    if(!args.user.permissions.isSwimmer) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebNyTeamScreen(args);
   }
 
   Widget getReLoginScreen(String desPath) {

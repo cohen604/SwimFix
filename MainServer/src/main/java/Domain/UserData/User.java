@@ -1,12 +1,13 @@
 package Domain.UserData;
 
-import DTO.UserDTO;
+import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.UserData.Interfaces.IInvitation;
+import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Interfaces.IUser;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements IUser {
@@ -24,6 +25,7 @@ public class User implements IUser {
 
     private final Object _adminLock;
     private final Object _researcherLock;
+    private final Object _coachLock;
     /***
      * Note: Only when register using this constructor
      * @param userDTO - user dto
@@ -34,11 +36,9 @@ public class User implements IUser {
         this.name = userDTO.getName();
         this.logged = new AtomicBoolean(false);
         _swimmer = new Swimmer(email);
-//        _coach = new Coach();
-//        _researcher = new Researcher();
-//        _admin = new Admin();
         _adminLock = new Object();
         _researcherLock = new Object();
+        _coachLock = new Object();
         _pathManager = new PathManager(email, true);
     }
 
@@ -54,6 +54,7 @@ public class User implements IUser {
         this._researcher = researcher;
         _adminLock = new Object();
         _researcherLock = new Object();
+        _coachLock = new Object();
         _pathManager = new PathManager(email, false);
     }
 
@@ -222,5 +223,39 @@ public class User implements IUser {
         synchronized (_researcherLock) {
             _researcher = null;
         }
+    }
+
+    @Override
+    public boolean addCoach(String teamName) {
+        synchronized (_coachLock) {
+            if(_coach == null) {
+                _coach = new Coach(email, teamName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteCoach() {
+        synchronized (_coachLock) {
+            _coach = null;
+        }
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitations() {
+        if(_swimmer!=null) {
+            return _swimmer.getInvitations();
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitationsHistory() {
+        if(_swimmer!=null) {
+            return _swimmer.getInvitationsHistory();
+        }
+        return null;
     }
 }

@@ -1,8 +1,8 @@
 package mainServer.Controllers;
 
 import DTO.ActionResult;
-import DTO.UserDTO;
-import DTO.UserPermissionsDTO;
+import DTO.UserDTOs.UserDTO;
+import DTO.UserDTOs.UserPermissionsDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.web.bind.annotation.CrossOrigin;

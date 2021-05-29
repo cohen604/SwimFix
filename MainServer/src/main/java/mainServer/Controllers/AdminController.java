@@ -1,8 +1,8 @@
 package mainServer.Controllers;
 import DTO.ActionResult;
-import DTO.AdminAddRequestDTO;
-import DTO.SummaryDTO;
-import DTO.UserDTO;
+import DTO.AdminDTOs.AdminAddRequestDTO;
+import DTO.AdminDTOs.SummaryDTO;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.web.bind.annotation.*;

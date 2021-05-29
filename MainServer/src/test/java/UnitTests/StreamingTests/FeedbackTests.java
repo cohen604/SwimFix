@@ -1,6 +1,6 @@
 package UnitTests.StreamingTests;
 
-import DTO.FeedbackVideoStreamer;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static java.nio.file.Files.readAllLines;
 
-public class FeedbackTests  extends TestCase {
+public class FeedbackTests extends TestCase {
 
     final private String VIDEO_FOLDER = "./src/test/java/TestingVideos";
     private List<File> deleteList;

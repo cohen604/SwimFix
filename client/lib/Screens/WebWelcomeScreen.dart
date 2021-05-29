@@ -94,7 +94,7 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     if(this.widget.args.user.permissions.isCoach) {
       return buildMainButton(context, "Coach",
       onClick('/coach',
-          arguments: new CoachScreenArguments(this.widget.args.user, 'Team Name')),
+          arguments: new CoachScreenArguments(this.widget.args.user)),
           _assetsHolder.getCoachImage()
       );
     }

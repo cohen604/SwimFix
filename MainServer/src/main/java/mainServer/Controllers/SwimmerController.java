@@ -1,20 +1,16 @@
 package mainServer.Controllers;
 
 import DTO.*;
-import Domain.Streaming.IFeedbackVideo;
-import com.google.gson.Gson;
-import Domain.SwimmingSkeletonsData.SwimmingSkeletonGraph.Pair;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.SwimmerDTOs.*;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/swimmer")
@@ -108,4 +104,116 @@ public class SwimmerController {
         return null;
     }
 
+    @PostMapping("/team/open")
+    @CrossOrigin(origins = "*")
+    public String openSwimmingTeam(@RequestBody OpenTeamRequestDTO requestDTO) {
+        try {
+            System.out.println("received open swimming team");
+            UserDTO coachDTO = requestDTO.getUserDTO();
+            String teamName = requestDTO.getTeamName();
+            ActionResult<OpenTeamResponseDTO> response = swimFixAPI.openSwimmingTeam(coachDTO, teamName);
+            System.out.println("send response of open swimming team");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitations")
+    @CrossOrigin(origins = "*")
+    public String getPendingInvitations(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received invitations request");
+            ActionResult<List<SwimmerInvitationDTO>> response = swimFixAPI.getPendingInvitations(userDTO);
+            System.out.println("send invitations");
+            return  response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitations/history")
+    @CrossOrigin(origins = "*")
+    public String getInvitationHistory(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received invitations history request");
+            ActionResult<List<SwimmerInvitationDTO>> response = swimFixAPI.getInvitationsHistory(userDTO);
+            System.out.println("send invitations history");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitation/approve")
+    @CrossOrigin(origins = "*")
+    public String approveInvitation(@RequestBody SwimmerInvitationUpdateDTO updateDTO) {
+        try {
+            System.out.println("received approve invitation");
+            UserDTO userDTO = updateDTO.getUserDTO();
+            String invitationId = updateDTO.getInvitationId();
+            ActionResult<Boolean> response = swimFixAPI.approveInvitation(userDTO, invitationId);
+            System.out.println("send approve invitation");
+            return response.toJson();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/invitation/deny")
+    @CrossOrigin(origins = "*")
+    public String denyInvitation(@RequestBody SwimmerInvitationUpdateDTO updateDTO) {
+        try {
+            System.out.println("received deny invitation");
+            UserDTO userDTO = updateDTO.getUserDTO();
+            String invitationId = updateDTO.getInvitationId();
+            ActionResult<Boolean> response = swimFixAPI.denyInvitation(userDTO, invitationId);
+            System.out.println("send deny invitation");
+            return response.toJson();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/team")
+    @CrossOrigin(origins = "*")
+    public String getMyTeam(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("received my team");
+            ActionResult<MyTeamDTO> response = swimFixAPI.getMyTeam(userDTO);
+            System.out.println("send my team");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PostMapping("/team/leave")
+    @CrossOrigin(origins = "*")
+    public String leaveTeam(@RequestBody SwimmerLeaveTeamDTO leaveTeamDTO) {
+        try {
+            System.out.println("received swimmer team leave");
+            UserDTO userDTO = leaveTeamDTO.getUserDTO();
+            String teamId = leaveTeamDTO.getTeamId();
+            ActionResult<Boolean> response = swimFixAPI.leaveTeam(userDTO, teamId);
+            System.out.println("send swimmer team leave");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

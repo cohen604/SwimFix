@@ -1,10 +1,5 @@
 package AcceptanceTests.Bridge;
 
-import DTO.ActionResult;
-import DTO.ConvertedVideoDTO;
-import DTO.FeedbackVideoDTO;
-import DTO.FeedbackVideoStreamer;
-
 public class AcceptanceTestsProxy implements AcceptanceTestsBridge {
 
     private AcceptanceTestsReal acceptanceTestsReal;
@@ -14,18 +9,34 @@ public class AcceptanceTestsProxy implements AcceptanceTestsBridge {
     }
 
     @Override
-    public ActionResult<FeedbackVideoStreamer> uploadVideoForStreamer(ConvertedVideoDTO convertedVideoDTO) {
+    public boolean uploadVideoForStreamer(String user, byte[] video) {
         if(acceptanceTestsReal != null) {
-            return acceptanceTestsReal.uploadVideoForStreamer(convertedVideoDTO);
+            return acceptanceTestsReal.uploadVideoForStreamer(user, video);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean login(String uid, String email, String name) {
+        if(acceptanceTestsReal != null){
+            return acceptanceTestsReal.login(uid, email, name);
+        }
+        return true;
+    }
+
+    @Override
+    public String streamFile(String user, String path) {
+        if(acceptanceTestsReal != null) {
+            return acceptanceTestsReal.streamFile(user, path);
         }
         return null;
     }
 
     @Override
-    public ActionResult<FeedbackVideoDTO> streamFile(String path) {
-        if(acceptanceTestsReal != null) {
-            return acceptanceTestsReal.streamFile(path);
+    public boolean logout(String uid) {
+        if(acceptanceTestsReal != null){
+            return acceptanceTestsReal.logout(uid);
         }
-        return null;
+        return true;
     }
 }

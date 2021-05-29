@@ -58,4 +58,11 @@ public interface IUser {
 
     void deleteResearcher();
 
+    boolean addCoach(String teamName);
+
+    void deleteCoach();
+
+    Collection<? extends IInvitation> getInvitations();
+
+    Collection<? extends  IInvitation> getInvitationsHistory();
 }

@@ -10,10 +10,10 @@ class DateTimeDTO {
     this.day = day;
   }
 
-  DateTimeDTO.fromJson(Map<String, dynamic> json)
-      : year = int.parse(json['year']),
-        month = int.parse(json['month']),
-        day = int.parse(json['day']);
+  DateTimeDTO.fromJson(Map<String, dynamic> map)
+      : year = map['year'],
+        month = map['month'],
+        day = map['day'];
 
   Map<String, dynamic> toJson() =>
     {
@@ -29,6 +29,32 @@ class DateTimeDTO {
   @override
   String toString() {
     return '$day.$month.$year';
+  }
+
+  int compareTo(DateTimeDTO other) {
+    if(year < other.year) {
+      return -1;
+    }
+    else if(year > other.year) {
+      return 1;
+    }
+    else {
+      if(month < other.month) {
+        return -1;
+      }
+      else if(month > other.month) {
+        return 1;
+      }
+      else {
+        if(day < other.day) {
+          return -1;
+        }
+        else if(day > other.day) {
+          return 1;
+        }
+      }
+    }
+    return 0;
   }
 
 }

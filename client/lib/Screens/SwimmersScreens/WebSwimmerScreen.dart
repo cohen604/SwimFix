@@ -1,7 +1,10 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
+import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
 import 'Arguments/HistoryScreenArguments.dart';
+import 'Arguments/PendingInvitationsArguments.dart';
 import 'Arguments/SwimmerScreenArguments.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,21 +32,38 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
     _assetsHolder = AssetsHolder.getInstance();
   }
 
-  void onClickUpload() {
-    this.setState(() {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, '/upload',
-          arguments: new UploadScreenArguments(this.widget.arguments.user));
-      });
+  void onClickUpload(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, '/upload',
+        arguments: new UploadScreenArguments(this.widget.arguments.user));
     });
   }
 
-  void onClickHistory() {
-    this.setState(() {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+  void onClickHistory(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, '/history',
             arguments: new HistoryScreenArguments(this.widget.arguments.user));
       });
+  }
+
+  void onClickOpenTeam(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, '/swimmer/open/team',
+          arguments: new SwimmerOpenTeamArguments(this.widget.arguments.user));
+    });
+  }
+
+  void onClickInvitations(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, '/swimmer/invitations',
+          arguments: new PendingInvitationsArguments(this.widget.arguments.user));
+    });
+  }
+
+  void onClickMyTeam(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushNamed(context, '/swimmer/team',
+          arguments: new MyTeamArguments(this.widget.arguments.user));
     });
   }
 
@@ -62,15 +82,25 @@ class _WebSwimmerScreenState extends State<WebSwimmerScreen> {
         scrollDirection: Axis.vertical,
         children: [
           IconCardButton("Upload",
-              "Upload a swimming Video", onClickUpload, Icons.upload_file),
+              "Upload a swimming Video",
+              ()=>onClickUpload(context),
+              Icons.upload_file),
           IconCardButton("History",
-              "View feedback history", onClickHistory, Icons.history),
+              "View feedback history",
+              ()=>onClickHistory(context),
+              Icons.history),
           IconCardButton("Open a team",
-              'Create a new team and become a Coach', null, Icons.group_add),
+              'Create a new team and become a Coach',
+               ()=>onClickOpenTeam(context),
+              Icons.group_add),
           IconCardButton("Team invitations",
-              'View your swimming team invitations', null, Icons.insert_invitation),
+              'View your swimming team invitations',
+              ()=>onClickInvitations(context),
+              Icons.insert_invitation),
           IconCardButton("My Team",
-              'View your team, you are part of', null, Icons.group),
+              'View your team, you are part of',
+              ()=>onClickMyTeam(context),
+              Icons.group),
         ],
       ),
     );

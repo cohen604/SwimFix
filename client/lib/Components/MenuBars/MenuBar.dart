@@ -99,7 +99,7 @@ class _MenuBarState extends State<MenuBar> {
       this.setState(() {
         SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, '/coach',
-              arguments: new CoachScreenArguments(this.widget.user, 'Team Name'));
+              arguments: new CoachScreenArguments(this.widget.user));
         });
       });
     };

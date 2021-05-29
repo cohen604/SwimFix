@@ -14,6 +14,8 @@ public abstract class Dao<T> {
 
     protected abstract MongoCollection<T> getCollection();
 
+    //TODO maybe need here to add cache for faster usage
+
     public List<T> getAll() {
         try {
             MongoCollection<T> collection = getCollection();
@@ -41,13 +43,13 @@ public abstract class Dao<T> {
     public T find(String id) {
         try {
             MongoCollection<T> collection = getCollection();
-            List<T> output = new LinkedList<>();
+//            List<T> output = new LinkedList<>();
             Document query = new Document("_id", id);
-            collection.find(query).into(output);
-            if(output.isEmpty()) {
-                return null;
-            }
-            return output.get(0);
+            return collection.find(query).first();
+//            if(output.isEmpty()) {
+//                return null;
+//            }
+//            return output.get(0);
         }catch (Exception e) {
             e.printStackTrace();
         }

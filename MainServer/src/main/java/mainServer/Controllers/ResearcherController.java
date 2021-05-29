@@ -1,6 +1,12 @@
 package mainServer.Controllers;
 
 import DTO.*;
+import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.ResearcherDTOs.FileDTO;
+import DTO.ResearcherDTOs.FileDownloadDTO;
+import DTO.ResearcherDTOs.FilesDownloadRequest;
+import DTO.ResearcherDTOs.ResearcherReportDTO;
+import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
 import org.springframework.http.HttpStatus;
@@ -9,9 +15,6 @@ import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/researcher")
