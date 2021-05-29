@@ -801,7 +801,23 @@ public class LogicManager {
      */
     public ActionResult<List<CoachSwimmerFeedbackDTO>> coachGetSwimmerFeedbacks(UserDTO coachDto, String swimmerEmail) {
         try {
-            IUser iUser = _userProvider.getUser(coachDto);
+            IUser coach = _userProvider.getUser(coachDto);
+            IUser swimmer = _userProvider.findUser(swimmerEmail);
+            if(coach!=null && swimmer!=null) {
+                Collection<? extends IFeedbackVideo> feedbacks = _userProvider.coachGetFeedbacks(coach, swimmer);
+                List<CoachSwimmerFeedbackDTO> output = new LinkedList<>();
+                for(IFeedbackVideo iFeedbackVideo: feedbacks) {
+                    CoachSwimmerFeedbackDTO dto = new CoachSwimmerFeedbackDTO(
+                            swimmer.getEmail(),
+                            iFeedbackVideo.getDate(),
+                            iFeedbackVideo.getPath(),
+                            iFeedbackVideo.getNumberOfErrors(),
+                            iFeedbackVideo.getNumberOfComments()
+                    );
+                    output.add(dto);
+                }
+                return new ActionResult<>(Response.SUCCESS, output);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -78,4 +78,8 @@ public interface IFeedbackVideo {
      * @return local date time of the feedback video
      */
     LocalDateTime getDate();
+
+    int getNumberOfErrors();
+
+    int getNumberOfComments();
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/Dates/DateTimeDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Domain/Feedback/FeedbackInfo.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Invitations/Invitation.dart';
@@ -461,12 +462,29 @@ class LogicManager {
       Map<String, dynamic> map = swimmer.toJson();
       ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
       if(serverResponse!=null && serverResponse.isSuccess()) {
-        print(serverResponse.value);
         return Team.fromJson(serverResponse.value) ;
       }
     }
     catch(e) {
-      print('error in get coach team ${e.toString()}');
+
+    }
+    return null;
+  }
+
+  Future<List<FeedbackInfo>> coachGetSwimmerFeedbacks(Swimmer coach, String swimmersEmail) async {
+    try {
+      String path = '/coach/swimmer/feedbacks';
+      Map<String, dynamic> map = Map();
+      map['coachDTO'] = coach.toJson();
+      map['swimmersEmail'] = swimmersEmail;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value as List;
+        return list.map((e)=>FeedbackInfo.fromJson(e)).toList();
+      }
+    }
+    catch(e) {
+      print('error in get swimmer feedbacks ${e.toString()}');
     }
     return null;
   }

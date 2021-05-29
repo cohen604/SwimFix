@@ -6,6 +6,7 @@ import Domain.Errors.Interfaces.SwimmingError;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,9 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     private TaggedVideo taggedVideo; // swimming skeletons
     private String path; // The feedback video path to insert into
     private boolean feedbackUpdated; // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
-    private VisualComment visualComment;
-    private TextualComment textualComment;
     private ISwimmingPeriodTime periodTime;
+    private List<TextualComment> comments;
+    private VisualComment visualComment;
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
                          String path, ISwimmingPeriodTime periodTime) {
@@ -27,9 +28,9 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         this.path = path;
         this.feedbackUpdated = false;
         this.periodTime = periodTime;
+        this.comments = new LinkedList<>();
         //TODO
         this.visualComment = null;
-        this.textualComment = null;
     }
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, String path) {
@@ -37,9 +38,9 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         this.taggedVideo = taggedVideo;
         this.errorMap = new HashMap<>();
         this.path = path;
+        this.comments = new LinkedList<>();
         //TODO
         this.visualComment = null;
-        this.textualComment = null;
     }
 
     /**
@@ -113,6 +114,20 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         int mintes = Integer.valueOf(values[4]);
         int seconds = Integer.valueOf(values[5]);
         return LocalDateTime.of(year, month, day, hour, mintes, seconds);
+    }
+
+    @Override
+    public int getNumberOfErrors() {
+        int sum = 0;
+        for(List<SwimmingError> errors : errorMap.values()) {
+            sum += errors.size();
+        }
+        return sum;
+    }
+
+    @Override
+    public int getNumberOfComments() {
+        return this.comments.size();
     }
 
     private String getDateString(String path) {

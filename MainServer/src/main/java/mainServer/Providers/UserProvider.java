@@ -406,4 +406,21 @@ public class UserProvider implements IUserProvider {
         return null;
     }
 
+    @Override
+    public Collection<? extends IFeedbackVideo> coachGetFeedbacks(IUser coach, IUser swimmer) {
+        User userCoach = _users.get(coach.getUid());
+        User userSwimmer = _users.get(swimmer.getUid());
+        if(userCoach != null
+                && userSwimmer != null
+                && userCoach.isLogged()
+                && userCoach.isCoach()
+                && userSwimmer.isSwimmer()) {
+            Team team = userCoach.getCoach().getTeam();
+            if(team.hasSwimmer(userSwimmer.getSwimmer())) {
+                return userSwimmer.getSwimmer().getFeedbacks();
+            }
+        }
+        return null;
+    }
+
 }

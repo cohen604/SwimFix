@@ -1,6 +1,7 @@
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArguments.dart';
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachSwimmerScreenArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
@@ -118,6 +119,10 @@ class MyApp extends StatelessWidget {
         '/coach/swimmer': (context) {
           CoachSwimmerScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getCoachSwimmerScreen(args);
+        },
+        '/coach/swimmer/feedback': (context) {
+          CoachFeedbackScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screenHolder.getCoachFeedbackScreen(args);
         },
         '/admin': (context) {
           AdminScreenArguments args = ModalRoute.of(context).settings.arguments;

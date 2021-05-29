@@ -70,6 +70,11 @@ public class Team implements ITeam {
         return this.invitations.values();
     }
 
+    @Override
+    public boolean hasSwimmer(ISwimmer swimmer) {
+        return this.swimmers.containsKey(swimmer.getEmail());
+    }
+
     public ConcurrentHashMap<String, ISwimmer> getSwimmers() {
         return swimmers;
     }

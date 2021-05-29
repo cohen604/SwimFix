@@ -48,5 +48,7 @@ public interface IUserProvider {
     String getMyTeam(IUser iUser);
 
     ITeam getCoachTeam(IUser iUser);
+
+    Collection<? extends IFeedbackVideo> coachGetFeedbacks(IUser coach, IUser swimmer);
 }
 
