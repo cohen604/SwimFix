@@ -3,16 +3,14 @@ package mainServer;
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
+import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
-import DTO.SwimmerDTOs.DateDTO;
-import DTO.SwimmerDTOs.MyTeamDTO;
-import DTO.SwimmerDTOs.OpenTeamResponseDTO;
-import DTO.SwimmerDTOs.SwimmerInvitationDTO;
+import DTO.SwimmerDTOs.*;
 import DTO.UserDTOs.UserDTO;
 import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.StatisticsData.IStatistic;
@@ -21,9 +19,12 @@ import Domain.Summaries.FeedbacksSummary;
 import Domain.Summaries.UsersSummary;
 import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.UserData.Interfaces.IInvitation;
+import Domain.UserData.Interfaces.ISwimmer;
+import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import Storage.DbContext;
+import Storage.Team.TeamDao;
 import mainServer.Providers.Interfaces.*;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
@@ -726,6 +727,54 @@ public class LogicManager {
                     return new ActionResult<>(Response.SUCCESS, new MyTeamDTO(true, teamName));
                 }
                 return new ActionResult<>(Response.SUCCESS, new MyTeamDTO(false, ""));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return the coach team
+     * @param userDTO - the coach
+     * @return the coach team
+     */
+    public ActionResult<TeamDTO> getCoachTeam(UserDTO userDTO) {
+        IUser iUser = _userProvider.getUser(userDTO);
+        try {
+            if(iUser!=null) {
+                ITeam iTeam = _userProvider.getCoachTeam(iUser);
+                if(iTeam != null) {
+                    List<SwimmerDTO> swimmers = new LinkedList<>();
+                    for(ISwimmer iSwimmer : iTeam.getSwimmersCollection()) {
+                        SwimmerDTO swimmer = new SwimmerDTO(
+                            iSwimmer.getEmail(),
+                            iSwimmer.getNumberOfFeedbacks()
+                        );
+                        swimmers.add(swimmer);
+                    }
+                    List<SwimmerInvitationDTO> invitations = new LinkedList<>();
+                    for(IInvitation iInvitation: iTeam.getInvitationsCollection()){
+                        SwimmerInvitationDTO invitation = new SwimmerInvitationDTO(
+                                iInvitation.getId(),
+                                iInvitation.getTeamId(),
+                                iInvitation.getCreationTime(),
+                                iInvitation.isPending(),
+                                iInvitation.isApprove(),
+                                iInvitation.isDenied()
+                        );
+                        invitations.add(invitation);
+                    }
+                    TeamDTO teamDto = new TeamDTO(
+                            iTeam.getName(),
+                            new DateDTO(iTeam.getOpenDate()),
+                            iTeam.getCoachId(),
+                            swimmers,
+                            invitations
+                    );
+                    return new ActionResult<>(Response.SUCCESS, teamDto);
+                }
             }
         }
         catch (Exception e) {

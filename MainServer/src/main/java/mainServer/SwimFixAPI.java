@@ -3,6 +3,7 @@ package mainServer;
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
+import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
@@ -198,5 +199,9 @@ public class SwimFixAPI {
 
    public ActionResult<MyTeamDTO> getMyTeam(UserDTO userDTO) {
       return logicManager.getMyTeam(userDTO);
+   }
+
+   public ActionResult<TeamDTO> getCoachTeam(UserDTO userDTO) {
+      return logicManager.getCoachTeam(userDTO);
    }
 }

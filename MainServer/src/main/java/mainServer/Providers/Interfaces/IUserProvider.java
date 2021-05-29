@@ -2,6 +2,7 @@ package mainServer.Providers.Interfaces;
 import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
+import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
 import java.util.Collection;
 
@@ -45,5 +46,7 @@ public interface IUserProvider {
     boolean leaveTeam(IUser user, String teamId);
 
     String getMyTeam(IUser iUser);
+
+    ITeam getCoachTeam(IUser iUser);
 }
 

@@ -1,5 +1,6 @@
 import 'package:client/Components/EmailInvitation.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Team/Team.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,14 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
 
   WebColors _webColors;
   AssetsHolder _assetsHolder;
+  ScreenState _screenState;
+  Team _team;
   TextEditingController _searchTextController;
 
   _WebCoachScreenState() {
     _webColors = WebColors.getInstance();
     _assetsHolder = AssetsHolder.getInstance();
+    _screenState = ScreenState.Loading;
     _searchTextController = TextEditingController();
   }
 
@@ -228,6 +232,113 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
     );
   }
 
+  ////////////// delete all of the above
+
+  Widget buildText(
+      BuildContext context,
+      String text,
+      int size,
+      Color color,
+      FontWeight fontWeight,
+      {textAlign = TextAlign.center}) {
+    return Text(text,
+      textAlign: textAlign,
+      style: TextStyle(
+          fontSize: size * MediaQuery.of(context).textScaleFactor,
+          color: color,
+          fontWeight: fontWeight,
+          decoration: TextDecoration.none
+      ),
+    );
+  }
+
+  Widget buildLoading(BuildContext context) {
+    return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 5.0,),
+            buildText(context, 'Loading team...', 24, Colors.black, FontWeight.normal),
+          ],
+        )
+    );
+  }
+
+  Widget buildError(BuildContext context) {
+    return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              size: 45,
+              color: Colors.red,
+            ),
+            SizedBox(height: 5.0,),
+            buildText(context, 'Something is broken.\n'
+                'Maybe the you don\'t have permissions or the servers are down.\n'
+                'For more information contact swimAnalytics@gmail.com',
+                24, Colors.black, FontWeight.normal,
+                textAlign: TextAlign.center),
+          ],
+        )
+    );
+  }
+
+  Widget buildRightSideView(BuildContext context) {
+    return Container();
+  }
+
+  Widget buildLeftSideView(BuildContext context) {
+    return Container();
+  }
+
+  Widget buildView(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+            child: buildRightSideView(context),
+        ),
+        Expanded(
+            child: buildLeftSideView(context)
+        )
+      ],
+    );
+  }
+
+  Widget buildScreenState(BuildContext context) {
+    if(_screenState == ScreenState.Loading) {
+      return buildLoading(context);
+    }
+    else if(_screenState == ScreenState.Error) {
+      return buildError(context);
+    }
+    else if(_screenState == ScreenState.View) {
+      return buildView(context);
+    }
+    return Container();
+  }
+
+  Widget buildMainArea(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+          fit: BoxFit.fill,
+          colorFilter: ColorFilter.mode(
+              _webColors.getBackgroundForI6(),
+              BlendMode.hardLight),
+        ),
+      ),
+      child: buildScreenState(context),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -243,7 +354,7 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Scrollbar(
-                      child: buildGroupView(context)
+                      child: buildMainArea(context)
                   )
                 ),
               )
@@ -253,4 +364,10 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
       ),
     );
   }
+}
+
+enum ScreenState {
+  Loading,
+  Error,
+  View
 }

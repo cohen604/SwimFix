@@ -2,11 +2,9 @@ package mainServer.Providers;
 import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
+import Domain.UserData.*;
+import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
-import Domain.UserData.Invitation;
-import Domain.UserData.Swimmer;
-import Domain.UserData.Team;
-import Domain.UserData.User;
 import Storage.Swimmer.ISwimmerDao;
 import Storage.Team.ITeamDao;
 import Storage.User.IUserDao;
@@ -387,6 +385,23 @@ public class UserProvider implements IUserProvider {
                 && user.isSwimmer()) {
             Swimmer swimmer = user.getSwimmer();
             return swimmer.getTeamId();
+        }
+        return null;
+    }
+
+    @Override
+    public ITeam getCoachTeam(IUser iUser) {
+        User user = _users.get(iUser.getUid());
+        if(user!=null
+                && user.isLogged()
+                && user.isCoach()) {
+            Team team = user.getCoach().getTeam();
+//            Team team = _teamDao.find(coachTeam.getName());
+            // take team from cache
+            if (_teams.putIfAbsent(team.getName(), team) != null) {
+                team = _teams.get(team.getName());
+            }
+            return team;
         }
         return null;
     }
