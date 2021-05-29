@@ -16,8 +16,8 @@ class Team {
 
   Team.fromJson(Map<String, dynamic> map)
     : name = map['name'],
-      date = map['dateDTO '],
+      date = DateTimeDTO.fromJson(map['dateDTO']),
       coach = map['coachId'],
       swimmers = (map['swimmers'] as List).map((e) => SwimmerTeam.fromJson(e)).toList(),
-      invitations = (map['invitations '] as List).map((e) => Invitation.fromJson(e)).toList();
+      invitations = (map['invitations'] as List).map((e) => Invitation.fromJson(e)).toList();
 }

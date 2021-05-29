@@ -630,6 +630,7 @@ public class LogicManager {
             SwimmerInvitationDTO swimmerInvitationDTO = new SwimmerInvitationDTO(
                     invitation.getId(),
                     invitation.getTeamId(),
+                    invitation.getSwimmerId(),
                     invitation.getCreationTime(),
                     invitation.isPending(),
                     invitation.isApprove(),
@@ -759,6 +760,7 @@ public class LogicManager {
                         SwimmerInvitationDTO invitation = new SwimmerInvitationDTO(
                                 iInvitation.getId(),
                                 iInvitation.getTeamId(),
+                                iInvitation.getSwimmerId(),
                                 iInvitation.getCreationTime(),
                                 iInvitation.isPending(),
                                 iInvitation.isApprove(),
@@ -766,8 +768,9 @@ public class LogicManager {
                         );
                         invitations.add(invitation);
                     }
+                    String teamName = iTeam.getName();
                     TeamDTO teamDto = new TeamDTO(
-                            iTeam.getName(),
+                            teamName,
                             new DateDTO(iTeam.getOpenDate()),
                             iTeam.getCoachId(),
                             swimmers,

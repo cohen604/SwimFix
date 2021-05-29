@@ -9,6 +9,7 @@ import 'package:client/Domain/Summaries/MyTeam.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
 import 'package:client/Domain/Team/AddingTeamResponse.dart';
 import 'package:client/Domain/Team/InvitationResponse.dart';
+import 'package:client/Domain/Team/Team.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/SwimmerOpenTeamArguments.dart';
@@ -450,6 +451,22 @@ class LogicManager {
     }
     catch(e) {
       print('error in get my team ${e.toString()}');
+    }
+    return null;
+  }
+
+  Future<Team> getCoachTeam(Swimmer swimmer) async {
+    try {
+      String path = '/coach//team';
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
+        return Team.fromJson(serverResponse.value) ;
+      }
+    }
+    catch(e) {
+      print('error in get coach team ${e.toString()}');
     }
     return null;
   }

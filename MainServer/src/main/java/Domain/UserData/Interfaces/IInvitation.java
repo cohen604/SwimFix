@@ -15,4 +15,6 @@ public interface IInvitation {
     boolean isApprove();
 
     boolean isDenied();
+
+    String getSwimmerId();
 }

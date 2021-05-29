@@ -6,6 +6,7 @@ public class SwimmerInvitationDTO {
 
     private String id;
     private String teamId;
+    private String email;
     private DateDTO dateDTO;
     private boolean isPending;
     private boolean isApprove;
@@ -13,12 +14,14 @@ public class SwimmerInvitationDTO {
 
     public SwimmerInvitationDTO(String id,
                                 String teamId,
+                                String email,
                                 LocalDateTime dateTime,
                                 boolean isPending,
                                 boolean isApprove,
                                 boolean isDenied) {
         this.id = id;
         this.teamId = teamId;
+        this.email = email;
         this.dateDTO = new DateDTO(dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth());
         this.isPending = isPending;
         this.isApprove = isApprove;
@@ -71,5 +74,13 @@ public class SwimmerInvitationDTO {
 
     public void setDenied(boolean denied) {
         isDenied = denied;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

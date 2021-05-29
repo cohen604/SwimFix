@@ -4,18 +4,20 @@ class Invitation {
 
   String id;
   String teamId;
+  String email;
   DateTimeDTO date;
   bool isPending;
   bool isApprove;
   bool isDenied;
 
 
-  Invitation(this.id, this.teamId, this.date, this.isPending, this.isApprove,
-      this.isDenied);
+  Invitation(this.id, this.teamId, this.email, this.date, this.isPending,
+      this.isApprove, this.isDenied);
 
   Invitation.fromJson(Map<String, dynamic> map)
     : id = map['id'],
       teamId = map['teamId'],
+      email = map['email'],
       date = DateTimeDTO.fromJson(map['dateDTO']),
       isPending = map['isPending'],
       isApprove = map['isApprove'],

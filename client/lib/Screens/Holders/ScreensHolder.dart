@@ -12,7 +12,9 @@ import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachSwimmerScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/WebCoachScreen.dart';
+import 'package:client/Screens/CoachScreens/WebCoachSwimmerScreen.dart';
 import 'package:client/Screens/MobileAboutScreen.dart';
 import 'package:client/Screens/MobileDownloadScreen.dart';
 import 'package:client/Screens/ResearcherScreens/Arguments/MultiReportScreenArguments.dart';
@@ -240,7 +242,18 @@ class ScreenHolder {
     if(!args.user.permissions.isSwimmer) {
       return getNoPermissionScreen(args.user);
     }
-    return new WebNyTeamScreen(args);
+    return new WebMyTeamScreen(args);
+  }
+
+
+  Widget getCoachSwimmerScreen(CoachSwimmerScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/coach');
+    }
+    if(!args.user.permissions.isCoach) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebCoachSwimmerScreen(args);
   }
 
   Widget getReLoginScreen(String desPath) {

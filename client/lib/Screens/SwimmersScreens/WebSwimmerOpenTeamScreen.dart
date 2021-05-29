@@ -136,7 +136,7 @@ class _WebSwimmerOpenTeamScreenState extends State<WebSwimmerOpenTeamScreen> {
         controller: _controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Search text',
+          labelText: 'Enter team name',
         ),
         textAlign: TextAlign.center,
         style: TextStyle(
