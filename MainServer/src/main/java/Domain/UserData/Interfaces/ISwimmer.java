@@ -13,4 +13,6 @@ public interface ISwimmer {
 
     Collection<? extends IInvitation> getInvitationsHistory();
 
+    int getNumberOfFeedbacks();
+
 }

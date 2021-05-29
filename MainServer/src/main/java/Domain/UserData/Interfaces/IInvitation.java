@@ -10,4 +10,9 @@ public interface IInvitation {
 
     LocalDateTime getCreationTime();
 
+    boolean isPending();
+
+    boolean isApprove();
+
+    boolean isDenied();
 }

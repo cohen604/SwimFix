@@ -74,6 +74,11 @@ public class Swimmer implements ISwimmer {
         return _invitationHistory.values();
     }
 
+    @Override
+    public int getNumberOfFeedbacks() {
+        return _feedbacks.size();
+    }
+
 
     public void deleteInvitation(Invitation invitation) {
         _pendingInvitations.remove(invitation.getId());

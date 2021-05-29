@@ -1,5 +1,7 @@
 package Domain.UserData;
+import Domain.UserData.Interfaces.IInvitation;
 import Domain.UserData.Interfaces.ISwimmer;
+import Domain.UserData.Interfaces.ITeam;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -7,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Team {
+public class Team implements ITeam {
 
     private String name;
     private LocalDateTime openDate;
@@ -43,16 +45,29 @@ public class Team {
         }
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public LocalDateTime getOpenDate() {
         return openDate;
     }
 
+    @Override
     public String getCoachId() {
         return coachId;
+    }
+
+    @Override
+    public Collection<? extends ISwimmer> getSwimmersCollection() {
+        return this.swimmers.values();
+    }
+
+    @Override
+    public Collection<? extends IInvitation> getInvitationsCollection() {
+        return this.invitations.values();
     }
 
     public ConcurrentHashMap<String, ISwimmer> getSwimmers() {
@@ -84,7 +99,6 @@ public class Team {
     public void deleteInvitation(Invitation invitation) {
         this.invitations.remove(invitation.getId());
     }
-
 
     public boolean addSwimmer(ISwimmer swimmer) {
         return swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
