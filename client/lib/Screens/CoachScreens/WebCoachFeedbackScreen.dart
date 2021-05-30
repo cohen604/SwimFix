@@ -1,5 +1,9 @@
 import 'package:chewie/chewie.dart';
+import 'package:client/Components/CommentComp.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Feedback/FeedbackComment.dart';
+import 'package:client/Domain/Feedback/FeedbackData.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
@@ -25,26 +29,54 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   LogicManager _logicManager;
   ScreenState _screenState;
 
-  VideoPlayerController _controller;
+  VideoPlayerController _videoController;
   ChewieController _chewieController;
+  TextEditingController _textController;
+
+  FeedbackData _feedbackData;
+  List<FeedbackComment> _comments;
 
   _WebCoachFeedbackScreenState() {
     _webColors = WebColors.getInstance();
     _assetsHolder = AssetsHolder.getInstance();
     _logicManager = LogicManager.getInstance();
     _screenState = ScreenState.View;
+    _textController = new TextEditingController();
   }
 
   @override
   void initState() {
     super.initState();
+    Swimmer coach = this.widget.args.user.swimmer;
+    String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
+    String feedbackKey = this.widget.args.feedbackInfo.key;
+    _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
+        (FeedbackData data) {
+          if(data == null) {
+            this.setState(() {
+              _screenState = ScreenState.Error;
+            });
+          }
+          else {
+            initVideoPlayers();
+            this.setState(() {
+              _feedbackData = data;
+              _screenState = ScreenState.View;
+              _comments = data.comments;
+            });
+          }
+        }
+    );
+  }
+
+  void initVideoPlayers() {
     String path = _logicManager.getStreamUrl() + this.widget.args.feedbackInfo.feedbackLink;
     print('the path is ' + path);
-    _controller = VideoPlayerController.network(path);
-    _controller.initialize();
-    _controller.play();
+    _videoController = VideoPlayerController.network(path);
+    _videoController.initialize();
+    _videoController.play();
     _chewieController = ChewieController(
-      videoPlayerController: _controller,
+      videoPlayerController: _videoController,
       autoPlay: false,
       looping: false,
       aspectRatio: 16 / 9,
@@ -59,8 +91,100 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
-    _chewieController.dispose();
+    _textController.dispose();
+    if(_videoController != null) {
+      _videoController.dispose();
+    }
+    if(_chewieController != null) {
+      _chewieController.dispose();
+    }
+  }
+
+  void updateFeedbackData() {
+    Swimmer coach = this.widget.args.user.swimmer;
+    String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
+    String feedbackKey = this.widget.args.feedbackInfo.key;
+    _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
+            (FeedbackData data) {
+          if(data != null) {
+            this.setState(() {
+              _feedbackData = data;
+              _comments = data.comments;
+            });
+          }
+        }
+    );
+  }
+
+  void showServerFailMsg(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          content:Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 45,
+                color: Colors.red,
+              ),
+              SizedBox(height: 5.0,),
+              buildText(context, 'Something is broken.\n'
+                  'Maybe the you don\'t have permissions or the servers are down.\n'
+                  'For more information contact swimAnalytics@gmail.com',
+                  24, Colors.black, FontWeight.normal),
+            ],
+          )
+        )
+    );
+  }
+
+  void showInvalidCommentMsg(BuildContext context) {
+    _textController.text = "";
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+            content:Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.warning_amber_outlined,
+                  size: 45,
+                  color: Colors.yellow,
+                ),
+                SizedBox(height: 5.0,),
+                buildText(context, 'Invalid comment. Please insert new comment',
+                    24, Colors.black, FontWeight.normal),
+              ],
+            )
+        )
+    );
+  }
+
+  void onAddComment(BuildContext context, String text) {
+    if(text.isEmpty || text.replaceAll(" ", "").isEmpty) {
+      showInvalidCommentMsg(context);
+    }
+    else {
+      Swimmer coach = this.widget.args.user.swimmer;
+      String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
+      String feedbackKey = this.widget.args.feedbackInfo.key;
+      _logicManager.coachAddFeedbackComment(coach, swimmersEmail, feedbackKey, text)
+          .then((bool added) {
+            if (added = null) {
+              showServerFailMsg(context);
+            }
+            else if (added) {
+              updateFeedbackData();
+            }
+            else {
+              showServerFailMsg(context);
+            }
+        }
+      );
+    }
   }
 
   Widget buildText(
@@ -127,17 +251,56 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     );
   }
 
-  Widget buildComment(BuildContext context) {
-    return Container();
-  }
-
   Widget buildEmptyCommentsList(BuildContext context) {
-    return Container();
+    return Center(
+      child: buildText(context, 'There are no comments to feedback', 21, Colors.black, FontWeight.normal),
+    );
   }
 
   Widget buildCommentsList(BuildContext context) {
-    return Container();
+    if(_comments.isEmpty) {
+      return buildEmptyCommentsList(context);
+    }
+    return ListView.builder(
+        itemCount: _comments.length,
+        itemBuilder: (BuildContext context, int index) {
+          return CommentComp(_comments[index]);
+        }
+    );
   }
+
+ Widget buildAddComment(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: TextField(
+              controller: _textController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Enter team name',
+              ),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24.0,
+                height: 2.0,
+                color: Colors.black,
+              ),
+            )
+        ),
+        Padding(
+            padding: const EdgeInsets.all(5),
+            child: IconButton(
+              icon: Icon(
+                  Icons.add
+              ),
+              color: _webColors.getBackgroundForI2(),
+              iconSize: 35,
+              onPressed: ()=>onAddComment(context, _textController.text),
+            )
+        ),
+      ],
+    );
+ }
 
   Widget buildComments(BuildContext context) {
     return Container(
@@ -149,6 +312,10 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
           child: Column(
             children: [
               buildText(context, 'Comments', 28, _webColors.getBackgroundForI2(), FontWeight.normal),
+              Expanded(
+                  child: buildCommentsList(context),
+              ),
+              buildAddComment(context),
             ],
           ),
         ),

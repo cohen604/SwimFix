@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Domain/Feedback/FeedbackData.dart';
 import 'package:client/Domain/Feedback/FeedbackInfo.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Files/FilesDownloadRequest.dart';
@@ -484,6 +485,43 @@ class LogicManager {
     }
     catch(e, stacktrace) {
       print('error in get swimmer feedbacks ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<FeedbackData> coachGetFeedbackData(Swimmer coach, String swimmersEmail, String feedbackKey) async {
+    try {
+      String path = '/coach/swimmer/feedback';
+      Map<String, dynamic> map = Map();
+      map['coachDTO'] = coach.toJson();
+      map['swimmerEmail'] = swimmersEmail;
+      map['key'] = feedbackKey;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return FeedbackData.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in coach get feedback data ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> coachAddFeedbackComment(Swimmer coach, String swimmersEmail, String feedbackKey, String text) async {
+    try {
+      String path = "/coach/swimmer/feedback/comment/add";
+      Map<String, dynamic> map = Map();
+      map['coachDTO'] = coach.toJson();
+      map['swimmerEmail'] = swimmersEmail;
+      map['key'] = feedbackKey;
+      map['commentText'] = text;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in coach get feedback data ${e.toString()} $stacktrace');
     }
     return null;
   }
