@@ -331,8 +331,12 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          buildButtonSortSwimmers(context, 'Email', SortBySwimmer.Email),
-          buildButtonSortSwimmers(context, 'Feedbacks', SortBySwimmer.Feedbacks),
+          Flexible(
+              child: buildButtonSortSwimmers(context, 'Email', SortBySwimmer.Email)
+          ),
+          Flexible(
+              child: buildButtonSortSwimmers(context, 'Feedbacks', SortBySwimmer.Feedbacks)
+          ),
           IconButton(
               onPressed: ()=>onClickSwimmersButtonSort(SortBySwimmer.None),
               icon: Icon(
@@ -340,57 +344,35 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
                 color: Colors.redAccent,
               )
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+                onPressed: ()=>onAddSwimmer(context),
+                color: _webColors.getBackgroundForI1(),
+                splashColor: _webColors.getBackgroundForI4(),
+                hoverColor: _webColors.getBackgroundForI6(),
+                iconSize: 35,
+                icon: Icon( Icons.person_add)
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget buildSwimmersBar(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            buildText(context, 'Swimmers', 26, _webColors.getBackgroundForI1(), FontWeight.normal,
-                  textAlign: TextAlign.center),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 200,
-                      child: TextField(
-                        controller: _searchTextController,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: "search swimmer",
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                          onPressed: ()=>onAddSwimmer(context),
-                          color: _webColors.getBackgroundForI1(),
-                          splashColor: _webColors.getBackgroundForI4(),
-                          hoverColor: _webColors.getBackgroundForI6(),
-                          iconSize: 35,
-                          icon: Icon( Icons.person_add)
-                      ),
-                    ),
-                  ]
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 5,),
-        buildBarSortSwimmers(context),
-      ],
+  Widget buildTeamInfo(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(5),
+      color: _webColors.getBackgroundForI6(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildText(context, _team.name, 42, _webColors.getBackgroundForI2(), FontWeight.normal),
+          buildText(context, _team.date.toString(), 21, Colors.black87, FontWeight.normal),
+          buildText(context, _team.coach, 21, Colors.black87, FontWeight.normal),
+        ],
+      ),
     );
   }
 
@@ -402,11 +384,9 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildText(context, _team.name, 32, _webColors.getBackgroundForI2(), FontWeight.normal),
-          buildText(context, _team.date.toString(), 24, Colors.black, FontWeight.normal),
-          buildText(context, _team.coach, 24, Colors.black, FontWeight.normal),
+          buildTeamInfo(context),
           SizedBox(height: 10,),
-          buildSwimmersBar(context),
+          buildBarSortSwimmers(context),
           Expanded(
             child: Container(
                 color: Colors.black.withAlpha(120),
@@ -432,13 +412,13 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
 
   Widget buildTrialingInvitation(BuildContext context, Invitation invitation) {
     if(invitation.isApprove) {
-      return buildText(context, 'Approved', 24, Colors.green, FontWeight.normal);
+      return buildText(context, 'Approved', 18, Colors.green, FontWeight.bold);
     }
     if(invitation.isDenied) {
-      return buildText(context, 'Denied', 24, Colors.redAccent, FontWeight.normal);
+      return buildText(context, 'Denied', 18, Colors.redAccent, FontWeight.bold);
     }
     if(invitation.isPending) {
-      return buildText(context, 'Pending', 24, Colors.orangeAccent, FontWeight.normal);
+      return buildText(context, 'Pending', 18, Colors.orangeAccent, FontWeight.bold);
     }
     return Container();
   }
@@ -452,25 +432,20 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
           child: ListTile(
             leading: Icon(
               Icons.mail_outline,
-              size: 45,
+              size: 35,
               color: _webColors.getBackgroundForI2(),
             ),
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildText(context, invitation.email, 24, Colors.black, FontWeight.normal,
-                    textAlign: TextAlign.left),
-                buildText(context, ' (${invitation.id})', 21, _webColors.getBackgroundForI2(), FontWeight.normal,
-                    textAlign: TextAlign.left),
-              ],
-            ),
+            title: buildText(context, invitation.email, 21, Colors.black, FontWeight.normal,
+                textAlign: TextAlign.left),
             subtitle: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildText(context, 'Date: ${invitation.date.toString()}', 21, Colors.black87, FontWeight.normal,
+                buildText(context, 'Id: ${invitation.id}', 18, Colors.black87, FontWeight.normal,
                     textAlign: TextAlign.left),
-                buildText(context, 'Team: ${invitation.teamId}', 21, Colors.black87, FontWeight.normal,
+                buildText(context, 'Date: ${invitation.date.toString()}', 18, Colors.black87, FontWeight.normal,
+                    textAlign: TextAlign.left),
+                buildText(context, 'Team: ${invitation.teamId}', 18, Colors.black87, FontWeight.normal,
                     textAlign: TextAlign.left),
               ],
             ),
@@ -551,7 +526,8 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
 
   Widget buildRightSideView(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.only(
+          top:15, right: 5.0, left: 5, bottom: 5),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -572,10 +548,11 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        Expanded(
-            child: buildLeftSideView(context)
+        Flexible(
+          flex: 2,
+          child: buildLeftSideView(context)
         ),
-        Expanded(
+        Flexible(
             child: buildRightSideView(context),
         )
       ],
