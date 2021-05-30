@@ -8,6 +8,12 @@ public class TextualComment implements ITextualComment {
     private String coachId;
     private String text;
 
+    public TextualComment(String coachId, String text) {
+        this.dateTime = LocalDateTime.now();
+        this.coachId = coachId;
+        this.text = text;
+    }
+
     public TextualComment(LocalDateTime dateTime, String coachId, String text) {
         this.dateTime = dateTime;
         this.coachId = coachId;

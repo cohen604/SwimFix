@@ -1,11 +1,13 @@
 package mainServer.Providers;
 import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.Streaming.ITextualComment;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.*;
 import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
+import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.ISwimmerDao;
 import Storage.Team.ITeamDao;
 import Storage.User.IUserDao;
@@ -440,6 +442,33 @@ public class UserProvider implements IUserProvider {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean coachAddCommentToFeedback(IUser iUserCoach, IUser iUserSwimmer, String feedbackKey, String commentText) {
+        User userCoach = _users.get(iUserCoach.getUid());
+        User userSwimmer = _users.get(iUserSwimmer.getUid());
+        if(userCoach != null
+                && userSwimmer != null
+                && userCoach.isLogged()
+                && userCoach.isCoach()
+                && userSwimmer.isSwimmer()) {
+            Team team = userCoach.getCoach().getTeam();
+            Swimmer swimmer = userSwimmer.getSwimmer();
+            if(team.hasSwimmer(swimmer)) {
+                IFeedbackVideo feedbackVideo = swimmer.getFeedback(feedbackKey);
+                if(feedbackVideo != null) {
+                    ITextualComment comment = feedbackVideo.addComment(userCoach.getEmail(), commentText);
+                    if(comment!=null && _swimmerDao.update(swimmer) != null) {
+                        return true;
+                    }
+                    else if(comment!=null) {
+                        feedbackVideo.removeComment(comment);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -865,5 +865,33 @@ public class LogicManager {
         }
         return new ActionResult<>(Response.FAIL, null);
     }
+
+    /**
+     * The function add coach comment to swimmers feedback
+     * @param coachDTO - the coach
+     * @param swimmerEmail - the swimmer
+     * @param feedbackKey - the feedback
+     * @param commentText - the comment
+     * @return true if the comment added other false.
+     */
+    public ActionResult<Boolean> coachAddCommentToFeedback(
+            UserDTO coachDTO,
+            String swimmerEmail,
+            String feedbackKey,
+            String commentText)
+    {
+        try {
+            IUser iCoach = _userProvider.getUser(coachDTO);
+            IUser iSwimmer = _userProvider.findUser(swimmerEmail);
+            if(iCoach != null && iSwimmer!=null) {
+                boolean added = _userProvider.coachAddCommentToFeedback(iCoach, iSwimmer, feedbackKey, commentText);
+                return new ActionResult<>(Response.SUCCESS, added);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 

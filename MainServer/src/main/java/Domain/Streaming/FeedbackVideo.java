@@ -17,6 +17,8 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     private List<TextualComment> comments;
     private VisualComment visualComment;
 
+    private final Object lockComments;
+
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
                          String path, ISwimmingPeriodTime periodTime, List<TextualComment> comments) {
         super(video);
@@ -26,16 +28,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         this.feedbackUpdated = false;
         this.periodTime = periodTime;
         this.comments = comments;
-        //TODO
-        this.visualComment = null;
-    }
-
-    public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, String path) {
-        super(video);
-        this.taggedVideo = taggedVideo;
-        this.errorMap = new HashMap<>();
-        this.path = path;
-        this.comments = new LinkedList<>();
+        this.lockComments = new Object();
         //TODO
         this.visualComment = null;
     }
@@ -130,6 +123,32 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     @Override
     public Collection<? extends ITextualComment> getComments() {
         return this.comments;
+    }
+
+    @Override
+    public ITextualComment addComment(String coachEmail, String commentText) {
+        synchronized (lockComments) {
+            if(commentText!=null && !commentText.isEmpty()) {
+                TextualComment textualComment = new TextualComment(coachEmail, commentText);
+                this.comments.add(textualComment);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void removeComment(ITextualComment comment) {
+        synchronized (lockComments) {
+            boolean deleted = false;
+            for (int i=0; i<comments.size() && !deleted; i++) {
+                TextualComment textualComment = this.comments.get(i);
+                if(textualComment.getDate().equals(comment.getDate())
+                        && textualComment.getCoachId().equals(comment.getCoachId())) {
+                    comments.remove(i);
+                    deleted = true;
+                }
+            }
+        }
     }
 
     private String getDateString(String path) {

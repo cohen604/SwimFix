@@ -85,4 +85,8 @@ public interface IFeedbackVideo {
     int getNumberOfComments();
 
     Collection<? extends ITextualComment> getComments();
+
+    ITextualComment addComment(String coachEmail, String commentText);
+
+    void removeComment(ITextualComment comment);
 }

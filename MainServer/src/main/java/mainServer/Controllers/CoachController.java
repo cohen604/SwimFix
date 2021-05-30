@@ -91,7 +91,25 @@ public class CoachController {
 
     @PostMapping("/swimmer/feedback/comment/add")
     @CrossOrigin(origins = "*")
-    public String coachAddCommentToFeedback() {
+    public String coachAddCommentToFeedback(@RequestBody CoachAddCommentDTO commentDTO) {
+        try {
+            System.out.println("Received coach add comment to feedback");
+            UserDTO coachDTO = commentDTO.getCoachDTO();
+            String swimmerEmail = commentDTO.getSwimmerEmail();
+            String feedbackKey = commentDTO.getKey();
+            String commentText = commentDTO.getCommentText();
+            ActionResult<Boolean> response = swimFixAPI.coachAddCommentToFeedback(
+                    coachDTO,
+                    swimmerEmail,
+                    feedbackKey,
+                    commentText
+            );
+            System.out.println("Send coach add comment to feedback");
+            return response.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

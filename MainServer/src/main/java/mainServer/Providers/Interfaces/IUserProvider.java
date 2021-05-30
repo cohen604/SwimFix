@@ -54,5 +54,7 @@ public interface IUserProvider {
     Set<Map.Entry<String, IFeedbackVideo>> coachGetFeedbacks(IUser coach, IUser swimmer);
 
     IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey);
+
+    boolean coachAddCommentToFeedback(IUser iUserCoach, IUser iUserSwimmer, String feedbackKey, String commentText);
 }
 
