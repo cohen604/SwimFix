@@ -109,8 +109,9 @@ public class Team implements ITeam {
         return swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
     }
 
-    public boolean addSwimmer(ISwimmer swimmer, String invitationId) {
+    public boolean addSwimmer(ISwimmer swimmer, String invitationId, Invitation updated) {
         return invitations.containsKey(invitationId)
+                && invitations.put(invitationId, updated) != null
                 && swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
     }
 

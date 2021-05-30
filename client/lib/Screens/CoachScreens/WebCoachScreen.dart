@@ -91,11 +91,27 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
     });
   }
 
+  void updateTeam() {
+    _logicManager.getCoachTeam(this.widget.args.user.swimmer)
+        .then((Team team) {
+      if(team != null) {
+        this.setState(() {
+          _team = team;
+          _invitations = List.from(_team.invitations);
+          _swimmers = List.from(_team.swimmers);
+        });
+      }
+    });
+  }
+
   void onAddSwimmer(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-          content: EmailInvitation(this.widget.args.user)
+          content: EmailInvitation(
+            this.widget.args.user,
+            ()=>updateTeam()
+          )
       ),
     );
   }

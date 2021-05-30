@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 class EmailInvitation extends StatefulWidget {
 
   WebUser webUser;
-
-  EmailInvitation(this.webUser);
+  Function onSuccess;
+  EmailInvitation(this.webUser, this.onSuccess);
 
   @override
   _EmailInvitationState createState() => _EmailInvitationState();
@@ -63,6 +63,7 @@ class _EmailInvitationState extends State<EmailInvitation> {
               });
             }
             else if(response.sendInvitationToUser){
+              this.widget.onSuccess();
               this.setState(() {
                 _state = ScreenState.SuccessInvitation;
               });

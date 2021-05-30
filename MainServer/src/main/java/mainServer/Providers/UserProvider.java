@@ -307,7 +307,7 @@ public class UserProvider implements IUserProvider {
                 team = _teams.get(team.getName());
             }
             if (swimmer.approveInvitation(invitationId)) {
-                if (team.addSwimmer(swimmer, invitationId)) {
+                if (team.addSwimmer(swimmer, invitationId, invitation)) {
                     if (_swimmerDao.update(swimmer) != null
                             && _teamDao.update(team) != null) {
                         return true;
