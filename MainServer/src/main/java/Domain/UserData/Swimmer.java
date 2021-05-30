@@ -79,6 +79,11 @@ public class Swimmer implements ISwimmer {
         return _feedbacks.size();
     }
 
+    @Override
+    public IFeedbackVideo getFeedback(String feedbackKey) {
+        return _feedbacks.get(feedbackKey);
+    }
+
 
     public void deleteInvitation(Invitation invitation) {
         _pendingInvitations.remove(invitation.getId());

@@ -5,6 +5,7 @@ import Storage.DbContext;
 import Storage.Feedbacks.Codecs.FeedbackCodec;
 import Storage.Feedbacks.Codecs.SwimmingErrors.*;
 import Storage.Feedbacks.Codecs.SwimmingPeriodTimeCodec;
+import Storage.Feedbacks.Codecs.TextualCommentCodec;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -38,7 +39,8 @@ public class FeedbacksDao extends Dao<FeedbackVideo> implements IFeedbackDao {
                 CodecRegistries.fromRegistries(
                         CodecRegistries.fromCodecs(
                                 new SwimmingErrorCodec(errorsCodecRegistry),
-                                new SwimmingPeriodTimeCodec()
+                                new SwimmingPeriodTimeCodec(),
+                                new TextualCommentCodec()
                         ), //here we define the codec
                         getDefaultCodecRegistry());
 

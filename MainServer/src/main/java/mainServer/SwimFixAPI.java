@@ -6,6 +6,7 @@ import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackDataDTO;
 import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import DTO.ResearcherDTOs.FileDTO;
@@ -205,5 +206,9 @@ public class SwimFixAPI {
 
    public ActionResult<List<CoachSwimmerFeedbackDTO>> coachGetSwimmerFeedbacks(UserDTO coachDto, String swimmerEmail) {
       return logicManager.coachGetSwimmerFeedbacks(coachDto, swimmerEmail);
+   }
+
+   public ActionResult<FeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
+      return logicManager.coachGetSwimmerFeedback(userDTO, swimmerEmail, feedbackKey);
    }
 }

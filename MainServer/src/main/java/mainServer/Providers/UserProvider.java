@@ -3,6 +3,7 @@ import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.*;
+import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
 import Storage.Swimmer.ISwimmerDao;
@@ -418,6 +419,24 @@ public class UserProvider implements IUserProvider {
             Team team = userCoach.getCoach().getTeam();
             if(team.hasSwimmer(userSwimmer.getSwimmer())) {
                 return userSwimmer.getSwimmer().getFeedbacksMap();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey) {
+        User coach = _users.get(iCoach.getUid());
+        User swimmer = _users.get(iSwimmer.getUid());
+        if(coach!= null
+                && swimmer != null
+                && coach.isLogged()
+                && coach.isCoach()
+                && swimmer.isSwimmer()) {
+            Team team = coach.getCoach().getTeam();
+            ISwimmer sw = swimmer.getSwimmer();
+            if (team.hasSwimmer(sw)) {
+                return sw.getFeedback(feedbackKey);
             }
         }
         return null;

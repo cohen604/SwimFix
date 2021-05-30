@@ -2,6 +2,7 @@ package mainServer.Controllers;
 
 import DTO.ActionResult;
 import DTO.CoachDTOs.*;
+import DTO.FeedbackDTOs.FeedbackDataDTO;
 import DTO.UserDTOs.UserDTO;
 import mainServer.SingleServiceAPI;
 import mainServer.SwimFixAPI;
@@ -69,6 +70,22 @@ public class CoachController {
     @PostMapping("/swimmer/feedback")
     @CrossOrigin(origins = "*")
     public String coachGetSwimmerFeedback(@RequestBody CoachFeedbackRequestDTO requestDTO) {
+        try {
+            System.out.println("Received coach get swimmer feedback");
+            UserDTO userDTO = requestDTO.getCoachDTO();
+            String swimmerEmail = requestDTO.getSwimmerEmail();
+            String feedbackKey = requestDTO.getKey();
+            ActionResult<FeedbackDataDTO> result = swimFixAPI.coachGetSwimmerFeedback(
+                    userDTO,
+                    swimmerEmail,
+                    feedbackKey
+            );
+            System.out.println("Send coach get swimmer feedback");
+            return result.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

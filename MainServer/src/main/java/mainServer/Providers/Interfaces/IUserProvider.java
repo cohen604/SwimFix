@@ -52,5 +52,7 @@ public interface IUserProvider {
     ITeam getCoachTeam(IUser iUser);
 
     Set<Map.Entry<String, IFeedbackVideo>> coachGetFeedbacks(IUser coach, IUser swimmer);
+
+    IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey);
 }
 

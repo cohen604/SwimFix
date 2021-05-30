@@ -5,10 +5,7 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FeedbackVideo extends Video implements IFeedbackVideo {
 
@@ -21,14 +18,14 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     private VisualComment visualComment;
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
-                         String path, ISwimmingPeriodTime periodTime) {
+                         String path, ISwimmingPeriodTime periodTime, List<TextualComment> comments) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
         this.path = path;
         this.feedbackUpdated = false;
         this.periodTime = periodTime;
-        this.comments = new LinkedList<>();
+        this.comments = comments;
         //TODO
         this.visualComment = null;
     }
@@ -130,6 +127,11 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         return this.comments.size();
     }
 
+    @Override
+    public Collection<? extends ITextualComment> getComments() {
+        return this.comments;
+    }
+
     private String getDateString(String path) {
         int indexOfSlash = path.lastIndexOf("\\") + 1;
         String onlyDate = path.substring(indexOfSlash);
@@ -140,5 +142,9 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     @Override
     public boolean isFeedbackUpdated() {
         return feedbackUpdated;
+    }
+
+    public List<TextualComment> getTextualComments() {
+        return this.comments;
     }
 }

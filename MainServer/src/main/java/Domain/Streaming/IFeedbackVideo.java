@@ -6,6 +6,7 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -82,4 +83,6 @@ public interface IFeedbackVideo {
     int getNumberOfErrors();
 
     int getNumberOfComments();
+
+    Collection<? extends ITextualComment> getComments();
 }

@@ -5,9 +5,7 @@ import DTO.AdminDTOs.SummaryDTO;
 import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
-import DTO.FeedbackDTOs.ConvertedVideoDTO;
-import DTO.FeedbackDTOs.FeedbackVideoDTO;
-import DTO.FeedbackDTOs.FeedbackVideoStreamer;
+import DTO.FeedbackDTOs.*;
 import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
@@ -820,6 +818,46 @@ public class LogicManager {
                     output.add(dto);
                 }
                 return new ActionResult<>(Response.SUCCESS, output);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
+
+    /**
+     * The function return the swimmer feedback data for coach request
+     * @param userDTO - the coach
+     * @param swimmerEmail - the swimmer
+     * @param feedbackKey - the feedback key
+     * @return
+     */
+    public ActionResult<FeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
+        try {
+            IUser iCoach = _userProvider.getUser(userDTO);
+            IUser iSwimmer = _userProvider.findUser(swimmerEmail);
+            if(iCoach != null
+                    && iSwimmer!=null) {
+                IFeedbackVideo feedbackVideo = _userProvider.coachGetSwimmerFeedback(iCoach, iSwimmer, feedbackKey);
+                if(feedbackVideo !=null) {
+                    List<TextualCommentDTO> comments = new LinkedList<>();
+                    for(ITextualComment textualComment: feedbackVideo.getComments()) {
+                        comments.add(new TextualCommentDTO(
+                            textualComment.getDate(),
+                            textualComment.getCoachId(),
+                            textualComment.getText()
+                        ));
+                    }
+                    FeedbackDataDTO feedbackDataDTO = new FeedbackDataDTO(
+                            swimmerEmail,
+                            feedbackVideo.getPath(),
+                            feedbackKey,
+                            feedbackVideo.getDate(),
+                            comments
+                    );
+                    return new ActionResult<>(Response.SUCCESS, feedbackDataDTO);
+                }
             }
         }
         catch (Exception e) {
