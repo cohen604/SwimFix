@@ -1,10 +1,13 @@
 package mainServer.Providers;
 import DTO.UserDTOs.UserDTO;
 import Domain.Streaming.IFeedbackVideo;
+import Domain.Streaming.ITextualComment;
 import Domain.Summaries.UsersSummary;
 import Domain.UserData.*;
+import Domain.UserData.Interfaces.ISwimmer;
 import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
+import Storage.Feedbacks.IFeedbackDao;
 import Storage.Swimmer.ISwimmerDao;
 import Storage.Team.ITeamDao;
 import Storage.User.IUserDao;
@@ -304,7 +307,7 @@ public class UserProvider implements IUserProvider {
                 team = _teams.get(team.getName());
             }
             if (swimmer.approveInvitation(invitationId)) {
-                if (team.addSwimmer(swimmer, invitationId)) {
+                if (team.addSwimmer(swimmer, invitationId, invitation)) {
                     if (_swimmerDao.update(swimmer) != null
                             && _teamDao.update(team) != null) {
                         return true;
@@ -404,6 +407,68 @@ public class UserProvider implements IUserProvider {
             return team;
         }
         return null;
+    }
+
+    @Override
+    public Set<Map.Entry<String, IFeedbackVideo>> coachGetFeedbacks(IUser coach, IUser swimmer) {
+        User userCoach = _users.get(coach.getUid());
+        User userSwimmer = _users.get(swimmer.getUid());
+        if(userCoach != null
+                && userSwimmer != null
+                && userCoach.isLogged()
+                && userCoach.isCoach()
+                && userSwimmer.isSwimmer()) {
+            Team team = userCoach.getCoach().getTeam();
+            if(team.hasSwimmer(userSwimmer.getSwimmer())) {
+                return userSwimmer.getSwimmer().getFeedbacksMap();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey) {
+        User coach = _users.get(iCoach.getUid());
+        User swimmer = _users.get(iSwimmer.getUid());
+        if(coach!= null
+                && swimmer != null
+                && coach.isLogged()
+                && coach.isCoach()
+                && swimmer.isSwimmer()) {
+            Team team = coach.getCoach().getTeam();
+            ISwimmer sw = swimmer.getSwimmer();
+            if (team.hasSwimmer(sw)) {
+                return sw.getFeedback(feedbackKey);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean coachAddCommentToFeedback(IUser iUserCoach, IUser iUserSwimmer, String feedbackKey, String commentText) {
+        User userCoach = _users.get(iUserCoach.getUid());
+        User userSwimmer = _users.get(iUserSwimmer.getUid());
+        if(userCoach != null
+                && userSwimmer != null
+                && userCoach.isLogged()
+                && userCoach.isCoach()
+                && userSwimmer.isSwimmer()) {
+            Team team = userCoach.getCoach().getTeam();
+            Swimmer swimmer = userSwimmer.getSwimmer();
+            if(team.hasSwimmer(swimmer)) {
+                IFeedbackVideo feedbackVideo = swimmer.getFeedback(feedbackKey);
+                if(feedbackVideo != null) {
+                    ITextualComment comment = feedbackVideo.addComment(userCoach.getEmail(), commentText);
+                    if(comment!=null && _swimmerDao.update(swimmer) != null) {
+                        return true;
+                    }
+                    else if(comment!=null) {
+                        feedbackVideo.removeComment(comment);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -70,6 +70,11 @@ public class Team implements ITeam {
         return this.invitations.values();
     }
 
+    @Override
+    public boolean hasSwimmer(ISwimmer swimmer) {
+        return this.swimmers.containsKey(swimmer.getEmail());
+    }
+
     public ConcurrentHashMap<String, ISwimmer> getSwimmers() {
         return swimmers;
     }
@@ -104,8 +109,9 @@ public class Team implements ITeam {
         return swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
     }
 
-    public boolean addSwimmer(ISwimmer swimmer, String invitationId) {
+    public boolean addSwimmer(ISwimmer swimmer, String invitationId, Invitation updated) {
         return invitations.containsKey(invitationId)
+                && invitations.put(invitationId, updated) != null
                 && swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
     }
 

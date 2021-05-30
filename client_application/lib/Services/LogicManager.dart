@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
+import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
@@ -140,16 +141,16 @@ class LogicManager {
 
 
   /// get the days a swimmer swim
-  Future<List<DateTimeDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
+  Future<List<DateDayDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
       String path = "/swimmer/history";
       ServerResponse response = await _connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
       List<dynamic> daysMap = response.value as List<dynamic>;
-      List<DateTimeDTO> days = daysMap.map(
+      List<DateDayDTO> days = daysMap.map(
               (element) {
-            return DateTimeDTO.factory(element);
+            return DateDayDTO.factory(element);
           }).toList();
       return days;
     }
@@ -161,17 +162,15 @@ class LogicManager {
 
 
   /// get the days a swimmer swim
-  Future<List<FeedbackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
+  Future<List<SwimmerHistoryFeedback>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateDayDTO day) async {
     try {
       String path = "/swimmer/history/day";
       Map<String, dynamic> request = Map();
       request['user'] = swimmer.toJson();
       request['date'] = day.toJson();
       ServerResponse response = await _connectionHandler.postMessage(path, request);
-      //TODO check if response is valid
       List<dynamic> feedbacks = response.value as List<dynamic>;
-      return feedbacks.map((element) => FeedbackLink.factory(element))
-          .toList();
+      return feedbacks.map((e) => SwimmerHistoryFeedback.fromJson(e)).toList();
     }
     catch(e) {
       print('error in get swimmer history pools by day ${e.toString()}');
@@ -179,13 +178,13 @@ class LogicManager {
     return null;
   }
 
-  Future<bool> deleteFeedback(Swimmer swimmer, DateTimeDTO date, FeedbackLink link) async {
+  Future<bool> deleteFeedback(Swimmer swimmer, DateDayDTO date, String link) async {
     try {
       String path = "/swimmer/history/day/delete";
       Map<String, dynamic> parameters = new Map();
       parameters['user'] = swimmer.toJson();
       parameters['date'] = date.toJson();
-      parameters['link'] = link.path;
+      parameters['link'] = link;
       print(parameters);
       ServerResponse serverResponse = await _connectionHandler.postMessage(
           path, parameters);

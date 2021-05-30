@@ -11,8 +11,12 @@ import 'package:client/Screens/Arguments/AboutScreenArguments.dart';
 import 'package:client/Screens/Arguments/NoPermissionScreenArguments.dart';
 import 'package:client/Screens/Arguments/ReLoginScreenArguments.dart';
 import 'package:client/Screens/Arguments/WelcomeScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/Arguments/CoachSwimmerScreenArguments.dart';
+import 'package:client/Screens/CoachScreens/WebCoachFeedbackScreen.dart';
 import 'package:client/Screens/CoachScreens/WebCoachScreen.dart';
+import 'package:client/Screens/CoachScreens/WebCoachSwimmerScreen.dart';
 import 'package:client/Screens/MobileAboutScreen.dart';
 import 'package:client/Screens/MobileDownloadScreen.dart';
 import 'package:client/Screens/ResearcherScreens/Arguments/MultiReportScreenArguments.dart';
@@ -240,8 +244,30 @@ class ScreenHolder {
     if(!args.user.permissions.isSwimmer) {
       return getNoPermissionScreen(args.user);
     }
-    return new WebNyTeamScreen(args);
+    return new WebMyTeamScreen(args);
   }
+
+
+  Widget getCoachSwimmerScreen(CoachSwimmerScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/coach');
+    }
+    if(!args.user.permissions.isCoach) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebCoachSwimmerScreen(args);
+  }
+
+  Widget getCoachFeedbackScreen(CoachFeedbackScreenArguments args) {
+    if(args == null || args.user == null || args.user.swimmer == null) {
+      return getReLoginScreen('/coach');
+    }
+    if(!args.user.permissions.isCoach) {
+      return getNoPermissionScreen(args.user);
+    }
+    return new WebCoachFeedbackScreen(args);
+  }
+
 
   Widget getReLoginScreen(String desPath) {
     ReLoginScreenArguments args = new ReLoginScreenArguments(desPath);
@@ -257,5 +283,4 @@ class ScreenHolder {
     return (defaultTargetPlatform == TargetPlatform.iOS
         || defaultTargetPlatform == TargetPlatform.android);
   }
-
 }

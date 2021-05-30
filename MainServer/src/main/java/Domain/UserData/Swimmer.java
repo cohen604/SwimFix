@@ -79,6 +79,11 @@ public class Swimmer implements ISwimmer {
         return _feedbacks.size();
     }
 
+    @Override
+    public IFeedbackVideo getFeedback(String feedbackKey) {
+        return _feedbacks.get(feedbackKey);
+    }
+
 
     public void deleteInvitation(Invitation invitation) {
         _pendingInvitations.remove(invitation.getId());
@@ -86,6 +91,10 @@ public class Swimmer implements ISwimmer {
 
     public Collection<IFeedbackVideo> getFeedbacks() {
         return _feedbacks.values();
+    }
+
+    public Set<Map.Entry<String, IFeedbackVideo>> getFeedbacksMap() {
+        return _feedbacks.entrySet();
     }
 
     public IFeedbackVideo get(String path) {

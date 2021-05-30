@@ -5,7 +5,7 @@ import 'package:client_application/Domain/Users/AppUser.dart';
 class HistoryDayScreenArguments {
 
   AppUser user;
-  DateTimeDTO date;
+  DateDayDTO date;
   HistoryDayScreenArguments(this.user, this.date);
 
 }

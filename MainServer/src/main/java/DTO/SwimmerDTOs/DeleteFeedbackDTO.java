@@ -5,10 +5,10 @@ import DTO.UserDTOs.UserDTO;
 public class DeleteFeedbackDTO {
 
     private UserDTO user;
-    private DateDTO date;
+    private DateDayDTO date;
     private String link;
 
-    public DeleteFeedbackDTO(UserDTO user, DateDTO date, String link) {
+    public DeleteFeedbackDTO(UserDTO user, DateDayDTO date, String link) {
         this.user = user;
         this.date = date;
         this.link = link;
@@ -18,7 +18,7 @@ public class DeleteFeedbackDTO {
         return user;
     }
 
-    public DateDTO getDate() {
+    public DateDayDTO getDate() {
         return date;
     }
 

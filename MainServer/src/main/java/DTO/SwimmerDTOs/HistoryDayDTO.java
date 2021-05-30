@@ -5,9 +5,9 @@ import DTO.UserDTOs.UserDTO;
 public class HistoryDayDTO {
 
     private UserDTO user;
-    private DateDTO date;
+    private DateDayDTO date;
 
-    public HistoryDayDTO(UserDTO user, DateDTO date) {
+    public HistoryDayDTO(UserDTO user, DateDayDTO date) {
         this.user = user;
         this.date = date;
     }
@@ -20,11 +20,11 @@ public class HistoryDayDTO {
         this.user = user;
     }
 
-    public DateDTO getDate() {
+    public DateDayDTO getDate() {
         return date;
     }
 
-    public void setDate(DateDTO date) {
+    public void setDate(DateDayDTO date) {
         this.date = date;
     }
 }

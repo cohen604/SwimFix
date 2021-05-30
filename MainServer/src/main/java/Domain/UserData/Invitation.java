@@ -44,12 +44,13 @@ public class Invitation implements IInvitation {
         return teamId;
     }
 
-    public String getSwimmerId() {
-        return swimmerId;
-    }
-
     public LocalDateTime getCreationTime() {
         return creationTime;
+    }
+
+    @Override
+    public String getSwimmerId() {
+        return swimmerId;
     }
 
     @Override

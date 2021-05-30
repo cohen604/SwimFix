@@ -6,7 +6,7 @@ class HistoryFeedBackArguments {
 
   AppUser user;
   FeedbackLink link;
-  DateTimeDTO dateTimeDTO;
+  DateDayDTO dateTimeDTO;
   HistoryFeedBackArguments(this.user, this.link, this.dateTimeDTO);
 
 }

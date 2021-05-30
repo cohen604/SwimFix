@@ -5,9 +5,7 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FeedbackVideo extends Video implements IFeedbackVideo {
 
@@ -15,31 +13,24 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     private TaggedVideo taggedVideo; // swimming skeletons
     private String path; // The feedback video path to insert into
     private boolean feedbackUpdated; // this flag will be used for knowing when the feedback video is updated and need to generate new feedback file
-    private VisualComment visualComment;
-    private TextualComment textualComment;
     private ISwimmingPeriodTime periodTime;
+    private List<TextualComment> comments;
+    private VisualComment visualComment;
+
+    private final Object lockComments;
 
     public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, Map<Integer, List<SwimmingError>> errorMap,
-                         String path, ISwimmingPeriodTime periodTime) {
+                         String path, ISwimmingPeriodTime periodTime, List<TextualComment> comments) {
         super(video);
         this.taggedVideo = taggedVideo;
         this.errorMap = errorMap;
         this.path = path;
         this.feedbackUpdated = false;
         this.periodTime = periodTime;
+        this.comments = comments;
+        this.lockComments = new Object();
         //TODO
         this.visualComment = null;
-        this.textualComment = null;
-    }
-
-    public FeedbackVideo(IVideo video, TaggedVideo taggedVideo, String path) {
-        super(video);
-        this.taggedVideo = taggedVideo;
-        this.errorMap = new HashMap<>();
-        this.path = path;
-        //TODO
-        this.visualComment = null;
-        this.textualComment = null;
     }
 
     /**
@@ -115,6 +106,52 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
         return LocalDateTime.of(year, month, day, hour, mintes, seconds);
     }
 
+    @Override
+    public int getNumberOfErrors() {
+        int sum = 0;
+        for(List<SwimmingError> errors : errorMap.values()) {
+            sum += errors.size();
+        }
+        return sum;
+    }
+
+    @Override
+    public int getNumberOfComments() {
+        return this.comments.size();
+    }
+
+    @Override
+    public Collection<? extends ITextualComment> getComments() {
+        return this.comments;
+    }
+
+    @Override
+    public ITextualComment addComment(String coachEmail, String commentText) {
+        synchronized (lockComments) {
+            if(commentText!=null && !commentText.isEmpty()) {
+                TextualComment textualComment = new TextualComment(coachEmail, commentText);
+                this.comments.add(textualComment);
+                return textualComment;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void removeComment(ITextualComment comment) {
+        synchronized (lockComments) {
+            boolean deleted = false;
+            for (int i=0; i<comments.size() && !deleted; i++) {
+                TextualComment textualComment = this.comments.get(i);
+                if(textualComment.getDate().equals(comment.getDate())
+                        && textualComment.getCoachId().equals(comment.getCoachId())) {
+                    comments.remove(i);
+                    deleted = true;
+                }
+            }
+        }
+    }
+
     private String getDateString(String path) {
         int indexOfSlash = path.lastIndexOf("\\") + 1;
         String onlyDate = path.substring(indexOfSlash);
@@ -125,5 +162,9 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
     @Override
     public boolean isFeedbackUpdated() {
         return feedbackUpdated;
+    }
+
+    public List<TextualComment> getTextualComments() {
+        return this.comments;
     }
 }

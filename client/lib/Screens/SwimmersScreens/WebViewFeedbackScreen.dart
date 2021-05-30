@@ -22,7 +22,6 @@ class _WebViewFeedbackScreenState extends State<WebViewFeedbackScreen> {
   VideoPlayerController _controller;
   ChewieController _chewieController;
 
-
   _WebViewFeedbackScreenState() {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();

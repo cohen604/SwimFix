@@ -5,6 +5,8 @@ import Domain.Summaries.UsersSummary;
 import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 
 public interface IUserProvider {
@@ -48,5 +50,11 @@ public interface IUserProvider {
     String getMyTeam(IUser iUser);
 
     ITeam getCoachTeam(IUser iUser);
+
+    Set<Map.Entry<String, IFeedbackVideo>> coachGetFeedbacks(IUser coach, IUser swimmer);
+
+    IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey);
+
+    boolean coachAddCommentToFeedback(IUser iUserCoach, IUser iUserSwimmer, String feedbackKey, String commentText);
 }
 

@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Invitations/Invitation.dart';
 
 import 'SwimmerTeam.dart';
@@ -7,7 +7,7 @@ import 'SwimmerTeam.dart';
 class Team {
 
   String name;
-  DateTimeDTO date;
+  DateDayDTO date;
   String coach;
   List<SwimmerTeam> swimmers;
   List<Invitation> invitations;
@@ -16,8 +16,8 @@ class Team {
 
   Team.fromJson(Map<String, dynamic> map)
     : name = map['name'],
-      date = map['dateDTO '],
+      date = DateDayDTO.fromJson(map['dateDayDTO']),
       coach = map['coachId'],
       swimmers = (map['swimmers'] as List).map((e) => SwimmerTeam.fromJson(e)).toList(),
-      invitations = (map['invitations '] as List).map((e) => Invitation.fromJson(e)).toList();
+      invitations = (map['invitations'] as List).map((e) => Invitation.fromJson(e)).toList();
 }

@@ -2,18 +2,17 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackDataDTO;
 import DTO.FeedbackDTOs.FeedbackVideoDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
-import DTO.SwimmerDTOs.DateDTO;
-import DTO.SwimmerDTOs.MyTeamDTO;
-import DTO.SwimmerDTOs.OpenTeamResponseDTO;
-import DTO.SwimmerDTOs.SwimmerInvitationDTO;
+import DTO.SwimmerDTOs.*;
 import DTO.UserDTOs.UserDTO;
 import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.Errors.Factories.FactoryElbowError;
@@ -141,16 +140,16 @@ public class SwimFixAPI {
    }
 
 
-   public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
+   public ActionResult<List<DateDayDTO>> getSwimmerHistoryDays(UserDTO userDto) {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
-   public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsBy(UserDTO userDto, DateDTO date) {
+   public ActionResult<List<SwimmerFeedbackDTO>> getSwimmerHistoryPoolsBy(UserDTO userDto, DateDayDTO date) {
       return logicManager.getSwimmerHistoryPoolsByDay(userDto, date);
    }
 
-   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, DateDTO dateDTO, String path) {
-      return logicManager.deleteFeedbackByID(userDTO, dateDTO, path);
+   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, DateDayDTO dateDayDTO, String path) {
+      return logicManager.deleteFeedbackByID(userDTO, dateDayDTO, path);
    }
 
    public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {
@@ -203,5 +202,17 @@ public class SwimFixAPI {
 
    public ActionResult<TeamDTO> getCoachTeam(UserDTO userDTO) {
       return logicManager.getCoachTeam(userDTO);
+   }
+
+   public ActionResult<List<CoachSwimmerFeedbackDTO>> coachGetSwimmerFeedbacks(UserDTO coachDto, String swimmerEmail) {
+      return logicManager.coachGetSwimmerFeedbacks(coachDto, swimmerEmail);
+   }
+
+   public ActionResult<FeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
+      return logicManager.coachGetSwimmerFeedback(userDTO, swimmerEmail, feedbackKey);
+   }
+
+   public ActionResult<Boolean> coachAddCommentToFeedback(UserDTO coachDTO, String swimmerEmail, String feedbackKey, String commentText) {
+      return logicManager.coachAddCommentToFeedback(coachDTO, swimmerEmail, feedbackKey, commentText);
    }
 }

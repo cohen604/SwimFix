@@ -1,5 +1,7 @@
 package Domain.UserData.Interfaces;
 
+import Domain.UserData.Swimmer;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -15,5 +17,5 @@ public interface ITeam {
 
     Collection<? extends IInvitation> getInvitationsCollection();
 
-
+    boolean hasSwimmer(ISwimmer swimmer);
 }

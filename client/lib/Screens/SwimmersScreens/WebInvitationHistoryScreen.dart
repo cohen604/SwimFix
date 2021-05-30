@@ -153,6 +153,7 @@ class _WebInvitationHistoryScreenState extends State<WebInvitationHistoryScreen>
         )
     );
   }
+
   Widget buildIconSort(BuildContext context, SortBy sortByValue) {
     if(_sortMap[sortByValue] == OrderBy.Ascending) {
       return Icon(

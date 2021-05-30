@@ -8,6 +8,7 @@ import Domain.PeriodTimeData.PeriodTime;
 import Domain.PeriodTimeData.SwimmingPeriodTime;
 import Domain.Streaming.FeedbackVideo;
 import Domain.Streaming.TaggedVideo;
+import Domain.Streaming.TextualComment;
 import Domain.Streaming.Video;
 import DomainLogic.FileLoaders.SkeletonsLoader;
 import org.bson.BsonReader;
@@ -43,6 +44,8 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
         String periods = bsonReader.readName();
         Codec<SwimmingPeriodTime> codec = _codecRegistry.get(SwimmingPeriodTime.class);
         SwimmingPeriodTime swimmingPeriodTime = decoderContext.decodeWithChildContext(codec, bsonReader);
+        String comments = bsonReader.readName();
+        List<TextualComment> commentList = decodeListComments(bsonReader, decoderContext);
         bsonReader.readEndDocument();
         return createFeedback(
                 feedbackPath,
@@ -50,7 +53,8 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
                 skeletonsPath,
                 mlSkeletonsPath,
                 errorMap,
-                swimmingPeriodTime);
+                swimmingPeriodTime,
+                commentList);
     }
 
     private Map<Integer, List<SwimmingError>> decodeErrorMap(BsonReader bsonReader, DecoderContext decoderContext) {
@@ -72,17 +76,30 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
         return errorMap;
     }
 
+    private List<TextualComment> decodeListComments(BsonReader bsonReader, DecoderContext decoderContext) {
+        List<TextualComment> output = new LinkedList<>();
+        bsonReader.readStartArray();
+        while(bsonReader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+            Codec<TextualComment> codec = _codecRegistry.get(TextualComment.class);
+            TextualComment comment = decoderContext.decodeWithChildContext(codec, bsonReader);
+            output.add(comment);
+        }
+        bsonReader.readEndArray();
+        return output;
+    }
+
     private FeedbackVideo createFeedback(
             String feedbackPath,
             String videoPath,
             String skeletonsPath,
             String mlSkeletonsPath,
             Map<Integer, List<SwimmingError>> map,
-            SwimmingPeriodTime periodTime) {
+            SwimmingPeriodTime periodTime,
+            List<TextualComment> comments) {
         Video video = new Video(videoPath);
         SkeletonsLoader loader = new SkeletonsLoader();
         TaggedVideo taggedVideo = new TaggedVideo(loader.read(skeletonsPath),mlSkeletonsPath,skeletonsPath);
-        return new FeedbackVideo(video, taggedVideo,map, feedbackPath, periodTime);
+        return new FeedbackVideo(video, taggedVideo,map, feedbackPath, periodTime, comments);
     }
 
     @Override
@@ -98,10 +115,12 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
         encodeErrorMap(bsonWriter, feedbackVideo.getSwimmingErrors(), encoderContext);
         // write time period
         bsonWriter.writeName("periods");
-        //TODO talk about this
         Codec<SwimmingPeriodTime> dateCodec = _codecRegistry.get(SwimmingPeriodTime.class);
         encoderContext.encodeWithChildContext(dateCodec, bsonWriter,
                 (SwimmingPeriodTime) feedbackVideo.getSwimmingPeriodTime());
+        // write comments
+        bsonWriter.writeName("comments");
+        encodeCommentsList(bsonWriter,feedbackVideo.getTextualComments(),encoderContext);
         bsonWriter.writeEndDocument();
     }
 
@@ -120,6 +139,14 @@ public class FeedbackCodec implements Codec<FeedbackVideo> {
         bsonWriter.writeEndDocument();
     }
 
+    private void encodeCommentsList(BsonWriter bsonWriter, List<TextualComment> comments, EncoderContext encoderContext){
+        bsonWriter.writeStartArray();
+        for(TextualComment comment: comments) {
+            Codec<TextualComment> codec = _codecRegistry.get(TextualComment.class);
+            encoderContext.encodeWithChildContext(codec, bsonWriter, comment);
+        }
+        bsonWriter.writeEndArray();
+    }
 
     @Override
     public Class<FeedbackVideo> getEncoderClass() {

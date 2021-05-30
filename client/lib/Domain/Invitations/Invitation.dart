@@ -1,22 +1,24 @@
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 
 class Invitation {
 
   String id;
   String teamId;
-  DateTimeDTO date;
+  String email;
+  DateDayDTO date;
   bool isPending;
   bool isApprove;
   bool isDenied;
 
 
-  Invitation(this.id, this.teamId, this.date, this.isPending, this.isApprove,
-      this.isDenied);
+  Invitation(this.id, this.teamId, this.email, this.date, this.isPending,
+      this.isApprove, this.isDenied);
 
   Invitation.fromJson(Map<String, dynamic> map)
     : id = map['id'],
       teamId = map['teamId'],
-      date = DateTimeDTO.fromJson(map['dateDTO']),
+      email = map['email'],
+      date = DateDayDTO.fromJson(map['dateDayDTO']),
       isPending = map['isPending'],
       isApprove = map['isApprove'],
       isDenied = map['isDenied'];

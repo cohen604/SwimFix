@@ -1,16 +1,16 @@
-class DateTimeDTO {
+class DateDayDTO {
 
   int year;
   int month;
   int day;
 
-  DateTimeDTO(int year, int month, int day) {
+  DateDayDTO(int year, int month, int day) {
     this.year = year;
     this.month = month;
     this.day = day;
   }
 
-  DateTimeDTO.fromJson(Map<String, dynamic> map)
+  DateDayDTO.fromJson(Map<String, dynamic> map)
       : year = map['year'],
         month = map['month'],
         day = map['day'];
@@ -22,8 +22,8 @@ class DateTimeDTO {
       'day': day,
     };
 
-  static DateTimeDTO factory(Map map) {
-    return new DateTimeDTO(map['year'], map['month'], map['day']);
+  static DateDayDTO factory(Map map) {
+    return new DateDayDTO(map['year'], map['month'], map['day']);
   }
 
   @override
@@ -31,7 +31,7 @@ class DateTimeDTO {
     return '$day.$month.$year';
   }
 
-  int compareTo(DateTimeDTO other) {
+  int compareTo(DateDayDTO other) {
     if(year < other.year) {
       return -1;
     }

@@ -10,17 +10,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class WebNyTeamScreen extends StatefulWidget {
+class WebMyTeamScreen extends StatefulWidget {
 
   MyTeamArguments args;
 
-  WebNyTeamScreen(this.args);
+  WebMyTeamScreen(this.args);
 
   @override
-  _WebNyTeamScreenState createState() => _WebNyTeamScreenState();
+  _WebMyTeamScreenState createState() => _WebMyTeamScreenState();
 }
 
-class _WebNyTeamScreenState extends State<WebNyTeamScreen> {
+class _WebMyTeamScreenState extends State<WebMyTeamScreen> {
 
   WebColors _webColors;
   AssetsHolder _assetsHolder;
@@ -28,7 +28,7 @@ class _WebNyTeamScreenState extends State<WebNyTeamScreen> {
   ScreenState _screenState;
   String _teamName;
 
-  _WebNyTeamScreenState() {
+  _WebMyTeamScreenState() {
     _webColors = WebColors.getInstance();
     _assetsHolder = AssetsHolder.getInstance();
     _logicManager = LogicManager.getInstance();

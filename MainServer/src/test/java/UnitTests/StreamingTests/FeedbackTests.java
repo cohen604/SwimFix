@@ -59,7 +59,7 @@ public class FeedbackTests extends TestCase {
         }
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
         SwimmingPeriodTime swimmingPeriodTime = new SwimmingPeriodTime(new LinkedList<>(), new LinkedList<>());
-        this.feedbackVideo = new FeedbackVideo(video, taggedVideo, errorsMap, path, swimmingPeriodTime);
+        this.feedbackVideo = new FeedbackVideo(video, taggedVideo, errorsMap, path, swimmingPeriodTime, new LinkedList<>());
     }
 
     private void setUFeedbackVideoNotExits() {
@@ -70,7 +70,7 @@ public class FeedbackTests extends TestCase {
         TaggedVideo taggedVideo = null;
         Map<Integer,List<SwimmingError>> errorsMap = new HashMap<>();
         SwimmingPeriodTime swimmingPeriodTime = new SwimmingPeriodTime(new LinkedList<>(), new LinkedList<>());
-        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap, path, swimmingPeriodTime);
+        this.feedbackVideo = new FeedbackVideo(video,taggedVideo, errorsMap, path, swimmingPeriodTime, new LinkedList<>());
     }
 
     private void setUpGeneratedFeedback() {

@@ -6,6 +6,7 @@ import Domain.SwimmingSkeletonsData.ISwimmingSkeleton;
 import Domain.Errors.Interfaces.SwimmingError;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -78,4 +79,14 @@ public interface IFeedbackVideo {
      * @return local date time of the feedback video
      */
     LocalDateTime getDate();
+
+    int getNumberOfErrors();
+
+    int getNumberOfComments();
+
+    Collection<? extends ITextualComment> getComments();
+
+    ITextualComment addComment(String coachEmail, String commentText);
+
+    void removeComment(ITextualComment comment);
 }

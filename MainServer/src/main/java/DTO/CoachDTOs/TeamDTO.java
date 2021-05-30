@@ -1,6 +1,6 @@
 package DTO.CoachDTOs;
 
-import DTO.SwimmerDTOs.DateDTO;
+import DTO.SwimmerDTOs.DateDayDTO;
 import DTO.SwimmerDTOs.SwimmerDTO;
 import DTO.SwimmerDTOs.SwimmerInvitationDTO;
 
@@ -9,14 +9,14 @@ import java.util.List;
 public class TeamDTO {
 
     private String name;
-    private DateDTO dateDTO;
+    private DateDayDTO dateDayDTO;
     private String coachId;
     private List<SwimmerDTO> swimmers;
     private List<SwimmerInvitationDTO> invitations;
 
-    public TeamDTO(String name, DateDTO dateDTO, String coachId, List<SwimmerDTO> swimmers, List<SwimmerInvitationDTO> invitations) {
+    public TeamDTO(String name, DateDayDTO dateDayDTO, String coachId, List<SwimmerDTO> swimmers, List<SwimmerInvitationDTO> invitations) {
         this.name = name;
-        this.dateDTO = dateDTO;
+        this.dateDayDTO = dateDayDTO;
         this.coachId = coachId;
         this.swimmers = swimmers;
         this.invitations = invitations;
@@ -30,12 +30,12 @@ public class TeamDTO {
         this.name = name;
     }
 
-    public DateDTO getDateDTO() {
-        return dateDTO;
+    public DateDayDTO getDateDayDTO() {
+        return dateDayDTO;
     }
 
-    public void setDateDTO(DateDTO dateDTO) {
-        this.dateDTO = dateDTO;
+    public void setDateDayDTO(DateDayDTO dateDayDTO) {
+        this.dateDayDTO = dateDayDTO;
     }
 
     public String getCoachId() {
