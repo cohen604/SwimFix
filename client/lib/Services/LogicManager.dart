@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Feedback/FeedbackInfo.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
@@ -8,6 +8,7 @@ import 'package:client/Domain/Files/FilesDownloadRequest.dart';
 import 'package:client/Domain/Invitations/Invitation.dart';
 import 'package:client/Domain/Summaries/MyTeam.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
+import 'package:client/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client/Domain/Team/AddingTeamResponse.dart';
 import 'package:client/Domain/Team/InvitationResponse.dart';
 import 'package:client/Domain/Team/Team.dart';
@@ -59,8 +60,8 @@ class LogicManager {
         // Map map = response.value as Map;
         return true;
       }
-    } catch(e) {
-      print('error in login ${e.toString()}');
+    } catch(e, stacktrace) {
+      print('error in login ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -74,8 +75,8 @@ class LogicManager {
       if (response != null && response.isSuccess() && response.value) {
           return true;
       }
-    } catch(e) {
-      print('error in logout ${e.toString()}');
+    } catch(e, stacktrace) {
+      print('error in logout ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -91,8 +92,8 @@ class LogicManager {
         print(map);
         return UserPermissions.factory(map);
       }
-    } catch(e) {
-      print('error in permissions ${e.toString()}');
+    } catch(e, stacktrace) {
+      print('error in permissions ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -122,8 +123,8 @@ class LogicManager {
       Map map = response.value as Map;
       return FeedBackLink.factory(map);
     }
-    catch(e) {
-      print('error in post video for stream ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in post video for stream ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -153,8 +154,8 @@ class LogicManager {
         return ResearcherReport.factory(mapResponse);
       }
     }
-   catch(e) {
-     print('error in $path with ${e.toString()}');
+   catch(e, stacktrace) {
+     print('error in $path with ${e.toString()} $stacktrace');
    }
     return null;
   }
@@ -188,36 +189,34 @@ class LogicManager {
         return InvitationResponse.fromJson(response.value as Map);
       }
     }
-    catch(e) {
-      print(e);
-      print('error in $path with ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in $path with ${e.toString()} $stacktrace');
     }
     return null;
   }
 
   /// get the days a swimmer swim
-  Future<List<DateTimeDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
+  Future<List<DateDayDTO>> getSwimmerHistoryDays(Swimmer swimmer) async {
     try {
       String path = "/swimmer/history";
       ServerResponse response = await this.connectionHandler
           .postMessage(path, swimmer.toJson());
       //TODO check if response is valid
       List<dynamic> daysMap = response.value as List<dynamic>;
-      List<DateTimeDTO> days = daysMap.map(
+      List<DateDayDTO> days = daysMap.map(
               (element) {
-                return DateTimeDTO.factory(element);
+                return DateDayDTO.factory(element);
               }).toList();
       return days;
     }
-    catch(e) {
-      print('error in get swimmer history days ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history days ${e.toString()} $stacktrace');
     }
     return null;
   }
 
-
   /// get the days a swimmer swim
-  Future<List<FeedBackLink>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateTimeDTO day) async {
+  Future<List<SwimmerHistoryFeedback>> getSwimmerHistoryPoolsByDay(Swimmer swimmer, DateDayDTO day) async {
     try {
       String path = "/swimmer/history/day";
       Map<String, dynamic> request = Map();
@@ -226,29 +225,28 @@ class LogicManager {
       ServerResponse response = await connectionHandler.postMessage(path, request);
       //TODO check if response is valid
       List<dynamic> feedbacks = response.value as List<dynamic>;
-      return feedbacks.map((element) => FeedBackLink.factory(element))
-          .toList();
+      return feedbacks.map((element) => SwimmerHistoryFeedback.fromJson(element)).toList();
     }
-    catch(e) {
-      print('error in get swimmer history pools by day ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history pools by day ${e.toString()} $stacktrace');
     }
     return null;
   }
 
-  Future<bool> deleteFeedback(Swimmer swimmer, DateTimeDTO date, FeedBackLink link) async {
+  Future<bool> deleteFeedback(Swimmer swimmer, DateDayDTO date, String link) async {
     try {
       String path = "/swimmer/history/day/delete";
       Map<String, dynamic> parameters = new Map();
       parameters['user'] = swimmer.toJson();
       parameters['date'] = date.toJson();
-      parameters['link'] = link.path;
+      parameters['link'] = link;
       print(parameters);
       ServerResponse serverResponse = await this.connectionHandler.postMessage(
           path, parameters);
       return serverResponse.value as bool;
     }
-    catch(e) {
-      print('error in delete feedback ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in delete feedback ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -267,8 +265,8 @@ class LogicManager {
         return swimmer;
       }).toList();
     }
-    catch(e) {
-      print('error in get users that not admins ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get users that not admins ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -283,8 +281,8 @@ class LogicManager {
           path, map);
       return serverResponse.value as bool;
     }
-    catch(e) {
-      print('error in add admin ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in add admin ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -303,8 +301,8 @@ class LogicManager {
         return swimmer;
       }).toList();
     }
-    catch(e) {
-      print('error in get users that not researchers ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get users that not researchers ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -320,8 +318,8 @@ class LogicManager {
           path, map);
       return serverResponse.value as bool;
     }
-    catch(e) {
-      print('error in add researcher ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in add researcher ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -335,8 +333,8 @@ class LogicManager {
         return Summary.fromJson(serverResponse.value as Map);
       }
     }
-    catch(e) {
-      print('error in get summary ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get summary ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -352,8 +350,8 @@ class LogicManager {
         return AddingTeamResponse.fromJson(serverResponse.value as Map);
       }
     }
-    catch(e) {
-      print('error in open swimming team ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in open swimming team ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -368,8 +366,8 @@ class LogicManager {
         return list.map((e) => Invitation.fromJson(e)).toList();
       }
     }
-    catch(e) {
-      print('error in get invitations ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get invitations ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -385,8 +383,8 @@ class LogicManager {
         return serverResponse.value as bool;
       }
     }
-    catch(e) {
-      print('error in approve invitation ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in approve invitation ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -402,8 +400,8 @@ class LogicManager {
         return serverResponse.value as bool;
       }
     }
-    catch(e) {
-      print('error in deny invitation ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in deny invitation ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -418,8 +416,8 @@ class LogicManager {
         return list.map((e) => Invitation.fromJson(e)).toList();
       }
     }
-    catch(e) {
-      print('error in get invitations history ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get invitations history ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -435,8 +433,8 @@ class LogicManager {
         return serverResponse.value as bool;
       }
     }
-    catch(e) {
-      print('error in leave team ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in leave team ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -450,8 +448,8 @@ class LogicManager {
         return MyTeam.fromJson(serverResponse.value) ;
       }
     }
-    catch(e) {
-      print('error in get my team ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get my team ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -462,11 +460,12 @@ class LogicManager {
       Map<String, dynamic> map = swimmer.toJson();
       ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
       if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
         return Team.fromJson(serverResponse.value) ;
       }
     }
-    catch(e) {
-
+    catch(e, stacktrace) {
+      print('error in coach get team ${e.toString()} ${stacktrace}');
     }
     return null;
   }
@@ -483,8 +482,8 @@ class LogicManager {
         return list.map((e)=>FeedbackInfo.fromJson(e)).toList();
       }
     }
-    catch(e) {
-      print('error in get swimmer feedbacks ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer feedbacks ${e.toString()} $stacktrace');
     }
     return null;
   }

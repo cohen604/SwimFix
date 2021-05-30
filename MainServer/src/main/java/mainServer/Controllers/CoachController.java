@@ -66,4 +66,18 @@ public class CoachController {
         return null;
     }
 
+    @PostMapping("/swimmer/feedback")
+    @CrossOrigin(origins = "*")
+    public String coachGetSwimmerFeedback(@RequestBody CoachFeedbackRequestDTO requestDTO) {
+        return null;
+    }
+
+    @PostMapping("/swimmer/feedback/comment/add")
+    @CrossOrigin(origins = "*")
+    public String coachAddCommentToFeedback() {
+        return null;
+    }
+
+
+
 }

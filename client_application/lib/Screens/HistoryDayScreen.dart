@@ -1,4 +1,5 @@
 import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
+import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
@@ -29,16 +30,16 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
   LogicManager _logicManager;
   ColorsHolder _colorsHolder;
   ScreenState _screenState;
-  List<FeedbackLink> _feedbacks;
+  List<SwimmerHistoryFeedback> _feedbacks;
 
- _WebSwimmerHistoryScreenState(Swimmer swimmer, DateTimeDTO date) {
+ _WebSwimmerHistoryScreenState(Swimmer swimmer, DateDayDTO date) {
     _logicManager = LogicManager.getInstance();
     _colorsHolder = new ColorsHolder();
     _screenState = ScreenState.LoadingDayHistory;
     getSwimmerHistoryByDay(swimmer, date);
  }
 
-  void getSwimmerHistoryByDay(Swimmer swimmer, DateTimeDTO day) {
+  void getSwimmerHistoryByDay(Swimmer swimmer, DateDayDTO day) {
     _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day).then(
         (feedbacks) {
           if(feedbacks == null) {
@@ -58,9 +59,9 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
 
   void onDeleteFeedback(int index) {
    Swimmer swimmer = this.widget.arguments.user.swimmer;
-   DateTimeDTO date = this.widget.arguments.date;
-   FeedbackLink link = _feedbacks[index];
-    _logicManager.deleteFeedback(swimmer, date, link)
+   DateDayDTO date = this.widget.arguments.date;
+   SwimmerHistoryFeedback feedback = _feedbacks[index];
+    _logicManager.deleteFeedback(swimmer, date, feedback.path)
         .then((deleted) {
           if(deleted) {
             getSwimmerHistoryByDay(swimmer, date);
@@ -78,12 +79,11 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
   }
 
   void onViewFeedback(int index) {
-     DateTimeDTO date = this.widget.arguments.date;
+     DateDayDTO date = this.widget.arguments.date;
      AppUser user = this.widget.arguments.user;
-     FeedbackLink link = _feedbacks[index];
-     link.path = "/"+link.path.replaceAll("\\", "/");
+     SwimmerHistoryFeedback feedback = _feedbacks[index];
      Navigator.pushNamed(context, '/history/day/feedback',
-        arguments: new HistoryFeedBackArguments(user, link, date));
+        arguments: new HistoryFeedBackArguments(user, new FeedbackLink(feedback.getPath()), date));
   }
 
   Widget buildLoadingHistory(BuildContext context) {
@@ -150,7 +150,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
    if(_feedbacks.length == 0) {
      return buildHistoryListEmpty(context);
    }
-   DateTimeDTO date = this.widget.arguments.date;
+   DateDayDTO date = this.widget.arguments.date;
    return ListView.builder(
     itemCount: _feedbacks.length,
     itemBuilder: (BuildContext context, int index) {
@@ -235,7 +235,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DateTimeDTO date = this.widget.arguments.date;
+    DateDayDTO date = this.widget.arguments.date;
     return SafeArea(
       child: Scaffold(
         drawer: BasicDrawer(
@@ -262,8 +262,8 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
 
 class PoolHourTile extends StatelessWidget {
 
-  final DateTimeDTO date;
-  final FeedbackLink link;
+  final DateDayDTO date;
+  final SwimmerHistoryFeedback link;
   final AppUser user;
   final Function remove;
   final Function view;
@@ -282,7 +282,7 @@ class PoolHourTile extends StatelessWidget {
   }
 
   Widget buildTitle(BuildContext context) {
-    return Text('${getStringTitle(link.path)}',
+    return Text('${link.date.toString()}', //${getStringTitle(link.path)}
       style: TextStyle(
           fontSize: 16 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black,

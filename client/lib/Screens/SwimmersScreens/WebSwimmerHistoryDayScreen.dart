@@ -1,6 +1,7 @@
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
@@ -31,16 +32,16 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   LogicManager _logicManager;
   WebColors _webColors;
   ScreenState _screenState;
-  List<FeedBackLink> _feedbacks;
+  List<SwimmerHistoryFeedback> _feedbacks;
 
- _WebSwimmerHistoryScreenState(Swimmer swimmer, DateTimeDTO date) {
+ _WebSwimmerHistoryScreenState(Swimmer swimmer, DateDayDTO date) {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();
     _screenState = ScreenState.LoadingDayHistory;
     getSwimmerHistoryByDay(swimmer, date);
  }
 
-  void getSwimmerHistoryByDay(Swimmer swimmer, DateTimeDTO day) {
+  void getSwimmerHistoryByDay(Swimmer swimmer, DateDayDTO day) {
     _logicManager.getSwimmerHistoryPoolsByDay(swimmer, day).then(
         (feedbacks) {
           if(feedbacks == null) {
@@ -60,9 +61,9 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
   void onDeleteFeedback(int index) {
    Swimmer swimmer = this.widget.arguments.webUser.swimmer;
-   DateTimeDTO date = this.widget.arguments.date;
-   FeedBackLink link = _feedbacks[index];
-    _logicManager.deleteFeedback(swimmer, date, link)
+   DateDayDTO date = this.widget.arguments.date;
+   SwimmerHistoryFeedback feedback = _feedbacks[index];
+    _logicManager.deleteFeedback(swimmer, date, feedback.path)
         .then((deleted) {
           if(deleted) {
             getSwimmerHistoryByDay(swimmer, date);
@@ -81,10 +82,10 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
   void onViewFeedback(int index) {
      WebUser user = this.widget.arguments.webUser;
-     FeedBackLink link = _feedbacks[index];
-     link.path = "/"+link.path.replaceAll("\\", "/");
+     SwimmerHistoryFeedback feedback = _feedbacks[index];
+     // String link.path = "/"+link.path.replaceAll("\\", "/");
      Navigator.pushNamed(context, '/viewFeedback',
-        arguments: new ViewFeedBackArguments(user, link));
+        arguments: new ViewFeedBackArguments(user, new FeedBackLink(feedback.getPath())));
   }
 
   void onBack(BuildContext context) {
@@ -155,7 +156,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
    if(_feedbacks.length == 0) {
      return buildHistoryListEmpty(context);
    }
-   DateTimeDTO date = this.widget.arguments.date;
+   DateDayDTO date = this.widget.arguments.date;
    return ListView.builder(
     itemCount: _feedbacks.length,
     itemBuilder: (BuildContext context, int index) {
@@ -171,7 +172,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   }
 
   Widget buildHistoryTitle(BuildContext context) {
-    DateTimeDTO date = this.widget.arguments.date;
+    DateDayDTO date = this.widget.arguments.date;
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0, bottom: 5),
@@ -288,8 +289,8 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
 class PoolHourTile extends StatelessWidget {
 
-  final DateTimeDTO date;
-  final FeedBackLink link;
+  final DateDayDTO date;
+  final SwimmerHistoryFeedback link;
   final WebUser user;
   final Function remove;
   final Function view;
@@ -300,7 +301,7 @@ class PoolHourTile extends StatelessWidget {
     this.color});
 
   Widget buildTitle(BuildContext context) {
-    return Text('${link.path}',
+    return Text('${link.date.toString()}',
       style: TextStyle(
           fontSize: 21 * MediaQuery.of(context).textScaleFactor,
           color: Colors.black,
@@ -329,9 +330,9 @@ class PoolHourTile extends StatelessWidget {
       child: Material(
         child: ListTile(
             shape:RoundedRectangleBorder(
-              side: BorderSide(color: Colors.green, width: 1),
+              side: BorderSide(color: Colors.blueAccent, width: 1),
               borderRadius: const BorderRadius.all(
-                Radius.circular(20.0),
+                Radius.circular(15.0),
               ),
             ),
             leading: Icon(

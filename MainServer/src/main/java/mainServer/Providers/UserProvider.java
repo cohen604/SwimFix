@@ -407,7 +407,7 @@ public class UserProvider implements IUserProvider {
     }
 
     @Override
-    public Collection<? extends IFeedbackVideo> coachGetFeedbacks(IUser coach, IUser swimmer) {
+    public Set<Map.Entry<String, IFeedbackVideo>> coachGetFeedbacks(IUser coach, IUser swimmer) {
         User userCoach = _users.get(coach.getUid());
         User userSwimmer = _users.get(swimmer.getUid());
         if(userCoach != null
@@ -417,7 +417,7 @@ public class UserProvider implements IUserProvider {
                 && userSwimmer.isSwimmer()) {
             Team team = userCoach.getCoach().getTeam();
             if(team.hasSwimmer(userSwimmer.getSwimmer())) {
-                return userSwimmer.getSwimmer().getFeedbacks();
+                return userSwimmer.getSwimmer().getFeedbacksMap();
             }
         }
         return null;

@@ -1,6 +1,6 @@
 package DTO.CoachDTOs;
 
-import DTO.SwimmerDTOs.DateDTO;
+import DTO.FeedbackDTOs.DateDTO;
 
 import java.time.LocalDateTime;
 
@@ -9,17 +9,26 @@ public class CoachSwimmerFeedbackDTO {
     private String swimmersEmail;
     private DateDTO dateDTO;
     private String link;
+    private String key;
     private int numberOfErrors;
     private int numberOfComments;
 
     public CoachSwimmerFeedbackDTO(String swimmersEmail,
                                    LocalDateTime localDateTime,
                                    String link,
+                                   String key,
                                    int numberOfErrors,
                                    int numberOfComments) {
         this.swimmersEmail = swimmersEmail;
-        this.dateDTO = new DateDTO(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth());
+        this.dateDTO = new DateDTO(
+                localDateTime.getYear(),
+                localDateTime.getMonthValue(),
+                localDateTime.getDayOfMonth(),
+                localDateTime.getHour(),
+                localDateTime.getMinute(),
+                localDateTime.getSecond());
         this.link = link;
+        this.key = key;
         this.numberOfErrors = numberOfErrors;
         this.numberOfComments = numberOfComments;
     }
@@ -46,6 +55,14 @@ public class CoachSwimmerFeedbackDTO {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public int getNumberOfErrors() {

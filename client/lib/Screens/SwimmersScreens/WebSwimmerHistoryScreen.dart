@@ -1,5 +1,5 @@
 import 'package:client/Components/MenuBars/MenuBar.dart';
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -25,7 +25,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
   LogicManager _logicManager;
   ScreenState _screenState;
   WebColors _webColors;
-  List<DateTimeDTO> days;
+  List<DateDayDTO> days;
 
   _WebSwimmerHistoryScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -52,7 +52,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
     );
   }
 
-  Future<List<DateTimeDTO>> getSwimmerHistoryMap() async {
+  Future<List<DateDayDTO>> getSwimmerHistoryMap() async {
     Swimmer swimmer = this.widget.arguments.user.swimmer;
     return await _logicManager.getSwimmerHistoryDays(swimmer);
   }
@@ -208,7 +208,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
 
 class PoolDateTile extends StatelessWidget {
 
-  final DateTimeDTO date;
+  final DateDayDTO date;
   final Function onTap;
   final Color color;
 
@@ -244,9 +244,9 @@ class PoolDateTile extends StatelessWidget {
       child: Material(
         child: ListTile(
           shape:RoundedRectangleBorder(
-            side: BorderSide(color: Colors.green, width: 1),
+            side: BorderSide(color: Colors.blueAccent, width: 1),
             borderRadius: const BorderRadius.all(
-              Radius.circular(20.0),
+              Radius.circular(15.0),
             ),
           ),
           leading: Icon(

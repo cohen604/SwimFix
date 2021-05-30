@@ -25,14 +25,10 @@ import Domain.UserData.Interfaces.ITeam;
 import Domain.UserData.Interfaces.IUser;
 import DomainLogic.FileLoaders.ISkeletonsLoader;
 import Storage.DbContext;
-import Storage.Team.TeamDao;
 import mainServer.Providers.Interfaces.*;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -252,16 +248,16 @@ public class LogicManager {
      * @param userDto - userdto
      * @return - list of days
      */
-    public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
+    public ActionResult<List<DateDayDTO>> getSwimmerHistoryDays(UserDTO userDto) {
         try {
             IUser user = _userProvider.getUser(userDto);
             if (user != null
                     && user.isLogged()
                     && user.isSwimmer()) {
                 Collection<LocalDateTime> days = user.getFeedbacksDays();
-                List<DateDTO> outputDays = new LinkedList<>();
+                List<DateDayDTO> outputDays = new LinkedList<>();
                 for (LocalDateTime day : days) {
-                    outputDays.add(new DateDTO(
+                    outputDays.add(new DateDayDTO(
                             day.getYear(),
                             day.getMonthValue(),
                             day.getDayOfMonth()));
@@ -281,21 +277,26 @@ public class LogicManager {
      * @param userDto - userdto
      * @return - list of feedbacks of the given date
      */
-    public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsByDay(UserDTO userDto, DateDTO dateDTO) {
+    public ActionResult<List<SwimmerFeedbackDTO>> getSwimmerHistoryPoolsByDay(UserDTO userDto, DateDayDTO dateDayDTO) {
         try {
             IUser user = _userProvider.getUser(userDto);
             if (user != null
                     && user.isLogged()
                     && user.isSwimmer()) {
                 LocalDateTime date = LocalDateTime.of(
-                        dateDTO.getYear(),
-                        dateDTO.getMonth(),
-                        dateDTO.getDay(), 0, 0);
+                        dateDayDTO.getYear(),
+                        dateDayDTO.getMonth(),
+                        dateDayDTO.getDay(), 0, 0);
                 Collection<IFeedbackVideo> feedbacks = user.getFeedbacksOfDay(date);
-                List<FeedbackVideoStreamer> output = new LinkedList<>();
+                List<SwimmerFeedbackDTO> output = new LinkedList<>();
                 if (feedbacks != null && !feedbacks.isEmpty()) {
                     for (IFeedbackVideo feedbackVideo : feedbacks) {
-                        output.add(new FeedbackVideoStreamer(feedbackVideo.getPath()));
+                        output.add(
+                                new SwimmerFeedbackDTO(
+                                        feedbackVideo.getPath(),
+                                        feedbackVideo.getDate()
+                                )
+                        );
                     }
                 }
                 return new ActionResult<>(Response.SUCCESS, output);
@@ -397,11 +398,11 @@ public class LogicManager {
     /***
      * delete a feedback of a user
      * @param userDTO - the user who own the feedback
-     * @param dateDTO - the date of the feedback
+     * @param dateDayDTO - the date of the feedback
      * @param path - the id of the feedback to delete
      * @return - true if deleted, false if not
      */
-    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDTO dateDTO, String path) {
+    public ActionResult<Boolean> deleteFeedbackByID(UserDTO userDTO, DateDayDTO dateDayDTO, String path) {
         try {
             IUser user = _userProvider.getUser(userDTO);
             if(user != null
@@ -778,7 +779,7 @@ public class LogicManager {
                     String teamName = iTeam.getName();
                     TeamDTO teamDto = new TeamDTO(
                             teamName,
-                            new DateDTO(iTeam.getOpenDate()),
+                            new DateDayDTO(iTeam.getOpenDate()),
                             iTeam.getCoachId(),
                             swimmers,
                             invitations
@@ -804,13 +805,15 @@ public class LogicManager {
             IUser coach = _userProvider.getUser(coachDto);
             IUser swimmer = _userProvider.findUser(swimmerEmail);
             if(coach!=null && swimmer!=null) {
-                Collection<? extends IFeedbackVideo> feedbacks = _userProvider.coachGetFeedbacks(coach, swimmer);
+                Set<Map.Entry<String, IFeedbackVideo>> feedbacks = _userProvider.coachGetFeedbacks(coach, swimmer);
                 List<CoachSwimmerFeedbackDTO> output = new LinkedList<>();
-                for(IFeedbackVideo iFeedbackVideo: feedbacks) {
+                for(Map.Entry<String, IFeedbackVideo> entry: feedbacks) {
+                    IFeedbackVideo iFeedbackVideo = entry.getValue();
                     CoachSwimmerFeedbackDTO dto = new CoachSwimmerFeedbackDTO(
                             swimmer.getEmail(),
                             iFeedbackVideo.getDate(),
                             iFeedbackVideo.getPath(),
+                            entry.getKey(),
                             iFeedbackVideo.getNumberOfErrors(),
                             iFeedbackVideo.getNumberOfComments()
                     );

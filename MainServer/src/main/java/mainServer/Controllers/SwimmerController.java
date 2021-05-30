@@ -55,7 +55,7 @@ public class SwimmerController {
         try {
             System.out.println("request view history days");
             UserDTO userDTO = new UserDTO(user.getUid(), user.getEmail(), user.getName());
-            ActionResult<List<DateDTO>> actionResult = swimFixAPI.getSwimmerHistoryDays(userDTO);
+            ActionResult<List<DateDayDTO>> actionResult = swimFixAPI.getSwimmerHistoryDays(userDTO);
             System.out.println("send view history days");
             return actionResult.toJson();
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class SwimmerController {
     public String viewHistoryByDay(@RequestBody HistoryDayDTO historyDayDTO) {
         try {
             System.out.println("request view history pools by day");
-            ActionResult<List<FeedbackVideoStreamer>> actionResult =
+            ActionResult<List<SwimmerFeedbackDTO>> actionResult =
                     swimFixAPI.getSwimmerHistoryPoolsBy(historyDayDTO.getUser(), historyDayDTO.getDate());
             System.out.println("send view history pools by day");
             return actionResult.toJson();
@@ -86,14 +86,14 @@ public class SwimmerController {
         try {
             System.out.println("request delete feedback");
             UserDTO userDTO = deleteFeedbackDTO.getUser();
-            DateDTO dateDTO = deleteFeedbackDTO.getDate();
+            DateDayDTO dateDayDTO = deleteFeedbackDTO.getDate();
             String link = deleteFeedbackDTO.getLink();
             if(link.contains("/")) {
                 link = link.replaceAll("/","\\");
             }
             ActionResult<Boolean> deleted = swimFixAPI.deleteFeedback(
                     userDTO,
-                    dateDTO,
+                    dateDayDTO,
                     link);
             System.out.println("send request delete feedback");
             return deleted.toJson();

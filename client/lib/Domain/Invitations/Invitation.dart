@@ -1,11 +1,11 @@
-import 'package:client/Domain/Dates/DateTimeDTO.dart';
+import 'package:client/Domain/Dates/DateDayDTO.dart';
 
 class Invitation {
 
   String id;
   String teamId;
   String email;
-  DateTimeDTO date;
+  DateDayDTO date;
   bool isPending;
   bool isApprove;
   bool isDenied;
@@ -18,7 +18,7 @@ class Invitation {
     : id = map['id'],
       teamId = map['teamId'],
       email = map['email'],
-      date = DateTimeDTO.fromJson(map['dateDTO']),
+      date = DateDayDTO.fromJson(map['dateDayDTO']),
       isPending = map['isPending'],
       isApprove = map['isApprove'],
       isDenied = map['isDenied'];

@@ -11,10 +11,7 @@ import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import DTO.ResearcherDTOs.FileDTO;
 import DTO.ResearcherDTOs.FileDownloadDTO;
 import DTO.ResearcherDTOs.ResearcherReportDTO;
-import DTO.SwimmerDTOs.DateDTO;
-import DTO.SwimmerDTOs.MyTeamDTO;
-import DTO.SwimmerDTOs.OpenTeamResponseDTO;
-import DTO.SwimmerDTOs.SwimmerInvitationDTO;
+import DTO.SwimmerDTOs.*;
 import DTO.UserDTOs.UserDTO;
 import DTO.UserDTOs.UserPermissionsDTO;
 import Domain.Errors.Factories.FactoryElbowError;
@@ -142,16 +139,16 @@ public class SwimFixAPI {
    }
 
 
-   public ActionResult<List<DateDTO>> getSwimmerHistoryDays(UserDTO userDto) {
+   public ActionResult<List<DateDayDTO>> getSwimmerHistoryDays(UserDTO userDto) {
       return logicManager.getSwimmerHistoryDays(userDto);
    }
 
-   public ActionResult<List<FeedbackVideoStreamer>> getSwimmerHistoryPoolsBy(UserDTO userDto, DateDTO date) {
+   public ActionResult<List<SwimmerFeedbackDTO>> getSwimmerHistoryPoolsBy(UserDTO userDto, DateDayDTO date) {
       return logicManager.getSwimmerHistoryPoolsByDay(userDto, date);
    }
 
-   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, DateDTO dateDTO, String path) {
-      return logicManager.deleteFeedbackByID(userDTO, dateDTO, path);
+   public ActionResult<Boolean> deleteFeedback(UserDTO userDTO, DateDayDTO dateDayDTO, String path) {
+      return logicManager.deleteFeedbackByID(userDTO, dateDayDTO, path);
    }
 
    public ActionResult<List<UserDTO>> findUsersThatNotAdmin(UserDTO userDTO) {

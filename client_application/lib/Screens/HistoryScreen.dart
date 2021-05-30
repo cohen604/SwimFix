@@ -23,7 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   LogicManager _logicManager;
   ScreenState _screenState;
   ColorsHolder _webColors;
-  List<DateTimeDTO> days;
+  List<DateDayDTO> days;
 
   _HistoryScreenState() {
     _logicManager = LogicManager.getInstance();
@@ -50,7 +50,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Future<List<DateTimeDTO>> getSwimmerHistoryMap() async {
+  Future<List<DateDayDTO>> getSwimmerHistoryMap() async {
     Swimmer swimmer = this.widget.arguments.user.swimmer;
     return await _logicManager.getSwimmerHistoryDays(swimmer);
   }
@@ -208,7 +208,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 class PoolDateTile extends StatelessWidget {
 
-  final DateTimeDTO date;
+  final DateDayDTO date;
   final Function onTap;
   final Color color;
   ColorsHolder colorsHolder;

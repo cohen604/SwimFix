@@ -88,6 +88,10 @@ public class Swimmer implements ISwimmer {
         return _feedbacks.values();
     }
 
+    public Set<Map.Entry<String, IFeedbackVideo>> getFeedbacksMap() {
+        return _feedbacks.entrySet();
+    }
+
     public IFeedbackVideo get(String path) {
         return _feedbacks.get(path);
     }
