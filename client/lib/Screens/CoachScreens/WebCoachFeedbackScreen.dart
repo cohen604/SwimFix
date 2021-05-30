@@ -108,6 +108,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
             (FeedbackData data) {
           if(data != null) {
             this.setState(() {
+              _textController.text = "";
               _feedbackData = data;
               _comments = data.comments;
             });
@@ -374,9 +375,9 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildText(context, this.widget.args.feedbackInfo.date.toString(),
-              26, Colors.black, FontWeight.normal),
+              24, Colors.black, FontWeight.normal),
           buildText(context, this.widget.args.feedbackInfo.swimmer,
-              26, Colors.black, FontWeight.normal),
+              24, Colors.black, FontWeight.normal),
         ],
       ),
     );
