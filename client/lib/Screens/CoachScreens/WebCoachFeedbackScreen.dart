@@ -40,7 +40,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     _webColors = WebColors.getInstance();
     _assetsHolder = AssetsHolder.getInstance();
     _logicManager = LogicManager.getInstance();
-    _screenState = ScreenState.View;
+    _screenState = ScreenState.Loading;
     _textController = new TextEditingController();
   }
 
@@ -173,7 +173,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
       String feedbackKey = this.widget.args.feedbackInfo.key;
       _logicManager.coachAddFeedbackComment(coach, swimmersEmail, feedbackKey, text)
           .then((bool added) {
-            if (added = null) {
+            if (added == null) {
               showServerFailMsg(context);
             }
             else if (added) {
@@ -206,15 +206,19 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   }
 
   Widget buildLoading(BuildContext context) {
-    return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 5.0,),
-            buildText(context, 'Loading feedback...', 24, Colors.black, FontWeight.normal),
-          ],
-        )
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 5.0,),
+              buildText(context, 'Loading feedback...', 24, Colors.black, FontWeight.normal),
+            ],
+          )
+      ),
     );
   }
 
@@ -243,8 +247,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   Widget buildVideo(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      color: _webColors.getBackgroundForI3().withAlpha(120),
-      padding: EdgeInsets.all(5),
+      color: _webColors.getBackgroundForI3(),
       child: Chewie(
         controller: _chewieController,
       ),
@@ -270,48 +273,61 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   }
 
  Widget buildAddComment(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-            child: TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter team name',
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24.0,
-                height: 2.0,
-                color: Colors.black,
-              ),
-            )
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: Colors.black
         ),
-        Padding(
-            padding: const EdgeInsets.all(5),
-            child: IconButton(
-              icon: Icon(
-                  Icons.add
-              ),
-              color: _webColors.getBackgroundForI2(),
-              iconSize: 35,
-              onPressed: ()=>onAddComment(context, _textController.text),
-            )
+        color: _webColors.getBackgroundForI6()
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Row(
+          children: [
+            Expanded(
+                child: TextField(
+                  controller: _textController,
+                  minLines: 1,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Comment text',
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                )
+            ),
+            Padding(
+                padding: const EdgeInsets.all(3),
+                child: IconButton(
+                  icon: Icon(
+                      Icons.add
+                  ),
+                  color: _webColors.getBackgroundForI2(),
+                  iconSize: 35,
+                  onPressed: ()=>onAddComment(context, _textController.text),
+                )
+            ),
+          ],
         ),
-      ],
+      ),
     );
  }
 
   Widget buildComments(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(10.0),
-      child: Card(
+      child: Container(
+        color: _webColors.getBackgroundForI4(),
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
             children: [
-              buildText(context, 'Comments', 28, _webColors.getBackgroundForI2(), FontWeight.normal),
+              buildText(context, 'Comments', 26, Colors.black, FontWeight.bold, textAlign: TextAlign.left),
               Expanded(
                   child: buildCommentsList(context),
               ),
@@ -360,7 +376,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
           buildText(context, this.widget.args.feedbackInfo.date.toString(),
               26, Colors.black, FontWeight.normal),
           buildText(context, this.widget.args.feedbackInfo.swimmer,
-              30, Colors.black, FontWeight.normal),
+              26, Colors.black, FontWeight.normal),
         ],
       ),
     );

@@ -131,6 +131,7 @@ public class FeedbackVideo extends Video implements IFeedbackVideo {
             if(commentText!=null && !commentText.isEmpty()) {
                 TextualComment textualComment = new TextualComment(coachEmail, commentText);
                 this.comments.add(textualComment);
+                return textualComment;
             }
         }
         return null;

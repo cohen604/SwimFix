@@ -461,7 +461,6 @@ class LogicManager {
       Map<String, dynamic> map = swimmer.toJson();
       ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
       if(serverResponse!=null && serverResponse.isSuccess()) {
-        print(serverResponse.value);
         return Team.fromJson(serverResponse.value) ;
       }
     }
@@ -498,6 +497,7 @@ class LogicManager {
       map['key'] = feedbackKey;
       ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
       if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
         return FeedbackData.fromJson(serverResponse.value as Map);
       }
     }

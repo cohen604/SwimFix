@@ -10,7 +10,7 @@ class FeedbackComment {
 
   FeedbackComment.fromJson(Map<String, dynamic> map)
     : dateDTO = DateDTO.fromJson(map['dateDTO']),
-      coachId = map['coachId '],
+      coachId = map['coachId'],
       comment = map['comment'];
 
 }
