@@ -932,5 +932,31 @@ public class LogicManager {
         }
         return new ActionResult<>(Response.FAIL, null);
     }
+
+    /***
+     * The function remove swimmer from coach team
+     * @param coach - the coach
+     * @param swimmerEmail - the swimmers email to remove
+     * @return true if the user is removed.
+     */
+    public ActionResult<Boolean> coachRemoveSwimmer(UserDTO coach, String swimmerEmail) {
+        try {
+            IUser coachUser = _userProvider.getUser(coach);
+            IUser swimmerUser = _userProvider.findUser(swimmerEmail);
+            if(coachUser!=null
+                    && coachUser.isLogged()
+                    && swimmerUser!=null) {
+                boolean removed = _userProvider.coachRemoveSwimmerFromTeam(coachUser, swimmerUser);
+                if(removed) {
+                    return new ActionResult<>(Response.SUCCESS, true);
+                }
+                return new ActionResult<>(Response.SUCCESS, false);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 

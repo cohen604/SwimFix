@@ -3,6 +3,7 @@ import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Invitations/Invitation.dart';
 import 'package:client/Domain/Team/SwimmerTeam.dart';
 import 'package:client/Domain/Team/Team.dart';
+import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachSwimmerScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -188,6 +189,63 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
     sortByInvitation(newSortBy);
   }
 
+  void showMessageServerError(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+          content: buildError(context),
+          )
+      );
+  }
+
+  void showMessageSwimmerFailedToRemove(BuildContext context, String email) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_outlined,
+                color: Colors.yellow,
+                size: 35,
+              ),
+              SizedBox(height: 10,),
+              buildText(context, 'Failed to remove $email from team', 24, Colors.black, FontWeight.normal),
+            ],
+          ),
+        )
+    );
+  }
+
+  void showMessageSwimmerRemoved(BuildContext context, String email) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          content: buildText(context, 'Removed $email from team', 24, Colors.black, FontWeight.normal),
+        )
+    );
+  }
+
+  void onClickRemoveSwimmer(BuildContext context, SwimmerTeam swimmerTeam) {
+    Swimmer coach = this.widget.args.user.swimmer;
+    String swimmersEmail = swimmerTeam.email;
+    _logicManager.coachRemoveSwimmer(coach, swimmersEmail).then(
+        (bool removed) {
+          if(removed == null) {
+            showMessageServerError(context);
+          }
+          else if(removed) {
+            updateTeam();
+            showMessageSwimmerRemoved(context, swimmersEmail);
+          }
+          else {
+            showMessageServerError(context);
+          }
+        }
+    );
+  }
+
   Widget buildText(
       BuildContext context,
       String text,
@@ -271,6 +329,12 @@ class _WebCoachScreenState extends State<WebCoachScreen> {
             subtitle: buildText( context,
               'Number of feedbacks: ${swimmerTeam.feedbacksCounter}',
               21, Colors.black45, FontWeight.normal, textAlign: TextAlign.left
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.delete_outline),
+              iconSize: 35,
+              color: Colors.red,
+              onPressed: ()=>onClickRemoveSwimmer(context, swimmerTeam),
             ),
             onTap: ()=>onClickSwimmerTeam(context, swimmerTeam),
           ),

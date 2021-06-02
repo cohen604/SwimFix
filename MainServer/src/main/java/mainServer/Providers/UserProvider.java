@@ -471,4 +471,34 @@ public class UserProvider implements IUserProvider {
         return false;
     }
 
+    @Override
+    public boolean coachRemoveSwimmerFromTeam(IUser iUserCoach, IUser iUserSwimmer) {
+        User userCoach = _users.get(iUserCoach.getUid());
+        User userSwimmer = _users.get(iUserSwimmer.getUid());
+        if(userCoach != null
+                && userSwimmer != null
+                && userCoach.isLogged()
+                && userCoach.isCoach()
+                && userSwimmer.isSwimmer()) {
+            Team team = userCoach.getCoach().getTeam();
+            Swimmer swimmer = userSwimmer.getSwimmer();
+            if(team.removeSwimmer(swimmer)) {
+                if(swimmer.leaveTeam()) {
+                    if(_swimmerDao.update(swimmer)!=null
+                            && _teamDao.update(team)!=null) {
+                        return true;
+                    }
+                    else {
+                        swimmer.addTeam(team.getName());
+                        team.addSwimmer(swimmer);
+                    }
+                }
+                else {
+                    team.addSwimmer(swimmer);
+                }
+            }
+        }
+        return false;
+    }
+
 }

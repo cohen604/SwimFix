@@ -52,7 +52,7 @@ public class CoachController {
 
     @PostMapping("/swimmer/feedbacks")
     @CrossOrigin(origins = "*")
-    public String coachGetSwimmerFeedbacks(@RequestBody CoachSwimmerFeedbacksRequest request) {
+    public String coachGetSwimmerFeedbacks(@RequestBody CoachAccessSwimmerRequest request) {
         try {
             System.out.println("Received coach get swimmers feedbacks request");
             UserDTO coachDto = request.getCoachDTO();
@@ -113,6 +113,22 @@ public class CoachController {
         return null;
     }
 
+    @PostMapping("/swimmer/remove")
+    @CrossOrigin(origins = "*")
+    public String coachRemoveSwimmerFromTeam(@RequestBody CoachAccessSwimmerRequest request) {
+        try {
+            System.out.println("Received coach add comment to feedback");
+            UserDTO coachDTO = request.getCoachDTO();
+            String swimmerEmail = request.getSwimmersEmail();
+            ActionResult<Boolean> actionResult = swimFixAPI.coachRemoveSwimmer(coachDTO, swimmerEmail);
+            System.out.println("Send coach removed swimmer from team");
+            return actionResult.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
