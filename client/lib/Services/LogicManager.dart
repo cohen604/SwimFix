@@ -545,4 +545,22 @@ class LogicManager {
     return null;
   }
 
+  Future<bool> coachRemoveSwimmer(Swimmer coach, String swimmersEmail) async {
+    try {
+      String path = '/coach/swimmer/remove';
+      Map<String, dynamic> map = Map();
+      map['coachDTO'] = coach.toJson();
+      map['swimmersEmail'] = swimmersEmail;
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in coach remove swimmer ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
 }

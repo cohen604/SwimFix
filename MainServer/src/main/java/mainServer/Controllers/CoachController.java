@@ -113,6 +113,8 @@ public class CoachController {
         return null;
     }
 
+    @PostMapping("/swimmer/remove")
+    @CrossOrigin(origins = "*")
     public String coachRemoveSwimmerFromTeam(@RequestBody CoachAccessSwimmerRequest request) {
         try {
             System.out.println("Received coach add comment to feedback");
