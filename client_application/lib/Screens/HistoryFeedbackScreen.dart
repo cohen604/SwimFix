@@ -27,6 +27,7 @@ class _HistoryFeedbackScreenState extends State<HistoryFeedbackScreen> {
   LogicManager _logicManager;
   ColorsHolder _colorsHolder;
   ScreenState _screenState;
+  String _screenTitle;
   FeedbackData _feedbackData;
   List<FeedbackComment> _comments;
 
@@ -34,6 +35,7 @@ class _HistoryFeedbackScreenState extends State<HistoryFeedbackScreen> {
     _logicManager = LogicManager.getInstance();
     _colorsHolder = new ColorsHolder();
     _screenState = ScreenState.Loading;
+    _screenTitle = "Feedback";
   }
 
   @override
@@ -48,6 +50,7 @@ class _HistoryFeedbackScreenState extends State<HistoryFeedbackScreen> {
               _feedbackData = feedback;
               _screenState = ScreenState.View;
               _comments = feedback.comments;
+              _screenTitle = feedback.date.toString();
             });
           }
           else {
@@ -241,7 +244,7 @@ class _HistoryFeedbackScreenState extends State<HistoryFeedbackScreen> {
         ),
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: Text("Feedback ${getStringTitle(path)}",),
+          title: Text("$_screenTitle",),
         ),
         body: SingleChildScrollView(
           child: Container(
