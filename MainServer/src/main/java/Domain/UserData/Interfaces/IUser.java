@@ -65,4 +65,6 @@ public interface IUser {
     Collection<? extends IInvitation> getInvitations();
 
     Collection<? extends  IInvitation> getInvitationsHistory();
+
+    IFeedbackVideo getIFeedback(String feedbackPath);
 }

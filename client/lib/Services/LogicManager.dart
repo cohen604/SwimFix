@@ -526,4 +526,23 @@ class LogicManager {
     return null;
   }
 
+  Future<FeedbackData> getFeedbackData(Swimmer swimmer, String feedback) async {
+    try {
+      String path = '/swimmer/feedback/info';
+      Map<String, dynamic> map = Map();
+      map['swimmerDTO'] = swimmer.toJson();
+      map['path'] = feedback;
+      print(feedback);
+      ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
+        return FeedbackData.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get feedback data ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
 }

@@ -258,4 +258,12 @@ public class User implements IUser {
         }
         return null;
     }
+
+    @Override
+    public IFeedbackVideo getIFeedback(String feedbackPath) {
+        if(_swimmer != null) {
+            return _swimmer.getFeedback(feedbackPath);
+        }
+        return null;
+    }
 }
