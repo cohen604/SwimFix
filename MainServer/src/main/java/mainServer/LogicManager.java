@@ -893,5 +893,44 @@ public class LogicManager {
         }
         return new ActionResult<>(Response.FAIL, null);
     }
+
+    /**
+     * The function return the swimmer get feedback info
+     * @param userDTO - user
+     * @param feedbackPath - the feedback path
+     * @return the feedback data if the feedback belongs to the user
+     */
+    public ActionResult<FeedbackDataDTO> SwimmerGetFeedbackInfo(UserDTO userDTO, String feedbackPath) {
+        try {
+            IUser iUser = _userProvider.getUser(userDTO);
+            if(iUser!=null
+                    && iUser.isLogged()
+                    && iUser.isSwimmer()) {
+                IFeedbackVideo iFeedbackVideo = iUser.getIFeedback(feedbackPath);
+                if(iFeedbackVideo != null) {
+                    List<TextualCommentDTO> comments = new LinkedList<>();
+                    for(ITextualComment textualComment: iFeedbackVideo.getComments()) {
+                        comments.add(new TextualCommentDTO(
+                                textualComment.getDate(),
+                                textualComment.getCoachId(),
+                                textualComment.getText()
+                        ));
+                    }
+                    FeedbackDataDTO feedbackDataDTO = new FeedbackDataDTO(
+                            iUser.getEmail(),
+                            iFeedbackVideo.getPath(),
+                            iFeedbackVideo.getPath(),
+                            iFeedbackVideo.getDate(),
+                            comments
+                    );
+                    return new ActionResult<>(Response.SUCCESS, feedbackDataDTO);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ActionResult<>(Response.FAIL, null);
+    }
 }
 

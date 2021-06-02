@@ -85,7 +85,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
      SwimmerHistoryFeedback feedback = _feedbacks[index];
      // String link.path = "/"+link.path.replaceAll("\\", "/");
      Navigator.pushNamed(context, '/viewFeedback',
-        arguments: new ViewFeedBackArguments(user, new FeedBackLink(feedback.getPath())));
+        arguments: new ViewFeedBackArguments(user, new FeedBackLink(feedback.path)));
   }
 
   void onBack(BuildContext context) {

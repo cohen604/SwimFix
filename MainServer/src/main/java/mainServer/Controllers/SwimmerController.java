@@ -2,6 +2,7 @@ package mainServer.Controllers;
 
 import DTO.*;
 import DTO.FeedbackDTOs.ConvertedVideoDTO;
+import DTO.FeedbackDTOs.FeedbackDataDTO;
 import DTO.FeedbackDTOs.FeedbackVideoStreamer;
 import DTO.SwimmerDTOs.*;
 import DTO.UserDTOs.UserDTO;
@@ -43,6 +44,22 @@ public class SwimmerController {
         return null;
     }
 
+    @PostMapping("/feedback/info")
+    @CrossOrigin(origins = "*")
+    public String getFeedbackInfo(@RequestBody SwimmerFeedbackInfoRequestDTO requestDTO) {
+        try {
+            System.out.println("Received feedback info request");
+            UserDTO userDTO = requestDTO.getSwimmerDTO();
+            String feedbackPath = requestDTO.getPath();
+            ActionResult<FeedbackDataDTO> actionResult = swimFixAPI.SwimmerGetFeedbackInfo(userDTO, feedbackPath);
+            System.out.println("Send feedback info request result");
+            return actionResult.toJson();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * return the days when a swimmer swim

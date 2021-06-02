@@ -290,8 +290,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   buildHi(context),
                   SizedBox(height: 10,),
                   Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
+                    child: Column(
                       children: <Widget>[
                         buildUpload(context),
                         buildCamera(context),

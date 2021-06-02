@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: buildLogin(context),
                 ),
-                buildDebugMode(context),
+                //buildDebugMode(context),
               ]
             ),
           ),

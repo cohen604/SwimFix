@@ -215,4 +215,8 @@ public class SwimFixAPI {
    public ActionResult<Boolean> coachAddCommentToFeedback(UserDTO coachDTO, String swimmerEmail, String feedbackKey, String commentText) {
       return logicManager.coachAddCommentToFeedback(coachDTO, swimmerEmail, feedbackKey, commentText);
    }
+
+   public ActionResult<FeedbackDataDTO> SwimmerGetFeedbackInfo(UserDTO userDTO, String feedbackPath) {
+      return logicManager.SwimmerGetFeedbackInfo(userDTO, feedbackPath);
+   }
 }
