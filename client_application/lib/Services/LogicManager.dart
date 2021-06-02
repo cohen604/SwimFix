@@ -7,6 +7,7 @@ import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
+import 'package:client_application/Domain/Video/FeedbackData.dart';
 import 'package:client_application/Services/Authentication/GoogleAuth.dart';
 import 'package:client_application/Services/VideoHandler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -194,6 +195,25 @@ class LogicManager {
       print('error in delete feedback ${e.toString()}');
     }
     return false;
+  }
+
+  Future<FeedbackData> getFeedbackData(Swimmer swimmer, String feedback) async {
+    try {
+      String path = '/swimmer/feedback/info';
+      Map<String, dynamic> map = Map();
+      map['swimmerDTO'] = swimmer.toJson();
+      map['path'] = feedback;
+      print(feedback);
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        print(serverResponse.value);
+        return FeedbackData.fromJson(serverResponse.value as Map);
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in swimmer feedback ${e.toString()} $stacktrace');
+    }
+    return null;
   }
 
 }

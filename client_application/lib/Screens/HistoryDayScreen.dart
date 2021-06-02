@@ -83,7 +83,7 @@ class _WebSwimmerHistoryScreenState extends State<HistoryDayScreen> {
      AppUser user = this.widget.arguments.user;
      SwimmerHistoryFeedback feedback = _feedbacks[index];
      Navigator.pushNamed(context, '/history/day/feedback',
-        arguments: new HistoryFeedBackArguments(user, new FeedbackLink(feedback.getPath()), date));
+        arguments: new HistoryFeedBackArguments(user, new FeedbackLink(feedback.path), date));
   }
 
   Widget buildLoadingHistory(BuildContext context) {
