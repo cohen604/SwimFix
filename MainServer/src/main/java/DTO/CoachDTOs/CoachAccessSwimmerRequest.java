@@ -2,12 +2,12 @@ package DTO.CoachDTOs;
 
 import DTO.UserDTOs.UserDTO;
 
-public class CoachSwimmerFeedbacksRequest {
+public class CoachAccessSwimmerRequest {
 
     private UserDTO coachDTO;
     private String swimmersEmail;
 
-    public CoachSwimmerFeedbacksRequest(UserDTO coachDTO, String swimmersEmail) {
+    public CoachAccessSwimmerRequest(UserDTO coachDTO, String swimmersEmail) {
         this.coachDTO = coachDTO;
         this.swimmersEmail = swimmersEmail;
     }

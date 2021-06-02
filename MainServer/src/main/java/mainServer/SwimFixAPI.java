@@ -219,4 +219,8 @@ public class SwimFixAPI {
    public ActionResult<FeedbackDataDTO> SwimmerGetFeedbackInfo(UserDTO userDTO, String feedbackPath) {
       return logicManager.SwimmerGetFeedbackInfo(userDTO, feedbackPath);
    }
+
+   public ActionResult<Boolean> coachRemoveSwimmer(UserDTO coach, String swimmerEmail) {
+      return logicManager.coachRemoveSwimmer(coach, swimmerEmail);
+   }
 }

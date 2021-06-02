@@ -56,5 +56,8 @@ public interface IUserProvider {
     IFeedbackVideo coachGetSwimmerFeedback(IUser iCoach, IUser iSwimmer, String feedbackKey);
 
     boolean coachAddCommentToFeedback(IUser iUserCoach, IUser iUserSwimmer, String feedbackKey, String commentText);
+
+    boolean coachRemoveSwimmerFromTeam(IUser iUserCoach, IUser iUserSwimmer);
+
 }
 

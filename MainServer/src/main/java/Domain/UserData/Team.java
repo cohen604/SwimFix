@@ -6,6 +6,7 @@ import Domain.UserData.Interfaces.ITeam;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,13 +15,15 @@ public class Team implements ITeam {
     private String name;
     private LocalDateTime openDate;
     private String coachId;
+    private AtomicBoolean isOpen;
     private ConcurrentHashMap<String, ISwimmer> swimmers;
     private AtomicInteger sendInvitations;
     private ConcurrentHashMap<String, Invitation> invitations;
 
-    public Team(String name, String coachId) {
+    public Team(String name, String coachId, boolean isOpen) {
         this.name = name;
         this.coachId = coachId;
+        this.isOpen = new AtomicBoolean(isOpen);
         this.openDate = LocalDateTime.now();
         this.swimmers = new ConcurrentHashMap<>();
         this.sendInvitations = new AtomicInteger(0);
@@ -110,17 +113,26 @@ public class Team implements ITeam {
     }
 
     public boolean addSwimmer(ISwimmer swimmer, String invitationId, Invitation updated) {
-        return invitations.containsKey(invitationId)
+        return isOpen.get()
+                && invitations.containsKey(invitationId)
                 && invitations.put(invitationId, updated) != null
                 && swimmers.putIfAbsent(swimmer.getEmail(), swimmer) == null;
     }
 
     public boolean removeSwimmer(ISwimmer swimmer) {
-        return swimmers.remove(swimmer.getEmail()) != null;
+        return isOpen.get()
+                && swimmers.remove(swimmer.getEmail()) != null;
     }
 
     public void updateInvitation(Invitation invitation) {
         invitations.put(invitation.getId(), invitation);
     }
 
+    public boolean closeTeam() {
+        return isOpen.compareAndSet(true, false);
+    }
+
+    public void openTeam() {
+        isOpen.compareAndSet(false, true);
+    }
 }
