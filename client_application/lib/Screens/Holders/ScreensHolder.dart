@@ -1,4 +1,5 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/HistoryInvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/InvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
@@ -9,6 +10,7 @@ import 'package:client_application/Screens/CameraScreen.dart';
 import 'package:client_application/Screens/FeedbackScreen.dart';
 import 'package:client_application/Screens/HistoryDayScreen.dart';
 import 'package:client_application/Screens/HistoryFeedbackScreen.dart';
+import 'package:client_application/Screens/HistoryInvitationsScreen.dart';
 import 'package:client_application/Screens/InvitationsScreen.dart';
 import 'package:client_application/Screens/LoginScreen.dart';
 import 'package:client_application/Screens/UploadScreen.dart';
@@ -60,6 +62,10 @@ class ScreensHolders {
 
   Widget getInvitationsScreen(InvitationsScreenArguments args) {
     return new InvitationsScreen(args);
+  }
+
+  Widget getInvitationHistoryScreen(HistoryInvitationsScreenArguments args) {
+    return new HistoryInvitationsScreen(args);
   }
 
 }

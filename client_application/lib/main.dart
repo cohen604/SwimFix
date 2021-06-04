@@ -1,5 +1,6 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/HistoryInvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/InvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
@@ -73,6 +74,10 @@ class MyApp extends StatelessWidget {
         '/invitations': (context) {
           InvitationsScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getInvitationsScreen(args);
+        },
+        '/invitations/history': (context) {
+          HistoryInvitationsScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getInvitationHistoryScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,

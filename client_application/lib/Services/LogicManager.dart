@@ -59,8 +59,9 @@ class LogicManager {
         // Map map = response.value as Map;
         return true;
       }
-    } catch (e) {
-      print('error in login ${e.toString()}');
+    }
+    catch(e, stacktrace) {
+      print('error in login ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -74,8 +75,9 @@ class LogicManager {
         await signOutWithGoogle();
         return true;
       }
-    } catch (e) {
-      print('error in logout ${e.toString()}');
+    }
+    catch(e, stacktrace) {
+      print('error in logout ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -105,8 +107,8 @@ class LogicManager {
       Map map = response.value as Map;
       return FeedbackLink.factory(map);
     }
-    catch (e) {
-      print('error in post video for stream ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in post video for stream ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -135,8 +137,8 @@ class LogicManager {
       _videoHandler.deleteVideo(newPath);
       return output;
     }
-    catch(e) {
-      print('error in feedbackFromTimes ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in feedbackFromTimes ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -156,8 +158,8 @@ class LogicManager {
           }).toList();
       return days;
     }
-    catch(e) {
-      print('error in get swimmer history days ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history days ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -174,8 +176,8 @@ class LogicManager {
       List<dynamic> feedbacks = response.value as List<dynamic>;
       return feedbacks.map((e) => SwimmerHistoryFeedback.fromJson(e)).toList();
     }
-    catch(e) {
-      print('error in get swimmer history pools by day ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history pools by day ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -192,8 +194,8 @@ class LogicManager {
           path, parameters);
       return serverResponse.value as bool;
     }
-    catch(e) {
-      print('error in delete feedback ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in delete feedback ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -263,6 +265,22 @@ class LogicManager {
     }
     catch(e, stacktrace) {
       print('error in deny invitation ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitationsHistory(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations/history";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get invitations history ${e.toString()} $stacktrace');
     }
     return null;
   }
