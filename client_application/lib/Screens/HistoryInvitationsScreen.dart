@@ -124,7 +124,7 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 5.0,),
-            buildText(context, 'Loading pending invitations...', 21, Colors.black, FontWeight.normal),
+            buildText(context, 'Loading invitations history...', 21, Colors.black, FontWeight.normal),
           ],
         )
     );
@@ -322,7 +322,7 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
         ),
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: Text("Swim Analytics",),
+          title: Text("Invitations history",),
         ),
         body: SingleChildScrollView(
           child: Container(

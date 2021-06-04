@@ -379,7 +379,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
         ),
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          title: Text("Swim Analytics",),
+          title: Text("Invitations",),
         ),
         body: SingleChildScrollView(
           child: Container(

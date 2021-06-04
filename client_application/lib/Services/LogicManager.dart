@@ -5,6 +5,7 @@ import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
 import 'package:client_application/Domain/Swimmer/Invitation.dart';
+import 'package:client_application/Domain/Swimmer/MyTeam.dart';
 import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
@@ -281,6 +282,38 @@ class LogicManager {
     }
     catch(e, stacktrace) {
       print('error in get invitations history ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<MyTeam> getMyTeam(Swimmer swimmer) async {
+    try {
+      String path = '/swimmer/team';
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return MyTeam.fromJson(serverResponse.value) ;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get my team ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> leaveTeam(Swimmer swimmer, String teamName) async {
+    try {
+      String path = '/swimmer/team/leave';
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['teamId'] = teamName;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in leave team ${e.toString()} $stacktrace');
     }
     return null;
   }
