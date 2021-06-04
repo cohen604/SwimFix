@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
+import 'package:client_application/Domain/Swimmer/Invitation.dart';
+import 'package:client_application/Domain/Swimmer/MyTeam.dart';
 import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
@@ -58,8 +60,9 @@ class LogicManager {
         // Map map = response.value as Map;
         return true;
       }
-    } catch (e) {
-      print('error in login ${e.toString()}');
+    }
+    catch(e, stacktrace) {
+      print('error in login ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -73,8 +76,9 @@ class LogicManager {
         await signOutWithGoogle();
         return true;
       }
-    } catch (e) {
-      print('error in logout ${e.toString()}');
+    }
+    catch(e, stacktrace) {
+      print('error in logout ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -104,8 +108,8 @@ class LogicManager {
       Map map = response.value as Map;
       return FeedbackLink.factory(map);
     }
-    catch (e) {
-      print('error in post video for stream ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in post video for stream ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -134,8 +138,8 @@ class LogicManager {
       _videoHandler.deleteVideo(newPath);
       return output;
     }
-    catch(e) {
-      print('error in feedbackFromTimes ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in feedbackFromTimes ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -155,8 +159,8 @@ class LogicManager {
           }).toList();
       return days;
     }
-    catch(e) {
-      print('error in get swimmer history days ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history days ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -173,8 +177,8 @@ class LogicManager {
       List<dynamic> feedbacks = response.value as List<dynamic>;
       return feedbacks.map((e) => SwimmerHistoryFeedback.fromJson(e)).toList();
     }
-    catch(e) {
-      print('error in get swimmer history pools by day ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in get swimmer history pools by day ${e.toString()} $stacktrace');
     }
     return null;
   }
@@ -191,8 +195,8 @@ class LogicManager {
           path, parameters);
       return serverResponse.value as bool;
     }
-    catch(e) {
-      print('error in delete feedback ${e.toString()}');
+    catch(e, stacktrace) {
+      print('error in delete feedback ${e.toString()} $stacktrace');
     }
     return false;
   }
@@ -212,6 +216,104 @@ class LogicManager {
     }
     catch(e, stacktrace) {
       print('error in swimmer feedback ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitations(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get invitations ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> approveInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/approve";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in approve invitation ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> denyInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/deny";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in deny invitation ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitationsHistory(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations/history";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get invitations history ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<MyTeam> getMyTeam(Swimmer swimmer) async {
+    try {
+      String path = '/swimmer/team';
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return MyTeam.fromJson(serverResponse.value) ;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get my team ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> leaveTeam(Swimmer swimmer, String teamName) async {
+    try {
+      String path = '/swimmer/team/leave';
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['teamId'] = teamName;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in leave team ${e.toString()} $stacktrace');
     }
     return null;
   }
