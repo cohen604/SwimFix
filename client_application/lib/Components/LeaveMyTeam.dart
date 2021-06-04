@@ -1,4 +1,4 @@
-\import 'package:client_application/Domain/Users/Swimmer.dart';
+import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Screens/Holders/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
