@@ -1,8 +1,11 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Components/CommentComp.dart';
+import 'package:client/Components/Graphs/SwimmingGraph.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Feedback/FeedbackAnalysis.dart';
 import 'package:client/Domain/Feedback/FeedbackComment.dart';
 import 'package:client/Domain/Feedback/FeedbackData.dart';
+import 'package:client/Domain/Graph/FeedbackGraphs.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
@@ -33,7 +36,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   ChewieController _chewieController;
   TextEditingController _textController;
 
-  FeedbackData _feedbackData;
+  FeedbackAnalysis _feedbackAnalysis;
   List<FeedbackComment> _comments;
 
   _WebCoachFeedbackScreenState() {
@@ -51,7 +54,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
     String feedbackKey = this.widget.args.feedbackInfo.key;
     _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
-        (FeedbackData data) {
+        (FeedbackAnalysis data) {
           if(data == null) {
             this.setState(() {
               _screenState = ScreenState.Error;
@@ -60,7 +63,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
           else {
             initVideoPlayers();
             this.setState(() {
-              _feedbackData = data;
+              _feedbackAnalysis = data;
               _screenState = ScreenState.View;
               _comments = data.comments;
             });
@@ -105,11 +108,11 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
     String feedbackKey = this.widget.args.feedbackInfo.key;
     _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
-            (FeedbackData data) {
+            (FeedbackAnalysis data) {
           if(data != null) {
             this.setState(() {
               _textController.text = "";
-              _feedbackData = data;
+              _feedbackAnalysis = data;
               _comments = data.comments;
             });
           }
@@ -224,24 +227,28 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   }
 
   Widget buildError(BuildContext context) {
-    return Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.warning_amber_rounded,
-              size: 45,
-              color: Colors.red,
-            ),
-            SizedBox(height: 5.0,),
-            buildText(context, 'Something is broken.\n'
-                'Maybe the you don\'t have permissions or the servers are down.\n'
-                'For more information contact swimAnalytics@gmail.com',
-                24, Colors.black, FontWeight.normal,
-                textAlign: TextAlign.center),
-          ],
-        )
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 45,
+                color: Colors.red,
+              ),
+              SizedBox(height: 5.0,),
+              buildText(context, 'Something is broken.\n'
+                  'Maybe the you don\'t have permissions or the servers are down.\n'
+                  'For more information contact swimAnalytics@gmail.com',
+                  24, Colors.black, FontWeight.normal,
+                  textAlign: TextAlign.center),
+            ],
+          )
+      ),
     );
   }
 
@@ -359,9 +366,15 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   }
 
   Widget buildAreaForGraphs(BuildContext context) {
+    FeedbackGraphs graphs = _feedbackAnalysis.graphs;
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
+      child: SwimmingGraph(
+        graphs.numberOfFrames,
+        graphs.head,
+        graphs.errors
+      ),
     );
   }
   
