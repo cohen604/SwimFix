@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:client_application/Domain/DTO/DateTimeDTO.dart';
 import 'package:client_application/Domain/Pair.dart';
 import 'package:client_application/Domain/ServerResponse.dart';
+import 'package:client_application/Domain/Swimmer/Invitation.dart';
 import 'package:client_application/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Domain/Video/FeedBackLink.dart';
@@ -212,6 +213,56 @@ class LogicManager {
     }
     catch(e, stacktrace) {
       print('error in swimmer feedback ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<List<Invitation>> getInvitations(Swimmer swimmer) async {
+    try {
+      String path = "/swimmer/invitations";
+      Map<String, dynamic> map = swimmer.toJson();
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        List<dynamic> list = serverResponse.value;
+        return list.map((e) => Invitation.fromJson(e)).toList();
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in get invitations ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> approveInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/approve";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in approve invitation ${e.toString()} $stacktrace');
+    }
+    return null;
+  }
+
+  Future<bool> denyInvitation(Swimmer swimmer, String invitationId) async {
+    try {
+      String path = "/swimmer/invitation/deny";
+      Map<String, dynamic> map = Map();
+      map['userDTO'] = swimmer.toJson();
+      map['invitationId'] = invitationId;
+      ServerResponse serverResponse = await _connectionHandler.postMessage(path, map);
+      if(serverResponse!=null && serverResponse.isSuccess()) {
+        return serverResponse.value as bool;
+      }
+    }
+    catch(e, stacktrace) {
+      print('error in deny invitation ${e.toString()} $stacktrace');
     }
     return null;
   }

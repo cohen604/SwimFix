@@ -1,4 +1,4 @@
-import 'package:client_application/Domain/DTO/DateDTO.dart';
+import 'package:client_application/Domain/DTO/DateDayDTO.dart';
 
 class SwimmerHistoryFeedback {
 

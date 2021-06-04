@@ -31,4 +31,30 @@ class DateDayDTO {
     return '$day.$month.$year';
   }
 
+  int compareTo(DateDayDTO other) {
+    if(year < other.year) {
+      return -1;
+    }
+    else if(year > other.year) {
+      return 1;
+    }
+    else {
+      if(month < other.month) {
+        return -1;
+      }
+      else if(month > other.month) {
+        return 1;
+      }
+      else {
+        if(day < other.day) {
+          return -1;
+        }
+        else if(day > other.day) {
+          return 1;
+        }
+      }
+    }
+    return 0;
+  }
+
 }

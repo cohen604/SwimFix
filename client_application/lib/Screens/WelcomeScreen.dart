@@ -3,6 +3,7 @@ import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart'
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'Arguments/HistoryScreenArguments.dart';
+import 'Arguments/InvitationsScreenArguments.dart';
 import 'Holders/ColorsHolder.dart';
 import 'package:client_application/Screens/Drawers/BasicDrawer.dart';
 import 'package:client_application/Services/LogicManager.dart';
@@ -40,6 +41,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     AppUser appUser = this.widget.arguments.appUser;
     Navigator.pushNamed(context, "/history",
         arguments: new HistoryScreenArguments(appUser));
+  }
+
+  void onInvitations(BuildContext context) {
+    AppUser appUser = this.widget.arguments.appUser;
+    Navigator.pushNamed(context, "/invitations",
+        arguments: new InvitationsScreenArguments(appUser));
+  }
+
+  void onMyTeam(BuildContext context) {
+    //TODO
   }
 
   void onLogout(BuildContext context) {
@@ -122,144 +133,124 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget buildUpload(BuildContext context) {
+  Widget buildButton(
+      BuildContext context,
+      String title,
+      String des,
+      IconData iconData,
+      String buttonTitle,
+      Function function) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
       child: Card(
-        borderOnForeground: true,
-        child: Container(
-          padding: EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              buildTitle(context, 'Upload video'),
-              buildDes(context, 'Upload a video file in any video format.'),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                      return _colorsHolder.getBackgroundForI1(); // Use the component's default.
-                    },
-                  ),
-                ),
-                onPressed: ()=>onUpload(context),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: Wrap(
-                      spacing: 5,
-                      children: [
-                        Icon(Icons.add_a_photo_sharp),
-                        Text('Upload',
-                          style: TextStyle(
-                            fontSize: 20 * MediaQuery.of(context).textScaleFactor,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ],
+          borderOnForeground: true,
+          child: Container(
+            padding: EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                buildTitle(context, title),
+                buildDes(context, des),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return _colorsHolder.getBackgroundForI1(); // Use the component's default.
+                        },
+                      ),
                     ),
-                  ),
+                    onPressed: function,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Wrap(
+                          spacing: 5,
+                          children: [
+                            Icon(iconData),
+                            Text(buttonTitle,
+                              style: TextStyle(
+                                fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                 )
-              )
-            ],
-          ),
-        )
+              ],
+            ),
+          )
       ),
+    );
+  }
+
+
+  Widget buildUpload(BuildContext context) {
+    return buildButton(
+        context,
+        'Upload video',
+        'Upload a video file in any video format.',
+        Icons.add_a_photo_sharp,
+        'Upload',
+        ()=>onUpload(context)
     );
   }
 
   Widget buildCamera(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: Card(
-          borderOnForeground: true,
-          child: Container(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                buildTitle(context, 'Film video'),
-                buildDes(context, 'Film swimming video with your device camera.'),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          return _colorsHolder.getBackgroundForI1(); // Use the component's default.
-                        },
-                      ),
-                    ),
-                    onPressed: ()=>onFilm(context),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Wrap(
-                          spacing: 5,
-                          children: [
-                            Icon(Icons.videocam),
-                            Text('Film',
-                              style: TextStyle(
-                                fontSize: 20 * MediaQuery.of(context).textScaleFactor,
-                                color: Colors.white,
-                                fontWeight: FontWeight.normal,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                )
-              ],
-            ),
-          )
-      ),
+    return buildButton(
+        context,
+        'Film video',
+        'Film swimming video with your device camera.',
+        Icons.videocam,
+        'Film',
+        ()=>onFilm(context)
     );
   }
 
   Widget buildHistory(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: Card(
-          borderOnForeground: true,
-          child: Container(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                buildTitle(context, 'History'),
-                buildDes(context, 'View swimming feedback history.'),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          return _colorsHolder.getBackgroundForI1(); // Use the component's default.
-                        },
-                      ),
-                    ),
-                    onPressed: ()=>onHistory(context),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Wrap(
-                          spacing: 5,
-                          children: [
-                            Icon(Icons.history),
-                            Text('View',
-                              style: TextStyle(
-                                fontSize: 20 * MediaQuery.of(context).textScaleFactor,
-                                color: Colors.white,
-                                fontWeight: FontWeight.normal,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                )
-              ],
-            ),
-          )
-      ),
+    return buildButton(
+        context,
+        'History',
+        'View swimming feedback history.',
+        Icons.history,
+        'View',
+        ()=>onHistory(context)
+    );
+  }
+
+  Widget buildInvitations(BuildContext context) {
+    return buildButton(
+        context,
+        'Invitations',
+        'View swimming invitations.',
+        Icons.email_outlined,
+        'View',
+        ()=>onHistory(context)
+    );
+  }
+
+  Widget buildMyTeam(BuildContext context) {
+    return buildButton(
+        context,
+        'My team',
+        'View your swimming team.',
+        Icons.pool,
+        'View',
+        ()=>onMyTeam(context)
+    );
+  }
+
+  Widget buildOptions(BuildContext context) {
+    return  Column(
+        children: <Widget>[
+          buildUpload(context),
+          buildCamera(context),
+          buildHistory(context),
+          buildInvitations(context),
+          buildMyTeam(context),
+        ]
     );
   }
 
@@ -290,13 +281,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   buildHi(context),
                   SizedBox(height: 10,),
                   Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        buildUpload(context),
-                        buildCamera(context),
-                        buildHistory(context),
-                      ],
-                    ),
+                    child: buildOptions(context)
                   ),
                 ],
               ),

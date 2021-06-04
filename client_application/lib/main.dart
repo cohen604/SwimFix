@@ -1,6 +1,7 @@
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/InvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
@@ -68,6 +69,10 @@ class MyApp extends StatelessWidget {
         '/history/day/feedback': (context) {
           HistoryFeedBackArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getHistoryFeedbackScreen(args);
+        },
+        '/invitations': (context) {
+          InvitationsScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getInvitationsScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,
