@@ -1,5 +1,6 @@
 import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/MyTeamScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/WelcomeScreenArguments.dart';
 import 'Arguments/HistoryScreenArguments.dart';
@@ -50,7 +51,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void onMyTeam(BuildContext context) {
-    //TODO
+    AppUser appUser = this.widget.arguments.appUser;
+    Navigator.pushNamed(context, "/team",
+        arguments: new MyTeamScreenArguments(appUser));
   }
 
   void onLogout(BuildContext context) {
@@ -84,23 +87,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget buildHi(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          Text("Welcome",
-            style: TextStyle(
-              fontSize: 28,
-              color: _colorsHolder.getBackgroundForI1(),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text("${this.widget.arguments.appUser.swimmer.name}",
-            style: TextStyle(
-              fontSize: 28,
-              color: _colorsHolder.getBackgroundForI1(),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+      child: Text("Welcome ${this.widget.arguments.appUser.swimmer.name}",
+        style: TextStyle(
+          fontSize: 28,
+          color: _colorsHolder.getBackgroundForI1(),
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -227,7 +219,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         'View swimming invitations.',
         Icons.email_outlined,
         'View',
-        ()=>onHistory(context)
+        ()=>onInvitations(context)
     );
   }
 
@@ -237,20 +229,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         'My team',
         'View your swimming team.',
         Icons.pool,
-        'View',
+        'Swim',
         ()=>onMyTeam(context)
     );
   }
 
   Widget buildOptions(BuildContext context) {
-    return  Column(
-        children: <Widget>[
-          buildUpload(context),
-          buildCamera(context),
-          buildHistory(context),
-          buildInvitations(context),
-          buildMyTeam(context),
-        ]
+    return  SingleChildScrollView(
+      child: Column(
+          children: <Widget>[
+            buildUpload(context),
+            buildCamera(context),
+            buildHistory(context),
+            buildInvitations(context),
+            buildMyTeam(context),
+          ]
+      ),
     );
   }
 
@@ -270,21 +264,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             backgroundColor: Colors.blue,
             title: Text("Swim Analytics",),
           ),
-          body: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              color: _colorsHolder.getBackgroundForI6(),
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  buildHi(context),
-                  SizedBox(height: 10,),
-                  Expanded(
-                    child: buildOptions(context)
-                  ),
-                ],
-              ),
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: _colorsHolder.getBackgroundForI6(),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                buildHi(context),
+                SizedBox(height: 10,),
+                Expanded(
+                  child: buildOptions(context)
+                ),
+              ],
             ),
           ),
         ),

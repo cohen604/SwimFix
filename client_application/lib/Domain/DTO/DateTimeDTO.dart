@@ -11,9 +11,9 @@ class DateDayDTO {
   }
 
   DateDayDTO.fromJson(Map<String, dynamic> json)
-      : year = int.parse(json['year']),
-        month = int.parse(json['month']),
-        day = int.parse(json['day']);
+      : year = json['year'],
+        month = json['month'],
+        day = json['day'];
 
   Map<String, dynamic> toJson() =>
     {

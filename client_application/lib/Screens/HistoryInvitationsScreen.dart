@@ -3,8 +3,6 @@ import 'package:client_application/Screens/Holders/ColorsHolder.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:universal_html/html.dart';
-
 import 'Arguments/HistoryInvitationsScreenArguments.dart';
 import 'Drawers/BasicDrawer.dart';
 
@@ -175,7 +173,7 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
         onPressed: ()=>onClickButtonSort(sortByValue),
         child: Row(
           children: [
-            buildText(context, title, 21,
+            buildText(context, title, 16,
                 _sortBy == sortByValue ? _colorsHolder.getBackgroundForI2() : Colors.black,
                 FontWeight.normal
             ),
@@ -189,7 +187,7 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       color: _colorsHolder.getBackgroundForI3(),
-      padding: const EdgeInsets.only(right: 10, left: 10),
+      padding: const EdgeInsets.only(right: 3, left: 3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -287,16 +285,13 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
   }
 
   Widget buildView(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        children: [
-          buildBarSort(context),
-          Expanded(
-              child: buildInvitationList(context)
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        buildBarSort(context),
+        Expanded(
+            child: buildInvitationList(context)
+        ),
+      ],
     );
   }
 
@@ -324,14 +319,17 @@ class _HistoryInvitationsScreenState extends State<HistoryInvitationsScreen> {
           backgroundColor: Colors.blue,
           title: Text("Invitations history",),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              color: _colorsHolder.getBackgroundForI6(),
-              padding: const EdgeInsets.all(16.0),
-              child: buildScreenState(context)
-          ),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Container(
+                  color: _colorsHolder.getBackgroundForI6(),
+                  padding: const EdgeInsets.all(5.0),
+                  child: buildScreenState(context)
+              ),
+            ),
+          ],
         ),
       ),
     );

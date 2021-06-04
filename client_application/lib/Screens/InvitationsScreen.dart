@@ -207,12 +207,19 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   Widget buildTopBar(BuildContext context) {
     return Align(
       alignment: Alignment.topRight,
-      child: IconButton(
-        icon: Icon(
-          Icons.history
+      child: TextButton(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            buildText(context, 'Invitation history', 18, _colorsHolder.getBackgroundForI2(), FontWeight.normal),
+            SizedBox(width: 5,),
+            Icon(
+              Icons.history,
+              size: 30,
+              color: _colorsHolder.getBackgroundForI2(),
+            ),
+          ],
         ),
-        iconSize: 30,
-        color: _colorsHolder.getBackgroundForI2(),
         onPressed: ()=>onClickHistory(context),
       ),
     );
@@ -241,7 +248,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
         onPressed: ()=>onClickButtonSort(sortByValue),
         child: Row(
           children: [
-            buildText(context, title, 21,
+            buildText(context, title, 18,
                 _sortBy == sortByValue ? _colorsHolder.getBackgroundForI2() : Colors.black,
                 FontWeight.normal
             ),
@@ -255,7 +262,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       color: _colorsHolder.getBackgroundForI3(),
-      padding: const EdgeInsets.only(right: 10, left: 10),
+      padding: const EdgeInsets.only(right: 5, left: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -352,7 +359,9 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       children: [
         buildTopBar(context),
         buildSortBar(context),
-        buildInvitations(context),
+        Expanded(
+            child: buildInvitations(context)
+        ),
       ],
     );
   }
@@ -381,14 +390,17 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
           backgroundColor: Colors.blue,
           title: Text("Invitations",),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: _colorsHolder.getBackgroundForI6(),
-            padding: const EdgeInsets.all(16.0),
-            child: buildScreenState(context)
-          ),
+        body: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Container(
+                  color: _colorsHolder.getBackgroundForI6(),
+                  padding: const EdgeInsets.all(5.0),
+                  child: buildScreenState(context)
+              ),
+            ),
+          ],
         ),
       ),
     );

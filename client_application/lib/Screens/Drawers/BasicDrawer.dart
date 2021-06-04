@@ -2,6 +2,8 @@ import 'package:client_application/Domain/Users/AppUser.dart';
 import 'package:client_application/Domain/Users/Swimmer.dart';
 import 'package:client_application/Screens/Arguments/CameraScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/InvitationsScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/MyTeamScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
 import 'package:client_application/Services/LogicManager.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +40,16 @@ class BasicDrawer extends StatelessWidget {
   void onLogout(BuildContext context) {
     LogicManager.getInstance().logout(appUser.swimmer);
     Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  void onInvitations(BuildContext context) {
+    Navigator.pushNamed(context, "/invitations",
+        arguments: new InvitationsScreenArguments(appUser));
+  }
+
+  void onMyTeam(BuildContext context) {
+    Navigator.pushNamed(context, "/team",
+        arguments: new MyTeamScreenArguments(appUser));
   }
 
   Widget buildAvatar(BuildContext context) {
@@ -117,6 +129,22 @@ class BasicDrawer extends StatelessWidget {
     );
   }
 
+  Widget buildInvitations(context) {
+    return  ListTile(
+      leading: Icon(Icons.email),
+      title: Text('Invitations'),
+      onTap: () => onInvitations(context),
+    );
+  }
+
+  Widget buildMyTeam(context) {
+    return  ListTile(
+      leading: Icon(Icons.pool),
+      title: Text('My team'),
+      onTap: () => onMyTeam(context),
+    );
+  }
+
   Widget buildLogout(context) {
     return ListTile(
       leading: Icon(Icons.exit_to_app),
@@ -139,6 +167,8 @@ class BasicDrawer extends StatelessWidget {
             buildUploadVideo(context),
             buildFilmVideo(context),
             buildHistory(context),
+            buildInvitations(context),
+            buildMyTeam(context),
             buildLogout(context),
           ],
         ),

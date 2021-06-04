@@ -3,6 +3,7 @@ import 'package:client_application/Screens/Arguments/FeedbackScreenArguments.dar
 import 'package:client_application/Screens/Arguments/HistoryInvitationsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/HistoryScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/InvitationsScreenArguments.dart';
+import 'package:client_application/Screens/Arguments/MyTeamScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/PoolsScreenArguments.dart';
 import 'package:client_application/Screens/Arguments/SwimmerHistoryPoolsArguments.dart';
 import 'package:client_application/Screens/Arguments/UploadScreenArguments.dart';
@@ -78,6 +79,10 @@ class MyApp extends StatelessWidget {
         '/invitations/history': (context) {
           HistoryInvitationsScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screensHolders.getInvitationHistoryScreen(args);
+        },
+        '/team': (context) {
+          MyTeamScreenArguments args = ModalRoute.of(context).settings.arguments;
+          return _screensHolders.getMyTeamScreen(args);
         }
       },
       debugShowCheckedModeBanner: false,
