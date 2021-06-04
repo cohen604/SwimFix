@@ -49,4 +49,12 @@ class AssetsHolder {
     return '/assets/assets/releases/app-x86_64-release.apk';
   }
 
+  String getBackGroundImage() {
+    return 'assets/images/background.png';
+  }
+
+  String getDarkBackGroundImage() {
+    return 'assets/images/dark_background.png';
+  }
+
 }

@@ -5,6 +5,7 @@ import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'Arguments/ReportScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -27,11 +28,12 @@ class _WebReportScreenState extends State<WebReportScreen> {
 
   LogicManager _logicManager;
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
   ResearcherStep _step;
-
 
   _WebReportScreenState() {
     _logicManager = LogicManager.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     _webColors = WebColors.getInstance();
     _step = ResearcherStep.Upload_Video;
   }
@@ -702,7 +704,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
 
   Widget buildStepsMap(BuildContext context) {
     return Container(
-      color: _webColors.getBackgroundForI7(),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -746,7 +747,6 @@ class _WebReportScreenState extends State<WebReportScreen> {
         child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: _webColors.getBackgroundForI7(),
             child: child
         )
     );
@@ -755,6 +755,12 @@ class _WebReportScreenState extends State<WebReportScreen> {
   Widget buildBottomSide(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: Row(
         children: [
           Flexible(

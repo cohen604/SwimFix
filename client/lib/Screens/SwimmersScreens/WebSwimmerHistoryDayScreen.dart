@@ -4,6 +4,7 @@ import 'package:client/Domain/Feedback/FeedBackLink.dart';
 import 'package:client/Domain/Swimmer/SwimmerHistoryFeedback.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Domain/Users/WebUser.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,6 +32,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
 
   LogicManager _logicManager;
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
   ScreenState _screenState;
   List<SwimmerHistoryFeedback> _feedbacks;
 
@@ -38,6 +40,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();
     _screenState = ScreenState.LoadingDayHistory;
+    _assetsHolder = AssetsHolder.getInstance();
     getSwimmerHistoryByDay(swimmer, date);
  }
 
@@ -241,25 +244,36 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
   }
 
   Widget buildScreenState(BuildContext context) {
-   Widget child = Container();
-   if(_screenState == ScreenState.LoadingDayHistory) {
+    Widget child = Container();
+    if(_screenState == ScreenState.LoadingDayHistory) {
       child = buildLoadingHistory(context);
-   }
-   else if(_screenState == ScreenState.Error) {
+    }
+    else if(_screenState == ScreenState.Error) {
       child = buildError(context);
-   }
-   else if(_screenState == ScreenState.ViewDayHistory) {
+    }
+    else if(_screenState == ScreenState.ViewDayHistory) {
       child = buildStateViewHistory(context);
-   }
-   return Stack(
-     children: [
-       child,
-       buildBackButton(context),
-       // Expanded(
-       //     child: child
-       // ),
-     ],
-   );
+    }
+    return Stack(
+      children: [
+        child,
+        buildBackButton(context),
+      ],
+    );
+  }
+
+  Widget buildMainArea(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: buildScreenState(context)
+    );
   }
 
   @override
@@ -275,7 +289,7 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryDayScreen> {
                   user: this.widget.arguments.webUser,
                 ),
                 new Expanded(
-                  child: buildScreenState(context)
+                  child: buildMainArea(context)
                 ),
               ]
           ),

@@ -1,6 +1,7 @@
 import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:universal_html/html.dart';
@@ -25,12 +26,14 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
   LogicManager _logicManager;
   ScreenState _screenState;
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
   List<DateDayDTO> days;
 
   _WebSwimmerHistoryScreenState() {
     _logicManager = LogicManager.getInstance();
     _screenState = ScreenState.LoadingHistory;
     _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   @override
@@ -182,6 +185,17 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
     return Container();
   }
 
+  Widget buildMainArea(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: buildScreenStates(context)
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,8 +209,8 @@ class _WebSwimmerHistoryScreenState extends State<WebSwimmerHistoryScreen> {
             MenuBar(
               user: this.widget.arguments.user,
             ),
-            new Expanded(
-              child: buildScreenStates(context),
+            Expanded(
+              child: buildMainArea(context),
             ),
           ]
         ),

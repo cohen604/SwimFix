@@ -402,11 +402,8 @@ class _WebPendingInvitationsScreenState extends State<WebPendingInvitationsScree
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+            image: AssetImage(_assetsHolder.getBackGroundImage()),
             fit: BoxFit.fill,
-            colorFilter: ColorFilter.mode(
-                _webColors.getBackgroundForI6(),
-                BlendMode.hardLight),
           ),
         ),
         child: buildScreenState(context),

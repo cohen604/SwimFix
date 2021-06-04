@@ -168,11 +168,8 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+            image: AssetImage(_assetsHolder.getBackGroundImage()),
             fit: BoxFit.fill,
-            colorFilter: ColorFilter.mode(
-                Colors.black.withAlpha(120),
-                BlendMode.darken),
           ),
         ),
         child: Column(

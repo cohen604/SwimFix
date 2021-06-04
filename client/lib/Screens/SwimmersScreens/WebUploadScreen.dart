@@ -5,6 +5,7 @@ import 'package:chewie/chewie.dart';
 import 'package:client/Components/Buttons/NumberButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:video_player/video_player.dart';
 import 'Arguments/UploadScreenArguments.dart';
 import 'package:client/Services/LogicManager.dart';
@@ -29,6 +30,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
 
   LogicManager _logicManager;
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
   UploadStep _step;
 
   bool _hasVideo;
@@ -42,6 +44,7 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
   _WebUploadScreenState() {
     _logicManager = LogicManager.getInstance();
     _webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     _step = UploadStep.Upload;
     _hasVideo = false;
     _hasFeedback = false;
@@ -453,7 +456,6 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
 
   Widget buildStepsMap(BuildContext context) {
     return Container(
-      color: _webColors.getBackgroundForI7(),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -489,7 +491,6 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
         child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: _webColors.getBackgroundForI7(),
             child: child
         )
     );
@@ -498,6 +499,12 @@ class _WebUploadScreenState extends State<WebUploadScreen> {
   Widget buildBottomSide(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: Row(
         children: [
           Flexible(

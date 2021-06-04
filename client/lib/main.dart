@@ -3,6 +3,7 @@ import 'package:client/Screens/AdminScreens/Arguments/AddResearcherScreenArgumen
 import 'package:client/Screens/AdminScreens/Arguments/StatisticsScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachSwimmerScreenArguments.dart';
+import 'package:client/Screens/ExampleScreen.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/InvitationHistoryArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/MyTeamArguments.dart';
 import 'package:client/Screens/SwimmersScreens/Arguments/PendingInvitationsArguments.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) {
+          // return ExampleScreen();
           AboutScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getAboutScreen(args);
         },
@@ -139,7 +141,7 @@ class MyApp extends StatelessWidget {
         '/admin/statistics': (context) {
           StatisticsScreenArguments args = ModalRoute.of(context).settings.arguments;
           return _screenHolder.getStatisticsScreen(args);
-        }
+        },
       },
       debugShowCheckedModeBanner: false,
     );
