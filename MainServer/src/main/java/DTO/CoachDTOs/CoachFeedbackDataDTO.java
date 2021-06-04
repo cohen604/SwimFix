@@ -1,20 +1,27 @@
-package DTO.FeedbackDTOs;
+package DTO.CoachDTOs;
+
+import DTO.FeedbackDTOs.DateDTO;
+import DTO.FeedbackDTOs.FeedbackGraphsDTO;
+import DTO.FeedbackDTOs.TextualCommentDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class FeedbackDataDTO {
+public class CoachFeedbackDataDTO {
 
     private String swimmerEmail;
     private String link;
     private String key;
     private DateDTO date;
     private List<TextualCommentDTO> comments;
-    public FeedbackDataDTO(String swimmerEmail,
-                           String link,
-                           String key,
-                           LocalDateTime date,
-                           List<TextualCommentDTO> comments) {
+    private FeedbackGraphsDTO graphs;
+
+    public CoachFeedbackDataDTO(String swimmerEmail,
+                                String link,
+                                String key,
+                                LocalDateTime date,
+                                List<TextualCommentDTO> comments,
+                                FeedbackGraphsDTO graphs) {
         this.swimmerEmail = swimmerEmail;
         this.link = link;
         this.key = key;
@@ -27,6 +34,7 @@ public class FeedbackDataDTO {
                 date.getSecond()
         );
         this.comments = comments;
+        this.graphs = graphs;
     }
 
     public String getSwimmerEmail() {
@@ -67,5 +75,13 @@ public class FeedbackDataDTO {
 
     public void setComments(List<TextualCommentDTO> comments) {
         this.comments = comments;
+    }
+
+    public FeedbackGraphsDTO getGraphs() {
+        return graphs;
+    }
+
+    public void setGraphs(FeedbackGraphsDTO graphs) {
+        this.graphs = graphs;
     }
 }

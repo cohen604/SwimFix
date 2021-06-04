@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.CoachFeedbackDataDTO;
 import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
@@ -42,6 +43,7 @@ public class LogicManager {
     private IReportProvider _reportProvider;
     private IEmailSenderProvider _emailSenderProvider;
     private IZipProvider _zipProvider;
+    private IGraphProvider _graphProvider;
 
     public LogicManager(IUserProvider userProvider,
                         IFeedbackProvider streamProvider,
@@ -50,6 +52,7 @@ public class LogicManager {
                         IReportProvider reportProvider,
                         IEmailSenderProvider emailSenderProvider,
                         IZipProvider zipProvider,
+                        IGraphProvider graphProvider,
                         String dbName) {
         _userProvider = userProvider;
         _feedbackProvider = streamProvider;
@@ -58,6 +61,7 @@ public class LogicManager {
         _reportProvider = reportProvider;
         _emailSenderProvider = emailSenderProvider;
         _zipProvider = zipProvider;
+        _graphProvider = graphProvider;
         // initialize server
         initializeServer(dbName);
     }
@@ -833,7 +837,7 @@ public class LogicManager {
      * @param feedbackKey - the feedback key
      * @return
      */
-    public ActionResult<FeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
+    public ActionResult<CoachFeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
         try {
             IUser iCoach = _userProvider.getUser(userDTO);
             IUser iSwimmer = _userProvider.findUser(swimmerEmail);
@@ -849,12 +853,17 @@ public class LogicManager {
                             textualComment.getText()
                         ));
                     }
-                    FeedbackDataDTO feedbackDataDTO = new FeedbackDataDTO(
+                    FeedbackGraphsDTO graphsDTO = _graphProvider.createGraph(
+                            feedbackVideo.getSwimmingSkeletons(),
+                            feedbackVideo.getSwimmingErrors()
+                    );
+                    CoachFeedbackDataDTO feedbackDataDTO = new CoachFeedbackDataDTO(
                             swimmerEmail,
                             feedbackVideo.getPath(),
                             feedbackKey,
                             feedbackVideo.getDate(),
-                            comments
+                            comments,
+                            graphsDTO
                     );
                     return new ActionResult<>(Response.SUCCESS, feedbackDataDTO);
                 }

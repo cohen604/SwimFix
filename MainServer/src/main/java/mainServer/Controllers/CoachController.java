@@ -75,7 +75,7 @@ public class CoachController {
             UserDTO userDTO = requestDTO.getCoachDTO();
             String swimmerEmail = requestDTO.getSwimmerEmail();
             String feedbackKey = requestDTO.getKey();
-            ActionResult<FeedbackDataDTO> result = swimFixAPI.coachGetSwimmerFeedback(
+            ActionResult<CoachFeedbackDataDTO> result = swimFixAPI.coachGetSwimmerFeedback(
                     userDTO,
                     swimmerEmail,
                     feedbackKey
