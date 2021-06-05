@@ -164,7 +164,7 @@ public class FeedbackProvider implements IFeedbackProvider {
      */
     private String generateName(String folderPath, String fileType, LocalDateTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-        return folderPath + File.pathSeparator + time.format(formatter) + fileType;
+        return folderPath + File.separator + time.format(formatter) + fileType;
     }
 
     /**
