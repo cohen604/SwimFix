@@ -25,11 +25,11 @@ public class AcceptanceTestsProxy implements AcceptanceTestsBridge {
     }
 
     @Override
-    public String streamFile(String user, String path) {
+    public boolean streamFile(String user, String path) {
         if(acceptanceTestsReal != null) {
             return acceptanceTestsReal.streamFile(user, path);
         }
-        return null;
+        return false;
     }
 
     @Override

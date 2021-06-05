@@ -11,7 +11,7 @@ public class ViewVideoTests extends  AcceptanceTests{
     @Before
     public void setUp(){
         setUpBridge();
-        this.videos[0] = new String[]{"/path/to/video1", "www.video1.stream.com"};
+        this.videos[0] = new String[]{"/path/to/feedback", "www.video1.stream.com"};
         this.videos[1] = new String[]{"/path/to/video2", "www.video2.stream.com"};
         this.videos[2] = new String[]{"/path/to/video3", "www.video3.stream.com"};
 
@@ -26,15 +26,16 @@ public class ViewVideoTests extends  AcceptanceTests{
 
     public void testGetCorrectStream(){
         String[] video = this.videos[0];
-        this.bridge.login(Integer.toString(0), this.users[0][0], this.users[0][1]);
-        assertEquals(this.bridge.streamFile(Integer.toString(0), video[0]), video[1]);
-        this.bridge.logout(Integer.toString(0));
+        this.bridge.login(Integer.toString(123231), this.users[0][0], this.users[0][1]);
+        this.bridge.uploadVideoForStreamer("123231", new byte[]{0x3});
+        assertTrue(this.bridge.streamFile(Integer.toString(123231), video[0]));
+        this.bridge.logout(Integer.toString(123231));
     }
 
     public void testGetIncorrectSteam(){
         String[] video = this.videos[1];
         this.bridge.login(Integer.toString(0), this.users[0][0], this.users[0][1]);
-        assertFalse(this.bridge.streamFile(Integer.toString(0), video[0]).equals(video[1]));
+        assertFalse(this.bridge.streamFile(Integer.toString(0), video[0]));
         this.bridge.logout(Integer.toString(0));
     }
 

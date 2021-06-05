@@ -1,5 +1,6 @@
 package Domain.UserData;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -63,6 +64,6 @@ public class PathManager {
     public String getDownloadsPath() { return combinePaths(_mainFolder, "downloads");}
 
     private String combinePaths(String prefix, String suffix) {
-        return prefix + "\\" + suffix;
+        return prefix + File.pathSeparator + suffix;
     }
 }
