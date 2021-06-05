@@ -5,6 +5,7 @@ import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
 import 'package:client/Domain/Users/ResearcherReport.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Services/LogicManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
 
   LogicManager logicManager;
   WebColors webColors;
+  AssetsHolder _assetsHolder;
   ScreenState screenState;
   // Searching Files vars
   List<File> videos;
@@ -36,6 +38,7 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
   _WebMultiReportsScreenState() {
     logicManager = LogicManager.getInstance();
     webColors = WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
     screenState = ScreenState.FolderPicking;
   }
 
@@ -745,7 +748,13 @@ class _WebMultiReportsScreenState extends State<WebMultiReportsScreen> {
             children: [
               MenuBar(user: this.widget.args.user,),
               Expanded(
-                child: Padding(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(_assetsHolder.getBackGroundImage()),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                   padding: EdgeInsets.only(top: 20),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

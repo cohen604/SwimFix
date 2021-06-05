@@ -2,6 +2,7 @@ package mainServer;
 
 import DTO.*;
 import DTO.AdminDTOs.SummaryDTO;
+import DTO.CoachDTOs.CoachFeedbackDataDTO;
 import DTO.CoachDTOs.CoachSwimmerFeedbackDTO;
 import DTO.CoachDTOs.InvitationResponseDTO;
 import DTO.CoachDTOs.TeamDTO;
@@ -90,6 +91,8 @@ public class SwimFixAPI {
 
       IZipProvider zipProvider = new ZipProvider();
 
+      IGraphProvider graphProvider = new GraphProvider();
+
       this.logicManager = new LogicManager(
               userProvider,
               feedbackProvider,
@@ -98,6 +101,7 @@ public class SwimFixAPI {
               reportProvider,
               emailSenderProvider,
               zipProvider,
+              graphProvider,
               dbName);
    }
 
@@ -208,7 +212,7 @@ public class SwimFixAPI {
       return logicManager.coachGetSwimmerFeedbacks(coachDto, swimmerEmail);
    }
 
-   public ActionResult<FeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
+   public ActionResult<CoachFeedbackDataDTO> coachGetSwimmerFeedback(UserDTO userDTO, String swimmerEmail, String feedbackKey) {
       return logicManager.coachGetSwimmerFeedback(userDTO, swimmerEmail, feedbackKey);
    }
 

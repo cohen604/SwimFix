@@ -38,6 +38,7 @@ dependencies:
   image: ^2.1.19
   synchronized: ^2.2.0+2
   path_provider: ^1.6.27
+  fl_chart: ^0.36.1
 
 
 dev_dependencies:
@@ -58,6 +59,8 @@ flutter:
   assets:
     - assets/
     - assets/images/about_screen_background.png
+    - assets/images/background.png
+    - assets/images/dark_background.png
     - assets/images/csv_example.png
     - assets/images/swimmer_image.png
     - assets/images/coach_image.png

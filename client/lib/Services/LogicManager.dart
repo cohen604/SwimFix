@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:client/Domain/Dates/DateDayDTO.dart';
 import 'package:client/Domain/Feedback/FeedBackLink.dart';
+import 'package:client/Domain/Feedback/FeedbackAnalysis.dart';
 import 'package:client/Domain/Feedback/FeedbackData.dart';
 import 'package:client/Domain/Feedback/FeedbackInfo.dart';
 import 'package:client/Domain/Files/FileDonwloaded.dart';
@@ -488,7 +489,7 @@ class LogicManager {
     return null;
   }
 
-  Future<FeedbackData> coachGetFeedbackData(Swimmer coach, String swimmersEmail, String feedbackKey) async {
+  Future<FeedbackAnalysis> coachGetFeedbackData(Swimmer coach, String swimmersEmail, String feedbackKey) async {
     try {
       String path = '/coach/swimmer/feedback';
       Map<String, dynamic> map = Map();
@@ -497,8 +498,7 @@ class LogicManager {
       map['key'] = feedbackKey;
       ServerResponse serverResponse = await this.connectionHandler.postMessage(path, map);
       if(serverResponse!=null && serverResponse.isSuccess()) {
-        print(serverResponse.value);
-        return FeedbackData.fromJson(serverResponse.value as Map);
+        return FeedbackAnalysis.fromJson(serverResponse.value as Map);
       }
     }
     catch(e, stacktrace) {

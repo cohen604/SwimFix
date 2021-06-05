@@ -121,6 +121,16 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
     return Container();
   }
 
+  Widget buildExpanded(BuildContext context) {
+    if( !this.widget.args.user.permissions.isSwimmer ||
+        !this.widget.args.user.permissions.isCoach ||
+        !this.widget.args.user.permissions.isAdmin ||
+        !this.widget.args.user.permissions.isResearcher) {
+      return Expanded(child: Container());
+    }
+    return Container();
+  }
+
   Widget buildMainButtons(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
@@ -128,10 +138,12 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          buildExpanded(context),
           buildSwimmer(context),
           buildCoach(context),
           buildAdmin(context),
           buildResearcher(context),
+          buildExpanded(context),
         ],
       ),
     );
@@ -145,11 +157,8 @@ class _WebWelcomeScreenState extends State<WebWelcomeScreen> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+              image: AssetImage(_assetsHolder.getBackGroundImage()),
               fit: BoxFit.fill,
-              colorFilter: ColorFilter.mode(
-                  _webColors.getBackgroundForI6(),
-                  BlendMode.hardLight),
             ),
           ),
           child: Column(

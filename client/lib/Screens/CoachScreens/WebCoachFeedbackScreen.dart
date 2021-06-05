@@ -1,8 +1,11 @@
 import 'package:chewie/chewie.dart';
 import 'package:client/Components/CommentComp.dart';
+import 'package:client/Components/Graphs/SwimmingGraph.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Domain/Feedback/FeedbackAnalysis.dart';
 import 'package:client/Domain/Feedback/FeedbackComment.dart';
 import 'package:client/Domain/Feedback/FeedbackData.dart';
+import 'package:client/Domain/Graph/FeedbackGraphs.dart';
 import 'package:client/Domain/Users/Swimmer.dart';
 import 'package:client/Screens/CoachScreens/Arguments/CoachFeedbackScreenArguments.dart';
 import 'package:client/Screens/Holders/AssetsHolder.dart';
@@ -33,8 +36,9 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   ChewieController _chewieController;
   TextEditingController _textController;
 
-  FeedbackData _feedbackData;
+  FeedbackAnalysis _feedbackAnalysis;
   List<FeedbackComment> _comments;
+  FeedbackGraphs graphs;
 
   _WebCoachFeedbackScreenState() {
     _webColors = WebColors.getInstance();
@@ -51,7 +55,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
     String feedbackKey = this.widget.args.feedbackInfo.key;
     _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
-        (FeedbackData data) {
+        (FeedbackAnalysis data) {
           if(data == null) {
             this.setState(() {
               _screenState = ScreenState.Error;
@@ -60,9 +64,10 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
           else {
             initVideoPlayers();
             this.setState(() {
-              _feedbackData = data;
+              _feedbackAnalysis = data;
               _screenState = ScreenState.View;
               _comments = data.comments;
+              graphs = _feedbackAnalysis.graphs;
             });
           }
         }
@@ -105,11 +110,11 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     String swimmersEmail = this.widget.args.feedbackInfo.swimmer;
     String feedbackKey = this.widget.args.feedbackInfo.key;
     _logicManager.coachGetFeedbackData(coach, swimmersEmail, feedbackKey).then(
-            (FeedbackData data) {
+            (FeedbackAnalysis data) {
           if(data != null) {
             this.setState(() {
               _textController.text = "";
-              _feedbackData = data;
+              _feedbackAnalysis = data;
               _comments = data.comments;
             });
           }
@@ -224,31 +229,34 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
   }
 
   Widget buildError(BuildContext context) {
-    return Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.warning_amber_rounded,
-              size: 45,
-              color: Colors.red,
-            ),
-            SizedBox(height: 5.0,),
-            buildText(context, 'Something is broken.\n'
-                'Maybe the you don\'t have permissions or the servers are down.\n'
-                'For more information contact swimAnalytics@gmail.com',
-                24, Colors.black, FontWeight.normal,
-                textAlign: TextAlign.center),
-          ],
-        )
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 45,
+                color: Colors.red,
+              ),
+              SizedBox(height: 5.0,),
+              buildText(context, 'Something is broken.\n'
+                  'Maybe the you don\'t have permissions or the servers are down.\n'
+                  'For more information contact swimAnalytics@gmail.com',
+                  24, Colors.black, FontWeight.normal,
+                  textAlign: TextAlign.center),
+            ],
+          )
+      ),
     );
   }
 
   Widget buildVideo(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      color: _webColors.getBackgroundForI3(),
       child: Chewie(
         controller: _chewieController,
       ),
@@ -358,13 +366,6 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     );
   }
 
-  Widget buildAreaForGraphs(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-    );
-  }
-  
   Widget buildTitle(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(15),
@@ -388,7 +389,7 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
       children: [
         buildTitle(context),
         buildAreaVideoAndComments(context),
-        buildAreaForGraphs(context),
+        Graphs(graphs),
       ],
     );
   }
@@ -410,11 +411,8 @@ class _WebCoachFeedbackScreenState extends State<WebCoachFeedbackScreen> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
           fit: BoxFit.fill,
-          colorFilter: ColorFilter.mode(
-              _webColors.getBackgroundForI6(),
-              BlendMode.hardLight),
         ),
       ),
       child: SingleChildScrollView(
@@ -454,3 +452,256 @@ enum ScreenState {
   View
 }
 
+class Graphs extends StatefulWidget {
+
+  FeedbackGraphs graphs;
+
+  Graphs(this.graphs);
+
+  @override
+  _GraphsState createState() => _GraphsState();
+}
+
+class _GraphsState extends State<Graphs> {
+
+  WebColors _webColors;
+  bool _head;
+  bool _shoulders;
+  bool _elbows;
+  bool _wrists;
+
+  _GraphsState() {
+    _webColors = WebColors.getInstance();
+    init();
+  }
+
+  void init() {
+    _head = false;
+    _shoulders = false;
+    _elbows = false;
+    _wrists = false;
+  }
+
+  void onClear() {
+    if(_head || _shoulders || _elbows || _wrists) {
+      this.setState(() {
+        init();
+      });
+    }
+  }
+
+  Widget buildText(
+      BuildContext context,
+      String text,
+      int size,
+      Color color,
+      FontWeight fontWeight,
+      {textAlign = TextAlign.center}) {
+    return Text(text,
+      textAlign: textAlign,
+      style: TextStyle(
+          fontSize: size * MediaQuery.of(context).textScaleFactor,
+          color: color,
+          fontWeight: fontWeight,
+          decoration: TextDecoration.none
+      ),
+    );
+  }
+
+  Widget buildGraphTextButton(BuildContext context, String title, Color color, Function function) {
+    return TextButton(
+        onPressed: function,
+        child: buildText(
+            context,
+            title,
+            24,
+            color,
+            FontWeight.normal)
+    );
+  }
+
+  Widget buildHeadButton(BuildContext context) {
+    return buildGraphTextButton(
+        context,
+        'Head',
+        _head ? _webColors.getBackgroundForI2() : Colors.black,
+        _head ? ()=>this.setState(() {_head = false;})
+            : ()=>this.setState(() {_head = true;})
+    );
+  }
+
+  Widget buildShouldersButton(BuildContext context) {
+    return buildGraphTextButton(
+        context,
+        'Shoulders',
+        _shoulders ? _webColors.getBackgroundForI2() : Colors.black,
+        _shoulders ? ()=>this.setState(() {_shoulders = false;})
+            : ()=>this.setState(() {_shoulders = true;})
+    );
+  }
+
+  Widget buildElbowsButton(BuildContext context) {
+    return buildGraphTextButton(
+        context,
+        'Elbows',
+        _elbows ? _webColors.getBackgroundForI2() : Colors.black,
+        _elbows ? ()=>this.setState(() {_elbows = false;})
+            : ()=>this.setState(() {_elbows = true;})
+    );
+  }
+
+  Widget buildWristsButton(BuildContext context) {
+    return buildGraphTextButton(
+        context,
+        'Wrists',
+        _wrists ? _webColors.getBackgroundForI2() : Colors.black,
+        _wrists ? ()=>this.setState(() {_wrists = false;})
+            : ()=>this.setState(() {_wrists = true;})
+    );
+  }
+
+  Widget buildGraphsBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      color: _webColors.getBackgroundForI4(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          buildHeadButton(context),
+          buildShouldersButton(context),
+          buildElbowsButton(context),
+          buildWristsButton(context),
+          IconButton(
+            onPressed: onClear,
+            icon: Icon(
+                Icons.clear
+            ),
+            color: Colors.redAccent,
+            iconSize: 35,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildHeadGraph(BuildContext context) {
+    if(_head) {
+      return Container(
+        width: MediaQuery.of(context).size.width / 2,
+        padding: const EdgeInsets.all(5),
+        child: SwimmingGraph(
+            'Head', this.widget.graphs.numberOfFrames, this.widget.graphs.head,
+            this.widget.graphs.errors),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildShoulderGraphs(BuildContext context) {
+    if(_shoulders) {
+      return Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SwimmingGraph('Left shoulder', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.leftShoulder, this.widget.graphs.errors),
+            ),
+            SizedBox(width: 10,),
+            Expanded(
+              child: SwimmingGraph('Right shoulder', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.rightShoulder, this.widget.graphs.errors),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildElbowGraphs(BuildContext context) {
+    if(_elbows) {
+      return Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SwimmingGraph('Left elbow', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.leftElbow, this.widget.graphs.errors),
+            ),
+            SizedBox(width: 10,),
+            Expanded(
+              child: SwimmingGraph('Right elbow', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.rightElbow, this.widget.graphs.errors),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  Widget buildWristGraphs(BuildContext context) {
+    if(_wrists) {
+      return Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        padding: const EdgeInsets.all(5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SwimmingGraph('Left wrist', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.leftWrist, this.widget.graphs.errors),
+            ),
+            SizedBox(width: 10,),
+            Expanded(
+              child: SwimmingGraph('Right wrist', this.widget.graphs.numberOfFrames,
+                  this.widget.graphs.rightWrist, this.widget.graphs.errors),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+            padding: const EdgeInsets.all(5.0),
+            alignment: Alignment.topLeft,
+            child: buildText(context, 'Select swimming skeleton graphs to view', 24, Colors.black54, FontWeight.normal)
+        ),
+        buildGraphsBar(context),
+        buildHeadGraph(context),
+        buildShoulderGraphs(context),
+        buildElbowGraphs(context),
+        buildWristGraphs(context),
+      ],
+    );
+  }
+}
+
+
+enum GraphState {
+  None,
+  Head,
+  Shoulder,
+  Elbow,
+  Wrist,
+}

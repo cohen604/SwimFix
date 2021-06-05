@@ -279,9 +279,8 @@ class _WebAboutScreenState extends State<WebAboutScreen> {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(_assetsHolder.getSwimmerBackGround()),
+          image: AssetImage(_assetsHolder.getDarkBackGroundImage()),
           fit: BoxFit.fill,
-          colorFilter: ColorFilter.mode(Colors.black.withAlpha(120), BlendMode.darken),
         ),
       ),
       child: Row(

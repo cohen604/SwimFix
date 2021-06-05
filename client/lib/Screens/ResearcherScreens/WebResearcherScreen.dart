@@ -1,5 +1,6 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
+import 'package:client/Screens/Holders/AssetsHolder.dart';
 import 'package:client/Screens/Holders/WebColors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +23,11 @@ class WebResearcherScreen extends StatefulWidget {
 class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   WebColors _webColors;
+  AssetsHolder _assetsHolder;
 
   _WebResearcherScreenState() {
     _webColors =WebColors.getInstance();
+    _assetsHolder = AssetsHolder.getInstance();
   }
 
   Function onClickReport(BuildContext context) {
@@ -51,7 +54,12 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
 
   Widget buildResearcherFeatures(BuildContext context) {
     return Container(
-      color: _webColors.getBackgroundForI7(),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(_assetsHolder.getBackGroundImage()),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
@@ -59,8 +67,8 @@ class _WebResearcherScreenState extends State<WebResearcherScreen> {
               "Get single report for swimming video", onClickReport(context), Icons.upload_file),
           IconCardButton("Multi report",
               "Get multiply reports for swimming videos", onClickMultiReport(context), Icons.drive_folder_upload),
-          IconCardButton("Edit Swimming error",
-              "Edit the angles of the swimming errors", null, Icons.edit),
+          // IconCardButton("Edit Swimming error",
+          //     "Edit the angles of the swimming errors", null, Icons.edit),
         ],
       ),
     );

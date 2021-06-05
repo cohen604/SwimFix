@@ -64,6 +64,6 @@ public class PathManager {
     public String getDownloadsPath() { return combinePaths(_mainFolder, "downloads");}
 
     private String combinePaths(String prefix, String suffix) {
-        return prefix + File.pathSeparator + suffix;
+        return prefix + File.separator + suffix;
     }
 }
