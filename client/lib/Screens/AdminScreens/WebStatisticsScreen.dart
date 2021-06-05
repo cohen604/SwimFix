@@ -1,4 +1,5 @@
 import 'package:client/Components/Buttons/IconCardButton.dart';
+import 'package:client/Components/Graphs/AdminGraph.dart';
 import 'package:client/Components/MenuBars/MenuBar.dart';
 import 'package:client/Domain/Summaries/Summary.dart';
 import 'package:client/Screens/AdminScreens/Arguments/AddAdminsScreenArguments.dart';
@@ -160,31 +161,67 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildText(context, 'Summary', 36, _webColors.getBackgroundForI2(), FontWeight.normal),
-          buildUsersSummary(context, 'Users',
-            getDisplayInt(_summary.users),
-            getDisplayInt(_summary.loggedUsers),
-            getDisplayInt(_summary.offlineUsers())),
-          buildUsersSummary(context, 'Swimmers',
-              getDisplayInt(_summary.swimmers),
-              getDisplayInt(_summary.loggedSwimmers),
-              getDisplayInt(_summary.offlineSwimmers())),
-          buildUsersSummary(context, 'Coaches',
-              getDisplayInt(_summary.coaches),
-              getDisplayInt(_summary.loggedCoaches),
-              getDisplayInt(_summary.offlineCoaches())),
-          buildUsersSummary(context, 'Researchers',
-              getDisplayInt(_summary.researchers),
-              getDisplayInt(_summary.loggedResearchers),
-              getDisplayInt(_summary.offlineResearchers())),
-          buildUsersSummary(context, 'Admins',
-              getDisplayInt(_summary.admins),
-              getDisplayInt(_summary.loggedAdmins),
-              getDisplayInt(_summary.offlineAdmins())),
           buildFeedbackSummary(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 3,
+                width: MediaQuery.of(context).size.width / 3,
+                child: AdminGraph('Users',
+                    _summary.users as double,
+                    _summary.loggedUsers as double,
+                    _summary.offlineUsers() as double
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height / 3,
+                width: MediaQuery.of(context).size.width / 3,
+                child: AdminGraph('Swimmers',
+                    _summary.swimmers as double,
+                    _summary.loggedSwimmers as double,
+                    _summary.offlineSwimmers() as double
+                ),
+              ),
+            ],
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: AdminGraph('Coaches',
+                      _summary.coaches as double,
+                      _summary.loggedCoaches as double,
+                      _summary.offlineCoaches() as double
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: AdminGraph('Researchers',
+                      _summary.researchers as double,
+                      _summary.loggedResearchers as double,
+                      _summary.offlineResearchers() as double
+                  ),
+                ),
+              ]
+          ),
+          Center(
+            child: Container(
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width / 3,
+              child: AdminGraph('Admins',
+                  _summary.admins as double,
+                  _summary.loggedAdmins as double,
+                  _summary.offlineAdmins() as double
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -213,7 +250,10 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
           fit: BoxFit.fill,
         ),
       ),
-      child: buildState(context),
+      child: SingleChildScrollView(
+          child: Scrollbar(child: buildState(context)
+        ),
+      ),
     );
   }
 
@@ -227,7 +267,7 @@ class _WebStatisticsScreenState extends State<WebStatisticsScreen> {
           children: [
             MenuBar(user: this.widget.args.user,),
             Expanded(
-                child: buildMainArea(context)
+              child: buildMainArea(context)
             ),
           ],
         ),

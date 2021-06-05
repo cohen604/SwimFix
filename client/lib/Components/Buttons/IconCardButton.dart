@@ -62,7 +62,7 @@ class _IconCardButtonState extends State<IconCardButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(5.0),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

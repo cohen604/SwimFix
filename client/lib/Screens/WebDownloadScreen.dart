@@ -76,6 +76,18 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
     onClickHref('/assets/assets/releases/app-x86_64-release.apk');
   }
 
+  Widget buildText(BuildContext context, String text, int size, Color color,
+      FontWeight fontWeight) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: size * MediaQuery.of(context).textScaleFactor,
+          color: color,
+          fontWeight: fontWeight,
+          decoration: TextDecoration.none),
+    );
+  }
+
   Widget buildTitle(BuildContext context, String text) {
     return Text(text,
       style: TextStyle(
@@ -108,16 +120,45 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
             children: [
               buildTitle(context, title),
               buildDes(context, des),
-              SizedBox(height: 10,),
+              SizedBox(height: 5,),
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                   onPressed: onClick,
-                  child: Text('Download',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: buildText(context, 'Download', 21, Colors.white, FontWeight.bold)
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDownloadComingSoon(BuildContext context,
+      String title,
+      String des) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(25),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildTitle(context, title),
+              buildDes(context, des),
+              SizedBox(height: 5,),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: null,
+                  child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: buildText(context, 'Comming soon', 21, Colors.black87, FontWeight.normal)
                   ),
                 ),
               ),
@@ -137,22 +178,15 @@ class _WebDownloadScreenState extends State<WebDownloadScreen> {
           child: buildDownload(
               context,
               'Android',
-              'Min SDK: 27\nSystem: ARM 32 bit',
-              onDownloadAndroidArm32),
-        ),
-        Flexible(
-          child: buildDownload(
-              context,
-              'Android',
-              'Min SDK: 27\nSystem: ARM 64 bit',
+              'Min SDK: 27\n',
               onDownloadAndroidArm64),
         ),
         Flexible(
-          child: buildDownload(
+          child: buildDownloadComingSoon(
               context,
-              'Android',
-              'Min SDK: 27\nSystem: x86 64 bit',
-              onDownloadAndroidArm64),
+              'iOS',
+              'Min SDK: 14.5\n'
+          ),
         ),
         Flexible(child: Container()),
       ]
