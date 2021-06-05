@@ -6,8 +6,8 @@ public class DataBase {
 
     public static String[][] Users = {
             //email, name
-            {"foo@bar.com", "foo"},
-            {"goo@bar.com", "goo"},
+            {"123231", "foo@bar.com", "foo"},
+            {"123123", "goo@bar.com", "goo"},
     };
 
     public static HashMap<String, String> videos = new HashMap<String, String>() {{
