@@ -14,7 +14,7 @@ In order to install and run the server, you need to do the following steps:
 
 1.  ```virtualenv .env```
 2. ```source .env/bin/activate```
-3. For CUDA support `pip install -r requirements/cuda.txt` and for CPU support `pip install -r requirements/cuda.txt`
+3. For CUDA support `pip install -r requirements/cuda.txt` and for CPU support `pip install -r requirements/cpu.txt`
 4. ```cd src```
 5. ``` python3 app.py```
 
