@@ -14,11 +14,52 @@ In order to install and run the server, you need to do the following steps:
 
 1.  ```virtualenv .env```
 2. ```source .env/bin/activate```
-3. ```pip install -r requirements.txt```
+3. For CUDA support `pip install -r requirements/cuda.txt` and for CPU support `pip install -r requirements/cuda.txt`
 4. ```cd src```
 5. ``` python3 app.py```
 
+## Docker
 
+In order to run the server using Docker, you need to first build the image:
+
+`docker build -t mlserver .`
+
+By default the image is built for CPU support so if you need CUDA support run the following:
+
+`docker build -t mlserver --build-arg DEVICE=cuda .`
+
+To run the server run the following:
+
+`docker run -p 5050:5050 mlserver`
+
+## Config
+
+the app is running by default with CPU support and on data weights from detectron2 [model zoo](https://github.com/facebookresearch/detectron2/blob/master/MODEL_ZOO.md)
+
+In order to change support for CUDA edit in `app.py` the following line accordingly:
+
+`model, cfg = get_model()`
+
+`get_model()` can have the following
+```
+def get_model(trained: bool = False, load_path: str = "model_final.pth", score_tresh: int = 0.75, device: str = "cpu")
+
+trained: bool = False
+if False the app will use data weights from model zoo
+
+load_path: str = "model_final.pth"
+if trained is True this should be set to the data weigths path
+
+score_tresh: int = 0.75
+
+
+device: str = "cpu"
+can be "cpu" or "cuda"
+```
+
+In order to use a different IP or port edit in `app.py` the following line accordingly:
+
+`app.run(host='0.0.0.0', port='5050', debug=True)`
 
 ## Utils
 
