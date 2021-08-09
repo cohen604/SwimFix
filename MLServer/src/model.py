@@ -29,7 +29,7 @@ def get_model(trained: bool = False, load_path: str = "model_final.pth", score_t
         predictor = DefaultPredictor(cfg)
 
     else:
-        cfg.MODEL.WEIGHTS = f"detectron2://ImageNetPretrained/MSRA/R-50.pkl"  # initialize
+        cfg.MODEL.WEIGHTS = f"detectron2://COCO-Keypoints/keypoint_rcnn_R_50_FPN_3x/137849621/model_final_a6e10b.pkl"  # initialize
         # set the testing threshold for this model
         predictor = DefaultPredictor(cfg)
 

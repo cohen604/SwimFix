@@ -51,8 +51,7 @@ def get_predictions(frames: np.ndarray) -> np.ndarray:
     for frame in tqdm(frames, desc='predicting'):
         outputs = model(frame)
         try:
-            keypoints = outputs['instances'].get_fields(
-            )['pred_keypoints'].cpu().numpy()[0]
+            keypoints = outputs['instances'].get_fields()['pred_keypoints'].cpu().numpy()[0]
             keypoints = list(keypoints.ravel().astype(np.float64))
         except:
             keypoints = [0] * 21
